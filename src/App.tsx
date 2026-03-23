@@ -22,7 +22,8 @@ import {
   Database,
   ShieldAlert,
   Cloud,
-  Telescope
+  Telescope,
+  Settings
 } from 'lucide-react';
 import { soundManager } from './utils/SoundManager';
 
@@ -31,6 +32,10 @@ type Tab = 'dashboard' | 'nebula' | 'orbit' | 'void';
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('orbit');
   const [showReflection, setShowReflection] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [, setTick] = useState(0);
+
+  const forceUpdate = () => setTick(t => t + 1);
 
   const handleMissedTask = () => {
     soundManager.playSwell();
@@ -39,14 +44,14 @@ export default function App() {
 
   const handleTabChange = (tab: Tab) => {
     if (tab !== activeTab) {
-      soundManager.playPop();
+      soundManager.playNav();
       setActiveTab(tab);
     }
   };
 
   return (
     <div className="min-h-screen bg-surface-lowest text-on-surface pb-24 selection:bg-primary-container/30 overflow-x-hidden">
-      <Header />
+      <Header onOpenSettings={() => setShowSettings(true)} />
       
       <main className="px-6 pt-24 max-w-md mx-auto">
         <AnimatePresence mode="wait">
@@ -79,12 +84,18 @@ export default function App() {
         {showReflection && (
           <ReflectionModal onClose={() => setShowReflection(false)} />
         )}
+        {showSettings && (
+          <SettingsModal 
+            onClose={() => setShowSettings(false)} 
+            onSettingsChange={forceUpdate} 
+          />
+        )}
       </AnimatePresence>
     </div>
   );
 }
 
-function Header() {
+function Header({ onOpenSettings }: { onOpenSettings: () => void }) {
   return (
     <header className="fixed top-0 w-full z-50 bg-surface-lowest/80 backdrop-blur-xl border-b border-white/5 nebula-shadow">
       <div className="flex justify-between items-center px-6 py-4 max-w-md mx-auto">
@@ -100,13 +111,22 @@ function Header() {
             Orbit Level 42
           </h1>
         </div>
-        <motion.button 
-          whileTap={{ scale: 0.9 }}
-          onClick={() => soundManager.playLevelUp()}
-          className="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-low hover:bg-surface transition-colors"
-        >
-          <Zap className="w-5 h-5 text-primary-container" />
-        </motion.button>
+        <div className="flex items-center gap-2">
+          <motion.button 
+            whileTap={{ scale: 0.9 }}
+            onClick={onOpenSettings}
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-low hover:bg-surface transition-colors"
+          >
+            <Settings className="w-5 h-5 text-on-surface-variant hover:text-on-surface transition-colors" />
+          </motion.button>
+          <motion.button 
+            whileTap={{ scale: 0.9 }}
+            onClick={() => soundManager.playLevelUp()}
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-low hover:bg-surface transition-colors"
+          >
+            <Zap className="w-5 h-5 text-primary-container" />
+          </motion.button>
+        </div>
       </div>
     </header>
   );
@@ -763,5 +783,105 @@ function NavItem({ icon, label, active = false, onClick }: { icon: ReactNode, la
         {label}
       </span>
     </motion.button>
+  );
+}
+
+function SettingsModal({ onClose, onSettingsChange }: { onClose: () => void, onSettingsChange: () => void }) {
+  const [soundEnabled, setSoundEnabled] = useState(soundManager.isSoundEnabled);
+  const [navSound, setNavSound] = useState(soundManager.navSoundType);
+
+  const handleToggleSound = () => {
+    const newVal = !soundEnabled;
+    setSoundEnabled(newVal);
+    soundManager.setSoundEnabled(newVal);
+    onSettingsChange();
+    if (newVal) {
+      setTimeout(() => soundManager.playNav(), 50);
+    }
+  };
+
+  const handleNavSoundChange = (type: 'smooth' | 'pop' | 'none') => {
+    setNavSound(type);
+    soundManager.setNavSoundType(type);
+    onSettingsChange();
+    if (type !== 'none' && soundEnabled) {
+      if (type === 'smooth') {
+        soundManager.playNav();
+      } else {
+        soundManager.playPop();
+      }
+    }
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-surface-lowest/90 backdrop-blur-md"
+    >
+      <motion.div 
+        initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
+        className="bg-surface-high w-full max-w-md rounded-3xl p-6 shadow-2xl border border-white/5 relative"
+      >
+        <button onClick={onClose} className="absolute top-4 right-4 p-2 text-on-surface-variant hover:text-on-surface transition-colors">
+          <X className="w-5 h-5" />
+        </button>
+        
+        <div className="mb-6">
+          <h3 className="font-display text-2xl font-bold text-on-surface mb-2">System Settings</h3>
+          <p className="text-sm text-on-surface-variant leading-relaxed">
+            Configure your orbital experience and sensory feedback.
+          </p>
+        </div>
+        
+        <div className="space-y-6">
+          {/* Global Sound Toggle */}
+          <div className="flex items-center justify-between bg-surface-lowest p-4 rounded-xl border border-white/5">
+            <div>
+              <p className="font-bold text-on-surface">Audio Feedback</p>
+              <p className="text-xs text-on-surface-variant">Enable system sounds</p>
+            </div>
+            <button 
+              onClick={handleToggleSound}
+              className={`w-12 h-6 rounded-full transition-colors relative ${soundEnabled ? 'bg-primary-container' : 'bg-surface-highest'}`}
+            >
+              <motion.div 
+                animate={{ x: soundEnabled ? 24 : 2 }}
+                className="w-5 h-5 bg-white rounded-full absolute top-0.5 shadow-sm"
+              />
+            </button>
+          </div>
+
+          {/* Nav Sound Selection */}
+          <div className="bg-surface-lowest p-4 rounded-xl border border-white/5 space-y-3">
+            <div>
+              <p className="font-bold text-on-surface">Navigation Sound</p>
+              <p className="text-xs text-on-surface-variant">Choose the acoustic profile for tab changes</p>
+            </div>
+            
+            <div className="grid grid-cols-3 gap-2">
+              <button 
+                onClick={() => handleNavSoundChange('smooth')}
+                className={`py-2 rounded-lg text-xs font-bold transition-all ${navSound === 'smooth' ? 'bg-primary-container/20 text-primary-container border border-primary-container/30' : 'bg-surface border border-white/5 text-on-surface-variant hover:text-on-surface'}`}
+              >
+                Smooth
+              </button>
+              <button 
+                onClick={() => handleNavSoundChange('pop')}
+                className={`py-2 rounded-lg text-xs font-bold transition-all ${navSound === 'pop' ? 'bg-primary-container/20 text-primary-container border border-primary-container/30' : 'bg-surface border border-white/5 text-on-surface-variant hover:text-on-surface'}`}
+              >
+                Sharp Pop
+              </button>
+              <button 
+                onClick={() => handleNavSoundChange('none')}
+                className={`py-2 rounded-lg text-xs font-bold transition-all ${navSound === 'none' ? 'bg-primary-container/20 text-primary-container border border-primary-container/30' : 'bg-surface border border-white/5 text-on-surface-variant hover:text-on-surface'}`}
+              >
+                Silent
+              </button>
+            </div>
+          </div>
+        </div>
+        
+      </motion.div>
+    </motion.div>
   );
 }

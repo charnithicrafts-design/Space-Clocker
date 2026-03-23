@@ -1,8 +1,36 @@
 class SoundManager {
   private ctx: AudioContext | null = null;
+  public isSoundEnabled: boolean = true;
+  public navSoundType: 'smooth' | 'pop' | 'none' = 'smooth';
+
+  constructor() {
+    if (typeof window !== 'undefined') {
+      const savedSound = localStorage.getItem('isSoundEnabled');
+      if (savedSound !== null) this.isSoundEnabled = savedSound === 'true';
+      
+      const savedNav = localStorage.getItem('navSoundType');
+      if (savedNav === 'smooth' || savedNav === 'pop' || savedNav === 'none') {
+        this.navSoundType = savedNav;
+      }
+    }
+  }
+
+  public setSoundEnabled(enabled: boolean) {
+    this.isSoundEnabled = enabled;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isSoundEnabled', String(enabled));
+    }
+  }
+
+  public setNavSoundType(type: 'smooth' | 'pop' | 'none') {
+    this.navSoundType = type;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('navSoundType', type);
+    }
+  }
 
   private init() {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !this.isSoundEnabled) return false;
     if (!this.ctx) {
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       this.ctx = new AudioContextClass();
@@ -10,10 +38,42 @@ class SoundManager {
     if (this.ctx.state === 'suspended') {
       this.ctx.resume();
     }
+    return true;
+  }
+
+  public playNav() {
+    if (this.navSoundType === 'none') return;
+    if (this.navSoundType === 'pop') {
+      this.playPop();
+      return;
+    }
+    
+    // Smooth transition sound
+    if (!this.init()) return;
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    
+    osc.type = 'sine';
+    // Very soft, low frequency sweep
+    osc.frequency.setValueAtTime(300, t);
+    osc.frequency.exponentialRampToValueAtTime(200, t + 0.3);
+    
+    // Soft attack and release
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.05, t + 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+    
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    
+    osc.start(t);
+    osc.stop(t + 0.3);
   }
 
   public playPop() {
-    this.init();
+    if (!this.init()) return;
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
@@ -34,7 +94,7 @@ class SoundManager {
   }
 
   public playThud() {
-    this.init();
+    if (!this.init()) return;
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
@@ -55,7 +115,7 @@ class SoundManager {
   }
 
   public playLevelUp() {
-    this.init();
+    if (!this.init()) return;
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
     
@@ -82,7 +142,7 @@ class SoundManager {
   }
 
   public playSwell() {
-    this.init();
+    if (!this.init()) return;
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
     
