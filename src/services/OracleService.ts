@@ -10,7 +10,7 @@ export const OracleService = {
       throw new Error('Oracle configuration missing.');
     }
 
-    const response = await fetch(`${config.providerUrl}/v1/chat/completions`, {
+    const response = await fetch(`${config.providerUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,5 +34,20 @@ export const OracleService = {
 
     const data = await response.json();
     return data.choices[0].message.content;
+  },
+
+  async getDailyDebrief(
+    config: OracleConfig,
+    tasks: any[],
+    reflections: any[],
+    stats: any
+  ): Promise<string> {
+    const prompt = `Analyze today's performance and provide a debrief.
+Tasks: ${JSON.stringify(tasks)}
+Reflections: ${JSON.stringify(reflections)}
+Stats: ${JSON.stringify(stats)}
+Based on the above, provide an insightful review and guidance for tomorrow.`;
+
+    return this.query(config, prompt, JSON.stringify({ tasks, reflections, stats }));
   },
 };
