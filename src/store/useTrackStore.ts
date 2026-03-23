@@ -28,6 +28,19 @@ export interface Reflection {
   type: 'missed-task' | 'void-engaged' | 'daily-summary';
 }
 
+export interface OracleConfig {
+  providerUrl: string;
+  apiKey: string;
+  model: string;
+}
+
+export interface OracleLog {
+  id: string;
+  prompt: string;
+  response: string;
+  date: string;
+}
+
 export const useTrackStore = () => {
   // --- STATE ---
   const [tasks, setTasks] = useState<Task[]>([
@@ -46,6 +59,12 @@ export const useTrackStore = () => {
   ]);
 
   const [reflections, setReflections] = useState<Reflection[]>([]);
+  const [oracleConfig, setOracleConfig] = useState<OracleConfig>({
+    providerUrl: '',
+    apiKey: '',
+    model: 'gpt-4o',
+  });
+  const [oracleLogs, setOracleLogs] = useState<OracleLog[]>([]);
 
   // --- ACTIONS ---
   const toggleTask = useCallback((id: string) => {
@@ -74,6 +93,20 @@ export const useTrackStore = () => {
     setReflections((prev) => [newReflection, ...prev]);
   }, []);
 
+  const updateOracleConfig = useCallback((config: OracleConfig) => {
+    setOracleConfig(config);
+  }, []);
+
+  const addOracleLog = useCallback((prompt: string, response: string) => {
+    const newLog: OracleLog = {
+      id: Date.now().toString(),
+      prompt,
+      response,
+      date: new Date().toISOString(),
+    };
+    setOracleLogs((prev) => [newLog, ...prev]);
+  }, []);
+
   // --- DERIVED STATE ---
   const stats = useMemo(() => {
     const orbitTasks = tasks.filter((t) => t.category === 'orbit');
@@ -91,9 +124,13 @@ export const useTrackStore = () => {
     voids,
     goals,
     reflections,
+    oracleConfig,
+    oracleLogs,
     toggleTask,
     engageVoid,
     addReflection,
+    updateOracleConfig,
+    addOracleLog,
     stats,
   };
 };
