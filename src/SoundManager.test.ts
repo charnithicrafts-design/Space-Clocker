@@ -7,6 +7,7 @@ import { soundManager } from '../src/utils/SoundManager';
 describe('SoundManager', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    (soundManager as any).ctx = null;
     
     // Mock AudioContext as a class
     (window as any).AudioContext = vi.fn().mockImplementation(function() {
@@ -33,6 +34,20 @@ describe('SoundManager', () => {
   it('should initialize AudioContext when sound is enabled', () => {
     soundManager.setSoundEnabled(true);
     soundManager.playPop();
+    expect(window.AudioContext).toHaveBeenCalled();
+  });
+
+  it('should play thud when called', () => {
+    soundManager.setSoundEnabled(true);
+    vi.clearAllMocks();
+    soundManager.playThud();
+    expect(window.AudioContext).toHaveBeenCalled();
+  });
+
+  it('should play swell when called', () => {
+    soundManager.setSoundEnabled(true);
+    vi.clearAllMocks();
+    soundManager.playSwell();
     expect(window.AudioContext).toHaveBeenCalled();
   });
 

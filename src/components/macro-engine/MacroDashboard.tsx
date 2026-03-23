@@ -9,8 +9,10 @@ interface MacroDashboardProps {
 
 const MacroDashboard: React.FC<MacroDashboardProps> = ({ goals }) => {
   return (
-    <aside className="lg:col-span-4 space-y-6">
-      <h3 className="text-sm font-black tracking-[0.2em] text-on-surface-variant uppercase ml-1">Ambition Tracker</h3>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-black tracking-[0.2em] text-on-surface-variant uppercase ml-1">Ambition Tracker</h3>
+      </div>
       
       {goals.map((goal) => (
         <motion.div
@@ -75,7 +77,7 @@ const MacroDashboard: React.FC<MacroDashboardProps> = ({ goals }) => {
         </div>
         <span className="text-[10px] font-black tracking-[0.2em] uppercase">Initialize New Goal</span>
       </motion.div>
-    </aside>
+    </div>
   );
 };
 

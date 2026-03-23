@@ -14,18 +14,40 @@ export interface Goal {
   targetDate: string;
 }
 
+export interface Void {
+  id: string;
+  title: string;
+  engagedCount: number;
+  maxAllowed: number;
+}
+
+export interface Reflection {
+  id: string;
+  content: string;
+  date: string;
+  type: 'missed-task' | 'void-engaged' | 'daily-summary';
+}
+
 export const useTrackStore = () => {
+  // --- STATE ---
   const [tasks, setTasks] = useState<Task[]>([
     { id: '1', title: 'Implement 3 Quantum Gates', completed: false, category: 'orbit' },
     { id: '2', title: 'Train 1 Neural Network model', completed: true, category: 'orbit' },
     { id: '3', title: 'Read 10 pages of Astrodynamics', completed: false, category: 'orbit' },
-    { id: '4', title: 'Doomscrolling Space News', completed: false, category: 'void' },
+  ]);
+
+  const [voids, setVoids] = useState<Void[]>([
+    { id: 'v1', title: 'Doomscrolling Space News', engagedCount: 0, maxAllowed: 3 },
+    { id: 'v2', title: 'Unplanned Debugging', engagedCount: 1, maxAllowed: 2 },
   ]);
 
   const [goals] = useState<Goal[]>([
     { id: 'g1', title: 'Lead Scientist at ISRO/NASA', progress: 42, targetDate: '2027' },
   ]);
 
+  const [reflections, setReflections] = useState<Reflection[]>([]);
+
+  // --- ACTIONS ---
   const toggleTask = useCallback((id: string) => {
     setTasks((prev) =>
       prev.map((task) =>
@@ -34,6 +56,25 @@ export const useTrackStore = () => {
     );
   }, []);
 
+  const engageVoid = useCallback((id: string) => {
+    setVoids((prev) =>
+      prev.map((v) =>
+        v.id === id ? { ...v, engagedCount: v.engagedCount + 1 } : v
+      )
+    );
+  }, []);
+
+  const addReflection = useCallback((content: string, type: Reflection['type']) => {
+    const newReflection: Reflection = {
+      id: Date.now().toString(),
+      content,
+      date: new Date().toISOString(),
+      type,
+    };
+    setReflections((prev) => [newReflection, ...prev]);
+  }, []);
+
+  // --- DERIVED STATE ---
   const stats = useMemo(() => {
     const orbitTasks = tasks.filter((t) => t.category === 'orbit');
     const completedOrbit = orbitTasks.filter((t) => t.completed).length;
@@ -41,13 +82,18 @@ export const useTrackStore = () => {
       orbitProgress: orbitTasks.length > 0 ? (completedOrbit / orbitTasks.length) * 100 : 0,
       totalOrbit: orbitTasks.length,
       completedOrbit,
+      totalVoidsEngaged: voids.reduce((acc, v) => acc + v.engagedCount, 0),
     };
-  }, [tasks]);
+  }, [tasks, voids]);
 
   return {
     tasks,
+    voids,
     goals,
+    reflections,
     toggleTask,
+    engageVoid,
+    addReflection,
     stats,
   };
 };
