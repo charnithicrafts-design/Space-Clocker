@@ -102,13 +102,13 @@ function Header({ onOpenSettings }: { onOpenSettings: () => void }) {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-surface-high border border-outline-variant/30 flex items-center justify-center overflow-hidden">
             <img 
-              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=1d2026" 
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=Valentina&backgroundColor=1d2026" 
               alt="User Avatar" 
               className="w-full h-full object-cover"
             />
           </div>
           <h1 className="font-display font-bold text-lg text-primary-container tracking-tight">
-            Orbit Level 42
+            Nithya | MCA
           </h1>
         </div>
         <div className="flex items-center gap-2">
@@ -176,8 +176,8 @@ function DashboardScreen() {
         <motion.div whileHover={{ scale: 1.02 }} className="glass-panel p-6 rounded-2xl border border-white/5 relative overflow-hidden group">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h4 className="font-display text-lg font-bold text-primary mb-1">Neural Interface v2</h4>
-              <span className="font-sans text-[10px] text-on-surface-variant uppercase tracking-widest">Project: Deep Core</span>
+              <h4 className="font-display text-lg font-bold text-primary mb-1">Quantum-ML Navigation</h4>
+              <span className="font-sans text-[10px] text-on-surface-variant uppercase tracking-widest">Project: ISRO Hackathon</span>
             </div>
             <div className="w-12 h-12 rounded-full border-2 border-tertiary-container/30 flex items-center justify-center bg-tertiary-container/5 shadow-[0_0_15px_rgba(67,243,222,0.2)]">
               <span className="font-display font-bold text-tertiary-container text-xs">72%</span>
@@ -185,7 +185,7 @@ function DashboardScreen() {
           </div>
           <div className="space-y-2">
             <div className="flex justify-between items-center text-[10px] font-sans text-on-surface-variant/80 uppercase tracking-tighter">
-              <span>Current Phase: Synaptic Bridge</span>
+              <span>Current Phase: Tensor Optimization</span>
               <span>08 / 12 Segments</span>
             </div>
             <div className="h-2 w-full bg-surface-lowest rounded-full overflow-hidden">
@@ -198,8 +198,8 @@ function DashboardScreen() {
         <motion.div whileHover={{ scale: 1.02 }} className="glass-panel p-6 rounded-2xl border border-white/5 relative overflow-hidden group">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h4 className="font-display text-lg font-bold text-secondary mb-1">Aether Colony Beta</h4>
-              <span className="font-sans text-[10px] text-on-surface-variant uppercase tracking-widest">Expansion: Quadrant 7</span>
+              <h4 className="font-display text-lg font-bold text-secondary mb-1">NASA Internship Prep</h4>
+              <span className="font-sans text-[10px] text-on-surface-variant uppercase tracking-widest">Focus: Astrodynamics</span>
             </div>
             <div className="w-12 h-12 rounded-full border-2 border-secondary/30 flex items-center justify-center bg-secondary/5 shadow-[0_0_15px_rgba(218,185,255,0.2)]">
               <span className="font-display font-bold text-secondary text-xs">38%</span>
@@ -207,7 +207,7 @@ function DashboardScreen() {
           </div>
           <div className="space-y-2">
             <div className="flex justify-between items-center text-[10px] font-sans text-on-surface-variant/80 uppercase tracking-tighter">
-              <span>Atmospheric Scrubber Grid</span>
+              <span>Orbital Mechanics Review</span>
               <span>Milestone Reach: Near</span>
             </div>
             <div className="h-2 w-full bg-surface-lowest rounded-full overflow-hidden">
@@ -233,10 +233,10 @@ function DashboardScreen() {
       <div className="bg-surface-low rounded-2xl p-6 border border-white/5">
         <div className="flex items-center gap-3 mb-3">
           <ShieldAlert className="w-5 h-5 text-error" />
-          <h4 className="font-display font-bold text-on-surface">System Anomaly</h4>
+          <h4 className="font-display font-bold text-on-surface">Simulation Anomaly</h4>
         </div>
         <p className="text-sm text-on-surface-variant leading-relaxed">
-          Quadrant 7 reported a slight drop in oxygen stabilization. Automated drones dispatched for inspection.
+          Quantum state coherence dropped during the last ML training run. Automated debugging scripts dispatched for inspection.
         </p>
         <button className="mt-4 font-sans text-xs font-bold text-primary-container uppercase tracking-[0.2em] flex items-center gap-2 hover:opacity-80 transition-opacity">
           View Diagnostics <span className="text-lg leading-none">›</span>
@@ -251,8 +251,8 @@ function DashboardScreen() {
    ========================================= */
 function NebulaScreen() {
   const [tasks, setTasks] = useState([
-    { id: 1, title: 'Life Support Calibration', completed: true },
-    { id: 2, title: 'Biometric Dome Shielding', completed: false },
+    { id: 1, title: 'Review Orbital Mechanics', completed: true },
+    { id: 2, title: 'Complete ML Certification', completed: false },
   ]);
 
   const toggleTask = (id: number) => {
@@ -277,7 +277,7 @@ function NebulaScreen() {
               <span className="inline-flex items-center px-2 py-0.5 rounded bg-primary-container/10 text-primary-container text-[10px] font-bold tracking-widest uppercase mb-2">
                 Priority Zero
               </span>
-              <h3 className="font-display text-xl font-bold text-on-surface">Interstellar Colony Alpha</h3>
+              <h3 className="font-display text-xl font-bold text-on-surface">ISRO Scientist 'SC' Exam</h3>
             </div>
             <div className="w-12 h-12 flex items-center justify-center rounded-full bg-tertiary-container/10 relative">
               <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 48 48">
@@ -326,7 +326,7 @@ function NebulaScreen() {
               <BrainCircuit className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-display text-lg font-bold text-on-surface">Neural Link Optimization</h3>
+              <h3 className="font-display text-lg font-bold text-on-surface">MCA Final Year Thesis</h3>
               <p className="text-xs text-on-surface-variant">12 Sub-goals • 4 Pending</p>
             </div>
           </div>
@@ -339,7 +339,7 @@ function NebulaScreen() {
               <Telescope className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-display text-lg font-bold text-on-surface">Deep Void Expedition</h3>
+              <h3 className="font-display text-lg font-bold text-on-surface">Quantum Computing Research</h3>
               <p className="text-xs text-on-surface-variant">3 Sub-goals • Not Started</p>
             </div>
           </div>
@@ -350,7 +350,7 @@ function NebulaScreen() {
         <div className="grid grid-cols-2 gap-4 pt-2">
           <div className="bg-gradient-to-br from-secondary/20 to-surface-high p-4 rounded-xl aspect-square flex flex-col justify-end border border-secondary/10">
             <Cpu className="w-6 h-6 text-secondary mb-2" />
-            <p className="font-display font-bold text-on-surface leading-tight">Compute<br/>Relay</p>
+            <p className="font-display font-bold text-on-surface leading-tight">Quantum<br/>State</p>
             <div className="mt-3 w-full h-1 bg-surface-lowest rounded-full overflow-hidden">
               <div className="bg-secondary h-full w-2/3" />
             </div>
@@ -359,7 +359,7 @@ function NebulaScreen() {
             <p className="text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant">Next Milestone</p>
             <div>
               <p className="text-xs text-tertiary-fixed font-medium mb-1">In 4 hours</p>
-              <p className="font-display font-bold text-on-surface text-lg leading-tight">System Sync</p>
+              <p className="font-display font-bold text-on-surface text-lg leading-tight">Thesis Draft</p>
             </div>
           </div>
         </div>
@@ -390,7 +390,7 @@ function Hero() {
         Current Trajectory
       </p>
       <h2 className="font-display text-5xl font-black text-primary leading-[1.1] tracking-tighter">
-        Solar Focused<br />Protocol
+        Deep Space<br />Protocol
       </h2>
       <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary-container/10 blur-[60px] rounded-full pointer-events-none" />
     </section>
@@ -434,9 +434,9 @@ function StatsGrid({ onLevelUp }: { onLevelUp: () => void }) {
 
 function TasksList({ onMissedTask }: { onMissedTask: () => void }) {
   const [tasks, setTasks] = useState([
-    { id: 1, time: '09:00 AM', title: 'Calibrate Engine Array', completed: true },
-    { id: 2, time: '11:30 AM', title: 'Atmospheric Re-entry Scan', completed: false },
-    { id: 3, time: '02:00 PM', title: 'Sync Galactic Logbook', completed: false },
+    { id: 1, time: '09:00 AM', title: 'Attend Advanced ML Lecture', completed: true },
+    { id: 2, time: '11:30 AM', title: 'Solve 5 Quantum Algorithms', completed: false },
+    { id: 3, time: '02:00 PM', title: 'Draft ISRO Application Essay', completed: false },
   ]);
 
   const toggleTask = (id: number) => {
@@ -533,13 +533,13 @@ function VoidProtocol() {
       </div>
       
       <ul className="space-y-6">
-        <NotToDoItem title="System Overclocking" desc="Avoid manual override during stabilization windows." onClick={handleNotToDoClick} />
-        <NotToDoItem title="Nebula Distractions" desc="Communication silence enforced during FTL travel." onClick={handleNotToDoClick} />
+        <NotToDoItem title="Doomscrolling" desc="Avoid infinite scrolling during deep study windows." onClick={handleNotToDoClick} />
+        <NotToDoItem title="Context Switching" desc="Communication silence enforced during thesis writing." onClick={handleNotToDoClick} />
         <li className="flex items-start gap-4 opacity-40">
           <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-outline-variant flex-shrink-0" />
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-on-surface">Reactive Comms</span>
-            <span className="text-xs text-on-surface-variant mt-0.5 leading-relaxed">No transmission until core tasks are archived.</span>
+            <span className="text-sm font-medium text-on-surface">Unplanned Debugging</span>
+            <span className="text-xs text-on-surface-variant mt-0.5 leading-relaxed">No coding until the mathematical model is verified.</span>
           </div>
         </li>
       </ul>
@@ -669,10 +669,10 @@ function VoidScreen() {
 
         {/* Labels */}
         <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-primary-container whitespace-nowrap">Data Structures</div>
-        <div className="absolute top-1/4 -right-8 text-[10px] font-bold text-primary-container text-right leading-tight">Systems<br/>Design</div>
-        <div className="absolute bottom-1/4 -right-8 text-[10px] font-bold text-secondary text-right leading-tight">Space<br/>Science</div>
+        <div className="absolute top-1/4 -right-8 text-[10px] font-bold text-primary-container text-right leading-tight">Quantum<br/>Computing</div>
+        <div className="absolute bottom-1/4 -right-8 text-[10px] font-bold text-secondary text-right leading-tight">Orbital<br/>Mechanics</div>
         <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-secondary whitespace-nowrap">AI/ML</div>
-        <div className="absolute bottom-1/4 -left-10 text-[10px] font-bold text-primary-container leading-tight">Cybersecurity</div>
+        <div className="absolute bottom-1/4 -left-10 text-[10px] font-bold text-primary-container leading-tight">Astrophysics</div>
         <div className="absolute top-1/4 -left-8 text-[10px] font-bold text-primary-container leading-tight">Cloud<br/>Computing</div>
       </div>
 
@@ -681,11 +681,11 @@ function VoidScreen() {
         <h3 className="font-display text-lg font-bold text-on-surface mb-6">Gap Analysis & Action Plan</h3>
         
         <div className="space-y-5">
-          <SkillItem title="Data Structures & Algorithms" percent={85} desc="Strong Foundation. Focus on Advanced Graphs for Google." color="from-primary-container to-secondary" />
-          <SkillItem title="Systems Design" percent={45} desc="Critical Gap. Master Distributed Systems for Google. Review Case Studies." color="from-secondary to-secondary/50" />
-          <SkillItem title="Space Science & Orbital Mechanics" percent={30} desc="Significant Effort Needed. Study Propulsion Systems for ISRO." color="from-primary-container to-primary-container/50" />
-          <SkillItem title="AI/ML Frameworks" percent={60} desc="Good Progress. Deepen knowledge in Reinforcement Learning." color="from-secondary to-secondary/50" />
-          <SkillItem title="Cloud Infrastructure (AWS/GCP)" percent={70} desc="On Track. Acquire Professional Certification for Google." color="from-primary-container to-secondary" />
+          <SkillItem title="Data Structures & Algorithms" percent={85} desc="Strong Foundation. Focus on dynamic programming for ISRO." color="from-primary-container to-secondary" />
+          <SkillItem title="Quantum Computing" percent={45} desc="Critical Gap. Master Qiskit for NASA. Review quantum gates." color="from-secondary to-secondary/50" />
+          <SkillItem title="Orbital Mechanics" percent={30} desc="Significant Effort Needed. Study Kepler's laws and propulsion." color="from-primary-container to-primary-container/50" />
+          <SkillItem title="AI/ML Frameworks" percent={60} desc="Good Progress. Deepen knowledge in PyTorch & Neural Networks." color="from-secondary to-secondary/50" />
+          <SkillItem title="Cloud Infrastructure (AWS/GCP)" percent={70} desc="On Track. Useful for processing large astronomical datasets." color="from-primary-container to-secondary" />
         </div>
       </div>
     </div>
