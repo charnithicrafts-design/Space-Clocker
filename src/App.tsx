@@ -4,8 +4,7 @@ import Navigation from './components/layout/Navigation';
 import MomentumEngine from './components/dashboard/MomentumEngine';
 import NebulaMap from './components/nebula/NebulaMap';
 import OrbitScheduler from './components/orbit/OrbitScheduler';
-
-const Horizon = () => <div className="p-6 lg:pl-80">Horizon View</div>;
+import EventHorizon from './components/horizon/EventHorizon';
 
 const App = () => {
   return (
@@ -16,7 +15,7 @@ const App = () => {
           <Route path="/" element={<MomentumEngine />} />
           <Route path="/nebula" element={<NebulaMap />} />
           <Route path="/orbit" element={<OrbitScheduler />} />
-          <Route path="/horizon" element={<Horizon />} />
+          <Route path="/horizon" element={<EventHorizon />} />
         </Routes>
       </div>
     </Router>
