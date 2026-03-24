@@ -5,8 +5,8 @@ import { useTrackStore } from '../../store/useTrackStore';
 
 const MilestoneCard = ({ milestone }: { milestone: any }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const totalTasks = milestone.tasks.length;
-  const completedTasks = milestone.tasks.filter((t: any) => t.completed).length;
+  const totalTasks = milestone.tasks?.length || 0;
+  const completedTasks = milestone.tasks?.filter((t: any) => t.completed).length || 0;
 
   return (
     <div className="glass-panel border border-outline-variant rounded-2xl overflow-hidden mb-3">
@@ -23,23 +23,21 @@ const MilestoneCard = ({ milestone }: { milestone: any }) => {
             <ChevronDown size={20} className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </div>
       </div>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div 
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="px-4 pb-4 space-y-2"
-          >
-            {milestone.tasks.map((task: any) => (
-              <div key={task.id} className="flex items-center gap-2 py-2 border-t border-surface-high text-sm">
-                {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} className="text-on-surface-variant" />}
-                <span className={task.completed ? "line-through text-on-surface-variant" : "text-white"}>{task.title}</span>
-              </div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          className="px-4 pb-4 space-y-2 border-t border-surface-high"
+        >
+          {milestone.tasks.map((task: any) => (
+            <div key={task.id} className="flex items-center gap-2 py-2 text-sm">
+              {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} className="text-on-surface-variant" />}
+              <span className={task.completed ? "line-through text-on-surface-variant" : "text-white"}>{task.title}</span>
+            </div>
+          ))}
+        </motion.div>
+      )}
     </div>
   );
 };
@@ -57,10 +55,8 @@ const NebulaMap = () => {
       
       {ambitions.map((goal) => (
         <div key={goal.id} className="mb-12">
-          <motion.div 
+          <div 
             className="glass-panel border-2 border-primary-container p-8 rounded-3xl mb-6 relative overflow-hidden"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
           >
             <div className="flex justify-between items-start mb-6">
               <div>
@@ -71,13 +67,13 @@ const NebulaMap = () => {
                 {goal.progress}%
               </div>
             </div>
-          </motion.div>
-
-          <section className="space-y-4">
-            {(goal.milestones || []).map((m) => (
-              <MilestoneCard key={m.id} milestone={m} />
-            ))}
-          </section>
+            
+            <section className="mt-6">
+              {(goal.milestones || []).map((m) => (
+                <MilestoneCard key={m.id} milestone={m} />
+              ))}
+            </section>
+          </div>
         </div>
       ))}
     </div>
