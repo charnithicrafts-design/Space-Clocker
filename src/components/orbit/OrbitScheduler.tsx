@@ -2,7 +2,7 @@ import React, { useMemo, useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
-import { Plus } from 'lucide-react';
+import { Plus, Edit2 } from 'lucide-react';
 
 const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
   <div className="fixed bottom-24 right-8 w-24 h-24">
@@ -20,7 +20,7 @@ const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
 ));
 
 const OrbitScheduler = () => {
-  const { tasks, toggleTask, addTask } = useTrackStore();
+  const { tasks, toggleTask, addTask, updateTask, ambitions } = useTrackStore();
   const [newTask, setNewTask] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -32,15 +32,14 @@ const OrbitScheduler = () => {
     setNewTask('');
   };
 
+  const handleTimeChange = (id: string, time: string) => {
+    updateTask(id, { time });
+  };
+
   const completionPercentage = useMemo(() => {
     if (tasks.length === 0) return 0;
     return (tasks.filter(t => t.completed).length / tasks.length) * 100;
   }, [tasks]);
-
-  const handleToggle = useCallback((id: string) => {
-    SoundManager.playPop();
-    toggleTask(id);
-  }, [toggleTask]);
 
   return (
     <div className="p-6 lg:pl-80 space-y-8">
@@ -60,12 +59,14 @@ const OrbitScheduler = () => {
         {tasks.map((task) => (
           <motion.div 
             key={task.id}
-            className={`glass-panel border p-4 rounded-xl flex items-center gap-6 ${task.isVoid ? 'border-error/30 hover:border-error' : 'border-outline-variant'}`}
-            whileHover={task.isVoid ? { x: [0, -5, 5, -5, 0] } : {}}
-            onClick={() => handleToggle(task.id)}
+            className={`glass-panel border p-4 rounded-xl flex items-center gap-4 ${task.isVoid ? 'border-error/30' : 'border-outline-variant'}`}
           >
-            <span className="font-mono text-primary-container text-sm w-12">{task.time}</span>
-            <span className={`flex-1 ${task.completed ? 'line-through opacity-50' : ''}`}>
+            <input 
+              className="font-mono bg-transparent text-primary-container text-sm w-16 focus:outline-none"
+              value={task.time}
+              onChange={(e) => handleTimeChange(task.id, e.target.value)}
+            />
+            <span className={`flex-1 ${task.completed ? 'line-through opacity-50' : ''}`} onClick={() => toggleTask(task.id)}>
               {task.title}
             </span>
           </motion.div>
