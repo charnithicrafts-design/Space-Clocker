@@ -69,7 +69,7 @@ const NebulaMap = () => {
           </motion.div>
 
           <section className="space-y-4">
-            {goal.milestones.map((m) => (
+            {(goal.milestones || []).map((m) => (
               <MilestoneCard key={m.id} milestone={m} />
             ))}
           </section>
