@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import InternshipScheduler from './InternshipScheduler';
 
 type Horizon = 'daily' | 'weekly' | 'yearly';
 
@@ -28,13 +28,16 @@ const CalendarShell = () => {
         <TimeHorizonPicker active={horizon} onChange={setHorizon} />
       </header>
 
-      <div className="glass-panel border border-outline-variant p-8 rounded-3xl min-h-[400px] flex items-center justify-center">
-        <div className="text-on-surface-variant">
-          {horizon === 'daily' && "Daily Focus Protocol active."}
-          {horizon === 'weekly' && "Resonance Matrix visualization (Coming Soon)"}
-          {horizon === 'yearly' && "Stellar Path timeline (Coming Soon)"}
+      {horizon === 'yearly' ? (
+        <InternshipScheduler />
+      ) : (
+        <div className="glass-panel border border-outline-variant p-8 rounded-3xl min-h-[400px] flex items-center justify-center">
+          <div className="text-on-surface-variant">
+            {horizon === 'daily' && "Daily Focus Protocol active."}
+            {horizon === 'weekly' && "Resonance Matrix visualization (Coming Soon)"}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
