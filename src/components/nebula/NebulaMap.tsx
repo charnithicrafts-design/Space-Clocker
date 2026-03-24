@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, ChevronDown, CheckCircle, Circle, ChevronRight } from 'lucide-react';
+import { ChevronDown, CheckCircle, Circle, Zap } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 
 const MilestoneCard = ({ milestone }: { milestone: any }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const totalTasks = milestone.tasks.length;
+  const completedTasks = milestone.tasks.filter((t: any) => t.completed).length;
 
   return (
     <div className="glass-panel border border-outline-variant rounded-2xl overflow-hidden mb-3">
@@ -14,9 +16,12 @@ const MilestoneCard = ({ milestone }: { milestone: any }) => {
       >
         <div className="flex items-center gap-3">
           <div className={`w-3 h-3 rounded-full ${milestone.status === 'completed' ? 'bg-primary-container' : 'bg-surface-high'}`} />
-          <span className="font-bold">{milestone.title}</span>
+          <span className="font-bold text-white">{milestone.title}</span>
         </div>
-        <ChevronDown size={20} className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <div className="flex items-center gap-4">
+            <span className="text-sm font-mono text-secondary">{completedTasks.toString().padStart(2, '0')}/{totalTasks.toString().padStart(2, '0')}</span>
+            <ChevronDown size={20} className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        </div>
       </div>
       <AnimatePresence>
         {isOpen && (
@@ -28,8 +33,8 @@ const MilestoneCard = ({ milestone }: { milestone: any }) => {
           >
             {milestone.tasks.map((task: any) => (
               <div key={task.id} className="flex items-center gap-2 py-2 border-t border-surface-high text-sm">
-                {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} />}
-                <span>{task.title}</span>
+                {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} className="text-on-surface-variant" />}
+                <span className={task.completed ? "line-through text-on-surface-variant" : "text-white"}>{task.title}</span>
               </div>
             ))}
           </motion.div>
