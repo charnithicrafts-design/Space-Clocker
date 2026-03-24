@@ -2,7 +2,7 @@ import React, { useMemo, useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
-import { Plus, Edit2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 
 const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
   <div className="fixed bottom-24 right-8 w-24 h-24">
@@ -20,7 +20,7 @@ const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
 ));
 
 const OrbitScheduler = () => {
-  const { tasks, toggleTask, addTask, updateTask, ambitions } = useTrackStore();
+  const { tasks, toggleTask, addTask, updateTask, deleteTask } = useTrackStore();
   const [newTask, setNewTask] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -35,6 +35,11 @@ const OrbitScheduler = () => {
   const handleTimeChange = (id: string, time: string) => {
     updateTask(id, { time });
   };
+
+  const handleDelete = useCallback((id: string) => {
+    SoundManager.playThud();
+    deleteTask(id);
+  }, [deleteTask]);
 
   const completionPercentage = useMemo(() => {
     if (tasks.length === 0) return 0;
@@ -52,7 +57,7 @@ const OrbitScheduler = () => {
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
         />
-        <button className="p-3 bg-primary-container text-on-primary rounded-xl"><Plus /></button>
+        <button aria-label="Add task" className="p-3 bg-primary-container text-on-primary rounded-xl"><Plus /></button>
       </form>
 
       <section className="space-y-4">
@@ -62,13 +67,16 @@ const OrbitScheduler = () => {
             className={`glass-panel border p-4 rounded-xl flex items-center gap-4 ${task.isVoid ? 'border-error/30' : 'border-outline-variant'}`}
           >
             <input 
-              className="font-mono bg-transparent text-primary-container text-sm w-16 focus:outline-none"
+              className="font-mono bg-transparent text-primary-container text-sm w-16 focus:outline-none focus:bg-surface-high p-1 rounded"
               value={task.time}
               onChange={(e) => handleTimeChange(task.id, e.target.value)}
             />
-            <span className={`flex-1 ${task.completed ? 'line-through opacity-50' : ''}`} onClick={() => toggleTask(task.id)}>
+            <span className={`flex-1 cursor-pointer ${task.completed ? 'line-through opacity-50' : ''}`} onClick={() => toggleTask(task.id)}>
               {task.title}
             </span>
+            <button aria-label="Delete task" onClick={() => handleDelete(task.id)} className="text-on-surface-variant hover:text-error transition-colors">
+              <Trash2 size={18} />
+            </button>
           </motion.div>
         ))}
       </section>

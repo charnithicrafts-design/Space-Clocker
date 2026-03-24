@@ -105,7 +105,11 @@ export const useTrackStore = create<TrackStore>()(
       addTask: (time: string, title: string, ambitionId?: string) => set((state) => ({
         tasks: [...state.tasks, { id: Date.now().toString(), time, title, completed: false, horizon: 'daily', plannedDate: new Date().toISOString() }]
       })),
+      deleteTask: (taskId: string) => set((state) => ({
+        tasks: state.tasks.filter((t) => t.id !== taskId)
+      })),
       updateTask: (taskId, updates) => set((state) => ({
+
         tasks: state.tasks.map((t) => t.id === taskId ? { ...t, ...updates } : t)
       })),
       toggleTask: (taskId: string) => set((state) => ({
