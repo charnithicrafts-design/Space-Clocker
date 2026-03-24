@@ -21,22 +21,40 @@ interface Profile {
   title: string;
 }
 
+interface Task {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+interface Milestone {
+  id: string;
+  title: string;
+  tasks: Task[];
+  status: 'pending' | 'active' | 'completed';
+}
+
 interface Ambition {
   id: string;
   title: string;
   progress: number;
-  plannedDate?: string;
+  milestones: Milestone[];
   horizon: 'daily' | 'weekly' | 'yearly';
 }
 
-interface Task {
-  id: string;
-  time: string;
-  title: string;
-  completed: boolean;
-  isVoid?: boolean;
-  plannedDate?: string;
-  horizon: 'daily' | 'weekly' | 'yearly';
+interface TrackStore {
+  profile: Profile;
+  ambitions: Ambition[];
+  tasks: Task[];
+  voids: VoidTask[];
+  reflections: Reflection[];
+  internships: InternshipPeriod[];
+  addAmbition: (title: string) => void;
+  addTask: (time: string, title: string, ambitionId?: string) => void;
+  updateTask: (taskId: string, updates: Partial<Task>) => void;
+  toggleTask: (taskId: string) => void;
+  addReflection: (content: string, type: Reflection['type']) => void;
+  addInternship: (internship: InternshipPeriod) => void;
 }
 
 // ... update initial state with horizon properties ...
