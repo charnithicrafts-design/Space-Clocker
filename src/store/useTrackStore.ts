@@ -12,7 +12,30 @@ interface Task {
   completed: boolean;
 }
 
-interface Void {
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+interface Profile {
+  name: string;
+  level: number;
+  title: string;
+}
+
+interface Ambition {
+  id: string;
+  title: string;
+  progress: number;
+}
+
+interface Task {
+  id: string;
+  time: string;
+  title: string;
+  completed: boolean;
+  isVoid?: boolean;
+}
+
+interface VoidTask {
   id: string;
   text: string;
   impact: 'low' | 'medium' | 'high';
@@ -25,48 +48,45 @@ interface Reflection {
   date: string;
   content: string;
   type: 'missed-task' | 'void-engaged' | 'daily-summary';
-  relatedId?: string;
 }
 
 interface TrackStore {
+  profile: Profile;
   ambitions: Ambition[];
   tasks: Task[];
-  voids: Void[];
+  voids: VoidTask[];
   reflections: Reflection[];
   toggleTask: (taskId: string) => void;
-  updateAmbitionProgress: (id: string, amount: number) => void;
-  addVoid: (text: string, impact: 'low' | 'medium' | 'high', maxAllowed: number) => void;
-  engageVoid: (id: string) => void;
-  addReflection: (content: string, type: Reflection['type'], relatedId?: string) => void;
+  addReflection: (content: string, type: Reflection['type']) => void;
 }
 
-export const useTrackStore = create<TrackStore>((set) => ({
-  ambitions: [
-    { id: '1', title: 'Lead Scientist at ISRO/NASA by 2027', progress: 42 }
-  ],
-  tasks: [
-    { id: '1', title: 'Implement 3 Quantum Gates', completed: false },
-    { id: '2', title: 'Train 1 Neural Network model', completed: false },
-    { id: '3', title: 'Read 10 pages of Astrodynamics', completed: false }
-  ],
-  voids: [
-    { id: '1', text: 'Doomscrolling Space News', impact: 'medium', engagedCount: 0, maxAllowed: 3 },
-    { id: '2', text: 'Unplanned Debugging', impact: 'high', engagedCount: 0, maxAllowed: 2 }
-  ],
-  reflections: [],
-  toggleTask: (taskId) => set((state) => ({
-    tasks: state.tasks.map((t) => t.id === taskId ? { ...t, completed: !t.completed } : t)
-  })),
-  updateAmbitionProgress: (id, amount) => set((state) => ({
-    ambitions: state.ambitions.map((a) => a.id === id ? { ...a, progress: Math.min(100, a.progress + amount) } : a)
-  })),
-  addVoid: (text, impact, maxAllowed) => set((state) => ({
-    voids: [...state.voids, { id: Date.now().toString(), text, impact, engagedCount: 0, maxAllowed }]
-  })),
-  engageVoid: (id) => set((state) => ({
-    voids: state.voids.map((v) => v.id === id ? { ...v, engagedCount: v.engagedCount + 1 } : v)
-  })),
-  addReflection: (content, type, relatedId) => set((state) => ({
-    reflections: [...state.reflections, { id: Date.now().toString(), date: new Date().toISOString(), content, type, relatedId }]
-  }))
-}));
+export const useTrackStore = create<TrackStore>()(
+  persist(
+    (set) => ({
+      profile: { name: 'Valentina', level: 42, title: 'Galactic Voyager' },
+      ambitions: [
+        { id: '1', title: 'Lead Scientist at ISRO/NASA by 2027', progress: 72 },
+        { id: '2', title: 'Master Quantum-ML Algorithms', progress: 45 }
+      ],
+      tasks: [
+        { id: '1', time: '08:00', title: 'Implement 3 Quantum Gates', completed: true },
+        { id: '2', time: '10:30', title: 'Train 1 Neural Network model', completed: false },
+        { id: '3', time: '13:00', title: 'Read 10 pages of Astrodynamics', completed: false }
+      ],
+      voids: [
+        { id: '1', text: 'Doomscrolling Space News', impact: 'medium', engagedCount: 0, maxAllowed: 3 },
+        { id: '2', text: 'Unplanned Debugging', impact: 'high', engagedCount: 0, maxAllowed: 2 }
+      ],
+      reflections: [
+        { id: '1', date: new Date().toISOString(), content: 'Missed ML training session due to university lab extension. Need to adjust focus window.', type: 'missed-task' }
+      ],
+      toggleTask: (taskId) => set((state) => ({
+        tasks: state.tasks.map((t) => t.id === taskId ? { ...t, completed: !t.completed } : t)
+      })),
+      addReflection: (content, type) => set((state) => ({
+        reflections: [...state.reflections, { id: Date.now().toString(), date: new Date().toISOString(), content, type }]
+      }))
+    }),
+    { name: 'space-clocker-storage' }
+  )
+);
