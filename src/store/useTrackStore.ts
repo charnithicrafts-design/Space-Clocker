@@ -146,6 +146,31 @@ export const useTrackStore = create<TrackStore>()(
         internships: [...state.internships, internship]
       }))
     }),
-    { name: 'space-clocker-storage' }
+    { 
+      name: 'space-clocker-storage',
+      version: 1, // Bump version to force migration/reset for new data structure
+      migrate: (persistedState: any, version: number) => {
+        if (version === 0) {
+          // If version is 0 (or undefined/legacy), return the NEW initial state to force a reset
+          // This is a simple strategy for dev: reset state on schema change.
+          // In production, we might want to merge, but for this demo, a reset ensures data integrity.
+          return {
+            ...persistedState,
+            // Force reset of ambitions to ensure new milestone structure is picked up
+            ambitions: [
+              { 
+                id: '1', title: 'Interstellar Colony Alpha', progress: 64, horizon: 'yearly',
+                milestones: [
+                  { id: 'm1', title: 'Life Support Calibration', status: 'completed', tasks: [{ id: 't1', title: 'Calibrate O2 levels', completed: true }] },
+                  { id: 'm2', title: 'Biometric Dome Shielding', status: 'active', tasks: [{ id: 't2', title: 'Initialize field', completed: false }] }
+                ]
+              },
+              { id: '2', title: 'Neural Link Optimization', progress: 0, horizon: 'yearly', milestones: [] }
+            ]
+          };
+        }
+        return persistedState;
+      },
+    }
   )
 );
