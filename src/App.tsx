@@ -1,30 +1,25 @@
-import React, { useState } from 'react';
-import MissionControl from './components/layout/MissionControl';
-import OrbitScheduler from './components/micro-engine/OrbitScheduler';
-import MacroDashboard from './components/macro-engine/MacroDashboard';
-import VoidList from './components/void-protocol/VoidList';
-import ReflectionModal from './components/reflection/ReflectionModal';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navigation from './components/layout/Navigation';
+import MomentumEngine from './components/dashboard/MomentumEngine';
+import NebulaMap from './components/nebula/NebulaMap';
 
-const App: React.FC = () => {
-  const [isReflectionOpen, setIsReflectionOpen] = useState(false);
+const Orbit = () => <div className="p-6 lg:pl-80">Orbit View</div>;
+const Horizon = () => <div className="p-6 lg:pl-80">Horizon View</div>;
 
+const App = () => {
   return (
-    <MissionControl>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <MacroDashboard />
-        <OrbitScheduler />
-        <div className="md:col-span-2">
-          <VoidList />
-        </div>
-        <button 
-          onClick={() => setIsReflectionOpen(true)}
-          className="fixed bottom-6 right-6 p-4 rounded-full bg-primary-container text-on-primary shadow-lg"
-        >
-          Reflect
-        </button>
+    <Router>
+      <div className="min-h-screen bg-surface-lowest text-on-surface">
+        <Navigation />
+        <Routes>
+          <Route path="/" element={<MomentumEngine />} />
+          <Route path="/nebula" element={<NebulaMap />} />
+          <Route path="/orbit" element={<Orbit />} />
+          <Route path="/horizon" element={<Horizon />} />
+        </Routes>
       </div>
-      <ReflectionModal isOpen={isReflectionOpen} onClose={() => setIsReflectionOpen(false)} />
-    </MissionControl>
+    </Router>
   );
 };
 
