@@ -80,13 +80,20 @@ export const useTrackStore = create<TrackStore>()(
       reflections: [
         { id: '1', date: new Date().toISOString(), content: 'Missed ML training session due to university lab extension. Need to adjust focus window.', type: 'missed-task' }
       ],
-      toggleTask: (taskId) => set((state) => ({
+      addAmbition: (title: string) => set((state) => ({
+        ambitions: [...state.ambitions, { id: Date.now().toString(), title, progress: 0 }]
+      })),
+      addTask: (time: string, title: string) => set((state) => ({
+        tasks: [...state.tasks, { id: Date.now().toString(), time, title, completed: false }]
+      })),
+      toggleTask: (taskId: string) => set((state) => ({
         tasks: state.tasks.map((t) => t.id === taskId ? { ...t, completed: !t.completed } : t)
       })),
-      addReflection: (content, type) => set((state) => ({
+      addReflection: (content: string, type: Reflection['type']) => set((state) => ({
         reflections: [...state.reflections, { id: Date.now().toString(), date: new Date().toISOString(), content, type }]
       }))
-    }),
+      }));
+
     { name: 'space-clocker-storage' }
   )
 );

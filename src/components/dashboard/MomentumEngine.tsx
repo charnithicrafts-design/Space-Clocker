@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
+import { SoundManager } from '../../utils/SoundManager';
 
 const MomentumEngine = () => {
-  const { profile, ambitions } = useTrackStore();
+  const { profile, ambitions, addAmbition } = useTrackStore();
+  const [newAmbition, setNewAmbition] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAmbition.trim()) return;
+    addAmbition(newAmbition);
+    SoundManager.playPop();
+    setNewAmbition('');
+  };
 
   return (
     <div className="p-6 lg:pl-80 space-y-6">
@@ -12,19 +22,17 @@ const MomentumEngine = () => {
           <h2 className="text-on-surface-variant text-sm tracking-widest uppercase font-medium">{profile.title}</h2>
           <h1 className="text-4xl font-display font-black text-primary">LVL {profile.level}</h1>
         </div>
-        <div className="text-right">
-          <p className="text-on-surface-variant text-xs uppercase tracking-wider mb-1">Resonance Progress</p>
-          <div className="w-48 h-2 bg-surface-high rounded-full overflow-hidden">
-            <motion.div 
-              className="h-full bg-primary-container"
-              initial={{ width: 0 }}
-              animate={{ width: `${ambitions[0]?.progress || 0}%` }}
-              transition={{ duration: 1.5, ease: 'easeOut' }}
-            />
-          </div>
-          <p className="text-[10px] text-primary mt-1">Next Resonance Shift: {ambitions[0]?.progress || 0}%</p>
-        </div>
       </header>
+
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input 
+          className="flex-1 bg-surface-high p-3 rounded-xl border border-outline-variant focus:border-primary focus:outline-none"
+          placeholder="Define new ambition..."
+          value={newAmbition}
+          onChange={(e) => setNewAmbition(e.target.value)}
+        />
+        <button className="px-6 py-3 bg-primary-container text-on-primary rounded-xl font-bold">Add</button>
+      </form>
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {ambitions.map((ambition) => (

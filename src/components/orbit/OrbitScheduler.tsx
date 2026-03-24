@@ -1,7 +1,8 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
+import { Plus } from 'lucide-react';
 
 const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
   <div className="fixed bottom-24 right-8 w-24 h-24">
@@ -19,7 +20,17 @@ const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
 ));
 
 const OrbitScheduler = () => {
-  const { tasks, toggleTask } = useTrackStore();
+  const { tasks, toggleTask, addTask } = useTrackStore();
+  const [newTask, setNewTask] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTask.trim()) return;
+    const time = new Date().getHours().toString().padStart(2, '0') + ':00';
+    addTask(time, newTask);
+    SoundManager.playPop();
+    setNewTask('');
+  };
 
   const completionPercentage = useMemo(() => {
     if (tasks.length === 0) return 0;
@@ -34,6 +45,16 @@ const OrbitScheduler = () => {
   return (
     <div className="p-6 lg:pl-80 space-y-8">
       <h2 className="text-on-surface-variant text-sm tracking-widest uppercase font-medium">Orbit (Daily Protocol)</h2>
+
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input 
+          className="flex-1 bg-surface-high p-3 rounded-xl border border-outline-variant focus:border-primary focus:outline-none"
+          placeholder="New task..."
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+        />
+        <button className="p-3 bg-primary-container text-on-primary rounded-xl"><Plus /></button>
+      </form>
 
       <section className="space-y-4">
         {tasks.map((task) => (
