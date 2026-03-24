@@ -36,7 +36,7 @@ const InternshipScheduler = () => {
       </form>
 
       <section className="space-y-4">
-        {internships.map((i, idx) => (
+        {(internships || []).map((i, idx) => (
           <motion.div key={idx} className="glass-panel border border-outline-variant p-4 rounded-xl flex items-center gap-4">
             <Briefcase className="text-secondary" />
             <div>
