@@ -25,6 +25,8 @@ interface Ambition {
   id: string;
   title: string;
   progress: number;
+  plannedDate?: string;
+  horizon: 'daily' | 'weekly' | 'yearly';
 }
 
 interface Task {
@@ -33,7 +35,13 @@ interface Task {
   title: string;
   completed: boolean;
   isVoid?: boolean;
+  plannedDate?: string;
+  horizon: 'daily' | 'weekly' | 'yearly';
 }
+
+// ... update initial state with horizon properties ...
+// (e.g. ambitions: [{..., horizon: 'yearly'}], tasks: [{..., horizon: 'daily'}])
+// ... and update addAmbition/addTask to accept these properties.
 
 interface VoidTask {
   id: string;
@@ -92,8 +100,7 @@ export const useTrackStore = create<TrackStore>()(
       addReflection: (content: string, type: Reflection['type']) => set((state) => ({
         reflections: [...state.reflections, { id: Date.now().toString(), date: new Date().toISOString(), content, type }]
       }))
-      }));
-
+    }),
     { name: 'space-clocker-storage' }
   )
 );
