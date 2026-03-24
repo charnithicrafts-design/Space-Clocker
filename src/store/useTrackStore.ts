@@ -102,8 +102,14 @@ export const useTrackStore = create<TrackStore>()(
     (set) => ({
       profile: { name: 'Valentina', level: 42, title: 'Galactic Voyager' },
       ambitions: [
-        { id: '1', title: 'Lead Scientist at ISRO/NASA by 2027', progress: 0, horizon: 'yearly' },
-        { id: '2', title: 'Master Quantum-ML Algorithms', progress: 0, horizon: 'yearly' }
+        { 
+          id: '1', title: 'Interstellar Colony Alpha', progress: 64, horizon: 'yearly',
+          milestones: [
+            { id: 'm1', title: 'Life Support Calibration', status: 'completed', tasks: [{ id: 't1', title: 'Calibrate O2 levels', completed: true }] },
+            { id: 'm2', title: 'Biometric Dome Shielding', status: 'active', tasks: [{ id: 't2', title: 'Initialize field', completed: false }] }
+          ]
+        },
+        { id: '2', title: 'Neural Link Optimization', progress: 0, horizon: 'yearly', milestones: [] }
       ],
       tasks: [
         { id: '1', time: '08:00', title: 'Implement 3 Quantum Gates', completed: true, horizon: 'daily' },

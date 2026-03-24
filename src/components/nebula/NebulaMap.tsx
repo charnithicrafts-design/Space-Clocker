@@ -1,7 +1,43 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { CheckCircle, Zap, ChevronDown, MoreHorizontal } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Zap, ChevronDown, CheckCircle, Circle, ChevronRight } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
+
+const MilestoneCard = ({ milestone }: { milestone: any }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="glass-panel border border-outline-variant rounded-2xl overflow-hidden mb-3">
+      <div 
+        className="p-4 flex justify-between items-center cursor-pointer hover:bg-surface-high transition-colors"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div className="flex items-center gap-3">
+          <div className={`w-3 h-3 rounded-full ${milestone.status === 'completed' ? 'bg-primary-container' : 'bg-surface-high'}`} />
+          <span className="font-bold">{milestone.title}</span>
+        </div>
+        <ChevronDown size={20} className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="px-4 pb-4 space-y-2"
+          >
+            {milestone.tasks.map((task: any) => (
+              <div key={task.id} className="flex items-center gap-2 py-2 border-t border-surface-high text-sm">
+                {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} />}
+                <span>{task.title}</span>
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const NebulaMap = () => {
   const { ambitions } = useTrackStore();
@@ -14,56 +50,31 @@ const NebulaMap = () => {
         <p className="text-on-surface-variant">Deconstruct your ambitions into stellar milestones.</p>
       </header>
       
-      {ambitions.slice(0, 1).map((goal) => (
-        <motion.div 
-          key={goal.id}
-          className="glass-panel border-2 border-primary-container p-8 rounded-3xl relative overflow-hidden"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-        >
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <span className="text-primary-container text-xs font-bold uppercase tracking-widest">Priority Zero</span>
-              <h1 className="text-2xl font-display font-bold text-white mt-1">{goal.title}</h1>
-            </div>
-            <div className="w-16 h-16 rounded-full border-2 border-primary-container flex items-center justify-center font-bold text-primary text-xl">
-              {goal.progress}%
-            </div>
-          </div>
-          
-          <div className="space-y-3">
-             <div className="flex items-center gap-3 p-4 bg-surface-high rounded-xl border border-outline-variant">
-              <div className="grid grid-cols-3 gap-1">
-                {[...Array(6)].map((_, i) => <div key={i} className="w-1 h-1 bg-white rounded-full" />)}
-              </div>
-              <span className="text-white flex-1">Life Support Calibration</span>
-              <CheckCircle className="text-primary-container" size={20} />
-            </div>
-            <div className="flex items-center gap-3 p-4 bg-surface-high rounded-xl border border-primary-container">
-              <span className="text-primary-container">=</span>
-              <span className="text-white flex-1">Biometric Dome Shielding</span>
-              <MoreHorizontal size={20} className="text-on-surface-variant" />
-            </div>
-          </div>
-        </motion.div>
-      ))}
-
-      <section className="space-y-4">
-        {ambitions.slice(1).map((sg) => (
-          <div key={sg.id} className="glass-panel border border-outline-variant p-6 rounded-2xl flex justify-between items-center hover:border-primary-container transition-colors">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-surface-high rounded-xl flex items-center justify-center text-primary-container">
-                <Zap size={24} />
-              </div>
+      {ambitions.map((goal) => (
+        <div key={goal.id} className="mb-12">
+          <motion.div 
+            className="glass-panel border-2 border-primary-container p-8 rounded-3xl mb-6 relative overflow-hidden"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+          >
+            <div className="flex justify-between items-start mb-6">
               <div>
-                <h3 className="font-bold text-white">{sg.title}</h3>
-                <p className="text-xs text-on-surface-variant">12 Sub-goals • 4 Pending</p>
+                <span className="text-primary-container text-xs font-bold uppercase tracking-widest">Priority Zero</span>
+                <h1 className="text-2xl font-display font-bold text-white mt-1">{goal.title}</h1>
+              </div>
+              <div className="w-16 h-16 rounded-full border-2 border-primary-container flex items-center justify-center font-bold text-primary text-xl">
+                {goal.progress}%
               </div>
             </div>
-            <ChevronDown className="text-on-surface-variant" />
-          </div>
-        ))}
-      </section>
+          </motion.div>
+
+          <section className="space-y-4">
+            {goal.milestones.map((m) => (
+              <MilestoneCard key={m.id} milestone={m} />
+            ))}
+          </section>
+        </div>
+      ))}
     </div>
   );
 };
