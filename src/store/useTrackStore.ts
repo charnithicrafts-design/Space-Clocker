@@ -102,6 +102,7 @@ interface TrackStore {
 
   // Oracle & Misc Actions
   updateOracleConfig: (config: Partial<OracleConfig>) => void;
+  updateProfile: (updates: Partial<Profile>) => void;
   addOracleLog: (log: string, response?: string) => void;
   engageVoid: (voidId: string) => void;
 }
@@ -232,6 +233,9 @@ export const useTrackStore = create<TrackStore>()(
       // Oracle & Misc Actions
       updateOracleConfig: (config) => set((state) => ({
         oracleConfig: { ...state.oracleConfig, ...config }
+      })),
+      updateProfile: (updates) => set((state) => ({
+        profile: { ...state.profile, ...updates }
       })),
       addOracleLog: (log, response) => set((state) => ({
         reflections: [...state.reflections, { 
