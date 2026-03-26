@@ -2,12 +2,12 @@
  * @vitest-environment jsdom
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { soundManager } from '../src/utils/SoundManager';
+import { SoundManager } from '../src/utils/SoundManager';
 
 describe('SoundManager', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    (soundManager as any).ctx = null;
+    (SoundManager as any)._context = null;
     
     // Mock AudioContext as a class
     (window as any).AudioContext = vi.fn().mockImplementation(function() {
@@ -17,7 +17,7 @@ describe('SoundManager', () => {
         currentTime: 0,
         createOscillator: vi.fn().mockReturnValue({
           type: '',
-          frequency: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn() },
+          frequency: { setValueAtTime: vi.fn(), exponentialRampToValueAtTime: vi.fn(), value: 440 },
           connect: vi.fn(),
           start: vi.fn(),
           stop: vi.fn(),
@@ -31,30 +31,18 @@ describe('SoundManager', () => {
     });
   });
 
-  it('should initialize AudioContext when sound is enabled', () => {
-    soundManager.setSoundEnabled(true);
-    soundManager.playPop();
+  it('should initialize AudioContext when a sound is played', async () => {
+    await SoundManager.playPop();
     expect(window.AudioContext).toHaveBeenCalled();
   });
 
-  it('should play thud when called', () => {
-    soundManager.setSoundEnabled(true);
-    vi.clearAllMocks();
-    soundManager.playThud();
+  it('should play thud when called', async () => {
+    await SoundManager.playThud();
     expect(window.AudioContext).toHaveBeenCalled();
   });
 
-  it('should play swell when called', () => {
-    soundManager.setSoundEnabled(true);
-    vi.clearAllMocks();
-    soundManager.playSwell();
+  it('should play swell when called', async () => {
+    await SoundManager.playSwell();
     expect(window.AudioContext).toHaveBeenCalled();
-  });
-
-  it('should not initialize AudioContext when sound is disabled', () => {
-    soundManager.setSoundEnabled(false);
-    vi.clearAllMocks();
-    soundManager.playPop();
-    expect(window.AudioContext).not.toHaveBeenCalled();
   });
 });

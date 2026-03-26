@@ -128,7 +128,7 @@ const RadarChart = ({ skills, showTarget }: { skills: any[], showTarget: boolean
   );
 };
 
-const SkillGapCard = ({ skill }: { skill: any }) => {
+const SkillGapCard = ({ skill, key }: { skill: any; key?: string }) => {
   return (
     <div className="glass-panel border border-outline-variant p-4 rounded-2xl space-y-3 hover:border-primary/50 transition-colors group">
       <div className="flex justify-between items-start">

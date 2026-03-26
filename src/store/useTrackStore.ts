@@ -61,6 +61,12 @@ export interface Skill {
   recommendation: string;
 }
 
+export interface OracleConfig {
+  apiKey: string;
+  model: string;
+  providerUrl: string;
+}
+
 interface TrackStore {
   profile: Profile;
   ambitions: Ambition[];
@@ -69,6 +75,12 @@ interface TrackStore {
   reflections: Reflection[];
   internships: InternshipPeriod[];
   skills: Skill[];
+  stats: {
+    streak: number;
+    tasksCompleted: number;
+    totalFocusHours: number;
+  };
+  oracleConfig: OracleConfig;
   
   // Actions
   addAmbition: (title: string) => void;
@@ -87,6 +99,11 @@ interface TrackStore {
 
   // Data Portability Actions
   importData: (data: Partial<TrackStore>) => void;
+
+  // Oracle & Misc Actions
+  updateOracleConfig: (config: Partial<OracleConfig>) => void;
+  addOracleLog: (log: string, response?: string) => void;
+  engageVoid: (voidId: string) => void;
 }
 
 export const useTrackStore = create<TrackStore>()(
@@ -123,6 +140,12 @@ export const useTrackStore = create<TrackStore>()(
         { id: '5', name: 'Cybersecurity', currentProficiency: 50, targetProficiency: 75, recommendation: 'Steady Progress. Focus on Network Security and Cryptography.' },
         { id: '6', name: 'Cloud Infrastructure (AWS/GCP)', currentProficiency: 70, targetProficiency: 85, recommendation: 'On Track. Acquire Professional Certification for Google.' }
       ],
+      stats: { streak: 12, tasksCompleted: 154, totalFocusHours: 420 },
+      oracleConfig: {
+        apiKey: '',
+        model: 'gemini-1.5-pro',
+        providerUrl: 'https://generativelanguage.googleapis.com/v1beta/openai'
+      },
 
       addAmbition: (title: string) => set((state) => ({
         ambitions: [...state.ambitions, { id: Date.now().toString(), title, progress: 0, horizon: 'yearly', milestones: [] }]
@@ -174,10 +197,11 @@ export const useTrackStore = create<TrackStore>()(
             if (m.id !== milestoneId) return m;
             const newTasks = m.tasks.map((t) => t.id === taskId ? { ...t, completed: !t.completed } : t);
             const allTasksCompleted = newTasks.length > 0 && newTasks.every(t => t.completed);
+            const status: Milestone['status'] = allTasksCompleted ? 'completed' : (newTasks.some(t => t.completed) ? 'active' : 'pending');
             return { 
               ...m, 
               tasks: newTasks, 
-              status: allTasksCompleted ? 'completed' : (newTasks.some(t => t.completed) ? 'active' : 'pending')
+              status
             };
           });
 
@@ -200,7 +224,25 @@ export const useTrackStore = create<TrackStore>()(
         tasks: data.tasks || state.tasks,
         voids: data.voids || state.voids,
         reflections: data.reflections || state.reflections,
-        skills: data.skills || state.skills
+        skills: data.skills || state.skills,
+        stats: data.stats || state.stats,
+        oracleConfig: data.oracleConfig || state.oracleConfig
+      })),
+
+      // Oracle & Misc Actions
+      updateOracleConfig: (config) => set((state) => ({
+        oracleConfig: { ...state.oracleConfig, ...config }
+      })),
+      addOracleLog: (log, response) => set((state) => ({
+        reflections: [...state.reflections, { 
+          id: Date.now().toString(), 
+          date: new Date().toISOString(), 
+          content: response ? `${log}\n\nOracle Response: ${response}` : log, 
+          type: 'daily-summary' 
+        }]
+      })),
+      engageVoid: (voidId) => set((state) => ({
+        voids: state.voids.map((v) => v.id === voidId ? { ...v, engagedCount: v.engagedCount + 1 } : v)
       }))
     }),
     { 

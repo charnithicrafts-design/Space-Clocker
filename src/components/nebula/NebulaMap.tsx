@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 
-const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: string }) => {
+const MilestoneCard = ({ milestone, ambitionId, key }: { milestone: any; ambitionId: string; key?: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
