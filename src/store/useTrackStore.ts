@@ -79,6 +79,14 @@ interface TrackStore {
   addReflection: (content: string, type: Reflection['type']) => void;
   addInternship: (internship: InternshipPeriod) => void;
   updateSkill: (id: string, current: number, target: number) => void;
+  
+  // Macro Engine Actions
+  addMilestone: (ambitionId: string, title: string) => void;
+  addMilestoneTask: (ambitionId: string, milestoneId: string, title: string) => void;
+  toggleMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => void;
+
+  // Data Portability Actions
+  importData: (data: Partial<TrackStore>) => void;
 }
 
 export const useTrackStore = create<TrackStore>()(
@@ -139,6 +147,60 @@ export const useTrackStore = create<TrackStore>()(
       })),
       updateSkill: (id, current, target) => set((state) => ({
         skills: state.skills.map((s) => s.id === id ? { ...s, currentProficiency: current, targetProficiency: target } : s)
+      })),
+
+      // Macro Engine Actions
+      addMilestone: (ambitionId, title) => set((state) => ({
+        ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
+          ...a,
+          milestones: [...a.milestones, { id: Date.now().toString(), title, tasks: [], status: 'pending' }]
+        } : a)
+      })),
+
+      addMilestoneTask: (ambitionId, milestoneId, title) => set((state) => ({
+        ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
+          ...a,
+          milestones: a.milestones.map((m) => m.id === milestoneId ? {
+            ...m,
+            tasks: [...m.tasks, { id: Date.now().toString(), time: '00:00', title, completed: false, horizon: 'daily' }]
+          } : m)
+        } : a)
+      })),
+
+      toggleMilestoneTask: (ambitionId, milestoneId, taskId) => set((state) => {
+        const newAmbitions = state.ambitions.map((a) => {
+          if (a.id !== ambitionId) return a;
+          const newMilestones = a.milestones.map((m) => {
+            if (m.id !== milestoneId) return m;
+            const newTasks = m.tasks.map((t) => t.id === taskId ? { ...t, completed: !t.completed } : t);
+            const allTasksCompleted = newTasks.length > 0 && newTasks.every(t => t.completed);
+            return { 
+              ...m, 
+              tasks: newTasks, 
+              status: allTasksCompleted ? 'completed' : (newTasks.some(t => t.completed) ? 'active' : 'pending')
+            };
+          });
+
+          // Recalculate Ambition Progress
+          const totalTasks = newMilestones.reduce((acc, m) => acc + m.tasks.length, 0);
+          const completedTasks = newMilestones.reduce((acc, m) => acc + m.tasks.filter(t => t.completed).length, 0);
+          const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : a.progress;
+
+          return { ...a, milestones: newMilestones, progress };
+        });
+        return { ambitions: newAmbitions };
+      }),
+
+      // Data Portability Actions
+      importData: (data) => set((state) => ({
+        ...state,
+        ...data,
+        profile: data.profile || state.profile,
+        ambitions: data.ambitions || state.ambitions,
+        tasks: data.tasks || state.tasks,
+        voids: data.voids || state.voids,
+        reflections: data.reflections || state.reflections,
+        skills: data.skills || state.skills
       }))
     }),
     { 
