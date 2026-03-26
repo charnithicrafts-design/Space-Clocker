@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send } from 'lucide-react';
+import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send, Rocket, X } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
+import { SoundManager } from '../../utils/SoundManager';
 
-const MilestoneCard = ({ milestone, ambitionId, key }: { milestone: any; ambitionId: string; key?: string }) => {
+const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -16,8 +17,14 @@ const MilestoneCard = ({ milestone, ambitionId, key }: { milestone: any; ambitio
     e.preventDefault();
     if (!newTaskTitle.trim()) return;
     addMilestoneTask(ambitionId, milestone.id, newTaskTitle);
+    SoundManager.playPop();
     setNewTaskTitle('');
     setIsAddingTask(false);
+  };
+
+  const handleToggleTask = (taskId: string) => {
+    toggleMilestoneTask(ambitionId, milestone.id, taskId);
+    SoundManager.playPop();
   };
 
   return (
@@ -47,7 +54,7 @@ const MilestoneCard = ({ milestone, ambitionId, key }: { milestone: any; ambitio
               <div 
                 key={task.id} 
                 className="flex items-center gap-2 py-2 text-sm cursor-pointer group"
-                onClick={() => toggleMilestoneTask(ambitionId, milestone.id, task.id)}
+                onClick={() => handleToggleTask(task.id)}
               >
                 {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} className="text-on-surface-variant group-hover:text-primary transition-colors" />}
                 <span className={task.completed ? "line-through text-on-surface-variant" : "text-white group-hover:text-primary-container transition-colors"}>{task.title}</span>
@@ -66,7 +73,7 @@ const MilestoneCard = ({ milestone, ambitionId, key }: { milestone: any; ambitio
               <form onSubmit={handleAddTask} className="flex gap-2 mt-2" onClick={(e) => e.stopPropagation()}>
                 <input 
                   autoFocus
-                  className="flex-1 bg-surface-high p-2 rounded-lg border border-outline-variant text-xs focus:outline-none focus:border-primary"
+                  className="flex-1 bg-surface-high p-2 rounded-lg border border-outline-variant text-xs focus:outline-none focus:border-primary text-white"
                   placeholder="Sub-task title..."
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
@@ -110,7 +117,7 @@ const ComputeRelayCard = () => (
   </div>
 );
 
-const AmbitionCard = ({ ambition, isPriority, key }: { ambition: any; isPriority?: boolean; key?: string }) => {
+const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: boolean }) => {
   const { addMilestone } = useTrackStore();
   const [isOpen, setIsOpen] = useState(isPriority || false);
   const [newMilestoneTitle, setNewMilestoneTitle] = useState('');
@@ -120,6 +127,7 @@ const AmbitionCard = ({ ambition, isPriority, key }: { ambition: any; isPriority
     e.preventDefault();
     if (!newMilestoneTitle.trim()) return;
     addMilestone(ambition.id, newMilestoneTitle);
+    SoundManager.playPop();
     setNewMilestoneTitle('');
     setIsAddingMilestone(false);
   };
@@ -127,8 +135,8 @@ const AmbitionCard = ({ ambition, isPriority, key }: { ambition: any; isPriority
   return (
     <motion.div 
       className={`glass-panel border-2 rounded-3xl mb-6 relative overflow-hidden transition-colors ${isPriority ? 'border-primary-container p-8' : 'border-outline-variant p-6 hover:border-primary/50'}`}
-      initial={isPriority ? { y: 20, opacity: 0 } : false}
-      animate={isPriority ? { y: 0, opacity: 1 } : false}
+      initial={isPriority ? { y: 20, opacity: 0 } : { opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
     >
       <div 
         className={`flex justify-between items-start cursor-pointer ${!isPriority ? 'mb-2' : 'mb-6'}`}
@@ -186,7 +194,7 @@ const AmbitionCard = ({ ambition, isPriority, key }: { ambition: any; isPriority
               <form onSubmit={handleAddMilestone} className="flex gap-2 p-2">
                 <input 
                   autoFocus
-                  className="flex-1 bg-surface-high p-3 rounded-xl border border-primary focus:outline-none text-sm"
+                  className="flex-1 bg-surface-high p-3 rounded-xl border border-primary focus:outline-none text-sm text-white"
                   placeholder="Milestone title..."
                   value={newMilestoneTitle}
                   onChange={(e) => setNewMilestoneTitle(e.target.value)}
@@ -211,26 +219,105 @@ const AmbitionCard = ({ ambition, isPriority, key }: { ambition: any; isPriority
 };
 
 const NebulaMap = () => {
-  const { ambitions } = useTrackStore();
+  const { ambitions, addAmbition } = useTrackStore();
+  const [isLaunching, setIsLaunching] = useState(false);
+  const [newAmbitionTitle, setNewAmbitionTitle] = useState('');
+
+  const handleLaunch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAmbitionTitle.trim()) return;
+    addAmbition(newAmbitionTitle);
+    SoundManager.playSwell();
+    setNewAmbitionTitle('');
+    setIsLaunching(false);
+  };
 
   return (
     <div className="p-6 lg:pl-80 space-y-8 bg-surface-lowest min-h-screen text-white pb-24">
-      <header className="mb-8">
-        <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Architect Mode</h2>
-        <h1 className="text-4xl font-display font-black text-white">The Nebula Map</h1>
-        <p className="text-on-surface-variant">Deconstruct your ambitions into stellar milestones.</p>
+      <header className="mb-8 flex justify-between items-end">
+        <div>
+          <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Architect Mode</h2>
+          <h1 className="text-4xl font-display font-black text-white">The Nebula Map</h1>
+          <p className="text-on-surface-variant">Deconstruct your ambitions into stellar milestones.</p>
+        </div>
+        
+        <AnimatePresence mode="wait">
+          {!isLaunching ? (
+            <motion.button 
+              key="launch-btn"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              onClick={() => setIsLaunching(true)}
+              className="flex items-center gap-2 bg-primary-container text-on-primary px-6 py-3 rounded-2xl font-bold hover:shadow-[0_0_20px_rgba(var(--color-primary-container-rgb),0.3)] transition-all group"
+            >
+              <Rocket size={20} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
+              <span>LAUNCH TRAJECTORY</span>
+            </motion.button>
+          ) : (
+            <motion.form 
+              key="launch-form"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              onSubmit={handleLaunch}
+              className="flex gap-2 bg-surface-high p-2 rounded-2xl border border-primary shadow-lg"
+            >
+              <input 
+                autoFocus
+                className="bg-transparent px-4 py-2 focus:outline-none text-sm w-64"
+                placeholder="Name your new ambition..."
+                value={newAmbitionTitle}
+                onChange={(e) => setNewAmbitionTitle(e.target.value)}
+              />
+              <button type="submit" className="p-2 bg-primary-container text-on-primary rounded-xl">
+                <Send size={18} />
+              </button>
+              <button 
+                type="button" 
+                onClick={() => setIsLaunching(false)}
+                className="p-2 text-on-surface-variant hover:text-white"
+              >
+                <X size={18} />
+              </button>
+            </motion.form>
+          )}
+        </AnimatePresence>
       </header>
       
-      {ambitions.slice(0, 1).map((goal) => (
-        <AmbitionCard key={goal.id} ambition={goal} isPriority />
-      ))}
+      {ambitions.length === 0 ? (
+        <div className="glass-panel border-2 border-dashed border-outline-variant rounded-[3rem] p-20 flex flex-col items-center justify-center text-center space-y-6">
+          <div className="w-24 h-24 bg-surface-high rounded-full flex items-center justify-center text-on-surface-variant opacity-20">
+            <Rocket size={48} />
+          </div>
+          <div>
+            <h2 className="text-2xl font-display font-bold text-white">No Trajectories Detected</h2>
+            <p className="text-on-surface-variant max-w-md mt-2">The nebula is quiet. Launch a new trajectory to begin architecting your path to the stars.</p>
+          </div>
+          <button 
+            onClick={() => setIsLaunching(true)}
+            className="text-primary font-bold hover:text-primary-container transition-colors flex items-center gap-2"
+          >
+            <Plus size={20} />
+            <span>INITIATE FIRST LAUNCH</span>
+          </button>
+        </div>
+      ) : (
+        <>
+          {ambitions.slice(0, 1).map((goal) => (
+            <AmbitionCard key={goal.id} ambition={goal} isPriority />
+          ))}
 
-      <div className="space-y-4">
-        <h3 className="text-on-surface-variant text-xs font-bold tracking-widest uppercase mb-4">Trajectory Fleet</h3>
-        {ambitions.slice(1).map((sg) => (
-          <AmbitionCard key={sg.id} ambition={sg} />
-        ))}
-      </div>
+          {ambitions.length > 1 && (
+            <div className="space-y-4">
+              <h3 className="text-on-surface-variant text-xs font-bold tracking-widest uppercase mb-4">Trajectory Fleet</h3>
+              {ambitions.slice(1).map((sg) => (
+                <AmbitionCard key={sg.id} ambition={sg} />
+              ))}
+            </div>
+          )}
+        </>
+      )}
 
       {/* Bottom Grid for Widgets */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6 h-48">
