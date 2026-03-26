@@ -1,12 +1,24 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu } from 'lucide-react';
+import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 
-const MilestoneCard = ({ milestone }: { milestone: any }) => {
+const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAddingTask, setIsAddingTask] = useState(false);
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const { toggleMilestoneTask, addMilestoneTask } = useTrackStore();
+  
   const totalTasks = milestone.tasks?.length || 0;
   const completedTasks = milestone.tasks?.filter((t: any) => t.completed).length || 0;
+
+  const handleAddTask = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTaskTitle.trim()) return;
+    addMilestoneTask(ambitionId, milestone.id, newTaskTitle);
+    setNewTaskTitle('');
+    setIsAddingTask(false);
+  };
 
   return (
     <div className="glass-panel border border-outline-variant rounded-2xl overflow-hidden mb-3">
@@ -15,7 +27,7 @@ const MilestoneCard = ({ milestone }: { milestone: any }) => {
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center gap-3">
-          <div className={`w-3 h-3 rounded-full ${milestone.status === 'completed' ? 'bg-primary-container' : 'bg-surface-high'}`} />
+          <div className={`w-3 h-3 rounded-full ${milestone.status === 'completed' ? 'bg-primary-container' : (milestone.status === 'active' ? 'bg-secondary' : 'bg-surface-high')}`} />
           <span className="font-bold text-white">{milestone.title}</span>
         </div>
         <div className="flex items-center gap-4">
@@ -23,21 +35,50 @@ const MilestoneCard = ({ milestone }: { milestone: any }) => {
             <ChevronDown size={20} className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </div>
       </div>
-      {isOpen && (
-        <motion.div 
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: 'auto', opacity: 1 }}
-          exit={{ height: 0, opacity: 0 }}
-          className="px-4 pb-4 space-y-2 border-t border-surface-high"
-        >
-          {milestone.tasks.map((task: any) => (
-            <div key={task.id} className="flex items-center gap-2 py-2 text-sm">
-              {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} className="text-on-surface-variant" />}
-              <span className={task.completed ? "line-through text-on-surface-variant" : "text-white"}>{task.title}</span>
-            </div>
-          ))}
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="px-4 pb-4 space-y-2 border-t border-surface-high"
+          >
+            {milestone.tasks.map((task: any) => (
+              <div 
+                key={task.id} 
+                className="flex items-center gap-2 py-2 text-sm cursor-pointer group"
+                onClick={() => toggleMilestoneTask(ambitionId, milestone.id, task.id)}
+              >
+                {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} className="text-on-surface-variant group-hover:text-primary transition-colors" />}
+                <span className={task.completed ? "line-through text-on-surface-variant" : "text-white group-hover:text-primary-container transition-colors"}>{task.title}</span>
+              </div>
+            ))}
+
+            {!isAddingTask ? (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setIsAddingTask(true); }}
+                className="flex items-center gap-2 py-2 text-xs font-bold text-primary hover:text-primary-container transition-colors mt-2"
+              >
+                <Plus size={14} />
+                <span>SPLIT INTO NEW TASK</span>
+              </button>
+            ) : (
+              <form onSubmit={handleAddTask} className="flex gap-2 mt-2" onClick={(e) => e.stopPropagation()}>
+                <input 
+                  autoFocus
+                  className="flex-1 bg-surface-high p-2 rounded-lg border border-outline-variant text-xs focus:outline-none focus:border-primary"
+                  placeholder="Sub-task title..."
+                  value={newTaskTitle}
+                  onChange={(e) => setNewTaskTitle(e.target.value)}
+                />
+                <button type="submit" className="p-2 bg-primary-container text-on-primary rounded-lg">
+                  <Send size={14} />
+                </button>
+              </form>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -70,7 +111,17 @@ const ComputeRelayCard = () => (
 );
 
 const NebulaMap = () => {
-  const { ambitions } = useTrackStore();
+  const { ambitions, addMilestone } = useTrackStore();
+  const [newMilestoneTitle, setNewMilestoneTitle] = useState('');
+  const [isAddingMilestone, setIsAddingMilestone] = useState(false);
+
+  const handleAddMilestone = (ambitionId: string) => (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newMilestoneTitle.trim()) return;
+    addMilestone(ambitionId, newMilestoneTitle);
+    setNewMilestoneTitle('');
+    setIsAddingMilestone(false);
+  };
 
   return (
     <div className="p-6 lg:pl-80 space-y-8 bg-surface-lowest min-h-screen text-white">
@@ -97,10 +148,40 @@ const NebulaMap = () => {
               </div>
             </div>
             
-            <section className="mt-6">
+            <section className="mt-6 space-y-3">
               {(goal.milestones || []).map((m) => (
-                <MilestoneCard key={m.id} milestone={m} />
+                <MilestoneCard key={m.id} milestone={m} ambitionId={goal.id} />
               ))}
+
+              {!isAddingMilestone ? (
+                <button 
+                  onClick={() => setIsAddingMilestone(true)}
+                  className="w-full glass-panel border border-dashed border-outline-variant p-4 rounded-2xl flex items-center justify-center gap-2 text-on-surface-variant hover:text-primary hover:border-primary/50 transition-colors group"
+                >
+                  <Plus size={20} className="group-hover:rotate-90 transition-transform" />
+                  <span className="font-bold tracking-tight">DECONSTRUCT INTO NEW MILESTONE</span>
+                </button>
+              ) : (
+                <form onSubmit={handleAddMilestone(goal.id)} className="flex gap-2 p-2">
+                  <input 
+                    autoFocus
+                    className="flex-1 bg-surface-high p-3 rounded-xl border border-primary focus:outline-none"
+                    placeholder="Milestone title..."
+                    value={newMilestoneTitle}
+                    onChange={(e) => setNewMilestoneTitle(e.target.value)}
+                  />
+                  <button type="submit" className="p-3 bg-primary-container text-on-primary rounded-xl">
+                    <Send size={20} />
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => setIsAddingMilestone(false)}
+                    className="p-3 text-on-surface-variant hover:text-white"
+                  >
+                    Cancel
+                  </button>
+                </form>
+              )}
             </section>
           </motion.div>
         </div>
