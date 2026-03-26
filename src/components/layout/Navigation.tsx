@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Target, CalendarDays, Brain, Telescope, Download, Upload, Settings } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 
-const NavLink = ({ to, icon: Icon, label, active }: { to: string; icon: any; label: string; active: boolean }) => (
+const NavLink = ({ to, icon: Icon, label, active, key }: { to: string; icon: any; label: string; active: boolean; key?: string }) => (
   <Link to={to} className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${active ? 'bg-surface-high text-primary' : 'text-on-surface-variant hover:text-primary hover:bg-surface-low'}`}>
     <Icon size={24} />
     <span className="hidden lg:block font-medium">{label}</span>
