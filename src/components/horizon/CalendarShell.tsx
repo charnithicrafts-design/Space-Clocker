@@ -24,7 +24,7 @@ const CalendarShell = () => {
   return (
     <div className="p-6 lg:pl-80 space-y-8">
       <header className="flex justify-between items-center">
-        <h2 className="text-on-surface-variant text-sm tracking-widest uppercase font-medium">Stellar Timeline</h2>
+        <h2 className="text-on-surface-variant text-sm tracking-widest uppercase font-medium">Stellar Timeline Tracker</h2>
         <TimeHorizonPicker active={horizon} onChange={setHorizon} />
       </header>
 

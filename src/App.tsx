@@ -5,6 +5,7 @@ import MomentumEngine from './components/dashboard/MomentumEngine';
 import NebulaMap from './components/nebula/NebulaMap';
 import OrbitScheduler from './components/orbit/OrbitScheduler';
 import CalendarShell from './components/horizon/CalendarShell';
+import EventHorizon from './components/horizon/EventHorizon';
 import SkillsMatrix from './components/skills/SkillsMatrix';
 import SettingsDashboard from './components/settings/SettingsDashboard';
 
@@ -17,7 +18,8 @@ const App = () => {
           <Route path="/" element={<MomentumEngine />} />
           <Route path="/nebula" element={<NebulaMap />} />
           <Route path="/orbit" element={<OrbitScheduler />} />
-          <Route path="/horizon" element={<CalendarShell />} />
+          <Route path="/timeline" element={<CalendarShell />} />
+          <Route path="/horizon" element={<EventHorizon />} />
           <Route path="/skills" element={<SkillsMatrix />} />
           <Route path="/settings" element={<SettingsDashboard />} />
         </Routes>

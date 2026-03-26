@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Target, CalendarDays, Brain, Telescope, Settings } from 'lucide-react';
+import { LayoutDashboard, Target, Clock, Brain, Telescope, Settings, CalendarDays } from 'lucide-react';
 
-const NavLink = ({ to, icon: Icon, label, active, key }: { to: string; icon: any; label: string; active: boolean; key?: string }) => (
+const NavLink = ({ to, icon: Icon, label, active }: { to: string; icon: any; label: string; active: boolean }) => (
   <Link to={to} className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${active ? 'bg-surface-high text-primary' : 'text-on-surface-variant hover:text-primary hover:bg-surface-low'}`}>
     <Icon size={24} />
     <span className="hidden lg:block font-medium">{label}</span>
@@ -15,10 +15,10 @@ const Navigation = () => {
   const links = [
     { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/nebula', icon: Target, label: 'Nebula' },
-    { to: '/orbit', icon: CalendarDays, label: 'Orbit' },
+    { to: '/orbit', icon: Clock, label: 'Orbit' },
+    { to: '/timeline', icon: CalendarDays, label: 'Timeline' },
     { to: '/skills', icon: Brain, label: 'Skills' },
     { to: '/horizon', icon: Telescope, label: 'Horizon' },
-    { to: '/settings', icon: Settings, label: 'Settings' },
   ];
 
   return (
