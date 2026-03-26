@@ -5,6 +5,7 @@ import MomentumEngine from './components/dashboard/MomentumEngine';
 import NebulaMap from './components/nebula/NebulaMap';
 import OrbitScheduler from './components/orbit/OrbitScheduler';
 import CalendarShell from './components/horizon/CalendarShell';
+import SkillsMatrix from './components/skills/SkillsMatrix';
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/nebula" element={<NebulaMap />} />
           <Route path="/orbit" element={<OrbitScheduler />} />
           <Route path="/horizon" element={<CalendarShell />} />
+          <Route path="/skills" element={<SkillsMatrix />} />
         </Routes>
       </div>
     </Router>

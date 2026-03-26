@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Target, CalendarDays, Brain } from 'lucide-react';
+import { LayoutDashboard, Target, CalendarDays, Brain, Telescope } from 'lucide-react';
 
 const NavLink = ({ to, icon: Icon, label, active }: { to: string; icon: any; label: string; active: boolean }) => (
   <Link to={to} className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${active ? 'bg-surface-high text-primary' : 'text-on-surface-variant hover:text-primary hover:bg-surface-low'}`}>
@@ -15,7 +15,8 @@ const Navigation = () => {
     { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/nebula', icon: Target, label: 'Nebula' },
     { to: '/orbit', icon: CalendarDays, label: 'Orbit' },
-    { to: '/horizon', icon: Brain, label: 'Horizon' },
+    { to: '/skills', icon: Brain, label: 'Skills' },
+    { to: '/horizon', icon: Telescope, label: 'Horizon' },
   ];
 
   return (
