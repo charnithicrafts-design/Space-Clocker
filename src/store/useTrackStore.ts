@@ -94,7 +94,9 @@ interface TrackStore {
   
   // Macro Engine Actions
   addMilestone: (ambitionId: string, title: string) => void;
+  updateMilestone: (ambitionId: string, milestoneId: string, title: string) => void;
   addMilestoneTask: (ambitionId: string, milestoneId: string, title: string) => void;
+  updateMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string, title: string) => void;
   toggleMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => void;
 
   // Data Portability Actions
@@ -181,12 +183,29 @@ export const useTrackStore = create<TrackStore>()(
         } : a)
       })),
 
+      updateMilestone: (ambitionId, milestoneId, title) => set((state) => ({
+        ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
+          ...a,
+          milestones: a.milestones.map((m) => m.id === milestoneId ? { ...m, title } : m)
+        } : a)
+      })),
+
       addMilestoneTask: (ambitionId, milestoneId, title) => set((state) => ({
         ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
           ...a,
           milestones: a.milestones.map((m) => m.id === milestoneId ? {
             ...m,
             tasks: [...m.tasks, { id: Date.now().toString(), time: '00:00', title, completed: false, horizon: 'daily' }]
+          } : m)
+        } : a)
+      })),
+
+      updateMilestoneTask: (ambitionId, milestoneId, taskId, title) => set((state) => ({
+        ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
+          ...a,
+          milestones: a.milestones.map((m) => m.id === milestoneId ? {
+            ...m,
+            tasks: m.tasks.map((t) => t.id === taskId ? { ...t, title } : t)
           } : m)
         } : a)
       })),

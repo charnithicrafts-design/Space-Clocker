@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send, Rocket, X } from 'lucide-react';
+import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send, Rocket, X, Edit2 } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 
-const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: string }) => {
+const MilestoneCard = ({ milestone, ambitionId, key }: { milestone: any; ambitionId: string; key?: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [isEditingMilestone, setIsEditingMilestone] = useState(false);
+  const [editMilestoneTitle, setEditMilestoneTitle] = useState(milestone.title);
+  const [editTaskTitle, setEditTaskTitle] = useState('');
   const [newTaskTitle, setNewTaskTitle] = useState('');
-  const { toggleMilestoneTask, addMilestoneTask } = useTrackStore();
+  const { toggleMilestoneTask, addMilestoneTask, updateMilestoneTask, updateMilestone } = useTrackStore();
   
   const totalTasks = milestone.tasks?.length || 0;
   const completedTasks = milestone.tasks?.filter((t: any) => t.completed).length || 0;
@@ -27,15 +31,68 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
     SoundManager.playPop();
   };
 
+  const startEditingTask = (e: React.MouseEvent, task: any) => {
+    e.stopPropagation();
+    if (task.completed) return;
+    setEditingTaskId(task.id);
+    setEditTaskTitle(task.title);
+  };
+
+  const saveTaskEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingTaskId && editTaskTitle.trim()) {
+      updateMilestoneTask(ambitionId, milestone.id, editingTaskId, editTaskTitle);
+      SoundManager.playPop();
+    }
+    setEditingTaskId(null);
+  };
+
+  const startEditingMilestone = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditingMilestone(true);
+    setEditMilestoneTitle(milestone.title);
+  };
+
+  const saveMilestoneEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editMilestoneTitle.trim()) {
+      updateMilestone(ambitionId, milestone.id, editMilestoneTitle);
+      SoundManager.playPop();
+    }
+    setIsEditingMilestone(false);
+  };
+
   return (
-    <div className="glass-panel border border-outline-variant rounded-2xl overflow-hidden mb-3">
+    <div className="glass-panel border border-outline-variant rounded-2xl overflow-hidden mb-3 group/milestone">
       <div 
         className="p-4 flex justify-between items-center cursor-pointer hover:bg-surface-high transition-colors"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="flex items-center gap-3">
-          <div className={`w-3 h-3 rounded-full ${milestone.status === 'completed' ? 'bg-primary-container' : (milestone.status === 'active' ? 'bg-secondary' : 'bg-surface-high')}`} />
-          <span className="font-bold text-white">{milestone.title}</span>
+        <div className="flex items-center gap-3 flex-1">
+          <div className={`w-3 h-3 rounded-full shrink-0 ${milestone.status === 'completed' ? 'bg-primary-container' : (milestone.status === 'active' ? 'bg-secondary' : 'bg-surface-high')}`} />
+          
+          {isEditingMilestone ? (
+            <form onSubmit={saveMilestoneEdit} className="flex-1" onClick={e => e.stopPropagation()}>
+              <input 
+                autoFocus
+                className="w-full bg-surface-high p-1 rounded border border-primary font-bold text-white focus:outline-none"
+                value={editMilestoneTitle}
+                onChange={(e) => setEditMilestoneTitle(e.target.value)}
+                onBlur={() => setIsEditingMilestone(false)}
+                onKeyDown={(e) => e.key === 'Escape' && setIsEditingMilestone(false)}
+              />
+            </form>
+          ) : (
+            <div className="flex items-center gap-2 group">
+              <span className="font-bold text-white">{milestone.title}</span>
+              <button 
+                onClick={startEditingMilestone}
+                className="opacity-0 group-hover:opacity-100 p-1 hover:text-primary transition-all"
+              >
+                <Edit2 size={14} />
+              </button>
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-4">
             <span className="text-sm font-mono text-secondary">{completedTasks.toString().padStart(2, '0')}/{totalTasks.toString().padStart(2, '0')}</span>
@@ -53,11 +110,40 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
             {milestone.tasks.map((task: any) => (
               <div 
                 key={task.id} 
-                className="flex items-center gap-2 py-2 text-sm cursor-pointer group"
-                onClick={() => handleToggleTask(task.id)}
+                className="flex items-center gap-2 py-2 text-sm group"
               >
-                {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} className="text-on-surface-variant group-hover:text-primary transition-colors" />}
-                <span className={task.completed ? "line-through text-on-surface-variant" : "text-white group-hover:text-primary-container transition-colors"}>{task.title}</span>
+                <div 
+                  className="flex items-center gap-2 flex-1 cursor-pointer"
+                  onClick={() => handleToggleTask(task.id)}
+                >
+                  {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} className="text-on-surface-variant group-hover:text-primary transition-colors" />}
+                  
+                  {editingTaskId === task.id ? (
+                    <form onSubmit={saveTaskEdit} className="flex-1" onClick={e => e.stopPropagation()}>
+                      <input 
+                        autoFocus
+                        className="w-full bg-surface-high p-1 rounded border border-primary text-xs focus:outline-none text-white"
+                        value={editTaskTitle}
+                        onChange={(e) => setEditTaskTitle(e.target.value)}
+                        onBlur={() => setEditingTaskId(null)}
+                        onKeyDown={(e) => e.key === 'Escape' && setEditingTaskId(null)}
+                      />
+                    </form>
+                  ) : (
+                    <span className={task.completed ? "line-through text-on-surface-variant" : "text-white group-hover:text-primary-container transition-colors"}>
+                      {task.title}
+                    </span>
+                  )}
+                </div>
+
+                {!task.completed && editingTaskId !== task.id && (
+                  <button 
+                    onClick={(e) => startEditingTask(e, task)}
+                    className="opacity-0 group-hover:opacity-100 p-1 hover:text-primary transition-all"
+                  >
+                    <Edit2 size={12} />
+                  </button>
+                )}
               </div>
             ))}
 
@@ -117,7 +203,7 @@ const ComputeRelayCard = () => (
   </div>
 );
 
-const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: boolean }) => {
+const AmbitionCard = ({ ambition, isPriority, key }: { ambition: any; isPriority?: boolean; key?: string }) => {
   const { addMilestone } = useTrackStore();
   const [isOpen, setIsOpen] = useState(isPriority || false);
   const [newMilestoneTitle, setNewMilestoneTitle] = useState('');

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Target, Clock, Brain, Telescope, Settings, CalendarDays } from 'lucide-react';
 
-const NavLink = ({ to, icon: Icon, label, active }: { to: string; icon: any; label: string; active: boolean }) => (
+const NavLink = ({ to, icon: Icon, label, active, key }: { to: string; icon: any; label: string; active: boolean; key?: string }) => (
   <Link to={to} className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${active ? 'bg-surface-high text-primary' : 'text-on-surface-variant hover:text-primary hover:bg-surface-low'}`}>
     <Icon size={24} />
     <span className="hidden lg:block font-medium">{label}</span>
@@ -36,9 +36,10 @@ const Navigation = () => {
       <nav className="hidden lg:flex fixed top-6 left-6 w-64 h-[calc(100vh-48px)] glass-panel rounded-3xl border border-outline-variant flex-col p-6 gap-6 z-50 overflow-hidden">
         <h1 className="font-display text-2xl font-bold text-primary px-3">Space-Clocker</h1>
         <div className="flex flex-col gap-2 flex-1">
-          {links.map((link) => (
-            <NavLink key={link.to} {...link} active={pathname === link.to} />
-          ))}
+          {links.map((link) => {
+            const { to, ...rest } = link;
+            return <NavLink key={to} to={to} {...rest} active={pathname === to} />;
+          })}
         </div>
 
         <div className="pt-6 border-t border-outline-variant">
