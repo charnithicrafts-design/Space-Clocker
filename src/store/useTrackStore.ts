@@ -84,6 +84,7 @@ interface TrackStore {
   
   // Actions
   addAmbition: (title: string) => void;
+  updateAmbition: (id: string, title: string) => void;
   addTask: (time: string, title: string, ambitionId?: string) => void;
   updateTask: (taskId: string, updates: Partial<Task>) => void;
   deleteTask: (taskId: string) => void;
@@ -152,6 +153,9 @@ export const useTrackStore = create<TrackStore>()(
 
       addAmbition: (title: string) => set((state) => ({
         ambitions: [...state.ambitions, { id: Date.now().toString(), title, progress: 0, horizon: 'yearly', milestones: [] }]
+      })),
+      updateAmbition: (id: string, title: string) => set((state) => ({
+        ambitions: state.ambitions.map((a) => a.id === id ? { ...a, title } : a)
       })),
       addTask: (time: string, title: string, ambitionId?: string) => set((state) => ({
         tasks: [...state.tasks, { id: Date.now().toString(), time, title, completed: false, horizon: 'daily', plannedDate: new Date().toISOString() }]

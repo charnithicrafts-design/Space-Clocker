@@ -204,8 +204,10 @@ const ComputeRelayCard = () => (
 );
 
 const AmbitionCard = ({ ambition, isPriority, key }: { ambition: any; isPriority?: boolean; key?: string }) => {
-  const { addMilestone } = useTrackStore();
+  const { addMilestone, updateAmbition } = useTrackStore();
   const [isOpen, setIsOpen] = useState(isPriority || false);
+  const [isEditingAmbition, setIsEditingAmbition] = useState(false);
+  const [editAmbitionTitle, setEditAmbitionTitle] = useState(ambition.title);
   const [newMilestoneTitle, setNewMilestoneTitle] = useState('');
   const [isAddingMilestone, setIsAddingMilestone] = useState(false);
 
@@ -218,6 +220,21 @@ const AmbitionCard = ({ ambition, isPriority, key }: { ambition: any; isPriority
     setIsAddingMilestone(false);
   };
 
+  const startEditingAmbition = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsEditingAmbition(true);
+    setEditAmbitionTitle(ambition.title);
+  };
+
+  const saveAmbitionEdit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editAmbitionTitle.trim()) {
+      updateAmbition(ambition.id, editAmbitionTitle);
+      SoundManager.playPop();
+    }
+    setIsEditingAmbition(false);
+  };
+
   return (
     <motion.div 
       className={`glass-panel border-2 rounded-3xl mb-6 relative overflow-hidden transition-colors ${isPriority ? 'border-primary-container p-8' : 'border-outline-variant p-6 hover:border-primary/50'}`}
@@ -228,17 +245,40 @@ const AmbitionCard = ({ ambition, isPriority, key }: { ambition: any; isPriority
         className={`flex justify-between items-start cursor-pointer ${!isPriority ? 'mb-2' : 'mb-6'}`}
         onClick={() => !isPriority && setIsOpen(!isOpen)}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-1">
           {!isPriority && (
             <div className="w-12 h-12 bg-surface-high rounded-xl flex items-center justify-center text-primary-container shrink-0">
               <Zap size={24} />
             </div>
           )}
-          <div>
+          <div className="flex-1">
             <span className="text-primary-container text-xs font-bold uppercase tracking-widest">
               {isPriority ? 'Priority Zero' : 'Secondary Ambition'}
             </span>
-            <h1 className={`${isPriority ? 'text-2xl' : 'text-lg'} font-display font-bold text-white mt-1`}>{ambition.title}</h1>
+            
+            {isEditingAmbition ? (
+              <form onSubmit={saveAmbitionEdit} className="mt-1" onClick={e => e.stopPropagation()}>
+                <input 
+                  autoFocus
+                  className={`w-full bg-surface-high p-2 rounded-xl border border-primary font-display font-bold text-white focus:outline-none ${isPriority ? 'text-2xl' : 'text-lg'}`}
+                  value={editAmbitionTitle}
+                  onChange={(e) => setEditAmbitionTitle(e.target.value)}
+                  onBlur={() => setIsEditingAmbition(false)}
+                  onKeyDown={(e) => e.key === 'Escape' && setIsEditingAmbition(false)}
+                />
+              </form>
+            ) : (
+              <div className="flex items-center gap-3 group/title">
+                <h1 className={`${isPriority ? 'text-2xl' : 'text-lg'} font-display font-bold text-white mt-1`}>{ambition.title}</h1>
+                <button 
+                  onClick={startEditingAmbition}
+                  className="opacity-0 group-hover/title:opacity-100 p-1 hover:text-primary transition-all mt-1"
+                >
+                  <Edit2 size={16} />
+                </button>
+              </div>
+            )}
+            
             {!isPriority && !isOpen && (
               <p className="text-xs text-on-surface-variant">
                 {(ambition.milestones || []).length} Milestones • {(ambition.milestones || []).filter((m: any) => m.status === 'pending').length} Pending
