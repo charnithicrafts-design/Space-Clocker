@@ -115,12 +115,12 @@ interface TrackStore {
   updatePreferences: (updates: Partial<Preferences>) => void;
   addOracleLog: (log: string, response?: string) => void;
   engageVoid: (voidId: string) => void;
+  initialize: () => Promise<void>;
 }
 
 export const useTrackStore = create<TrackStore>()(
-  persist(
-    (set) => ({
-      profile: { name: 'Valentina', level: 42, title: 'Galactic Voyager' },
+  (set, get) => ({
+    profile: { name: 'Valentina', level: 42, title: 'Galactic Voyager' },
       ambitions: [
         { 
           id: '1', title: 'Interstellar Colony Alpha', progress: 64, horizon: 'yearly',
@@ -167,9 +167,17 @@ export const useTrackStore = create<TrackStore>()(
       updateAmbition: (id: string, title: string) => set((state) => ({
         ambitions: state.ambitions.map((a) => a.id === id ? { ...a, title } : a)
       })),
-      addTask: (time: string, title: string, ambitionId?: string) => set((state) => ({
-        tasks: [...state.tasks, { id: Date.now().toString(), time, title, completed: false, horizon: 'daily', plannedDate: new Date().toISOString() }]
-      })),
+      addTask: (time, title, ambitionId) => set((state) => {
+        const newTask = { id: Date.now().toString(), time, title, completed: false, horizon: 'daily' as const, plannedDate: new Date().toISOString() };
+        
+        import('../db/client').then(({ db }) => {
+          db.query(`INSERT INTO tasks (id, time, title, completed, horizon, planned_date, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
+            newTask.id, newTask.time, newTask.title, newTask.completed, newTask.horizon, newTask.plannedDate, ambitionId
+          ]);
+        });
+
+        return { tasks: [...state.tasks, newTask] };
+      }),
       deleteTask: (taskId: string) => set((state) => ({
         tasks: state.tasks.filter((t) => t.id !== taskId)
       })),
@@ -298,11 +306,48 @@ export const useTrackStore = create<TrackStore>()(
       })),
       engageVoid: (voidId) => set((state) => ({
         voids: state.voids.map((v) => v.id === voidId ? { ...v, engagedCount: v.engagedCount + 1 } : v)
-      }))
+      })),
+      initialize: async () => {
+        const { db } = await import('../db/client');
+        
+        const profile = (await db.query<Profile>(`SELECT name, level, title FROM profile WHERE id = 1`)).rows[0];
+        const preferences = (await db.query<Preferences>(`SELECT confirm_delete as "confirmDelete" FROM preferences WHERE id = 1`)).rows[0];
+        const stats = (await db.query<any>(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`)).rows[0];
+        const oracleConfig = (await db.query<OracleConfig>(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`)).rows[0];
+        
+        const ambitionsRaw = (await db.query<any>(`SELECT * FROM ambitions`)).rows;
+        const milestonesRaw = (await db.query<any>(`SELECT * FROM milestones`)).rows;
+        const tasksRaw = (await db.query<any>(`SELECT * FROM tasks`)).rows;
+        
+        // Build nested structure
+        const ambitions: Ambition[] = ambitionsRaw.map(a => ({
+          ...a,
+          milestones: milestonesRaw
+            .filter(m => m.ambition_id === a.id)
+            .map(m => ({
+              ...m,
+              tasks: tasksRaw.filter(t => t.milestone_id === m.id)
+            }))
+        }));
+
+        const standaloneTasks = tasksRaw.filter(t => !t.milestone_id);
+        const voids = (await db.query<VoidTask>(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`)).rows;
+        const reflections = (await db.query<Reflection>(`SELECT id, date, content, type FROM reflections`)).rows;
+        const skills = (await db.query<Skill>(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation FROM skills`)).rows;
+        const internships = (await db.query<any>(`SELECT organization, start_date as "start", end_date as "end" FROM internships`)).rows;
+
+        set({
+          profile: profile || get().profile,
+          preferences: preferences || get().preferences,
+          stats: stats || get().stats,
+          oracleConfig: oracleConfig || get().oracleConfig,
+          ambitions,
+          tasks: standaloneTasks,
+          voids,
+          reflections,
+          skills,
+          internships
+        });
+      }
     }),
-    { 
-      name: 'space-clocker-storage',
-      version: 2, // Bump version for new data structure
-    }
-  )
 );

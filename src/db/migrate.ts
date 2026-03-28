@@ -1,0 +1,101 @@
+import { db } from './client';
+
+export async function migrateFromZustand() {
+  const stored = localStorage.getItem('space-clocker-storage');
+  if (!stored) return;
+
+  const { state } = JSON.parse(stored);
+  if (!state) return;
+
+  // Check if migration has already happened (this is a one-time thing)
+  const isMigrated = localStorage.getItem('space-clocker-migrated');
+  if (isMigrated === 'true') return;
+
+  console.log('Migrating data from Zustand to PGlite...');
+
+  // 1. Singletons
+  if (state.profile) {
+    await db.query(`UPDATE profile SET name = $1, level = $2, title = $3 WHERE id = 1`, [
+      state.profile.name, state.profile.level, state.profile.title
+    ]);
+  }
+  if (state.preferences) {
+    await db.query(`UPDATE preferences SET confirm_delete = $1 WHERE id = 1`, [
+      state.preferences.confirmDelete
+    ]);
+  }
+  if (state.stats) {
+    await db.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [
+      state.stats.streak, state.stats.tasksCompleted, state.stats.totalFocusHours
+    ]);
+  }
+  if (state.oracleConfig) {
+    await db.query(`UPDATE oracle_config SET api_key = $1, model = $2, provider_url = $3 WHERE id = 1`, [
+      state.oracleConfig.apiKey, state.oracleConfig.model, state.oracleConfig.providerUrl
+    ]);
+  }
+
+  // 2. Ambitions & Milestones & Milestone Tasks
+  if (state.ambitions) {
+    for (const ambition of state.ambitions) {
+      await db.query(`INSERT INTO ambitions (id, title, progress, horizon) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`, [
+        ambition.id, ambition.title, ambition.progress, ambition.horizon
+      ]);
+
+      if (ambition.milestones) {
+        for (const milestone of ambition.milestones) {
+          await db.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`, [
+            milestone.id, ambition.id, milestone.title, milestone.status
+          ]);
+
+          if (milestone.tasks) {
+            for (const task of milestone.tasks) {
+              await db.query(`INSERT INTO tasks (id, milestone_id, time, title, completed, horizon, planned_date, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT DO NOTHING`, [
+                task.id, milestone.id, task.time, task.title, task.completed, task.horizon, task.plannedDate, task.isVoid
+              ]);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 3. Standalone Tasks (Orbit)
+  if (state.tasks) {
+    for (const task of state.tasks) {
+      await db.query(`INSERT INTO tasks (id, time, title, completed, horizon, planned_date, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT DO NOTHING`, [
+        task.id, task.time, task.title, task.completed, task.horizon, task.plannedDate, task.isVoid
+      ]);
+    }
+  }
+
+  // 4. Void Tasks
+  if (state.voids) {
+    for (const v of state.voids) {
+      await db.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING`, [
+        v.id, v.text, v.impact, v.engagedCount, v.maxAllowed
+      ]);
+    }
+  }
+
+  // 5. Reflections
+  if (state.reflections) {
+    for (const r of state.reflections) {
+      await db.query(`INSERT INTO reflections (id, date, content, type) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`, [
+        r.id, r.date, r.content, r.type
+      ]);
+    }
+  }
+
+  // 6. Skills
+  if (state.skills) {
+    for (const s of state.skills) {
+      await db.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING`, [
+        s.id, s.name, s.currentProficiency, s.targetProficiency, s.recommendation
+      ]);
+    }
+  }
+
+  localStorage.setItem('space-clocker-migrated', 'true');
+  console.log('Migration complete.');
+}
