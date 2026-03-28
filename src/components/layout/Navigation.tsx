@@ -2,7 +2,14 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Target, Clock, Brain, Telescope, Settings, CalendarDays } from 'lucide-react';
 
-const NavLink = ({ to, icon: Icon, label, active, key }: { to: string; icon: any; label: string; active: boolean; key?: string }) => (
+interface NavLinkProps {
+  to: string;
+  icon: any;
+  label: string;
+  active: boolean;
+}
+
+const NavLink: React.FC<NavLinkProps> = ({ to, icon: Icon, label, active }) => (
   <Link to={to} className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${active ? 'bg-surface-high text-primary' : 'text-on-surface-variant hover:text-primary hover:bg-surface-low'}`}>
     <Icon size={24} />
     <span className="hidden lg:block font-medium">{label}</span>

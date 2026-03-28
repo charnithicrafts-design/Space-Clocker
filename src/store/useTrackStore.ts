@@ -88,23 +88,23 @@ interface TrackStore {
   preferences: Preferences;
   
   // Actions
-  addAmbition: (title: string) => void;
-  updateAmbition: (id: string, title: string) => void;
+  addAmbition: (title: string) => Promise<void>;
+  updateAmbition: (id: string, title: string) => Promise<void>;
   addTask: (time: string, title: string, ambitionId?: string) => Promise<void>;
   updateTask: (taskId: string, updates: Partial<Task>) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
-  toggleTask: (taskId: string) => void;
-  addReflection: (content: string, type: Reflection['type']) => void;
-  addInternship: (internship: InternshipPeriod) => void;
-  updateSkill: (id: string, current: number, target: number) => void;
+  toggleTask: (taskId: string) => Promise<void>;
+  addReflection: (content: string, type: Reflection['type']) => Promise<void>;
+  addInternship: (internship: InternshipPeriod) => Promise<void>;
+  updateSkill: (id: string, current: number, target: number) => Promise<void>;
   
   // Macro Engine Actions
-  addMilestone: (ambitionId: string, title: string) => void;
-  updateMilestone: (ambitionId: string, milestoneId: string, title: string) => void;
-  addMilestoneTask: (ambitionId: string, milestoneId: string, title: string) => void;
-  updateMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string, title: string) => void;
-  deleteMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => void;
-  toggleMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => void;
+  addMilestone: (ambitionId: string, title: string) => Promise<void>;
+  updateMilestone: (ambitionId: string, milestoneId: string, title: string) => Promise<void>;
+  addMilestoneTask: (ambitionId: string, milestoneId: string, title: string) => Promise<void>;
+  updateMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string, title: string) => Promise<void>;
+  deleteMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => Promise<void>;
+  toggleMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => Promise<void>;
 
   // Data Portability Actions
   importData: (data: Partial<TrackStore>) => void;
@@ -161,116 +161,126 @@ export const useTrackStore = create<TrackStore>()(
         confirmDelete: true
       },
 
-      addAmbition: (title: string) => set((state) => {
+      addAmbition: async (title: string) => {
         const newAmbition: Ambition = { id: Date.now().toString(), title, progress: 0, horizon: 'yearly', milestones: [] };
-        import('../db/client').then(({ db }) => {
-          db.query(`INSERT INTO ambitions (id, title, progress, horizon) VALUES ($1, $2, $3, $4)`, [
-            newAmbition.id, newAmbition.title, newAmbition.progress, newAmbition.horizon
-          ]);
-        });
-        return {
+        const { db } = await import('../db/client');
+        await db.query(`INSERT INTO ambitions (id, title, progress, horizon) VALUES ($1, $2, $3, $4)`, [
+          newAmbition.id, newAmbition.title, newAmbition.progress, newAmbition.horizon
+        ]);
+        set((state) => ({
           ambitions: [...state.ambitions, newAmbition]
-        };
-      }),
-      updateAmbition: (id, title) => set((state) => {
-        import('../db/client').then(({ db }) => {
-          db.query(`UPDATE ambitions SET title = $1 WHERE id = $2`, [title, id]);
-        });
-        return {
+        }));
+      },
+      updateAmbition: async (id, title) => {
+        const { db } = await import('../db/client');
+        await db.query(`UPDATE ambitions SET title = $1 WHERE id = $2`, [title, id]);
+        set((state) => ({
           ambitions: state.ambitions.map((a) => a.id === id ? { ...a, title } : a)
-        };
-      }),
-      addTask: (time, title, ambitionId) => set((state) => {
+        }));
+      },
+      addTask: async (time, title, ambitionId) => {
         const newTask: Task = { id: Date.now().toString(), time, title, completed: false, horizon: 'daily' as const, plannedDate: new Date().toISOString() };
         
-        import('../db/client').then(({ db }) => {
-          db.query(`INSERT INTO tasks (id, time, title, completed, horizon, planned_date, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
-            newTask.id, newTask.time, newTask.title, newTask.completed, newTask.horizon, newTask.plannedDate, ambitionId
-          ]);
-        });
+        const { db } = await import('../db/client');
+        await db.query(`INSERT INTO tasks (id, time, title, completed, horizon, planned_date, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
+          newTask.id, newTask.time, newTask.title, newTask.completed, newTask.horizon, newTask.plannedDate, ambitionId
+        ]);
 
-        return { tasks: [...state.tasks, newTask] };
-      }),
-      deleteTask: (taskId: string) => set((state) => {
-        const dbPromise = import('../db/client').then(({ db }) => {
-          return db.query(`DELETE FROM tasks WHERE id = $1`, [taskId]);
-        });
-        return {
+        set((state) => ({ tasks: [...state.tasks, newTask] }));
+      },
+      deleteTask: async (taskId: string) => {
+        const { db } = await import('../db/client');
+        await db.query(`DELETE FROM tasks WHERE id = $1`, [taskId]);
+        set((state) => ({
           tasks: state.tasks.filter((t) => t.id !== taskId)
-        };
-      }) as any,
-      updateTask: (taskId, updates) => set((state) => {
-        const task = state.tasks.find(t => t.id === taskId);
+        }));
+      },
+      updateTask: async (taskId, updates) => {
+        const task = get().tasks.find(t => t.id === taskId);
         if (task) {
-          const dbPromise = import('../db/client').then(({ db }) => {
-            if (updates.title !== undefined) return db.query(`UPDATE tasks SET title = $1 WHERE id = $2`, [updates.title, taskId]);
-            if (updates.completed !== undefined) return db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [updates.completed, taskId]);
-            if (updates.time !== undefined) return db.query(`UPDATE tasks SET time = $1 WHERE id = $2`, [updates.time, taskId]);
-          });
+          const { db } = await import('../db/client');
+          if (updates.title !== undefined) await db.query(`UPDATE tasks SET title = $1 WHERE id = $2`, [updates.title, taskId]);
+          if (updates.completed !== undefined) await db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [updates.completed, taskId]);
+          if (updates.time !== undefined) await db.query(`UPDATE tasks SET time = $1 WHERE id = $2`, [updates.time, taskId]);
         }
-        return {
+        set((state) => ({
           tasks: state.tasks.map((t) => t.id === taskId ? { ...t, ...updates } : t)
-        };
-      }) as any,
-      toggleTask: (taskId: string) => set((state) => {
-        const task = state.tasks.find(t => t.id === taskId);
+        }));
+      },
+      toggleTask: async (taskId: string) => {
+        const task = get().tasks.find(t => t.id === taskId);
         if (task) {
           const newCompleted = !task.completed;
-          import('../db/client').then(({ db }) => {
-            db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [newCompleted, taskId]);
-          });
-          return {
+          const { db } = await import('../db/client');
+          await db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [newCompleted, taskId]);
+          set((state) => ({
             tasks: state.tasks.map((t) => t.id === taskId ? { ...t, completed: newCompleted } : t)
-          };
+          }));
         }
-        return state;
-      }),
-      addReflection: (content: string, type: Reflection['type']) => set((state) => ({
-        reflections: [...state.reflections, { id: Date.now().toString(), date: new Date().toISOString(), content, type }]
-      })),
-      addInternship: (internship) => set((state) => ({
-        internships: [...state.internships, internship]
-      })),
-      updateSkill: (id, current, target) => set((state) => ({
-        skills: state.skills.map((s) => s.id === id ? { ...s, currentProficiency: current, targetProficiency: target } : s)
-      })),
+      },
+      addReflection: async (content: string, type: Reflection['type']) => {
+        const newReflection = { id: Date.now().toString(), date: new Date().toISOString(), content, type };
+        const { db } = await import('../db/client');
+        await db.query(`INSERT INTO reflections (id, date, content, type) VALUES ($1, $2, $3, $4)`, [
+          newReflection.id, newReflection.date, newReflection.content, newReflection.type
+        ]);
+        set((state) => ({
+          reflections: [...state.reflections, newReflection]
+        }));
+      },
+      addInternship: async (internship) => {
+        const id = Date.now().toString();
+        const { db } = await import('../db/client');
+        await db.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [
+          id, internship.organization, internship.start, internship.end
+        ]);
+        set((state) => ({
+          internships: [...state.internships, internship]
+        }));
+      },
+      updateSkill: async (id, current, target) => {
+        const { db } = await import('../db/client');
+        await db.query(`UPDATE skills SET current_proficiency = $1, target_proficiency = $2 WHERE id = $3`, [
+          current, target, id
+        ]);
+        set((state) => ({
+          skills: state.skills.map((s) => s.id === id ? { ...s, currentProficiency: current, targetProficiency: target } : s)
+        }));
+      },
 
       // Macro Engine Actions
-      addMilestone: (ambitionId, title) => set((state) => {
+      addMilestone: async (ambitionId, title) => {
         const newMilestone: Milestone = { id: Date.now().toString(), title, tasks: [], status: 'pending' };
-        import('../db/client').then(({ db }) => {
-          db.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [
-            newMilestone.id, ambitionId, newMilestone.title, newMilestone.status
-          ]);
-        });
-        return {
+        const { db } = await import('../db/client');
+        await db.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [
+          newMilestone.id, ambitionId, newMilestone.title, newMilestone.status
+        ]);
+        set((state) => ({
           ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
             ...a,
             milestones: [...a.milestones, newMilestone]
           } : a)
-        };
-      }),
+        }));
+      },
 
-      updateMilestone: (ambitionId, milestoneId, title) => set((state) => {
-        import('../db/client').then(({ db }) => {
-          db.query(`UPDATE milestones SET title = $1 WHERE id = $2`, [title, milestoneId]);
-        });
-        return {
+      updateMilestone: async (ambitionId, milestoneId, title) => {
+        const { db } = await import('../db/client');
+        await db.query(`UPDATE milestones SET title = $1 WHERE id = $2`, [title, milestoneId]);
+        set((state) => ({
           ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
             ...a,
             milestones: a.milestones.map((m) => m.id === milestoneId ? { ...m, title } : m)
           } : a)
-        };
-      }),
+        }));
+      },
 
-      addMilestoneTask: (ambitionId, milestoneId, title) => set((state) => {
+      addMilestoneTask: async (ambitionId, milestoneId, title) => {
         const newTask: Task = { id: Date.now().toString(), time: '00:00', title, completed: false, horizon: 'daily' };
-        import('../db/client').then(({ db }) => {
-          db.query(`INSERT INTO tasks (id, milestone_id, time, title, completed, horizon) VALUES ($1, $2, $3, $4, $5, $6)`, [
-            newTask.id, milestoneId, newTask.time, newTask.title, newTask.completed, newTask.horizon
-          ]);
-        });
-        return {
+        const { db } = await import('../db/client');
+        await db.query(`INSERT INTO tasks (id, milestone_id, time, title, completed, horizon) VALUES ($1, $2, $3, $4, $5, $6)`, [
+          newTask.id, milestoneId, newTask.time, newTask.title, newTask.completed, newTask.horizon
+        ]);
+        set((state) => ({
           ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
             ...a,
             milestones: a.milestones.map((m) => m.id === milestoneId ? {
@@ -278,14 +288,13 @@ export const useTrackStore = create<TrackStore>()(
               tasks: [...m.tasks, newTask]
             } : m)
           } : a)
-        };
-      }),
+        }));
+      },
 
-      updateMilestoneTask: (ambitionId, milestoneId, taskId, title) => set((state) => {
-        import('../db/client').then(({ db }) => {
-          db.query(`UPDATE tasks SET title = $1 WHERE id = $2`, [title, taskId]);
-        });
-        return {
+      updateMilestoneTask: async (ambitionId, milestoneId, taskId, title) => {
+        const { db } = await import('../db/client');
+        await db.query(`UPDATE tasks SET title = $1 WHERE id = $2`, [title, taskId]);
+        set((state) => ({
           ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
             ...a,
             milestones: a.milestones.map((m) => m.id === milestoneId ? {
@@ -293,72 +302,74 @@ export const useTrackStore = create<TrackStore>()(
               tasks: m.tasks.map((t) => t.id === taskId ? { ...t, title } : t)
             } : m)
           } : a)
-        };
-      }),
+        }));
+      },
 
-      deleteMilestoneTask: (ambitionId, milestoneId, taskId) => set((state) => {
-        import('../db/client').then(({ db }) => {
-          db.query(`DELETE FROM tasks WHERE id = $1`, [taskId]);
-        });
-        const newAmbitions = state.ambitions.map((a) => {
-          if (a.id !== ambitionId) return a;
-          const newMilestones = a.milestones.map((m) => {
-            if (m.id !== milestoneId) return m;
-            return { 
-              ...m, 
-              tasks: m.tasks.filter((t) => t.id !== taskId)
-            };
+      deleteMilestoneTask: async (ambitionId, milestoneId, taskId) => {
+        const { db } = await import('../db/client');
+        await db.query(`DELETE FROM tasks WHERE id = $1`, [taskId]);
+        set((state) => {
+          const newAmbitions = state.ambitions.map((a) => {
+            if (a.id !== ambitionId) return a;
+            const newMilestones = a.milestones.map((m) => {
+              if (m.id !== milestoneId) return m;
+              return { 
+                ...m, 
+                tasks: m.tasks.filter((t) => t.id !== taskId)
+              };
+            });
+            return { ...a, milestones: newMilestones };
           });
-          return { ...a, milestones: newMilestones };
+          return { ambitions: newAmbitions };
         });
-        return { ambitions: newAmbitions };
-      }),
+      },
 
-      toggleMilestoneTask: (ambitionId, milestoneId, taskId) => set((state) => {
+      toggleMilestoneTask: async (ambitionId, milestoneId, taskId) => {
         let updatedTask: any = null;
-        const newAmbitions = state.ambitions.map((a) => {
-          if (a.id !== ambitionId) return a;
-          const newMilestones = a.milestones.map((m) => {
-            if (m.id !== milestoneId) return m;
-            const newTasks = m.tasks.map((t) => {
-              if (t.id === taskId) {
-                updatedTask = { ...t, completed: !t.completed };
-                return updatedTask;
-              }
-              return t;
+        let newStatus: Milestone['status'] = 'pending';
+        let newProgress = 0;
+
+        const { db } = await import('../db/client');
+
+        set((state) => {
+          const newAmbitions = state.ambitions.map((a) => {
+            if (a.id !== ambitionId) return a;
+            const newMilestones = a.milestones.map((m) => {
+              if (m.id !== milestoneId) return m;
+              const newTasks = m.tasks.map((t) => {
+                if (t.id === taskId) {
+                  updatedTask = { ...t, completed: !t.completed };
+                  return updatedTask;
+                }
+                return t;
+              });
+              const allTasksCompleted = newTasks.length > 0 && newTasks.every(t => t.completed);
+              newStatus = allTasksCompleted ? 'completed' : (newTasks.some(t => t.completed) ? 'active' : 'pending');
+              
+              return { 
+                ...m, 
+                tasks: newTasks, 
+                status: newStatus
+              };
             });
-            const allTasksCompleted = newTasks.length > 0 && newTasks.every(t => t.completed);
-            const status: Milestone['status'] = allTasksCompleted ? 'completed' : (newTasks.some(t => t.completed) ? 'active' : 'pending');
-            
-            // Persist status change
-            import('../db/client').then(({ db }) => {
-              db.query(`UPDATE milestones SET status = $1 WHERE id = $2`, [status, milestoneId]);
-            });
 
-            return { 
-              ...m, 
-              tasks: newTasks, 
-              status
-            };
+            // Recalculate Ambition Progress
+            const totalTasks = newMilestones.reduce((acc, m) => acc + m.tasks.length, 0);
+            const completedTasks = newMilestones.reduce((acc, m) => acc + m.tasks.filter(t => t.completed).length, 0);
+            newProgress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : a.progress;
+
+            return { ...a, milestones: newMilestones, progress: newProgress };
           });
-
-          // Recalculate Ambition Progress
-          const totalTasks = newMilestones.reduce((acc, m) => acc + m.tasks.length, 0);
-          const completedTasks = newMilestones.reduce((acc, m) => acc + m.tasks.filter(t => t.completed).length, 0);
-          const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : a.progress;
-
-          // Persist progress and task toggle
-          import('../db/client').then(({ db }) => {
-            db.query(`UPDATE ambitions SET progress = $1 WHERE id = $2`, [progress, ambitionId]);
-            if (updatedTask) {
-              db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [updatedTask.completed, taskId]);
-            }
-          });
-
-          return { ...a, milestones: newMilestones, progress };
+          return { ambitions: newAmbitions };
         });
-        return { ambitions: newAmbitions };
-      }),
+
+        // Persist changes
+        if (updatedTask) {
+          await db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [updatedTask.completed, taskId]);
+        }
+        await db.query(`UPDATE milestones SET status = $1 WHERE id = $2`, [newStatus, milestoneId]);
+        await db.query(`UPDATE ambitions SET progress = $1 WHERE id = $2`, [newProgress, ambitionId]);
+      },
 
       // Data Portability Actions
       importData: (data) => set((state) => ({

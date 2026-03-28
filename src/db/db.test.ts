@@ -41,17 +41,17 @@ describe('Pglite Data Layer', () => {
     await db.query(`INSERT INTO tasks (id, title, completed) VALUES ('t1', 'Test Task', false)`);
     
     // Read
-    let res = await db.query(`SELECT * FROM tasks WHERE id = 't1'`);
+    let res = await db.query<any>(`SELECT * FROM tasks WHERE id = 't1'`);
     expect(res.rows[0].title).toBe('Test Task');
     
     // Update
     await db.query(`UPDATE tasks SET completed = true WHERE id = 't1'`);
-    res = await db.query(`SELECT completed FROM tasks WHERE id = 't1'`);
+    res = await db.query<any>(`SELECT completed FROM tasks WHERE id = 't1'`);
     expect(res.rows[0].completed).toBe(true);
     
     // Delete
     await db.query(`DELETE FROM tasks WHERE id = 't1'`);
-    res = await db.query(`SELECT count(*) as count FROM tasks`);
+    res = await db.query<any>(`SELECT count(*) as count FROM tasks`);
     expect(res.rows[0].count).toBe(0);
   });
 });

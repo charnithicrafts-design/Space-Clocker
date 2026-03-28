@@ -11,6 +11,15 @@ vi.mock('../../utils/SoundManager', () => ({
   }
 }));
 
+// Mock DB client
+vi.mock('../../db/client', () => ({
+  db: {
+    query: vi.fn().mockResolvedValue({ rows: [] }),
+    exec: vi.fn().mockResolvedValue(undefined),
+    waitReady: Promise.resolve(),
+  }
+}));
+
 // Mocking AudioContext
 // Mocking AudioContext properly
 class MockAudioContext {
@@ -45,7 +54,7 @@ describe('OrbitScheduler', () => {
       fireEvent.click(addButton);
     });
 
-    expect(screen.getByText('New Test Task')).toBeInTheDocument();
+    expect(await screen.findByText('New Test Task')).toBeInTheDocument();
   });
 
   it('allows deleting a task', async () => {

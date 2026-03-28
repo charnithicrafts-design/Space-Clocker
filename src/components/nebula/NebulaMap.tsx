@@ -4,7 +4,7 @@ import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send, Rocket, 
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 
-const MilestoneCard = ({ milestone, ambitionId, key }: { milestone: any; ambitionId: string; key?: string }) => {
+const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
@@ -220,7 +220,7 @@ const ComputeRelayCard = () => (
   </div>
 );
 
-const AmbitionCard = ({ ambition, isPriority, key }: { ambition: any; isPriority?: boolean; key?: string }) => {
+const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: boolean }) => {
   const { addMilestone, updateAmbition } = useTrackStore();
   const [isOpen, setIsOpen] = useState(isPriority || false);
   const [isEditingAmbition, setIsEditingAmbition] = useState(false);
