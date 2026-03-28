@@ -67,6 +67,10 @@ export interface OracleConfig {
   providerUrl: string;
 }
 
+export interface Preferences {
+  confirmDelete: boolean;
+}
+
 interface TrackStore {
   profile: Profile;
   ambitions: Ambition[];
@@ -81,6 +85,7 @@ interface TrackStore {
     totalFocusHours: number;
   };
   oracleConfig: OracleConfig;
+  preferences: Preferences;
   
   // Actions
   addAmbition: (title: string) => void;
@@ -98,6 +103,7 @@ interface TrackStore {
   updateMilestone: (ambitionId: string, milestoneId: string, title: string) => void;
   addMilestoneTask: (ambitionId: string, milestoneId: string, title: string) => void;
   updateMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string, title: string) => void;
+  deleteMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => void;
   toggleMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => void;
 
   // Data Portability Actions
@@ -106,6 +112,7 @@ interface TrackStore {
   // Oracle & Misc Actions
   updateOracleConfig: (config: Partial<OracleConfig>) => void;
   updateProfile: (updates: Partial<Profile>) => void;
+  updatePreferences: (updates: Partial<Preferences>) => void;
   addOracleLog: (log: string, response?: string) => void;
   engageVoid: (voidId: string) => void;
 }
@@ -149,6 +156,9 @@ export const useTrackStore = create<TrackStore>()(
         apiKey: '',
         model: 'gemini-1.5-pro',
         providerUrl: 'https://generativelanguage.googleapis.com/v1beta/openai'
+      },
+      preferences: {
+        confirmDelete: true
       },
 
       addAmbition: (title: string) => set((state) => ({
@@ -214,6 +224,21 @@ export const useTrackStore = create<TrackStore>()(
         } : a)
       })),
 
+      deleteMilestoneTask: (ambitionId, milestoneId, taskId) => set((state) => {
+        const newAmbitions = state.ambitions.map((a) => {
+          if (a.id !== ambitionId) return a;
+          const newMilestones = a.milestones.map((m) => {
+            if (m.id !== milestoneId) return m;
+            return { 
+              ...m, 
+              tasks: m.tasks.filter((t) => t.id !== taskId)
+            };
+          });
+          return { ...a, milestones: newMilestones };
+        });
+        return { ambitions: newAmbitions };
+      }),
+
       toggleMilestoneTask: (ambitionId, milestoneId, taskId) => set((state) => {
         const newAmbitions = state.ambitions.map((a) => {
           if (a.id !== ambitionId) return a;
@@ -259,6 +284,9 @@ export const useTrackStore = create<TrackStore>()(
       })),
       updateProfile: (updates) => set((state) => ({
         profile: { ...state.profile, ...updates }
+      })),
+      updatePreferences: (updates) => set((state) => ({
+        preferences: { ...state.preferences, ...updates }
       })),
       addOracleLog: (log, response) => set((state) => ({
         reflections: [...state.reflections, { 

@@ -5,15 +5,17 @@ import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw } from 'l
 
 const SettingsDashboard = () => {
   const store = useTrackStore();
-  const { profile, oracleConfig, updateProfile, updateOracleConfig, importData } = store;
+  const { profile, oracleConfig, preferences, updateProfile, updateOracleConfig, updatePreferences, importData } = store;
 
   const [localProfile, setLocalProfile] = useState(profile);
   const [localOracle, setLocalOracle] = useState(oracleConfig);
+  const [localPrefs, setLocalPrefs] = useState(preferences);
   const [isSaved, setIsSaved] = useState(false);
 
   const handleSave = () => {
     updateProfile(localProfile);
     updateOracleConfig(localOracle);
+    updatePreferences(localPrefs);
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
   };
@@ -166,6 +168,30 @@ const SettingsDashboard = () => {
             >
               <Trash2 size={20} />
               <span className="font-bold uppercase text-xs tracking-widest">Wipe Local Memory</span>
+            </button>
+          </div>
+        </section>
+
+        {/* Preferences Section */}
+        <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
+          <div className="flex items-center gap-3 border-b border-outline-variant pb-4 mb-4">
+            <RefreshCcw className="text-secondary" />
+            <h3 className="font-display font-bold text-xl">System Preferences</h3>
+          </div>
+          
+          <div className="flex items-center justify-between p-4 rounded-2xl bg-surface-high border border-outline-variant">
+            <div>
+              <h4 className="font-bold text-sm">Confirm Deletion</h4>
+              <p className="text-xs text-on-surface-variant">Ask for confirmation before removing tasks or milestones.</p>
+            </div>
+            <button 
+              onClick={() => setLocalPrefs({ ...localPrefs, confirmDelete: !localPrefs.confirmDelete })}
+              className={`w-12 h-6 rounded-full p-1 transition-colors ${localPrefs.confirmDelete ? 'bg-primary' : 'bg-surface-low'}`}
+            >
+              <motion.div 
+                animate={{ x: localPrefs.confirmDelete ? 24 : 0 }}
+                className="w-4 h-4 bg-white rounded-full shadow-sm"
+              />
             </button>
           </div>
         </section>

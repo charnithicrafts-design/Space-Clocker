@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send, Rocket, X, Edit2 } from 'lucide-react';
+import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send, Rocket, X, Edit2, Trash2 } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 
@@ -12,7 +12,7 @@ const MilestoneCard = ({ milestone, ambitionId, key }: { milestone: any; ambitio
   const [editMilestoneTitle, setEditMilestoneTitle] = useState(milestone.title);
   const [editTaskTitle, setEditTaskTitle] = useState('');
   const [newTaskTitle, setNewTaskTitle] = useState('');
-  const { toggleMilestoneTask, addMilestoneTask, updateMilestoneTask, updateMilestone } = useTrackStore();
+  const { toggleMilestoneTask, addMilestoneTask, updateMilestoneTask, updateMilestone, deleteMilestoneTask, preferences } = useTrackStore();
   
   const totalTasks = milestone.tasks?.length || 0;
   const completedTasks = milestone.tasks?.filter((t: any) => t.completed).length || 0;
@@ -45,6 +45,15 @@ const MilestoneCard = ({ milestone, ambitionId, key }: { milestone: any; ambitio
       SoundManager.playPop();
     }
     setEditingTaskId(null);
+  };
+
+  const handleDeleteTask = (e: React.MouseEvent, taskId: string) => {
+    e.stopPropagation();
+    if (preferences.confirmDelete && !window.confirm('Delete this task from milestone?')) {
+      return;
+    }
+    deleteMilestoneTask(ambitionId, milestone.id, taskId);
+    SoundManager.playThud();
   };
 
   const startEditingMilestone = (e: React.MouseEvent) => {
@@ -137,12 +146,20 @@ const MilestoneCard = ({ milestone, ambitionId, key }: { milestone: any; ambitio
                 </div>
 
                 {!task.completed && editingTaskId !== task.id && (
-                  <button 
-                    onClick={(e) => startEditingTask(e, task)}
-                    className="opacity-0 group-hover:opacity-100 p-1 hover:text-primary transition-all"
-                  >
-                    <Edit2 size={12} />
-                  </button>
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                    <button 
+                      onClick={(e) => startEditingTask(e, task)}
+                      className="p-1 hover:text-primary"
+                    >
+                      <Edit2 size={12} />
+                    </button>
+                    <button 
+                      onClick={(e) => handleDeleteTask(e, task.id)}
+                      className="p-1 hover:text-error"
+                    >
+                      <Trash2 size={12} />
+                    </button>
+                  </div>
                 )}
               </div>
             ))}
