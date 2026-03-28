@@ -90,9 +90,9 @@ interface TrackStore {
   // Actions
   addAmbition: (title: string) => void;
   updateAmbition: (id: string, title: string) => void;
-  addTask: (time: string, title: string, ambitionId?: string) => void;
-  updateTask: (taskId: string, updates: Partial<Task>) => void;
-  deleteTask: (taskId: string) => void;
+  addTask: (time: string, title: string, ambitionId?: string) => Promise<void>;
+  updateTask: (taskId: string, updates: Partial<Task>) => Promise<void>;
+  deleteTask: (taskId: string) => Promise<void>;
   toggleTask: (taskId: string) => void;
   addReflection: (content: string, type: Reflection['type']) => void;
   addInternship: (internship: InternshipPeriod) => void;
@@ -161,14 +161,27 @@ export const useTrackStore = create<TrackStore>()(
         confirmDelete: true
       },
 
-      addAmbition: (title: string) => set((state) => ({
-        ambitions: [...state.ambitions, { id: Date.now().toString(), title, progress: 0, horizon: 'yearly', milestones: [] }]
-      })),
-      updateAmbition: (id: string, title: string) => set((state) => ({
-        ambitions: state.ambitions.map((a) => a.id === id ? { ...a, title } : a)
-      })),
+      addAmbition: (title: string) => set((state) => {
+        const newAmbition: Ambition = { id: Date.now().toString(), title, progress: 0, horizon: 'yearly', milestones: [] };
+        import('../db/client').then(({ db }) => {
+          db.query(`INSERT INTO ambitions (id, title, progress, horizon) VALUES ($1, $2, $3, $4)`, [
+            newAmbition.id, newAmbition.title, newAmbition.progress, newAmbition.horizon
+          ]);
+        });
+        return {
+          ambitions: [...state.ambitions, newAmbition]
+        };
+      }),
+      updateAmbition: (id, title) => set((state) => {
+        import('../db/client').then(({ db }) => {
+          db.query(`UPDATE ambitions SET title = $1 WHERE id = $2`, [title, id]);
+        });
+        return {
+          ambitions: state.ambitions.map((a) => a.id === id ? { ...a, title } : a)
+        };
+      }),
       addTask: (time, title, ambitionId) => set((state) => {
-        const newTask = { id: Date.now().toString(), time, title, completed: false, horizon: 'daily' as const, plannedDate: new Date().toISOString() };
+        const newTask: Task = { id: Date.now().toString(), time, title, completed: false, horizon: 'daily' as const, plannedDate: new Date().toISOString() };
         
         import('../db/client').then(({ db }) => {
           db.query(`INSERT INTO tasks (id, time, title, completed, horizon, planned_date, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
@@ -178,15 +191,40 @@ export const useTrackStore = create<TrackStore>()(
 
         return { tasks: [...state.tasks, newTask] };
       }),
-      deleteTask: (taskId: string) => set((state) => ({
-        tasks: state.tasks.filter((t) => t.id !== taskId)
-      })),
-      updateTask: (taskId, updates) => set((state) => ({
-        tasks: state.tasks.map((t) => t.id === taskId ? { ...t, ...updates } : t)
-      })),
-      toggleTask: (taskId: string) => set((state) => ({
-        tasks: state.tasks.map((t) => t.id === taskId ? { ...t, completed: !t.completed } : t)
-      })),
+      deleteTask: (taskId: string) => set((state) => {
+        const dbPromise = import('../db/client').then(({ db }) => {
+          return db.query(`DELETE FROM tasks WHERE id = $1`, [taskId]);
+        });
+        return {
+          tasks: state.tasks.filter((t) => t.id !== taskId)
+        };
+      }) as any,
+      updateTask: (taskId, updates) => set((state) => {
+        const task = state.tasks.find(t => t.id === taskId);
+        if (task) {
+          const dbPromise = import('../db/client').then(({ db }) => {
+            if (updates.title !== undefined) return db.query(`UPDATE tasks SET title = $1 WHERE id = $2`, [updates.title, taskId]);
+            if (updates.completed !== undefined) return db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [updates.completed, taskId]);
+            if (updates.time !== undefined) return db.query(`UPDATE tasks SET time = $1 WHERE id = $2`, [updates.time, taskId]);
+          });
+        }
+        return {
+          tasks: state.tasks.map((t) => t.id === taskId ? { ...t, ...updates } : t)
+        };
+      }) as any,
+      toggleTask: (taskId: string) => set((state) => {
+        const task = state.tasks.find(t => t.id === taskId);
+        if (task) {
+          const newCompleted = !task.completed;
+          import('../db/client').then(({ db }) => {
+            db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [newCompleted, taskId]);
+          });
+          return {
+            tasks: state.tasks.map((t) => t.id === taskId ? { ...t, completed: newCompleted } : t)
+          };
+        }
+        return state;
+      }),
       addReflection: (content: string, type: Reflection['type']) => set((state) => ({
         reflections: [...state.reflections, { id: Date.now().toString(), date: new Date().toISOString(), content, type }]
       })),
@@ -198,41 +236,70 @@ export const useTrackStore = create<TrackStore>()(
       })),
 
       // Macro Engine Actions
-      addMilestone: (ambitionId, title) => set((state) => ({
-        ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
-          ...a,
-          milestones: [...a.milestones, { id: Date.now().toString(), title, tasks: [], status: 'pending' }]
-        } : a)
-      })),
+      addMilestone: (ambitionId, title) => set((state) => {
+        const newMilestone: Milestone = { id: Date.now().toString(), title, tasks: [], status: 'pending' };
+        import('../db/client').then(({ db }) => {
+          db.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [
+            newMilestone.id, ambitionId, newMilestone.title, newMilestone.status
+          ]);
+        });
+        return {
+          ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
+            ...a,
+            milestones: [...a.milestones, newMilestone]
+          } : a)
+        };
+      }),
 
-      updateMilestone: (ambitionId, milestoneId, title) => set((state) => ({
-        ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
-          ...a,
-          milestones: a.milestones.map((m) => m.id === milestoneId ? { ...m, title } : m)
-        } : a)
-      })),
+      updateMilestone: (ambitionId, milestoneId, title) => set((state) => {
+        import('../db/client').then(({ db }) => {
+          db.query(`UPDATE milestones SET title = $1 WHERE id = $2`, [title, milestoneId]);
+        });
+        return {
+          ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
+            ...a,
+            milestones: a.milestones.map((m) => m.id === milestoneId ? { ...m, title } : m)
+          } : a)
+        };
+      }),
 
-      addMilestoneTask: (ambitionId, milestoneId, title) => set((state) => ({
-        ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
-          ...a,
-          milestones: a.milestones.map((m) => m.id === milestoneId ? {
-            ...m,
-            tasks: [...m.tasks, { id: Date.now().toString(), time: '00:00', title, completed: false, horizon: 'daily' }]
-          } : m)
-        } : a)
-      })),
+      addMilestoneTask: (ambitionId, milestoneId, title) => set((state) => {
+        const newTask: Task = { id: Date.now().toString(), time: '00:00', title, completed: false, horizon: 'daily' };
+        import('../db/client').then(({ db }) => {
+          db.query(`INSERT INTO tasks (id, milestone_id, time, title, completed, horizon) VALUES ($1, $2, $3, $4, $5, $6)`, [
+            newTask.id, milestoneId, newTask.time, newTask.title, newTask.completed, newTask.horizon
+          ]);
+        });
+        return {
+          ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
+            ...a,
+            milestones: a.milestones.map((m) => m.id === milestoneId ? {
+              ...m,
+              tasks: [...m.tasks, newTask]
+            } : m)
+          } : a)
+        };
+      }),
 
-      updateMilestoneTask: (ambitionId, milestoneId, taskId, title) => set((state) => ({
-        ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
-          ...a,
-          milestones: a.milestones.map((m) => m.id === milestoneId ? {
-            ...m,
-            tasks: m.tasks.map((t) => t.id === taskId ? { ...t, title } : t)
-          } : m)
-        } : a)
-      })),
+      updateMilestoneTask: (ambitionId, milestoneId, taskId, title) => set((state) => {
+        import('../db/client').then(({ db }) => {
+          db.query(`UPDATE tasks SET title = $1 WHERE id = $2`, [title, taskId]);
+        });
+        return {
+          ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
+            ...a,
+            milestones: a.milestones.map((m) => m.id === milestoneId ? {
+              ...m,
+              tasks: m.tasks.map((t) => t.id === taskId ? { ...t, title } : t)
+            } : m)
+          } : a)
+        };
+      }),
 
       deleteMilestoneTask: (ambitionId, milestoneId, taskId) => set((state) => {
+        import('../db/client').then(({ db }) => {
+          db.query(`DELETE FROM tasks WHERE id = $1`, [taskId]);
+        });
         const newAmbitions = state.ambitions.map((a) => {
           if (a.id !== ambitionId) return a;
           const newMilestones = a.milestones.map((m) => {
@@ -248,13 +315,26 @@ export const useTrackStore = create<TrackStore>()(
       }),
 
       toggleMilestoneTask: (ambitionId, milestoneId, taskId) => set((state) => {
+        let updatedTask: any = null;
         const newAmbitions = state.ambitions.map((a) => {
           if (a.id !== ambitionId) return a;
           const newMilestones = a.milestones.map((m) => {
             if (m.id !== milestoneId) return m;
-            const newTasks = m.tasks.map((t) => t.id === taskId ? { ...t, completed: !t.completed } : t);
+            const newTasks = m.tasks.map((t) => {
+              if (t.id === taskId) {
+                updatedTask = { ...t, completed: !t.completed };
+                return updatedTask;
+              }
+              return t;
+            });
             const allTasksCompleted = newTasks.length > 0 && newTasks.every(t => t.completed);
             const status: Milestone['status'] = allTasksCompleted ? 'completed' : (newTasks.some(t => t.completed) ? 'active' : 'pending');
+            
+            // Persist status change
+            import('../db/client').then(({ db }) => {
+              db.query(`UPDATE milestones SET status = $1 WHERE id = $2`, [status, milestoneId]);
+            });
+
             return { 
               ...m, 
               tasks: newTasks, 
@@ -266,6 +346,14 @@ export const useTrackStore = create<TrackStore>()(
           const totalTasks = newMilestones.reduce((acc, m) => acc + m.tasks.length, 0);
           const completedTasks = newMilestones.reduce((acc, m) => acc + m.tasks.filter(t => t.completed).length, 0);
           const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : a.progress;
+
+          // Persist progress and task toggle
+          import('../db/client').then(({ db }) => {
+            db.query(`UPDATE ambitions SET progress = $1 WHERE id = $2`, [progress, ambitionId]);
+            if (updatedTask) {
+              db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [updatedTask.completed, taskId]);
+            }
+          });
 
           return { ...a, milestones: newMilestones, progress };
         });
@@ -290,12 +378,24 @@ export const useTrackStore = create<TrackStore>()(
       updateOracleConfig: (config) => set((state) => ({
         oracleConfig: { ...state.oracleConfig, ...config }
       })),
-      updateProfile: (updates) => set((state) => ({
-        profile: { ...state.profile, ...updates }
-      })),
-      updatePreferences: (updates) => set((state) => ({
-        preferences: { ...state.preferences, ...updates }
-      })),
+      updateProfile: (updates) => set((state) => {
+        const newProfile = { ...state.profile, ...updates };
+        import('../db/client').then(({ db }) => {
+          db.query(`UPDATE profile SET name = $1, level = $2, title = $3 WHERE id = 1`, [
+            newProfile.name, newProfile.level, newProfile.title
+          ]);
+        });
+        return { profile: newProfile };
+      }),
+      updatePreferences: (updates) => set((state) => {
+        const newPrefs = { ...state.preferences, ...updates };
+        import('../db/client').then(({ db }) => {
+          db.query(`UPDATE preferences SET confirm_delete = $1 WHERE id = 1`, [
+            newPrefs.confirmDelete
+          ]);
+        });
+        return { preferences: newPrefs };
+      }),
       addOracleLog: (log, response) => set((state) => ({
         reflections: [...state.reflections, { 
           id: Date.now().toString(), 

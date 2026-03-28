@@ -3,6 +3,14 @@ import { describe, it, expect, vi } from 'vitest';
 import OrbitScheduler from './OrbitScheduler';
 import { useTrackStore } from '../../store/useTrackStore';
 
+vi.mock('../../utils/SoundManager', () => ({
+  SoundManager: {
+    playPop: vi.fn(),
+    playThud: vi.fn(),
+    playSwell: vi.fn(),
+  }
+}));
+
 // Mocking AudioContext
 // Mocking AudioContext properly
 class MockAudioContext {
@@ -24,11 +32,12 @@ class MockAudioContext {
 }
 
 vi.stubGlobal('AudioContext', MockAudioContext);
+vi.stubGlobal('confirm', vi.fn().mockReturnValue(true));
 
 describe('OrbitScheduler', () => {
   it('allows adding a new task', async () => {
     render(<OrbitScheduler />);
-    const input = screen.getByPlaceholderText('New task...');
+    const input = screen.getByPlaceholderText('What is the next mission step?...');
     const addButton = screen.getByRole('button', { name: /add task/i });
 
     await act(async () => {
@@ -43,7 +52,7 @@ describe('OrbitScheduler', () => {
     render(<OrbitScheduler />);
     
     // Add a task first
-    const input = screen.getByPlaceholderText('New task...');
+    const input = screen.getByPlaceholderText('What is the next mission step?...');
     const addButton = screen.getByRole('button', { name: /add task/i });
     await act(async () => {
         fireEvent.change(input, { target: { value: 'Task to delete' } });
