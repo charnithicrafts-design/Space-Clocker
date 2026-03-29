@@ -65,9 +65,30 @@ If you fall out of sync or engage with The Void, the system encourages recalibra
 
 ## 🔊 7. Integrated Audio Feedback
 The **SoundManager** provides organic feedback to reward your dopamine receptors:
-- **"Swell":** Triggers when launching a new Trajectory (Expansion).
-- **"Pop":** A crisp sound for task completion and additions (Satisfaction).
-- **"Thud":** A low warning for deletions or Void engagement (Caution).
+- **"Swell":** Triggers when launching a new Trajectory or restoring a snapshot (Expansion).
+- **"Pop":** A crisp sound for task completion, additions, or disconnecting links (Satisfaction).
+- **"Thud":** A low warning for deletions, Void engagement, or failed uplinks (Caution).
+- **"Uplink":** A high-tech transmission sound when starting a cloud sync or snapshot creation.
+- **"Success Arpeggio":** A melodic tone indicating a successful telemetry sync or data restore.
+
+---
+
+## 📡 8. The Communication Array (Data Portability)
+Protect your trajectory data and maintain continuity across multiple command centers (devices).
+
+### Chronos Backup (Binary Snapshots)
+- **Binary Precision:** Unlike standard exports, **Chronos Snapshots** capture the entire physical state of your local database (`.pgdump`).
+- **Create Snapshot:** Generate a timestamped recovery point. Perfect for "Long-Range Transitions" or before experimental changes.
+- **System Restore:** Hot-swap your current database with a previous snapshot to instantly revert to a specific moment in your mission history.
+
+### Stellar Sync (Cloud Uplink)
+- **Neural Link:** Connect your command center to **Google Drive** using your unique Client ID.
+- **Telemetry Uplink:** Manually push your latest trajectory to the Nebula to ensure your data is safe in orbit.
+- **Multi-Device Continuity:** Switch between your laptop and smartphone seamlessly. The system detects the most recent data stream automatically.
+
+### Temporal Rift Detection
+- **Divergence Alerts:** If the system detects a newer trajectory in the cloud than on your local device, a **Temporal Rift** warning will appear.
+- **Conflict Resolution:** Choose to **Adopt Remote Timeline** (pull remote data) or **Stay in Local Trajectory** (keep local data) to resolve the rift and maintain temporal stability.
 
 ---
 
