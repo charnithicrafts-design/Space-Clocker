@@ -1,70 +1,83 @@
-/**
- * @vitest-environment jsdom
- */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useTrackStore } from './useTrackStore';
+import * as DbClient from '../db/client';
+import { syncService } from '../services/SyncService';
 
-// Mock DB client
+// Mock DbClient
 vi.mock('../db/client', () => ({
-  db: {
+  getDb: vi.fn().mockReturnValue({
     query: vi.fn().mockResolvedValue({ rows: [] }),
-    exec: vi.fn().mockResolvedValue(undefined),
-    waitReady: Promise.resolve(),
+  }),
+  dumpDb: vi.fn().mockResolvedValue(new Blob(['test-dump'])),
+  restoreDb: vi.fn().mockResolvedValue(undefined),
+}));
+
+// Mock SyncService
+vi.mock('../services/SyncService', () => ({
+  syncService: {
+    checkDivergence: vi.fn(),
+    pullUpdate: vi.fn(),
+    pushUpdate: vi.fn(),
+    authorize: vi.fn(),
   }
 }));
 
-// Mock SoundManager
-vi.mock('../utils/SoundManager', () => ({
-  SoundManager: {
-    playPop: vi.fn(),
-    playThud: vi.fn(),
-    playSwell: vi.fn(),
-  }
-}));
-
-describe('useTrackStore Actions', () => {
+describe('useTrackStore - Communication Array', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset store state if needed, though Zustand persist is removed
+    // Reset store state if needed, though zustand store persists in memory during tests
+    useTrackStore.setState({
+      syncStatus: { isSyncing: false, lastSyncedAt: undefined },
+      oracleConfig: { apiKey: '', model: 'gemini-1.5-pro', providerUrl: '' }
+    });
   });
 
-  it('should add a task to state', async () => {
-    const { addTask } = useTrackStore.getState();
-    const title = 'New Test Task';
-    const time = '09:00';
+  it('should update sync status', () => {
+    const store = useTrackStore.getState();
+    store.setSyncStatus({ isSyncing: true, error: 'Test Error' });
     
-    await addTask(time, title);
-    
-    const state = useTrackStore.getState();
-    const task = state.tasks.find(t => t.title === title);
-    
-    expect(task).toBeDefined();
+    expect(useTrackStore.getState().syncStatus.isSyncing).toBe(true);
+    expect(useTrackStore.getState().syncStatus.error).toBe('Test Error');
   });
 
-  it('should update a task in state', async () => {
-    const { addTask, updateTask } = useTrackStore.getState();
-    await addTask('10:00', 'Original Title');
+  it('should check sync via syncService', async () => {
+    const store = useTrackStore.getState();
+    vi.mocked(syncService.checkDivergence).mockResolvedValue('remote_newer');
     
-    const state = useTrackStore.getState();
-    const task = state.tasks[state.tasks.length - 1];
+    const status = await store.checkSync();
     
-    await updateTask(task.id, { title: 'Updated Title' });
-    
-    const updatedState = useTrackStore.getState();
-    const updatedTask = updatedState.tasks.find(t => t.id === task.id);
-    expect(updatedTask?.title).toBe('Updated Title');
+    expect(syncService.checkDivergence).toHaveBeenCalled();
+    expect(status).toBe('remote_newer');
   });
 
-  it('should delete a task from state', async () => {
-    const { addTask, deleteTask } = useTrackStore.getState();
-    await addTask('11:00', 'To Be Deleted');
+  it('should perform pull and re-initialize', async () => {
+    const store = useTrackStore.getState();
+    const db = DbClient.getDb();
+    vi.mocked(db.query).mockResolvedValueOnce({ rows: [{ remote_file_id: 'remote-123' }] });
     
-    const state = useTrackStore.getState();
-    const task = state.tasks[state.tasks.length - 1];
+    // Mock initialize to verify it's called
+    const initializeSpy = vi.spyOn(store, 'initialize').mockResolvedValue(undefined);
+
+    await store.performPull();
     
-    await deleteTask(task.id);
+    expect(db.query).toHaveBeenCalledWith(expect.stringContaining('SELECT remote_file_id'));
+    expect(syncService.pullUpdate).toHaveBeenCalledWith('remote-123');
+    expect(initializeSpy).toHaveBeenCalled();
+  });
+
+  it('should initialize state from database', async () => {
+    const store = useTrackStore.getState();
+    const db = DbClient.getDb();
     
-    const updatedState = useTrackStore.getState();
-    expect(updatedState.tasks.find(t => t.id === task.id)).toBeUndefined();
+    vi.mocked(db.query).mockImplementation(async (query: string) => {
+      if (query.includes('FROM profile')) return { rows: [{ name: 'Test Pilot', level: 10, title: 'Commander' }] };
+      if (query.includes('FROM oracle_config')) return { rows: [{ api_key: 'key', model: 'm', provider_url: 'u' }] };
+      return { rows: [] };
+    });
+
+    await store.initialize();
+    
+    expect(useTrackStore.getState().profile.name).toBe('Test Pilot');
+    expect(useTrackStore.getState().oracleConfig.apiKey).toBe('key');
   });
 });
