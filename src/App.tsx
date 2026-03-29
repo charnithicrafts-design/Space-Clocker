@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/layout/Navigation';
 import MomentumEngine from './components/dashboard/MomentumEngine';
@@ -8,14 +8,34 @@ import CalendarShell from './components/horizon/CalendarShell';
 import EventHorizon from './components/horizon/EventHorizon';
 import SkillsMatrix from './components/skills/SkillsMatrix';
 import SettingsDashboard from './components/settings/SettingsDashboard';
+import SyncConflictModal from './components/reflection/SyncConflictModal';
 import { useTrackStore } from './store/useTrackStore';
 
 const App = () => {
-  const initialize = useTrackStore((state) => state.initialize);
+  const { initialize, checkSync, performPull, oracleConfig } = useTrackStore();
+  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
 
   useEffect(() => {
-    initialize();
-  }, [initialize]);
+    const startup = async () => {
+      await initialize();
+      
+      // Check for sync divergence if enabled
+      if (oracleConfig.syncEnabled) {
+        const result = await checkSync();
+        if (result === 'remote_newer') {
+          setIsSyncModalOpen(true);
+        }
+      }
+    };
+    startup();
+  }, [initialize, checkSync, oracleConfig.syncEnabled]);
+
+  const handleResolveConflict = async (strategy: 'local' | 'remote') => {
+    if (strategy === 'remote') {
+      await performPull();
+    }
+    setIsSyncModalOpen(false);
+  };
 
   return (
     <Router>
@@ -30,6 +50,12 @@ const App = () => {
           <Route path="/skills" element={<SkillsMatrix />} />
           <Route path="/settings" element={<SettingsDashboard />} />
         </Routes>
+
+        <SyncConflictModal 
+          isOpen={isSyncModalOpen}
+          onClose={() => setIsSyncModalOpen(false)}
+          onResolve={handleResolveConflict}
+        />
       </div>
     </Router>
   );

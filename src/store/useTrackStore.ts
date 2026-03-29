@@ -118,6 +118,8 @@ interface TrackStore {
   // Data Portability Actions
   importData: (data: Partial<TrackStore>) => void;
   setSyncStatus: (status: Partial<SyncStatus>) => void;
+  checkSync: () => Promise<'none' | 'remote_newer' | 'synced'>;
+  performPull: () => Promise<void>;
 
   // Oracle & Misc Actions
   updateOracleConfig: (config: Partial<OracleConfig>) => void;
@@ -178,6 +180,27 @@ export const useTrackStore = create<TrackStore>()(
       setSyncStatus: (status) => set((state) => ({
         syncStatus: { ...state.syncStatus, ...status }
       })),
+
+      checkSync: async () => {
+        const { syncService } = await import('../services/SyncService');
+        return await syncService.checkDivergence();
+      },
+
+      performPull: async () => {
+        const { syncService } = await import('../services/SyncService');
+        const { getDb } = await import('../db/client');
+        
+        // Find the remote file id from metadata or service
+        const db = getDb();
+        const meta = (await db.query('SELECT remote_file_id FROM sync_metadata WHERE id = 1')).rows[0];
+        
+        if (meta?.remote_file_id) {
+          await syncService.pullUpdate(meta.remote_file_id);
+          // Re-initialize state
+          const currentStore = get();
+          await currentStore.initialize();
+        }
+      },
 
       addAmbition: async (title: string) => {
         const newAmbition: Ambition = { id: Date.now().toString(), title, progress: 0, horizon: 'yearly', milestones: [] };
