@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
-import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe } from 'lucide-react';
+import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, Check, AlertCircle } from 'lucide-react';
 import { dumpDb, restoreDb } from '../../db/client';
+import { syncService } from '../../services/SyncService';
 
 const SettingsDashboard = () => {
   const store = useTrackStore();
-  const { profile, oracleConfig, preferences, updateProfile, updateOracleConfig, updatePreferences, importData, initialize } = store;
+  const { profile, oracleConfig, preferences, syncStatus, updateProfile, updateOracleConfig, updatePreferences, importData, initialize, setSyncStatus } = store;
 
   const [localProfile, setLocalProfile] = useState(profile);
   const [localOracle, setLocalOracle] = useState(oracleConfig);
@@ -21,6 +22,17 @@ const SettingsDashboard = () => {
     updatePreferences(localPrefs);
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 2000);
+  };
+
+  const handleSyncNow = async () => {
+    try {
+      setSyncStatus({ isSyncing: true, error: undefined });
+      const { syncedAt } = await syncService.pushUpdate();
+      setSyncStatus({ isSyncing: false, lastSyncedAt: syncedAt });
+    } catch (err) {
+      console.error('Sync failed:', err);
+      setSyncStatus({ isSyncing: false, error: 'Telemetry Uplink Failed' });
+    }
   };
 
   const handleExportJSON = () => {
@@ -160,11 +172,12 @@ const SettingsDashboard = () => {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Model</label>
+              <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Google Client ID (Sync)</label>
               <input 
                 className="w-full bg-surface-high p-4 rounded-xl border border-outline-variant focus:border-secondary focus:outline-none transition-colors"
-                value={localOracle.model}
-                onChange={(e) => setLocalOracle({ ...localOracle, model: e.target.value })}
+                placeholder="Neural Link Client ID"
+                value={localOracle.clientId || ''}
+                onChange={(e) => setLocalOracle({ ...localOracle, clientId: e.target.value })}
               />
             </div>
             <div>
@@ -186,7 +199,57 @@ const SettingsDashboard = () => {
           </div>
           
           <div className="space-y-4">
-            <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Chronos Backup (Binary)</h4>
+            <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
+              <Cloud size={14} className="text-secondary" />
+              Stellar Sync (Cloud)
+            </h4>
+            
+            <div className="p-4 rounded-2xl bg-surface-high border border-outline-variant space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h5 className="font-bold text-sm">Neural Link Status</h5>
+                  <p className="text-[10px] text-on-surface-variant uppercase tracking-tighter">
+                    {syncStatus.lastSyncedAt ? `Last Uplink: ${new Date(syncStatus.lastSyncedAt).toLocaleString()}` : 'Array Disconnected'}
+                  </p>
+                </div>
+                <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${localOracle.syncEnabled ? 'bg-success/20 text-success border border-success/30' : 'bg-surface-low text-on-surface-variant border border-outline-variant'}`}>
+                  {localOracle.syncEnabled ? 'Active' : 'Offline'}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <button 
+                  onClick={() => setLocalOracle({ ...localOracle, syncEnabled: !localOracle.syncEnabled })}
+                  className={`flex items-center justify-center gap-2 p-3 rounded-xl border transition-all font-bold text-[10px] uppercase tracking-widest ${localOracle.syncEnabled ? 'bg-error/10 border-error/20 text-error hover:bg-error/20' : 'bg-primary/10 border-primary/20 text-primary hover:bg-primary/20'}`}
+                >
+                  <Link size={14} />
+                  {localOracle.syncEnabled ? 'Sever Link' : 'Establish Link'}
+                </button>
+                
+                <button 
+                  onClick={handleSyncNow}
+                  disabled={!localOracle.syncEnabled || syncStatus.isSyncing}
+                  className="flex items-center justify-center gap-2 p-3 rounded-xl bg-secondary/10 border border-secondary/20 text-secondary hover:bg-secondary/20 transition-all font-bold text-[10px] uppercase tracking-widest disabled:opacity-30"
+                >
+                  <RefreshCcw size={14} className={syncStatus.isSyncing ? 'animate-spin' : ''} />
+                  {syncStatus.isSyncing ? 'Uplinking...' : 'Sync Now'}
+                </button>
+              </div>
+
+              {syncStatus.error && (
+                <div className="flex items-center gap-2 text-error text-[10px] font-bold bg-error/5 p-2 rounded-lg border border-error/10">
+                  <AlertCircle size={12} />
+                  {syncStatus.error}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="space-y-4 pt-4 border-t border-outline-variant">
+            <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
+              <Database size={14} className="text-primary" />
+              Chronos Backup (Binary)
+            </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <button 
                 onClick={handleCreateSnapshot}
@@ -201,25 +264,6 @@ const SettingsDashboard = () => {
                 <RefreshCcw size={20} className={isRestoring ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'} />
                 <span className="font-bold uppercase text-xs tracking-widest">Restore Snapshot</span>
                 <input type="file" className="hidden" accept=".pgdump" onChange={handleRestoreSnapshot} />
-              </label>
-            </div>
-          </div>
-
-          <div className="space-y-4 pt-4 border-t border-outline-variant">
-            <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Legacy Portability (JSON)</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <button 
-                onClick={handleExportJSON}
-                className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-surface-low border border-outline-variant hover:border-primary-container hover:text-primary-container transition-all group opacity-70"
-              >
-                <Download size={18} />
-                <span className="font-bold uppercase text-[10px] tracking-widest">Export JSON</span>
-              </button>
-              
-              <label className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-surface-low border border-outline-variant hover:border-secondary-container hover:text-secondary-container transition-all group cursor-pointer opacity-70">
-                <Upload size={18} />
-                <span className="font-bold uppercase text-[10px] tracking-widest">Import JSON</span>
-                <input type="file" className="hidden" accept=".json" onChange={handleImportJSON} />
               </label>
             </div>
           </div>

@@ -29,7 +29,17 @@ CREATE TABLE IF NOT EXISTS oracle_config (
   api_key TEXT DEFAULT '',
   model TEXT DEFAULT 'gemini-1.5-pro',
   provider_url TEXT DEFAULT 'https://generativelanguage.googleapis.com/v1beta/openai',
+  client_id TEXT DEFAULT '',
+  sync_enabled BOOLEAN DEFAULT false,
   CONSTRAINT single_oracle CHECK (id = 1)
+);
+
+CREATE TABLE IF NOT EXISTS sync_metadata (
+  id INTEGER PRIMARY KEY DEFAULT 1,
+  last_synced_at TEXT,
+  device_id TEXT,
+  remote_file_id TEXT,
+  CONSTRAINT single_sync CHECK (id = 1)
 );
 
 -- Ambitions & Milestones

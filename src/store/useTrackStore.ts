@@ -65,6 +65,14 @@ export interface OracleConfig {
   apiKey: string;
   model: string;
   providerUrl: string;
+  clientId?: string;
+  syncEnabled?: boolean;
+}
+
+export interface SyncStatus {
+  isSyncing: boolean;
+  lastSyncedAt?: string;
+  error?: string;
 }
 
 export interface Preferences {
@@ -86,6 +94,7 @@ interface TrackStore {
   };
   oracleConfig: OracleConfig;
   preferences: Preferences;
+  syncStatus: SyncStatus;
   
   // Actions
   addAmbition: (title: string) => Promise<void>;
@@ -108,6 +117,7 @@ interface TrackStore {
 
   // Data Portability Actions
   importData: (data: Partial<TrackStore>) => void;
+  setSyncStatus: (status: Partial<SyncStatus>) => void;
 
   // Oracle & Misc Actions
   updateOracleConfig: (config: Partial<OracleConfig>) => void;
@@ -160,6 +170,14 @@ export const useTrackStore = create<TrackStore>()(
       preferences: {
         confirmDelete: true
       },
+      syncStatus: {
+        isSyncing: false,
+        lastSyncedAt: undefined
+      },
+
+      setSyncStatus: (status) => set((state) => ({
+        syncStatus: { ...state.syncStatus, ...status }
+      })),
 
       addAmbition: async (title: string) => {
         const newAmbition: Ambition = { id: Date.now().toString(), title, progress: 0, horizon: 'yearly', milestones: [] };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Target, Clock, Brain, Telescope, Settings, CalendarDays } from 'lucide-react';
+import { LayoutDashboard, Target, Clock, Brain, Telescope, Settings, CalendarDays, Globe, RefreshCcw, AlertCircle } from 'lucide-react';
+import { useTrackStore } from '../../store/useTrackStore';
 
 interface NavLinkProps {
   to: string;
@@ -18,6 +19,7 @@ const NavLink: React.FC<NavLinkProps> = ({ to, icon: Icon, label, active }) => (
 
 const Navigation = () => {
   const { pathname } = useLocation();
+  const { syncStatus, oracleConfig } = useTrackStore();
   
   const links = [
     { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -48,6 +50,26 @@ const Navigation = () => {
             return <NavLink key={to} to={to} {...rest} active={pathname === to} />;
           })}
         </div>
+
+        {/* Sync Status Overlay */}
+        {oracleConfig.syncEnabled && (
+          <div className="px-3 py-4 bg-surface-low rounded-2xl border border-outline-variant/30 flex items-center gap-3 group">
+            <div className={`relative ${syncStatus.isSyncing ? 'animate-spin' : ''}`}>
+              <Globe size={18} className={syncStatus.error ? 'text-error' : 'text-secondary'} />
+              {syncStatus.isSyncing && (
+                <div className="absolute inset-0 bg-secondary blur-sm opacity-50 animate-pulse" />
+              )}
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant truncate">
+                {syncStatus.isSyncing ? 'Uplinking...' : (syncStatus.error ? 'Comms Error' : 'Comms Active')}
+              </p>
+              {syncStatus.lastSyncedAt && !syncStatus.error && !syncStatus.isSyncing && (
+                <p className="text-[8px] text-success/70 font-mono">Telemetry OK</p>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="pt-6 border-t border-outline-variant">
           <NavLink 
