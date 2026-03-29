@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
-import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw } from 'lucide-react';
+import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe } from 'lucide-react';
+import { dumpDb, restoreDb } from '../../db/client';
 
 const SettingsDashboard = () => {
   const store = useTrackStore();
-  const { profile, oracleConfig, preferences, updateProfile, updateOracleConfig, updatePreferences, importData } = store;
+  const { profile, oracleConfig, preferences, updateProfile, updateOracleConfig, updatePreferences, importData, initialize } = store;
 
   const [localProfile, setLocalProfile] = useState(profile);
   const [localOracle, setLocalOracle] = useState(oracleConfig);
   const [localPrefs, setLocalPrefs] = useState(preferences);
   const [isSaved, setIsSaved] = useState(false);
+  const [isDumping, setIsDumping] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
 
   const handleSave = () => {
     updateProfile(localProfile);
@@ -20,7 +23,7 @@ const SettingsDashboard = () => {
     setTimeout(() => setIsSaved(false), 2000);
   };
 
-  const handleExport = () => {
+  const handleExportJSON = () => {
     const data = JSON.stringify(store, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -31,7 +34,7 @@ const SettingsDashboard = () => {
     URL.revokeObjectURL(url);
   };
 
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -47,6 +50,43 @@ const SettingsDashboard = () => {
       }
     };
     reader.readAsText(file);
+  };
+
+  const handleCreateSnapshot = async () => {
+    try {
+      setIsDumping(true);
+      const blob = await dumpDb();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `chronos-snapshot-${new Date().toISOString().split('T')[0]}.pgdump`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Snapshot failed:', err);
+      alert('Failed to create system snapshot.');
+    } finally {
+      setIsDumping(false);
+    }
+  };
+
+  const handleRestoreSnapshot = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    if (window.confirm('CRITICAL: This will replace your entire local database with the snapshot. Proceed?')) {
+      try {
+        setIsRestoring(true);
+        await restoreDb(file);
+        await initialize(); // Reload state from the new DB
+        window.location.reload();
+      } catch (err) {
+        console.error('Restore failed:', err);
+        alert('Failed to restore snapshot. Ensure it is a valid .pgdump file.');
+      } finally {
+        setIsRestoring(false);
+      }
+    }
   };
 
   const handleReset = () => {
@@ -138,27 +178,50 @@ const SettingsDashboard = () => {
           </div>
         </section>
 
-        {/* Portability Section */}
+        {/* Communication Array Section */}
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
           <div className="flex items-center gap-3 border-b border-outline-variant pb-4 mb-4">
-            <Shield className="text-primary-container" />
-            <h3 className="font-display font-bold text-xl">Data Portability</h3>
+            <Globe className="text-primary-container" />
+            <h3 className="font-display font-bold text-xl">Communication Array</h3>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <button 
-              onClick={handleExport}
-              className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-surface-high border border-outline-variant hover:border-primary hover:text-primary transition-all group"
-            >
-              <Download size={20} className="group-hover:-translate-y-1 transition-transform" />
-              <span className="font-bold uppercase text-xs tracking-widest">Export JSON</span>
-            </button>
-            
-            <label className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-surface-high border border-outline-variant hover:border-secondary hover:text-secondary transition-all group cursor-pointer">
-              <Upload size={20} className="group-hover:-translate-y-1 transition-transform" />
-              <span className="font-bold uppercase text-xs tracking-widest">Import JSON</span>
-              <input type="file" className="hidden" accept=".json" onChange={handleImport} />
-            </label>
+          <div className="space-y-4">
+            <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Chronos Backup (Binary)</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button 
+                onClick={handleCreateSnapshot}
+                disabled={isDumping}
+                className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-surface-high border border-outline-variant hover:border-primary hover:text-primary transition-all group disabled:opacity-50"
+              >
+                <Database size={20} className={isDumping ? 'animate-pulse' : 'group-hover:-translate-y-1 transition-transform'} />
+                <span className="font-bold uppercase text-xs tracking-widest">{isDumping ? 'Dumping...' : 'Create Snapshot'}</span>
+              </button>
+              
+              <label className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-surface-high border border-outline-variant hover:border-secondary hover:text-secondary transition-all group cursor-pointer">
+                <RefreshCcw size={20} className={isRestoring ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'} />
+                <span className="font-bold uppercase text-xs tracking-widest">Restore Snapshot</span>
+                <input type="file" className="hidden" accept=".pgdump" onChange={handleRestoreSnapshot} />
+              </label>
+            </div>
+          </div>
+
+          <div className="space-y-4 pt-4 border-t border-outline-variant">
+            <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Legacy Portability (JSON)</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button 
+                onClick={handleExportJSON}
+                className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-surface-low border border-outline-variant hover:border-primary-container hover:text-primary-container transition-all group opacity-70"
+              >
+                <Download size={18} />
+                <span className="font-bold uppercase text-[10px] tracking-widest">Export JSON</span>
+              </button>
+              
+              <label className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-surface-low border border-outline-variant hover:border-secondary-container hover:text-secondary-container transition-all group cursor-pointer opacity-70">
+                <Upload size={18} />
+                <span className="font-bold uppercase text-[10px] tracking-widest">Import JSON</span>
+                <input type="file" className="hidden" accept=".json" onChange={handleImportJSON} />
+              </label>
+            </div>
           </div>
           
           <div className="pt-4 border-t border-outline-variant">
@@ -200,9 +263,9 @@ const SettingsDashboard = () => {
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl flex flex-col justify-center items-center text-center space-y-4">
           <RefreshCcw className="text-on-surface-variant animate-spin-slow" size={48} />
           <div>
-            <h3 className="font-display font-bold text-xl">System Version 1.2.0</h3>
+            <h3 className="font-display font-bold text-xl">System Version 1.3.0</h3>
             <p className="text-on-surface-variant text-sm mt-2 max-w-xs">
-              Your trajectory data is stored locally in your browser's neural buffer. Back up often to prevent data loss during deep space transitions.
+              Your trajectory data is protected by Chronos Snapshots. Use the Communication Array to sync across devices.
             </p>
           </div>
         </section>
