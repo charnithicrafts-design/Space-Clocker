@@ -192,7 +192,7 @@ export const useTrackStore = create<TrackStore>()(
         
         // Find the remote file id from metadata or service
         const db = getDb();
-        const meta = (await db.query('SELECT remote_file_id FROM sync_metadata WHERE id = 1')).rows[0];
+        const meta = (await db.query<{ remote_file_id: string }>('SELECT remote_file_id FROM sync_metadata WHERE id = 1')).rows[0];
         
         if (meta?.remote_file_id) {
           await syncService.pullUpdate(meta.remote_file_id);

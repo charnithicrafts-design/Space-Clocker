@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
-import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, Check, AlertCircle } from 'lucide-react';
+import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle } from 'lucide-react';
 import { dumpDb, restoreDb } from '../../db/client';
 import { syncService } from '../../services/SyncService';
+import { SoundManager } from '../../utils/SoundManager';
 
 const SettingsDashboard = () => {
   const store = useTrackStore();
@@ -27,12 +28,38 @@ const SettingsDashboard = () => {
   const handleSyncNow = async () => {
     try {
       setSyncStatus({ isSyncing: true, error: undefined });
+      SoundManager.playUplink();
       const { syncedAt } = await syncService.pushUpdate();
       setSyncStatus({ isSyncing: false, lastSyncedAt: syncedAt });
+      SoundManager.playSyncSuccess();
     } catch (err) {
       console.error('Sync failed:', err);
       setSyncStatus({ isSyncing: false, error: 'Telemetry Uplink Failed' });
+      SoundManager.playThud();
     }
+  };
+
+  const handleEstablishLink = async () => {
+    try {
+      if (!localOracle.clientId) {
+        alert('Please provide a Google Client ID first.');
+        return;
+      }
+      setSyncStatus({ isSyncing: true, error: undefined });
+      await syncService.authorize(localOracle.clientId);
+      updateOracleConfig({ syncEnabled: true });
+      setSyncStatus({ isSyncing: false });
+      SoundManager.playSyncSuccess();
+    } catch (err) {
+      console.error('Auth failed:', err);
+      setSyncStatus({ isSyncing: false, error: 'Neural Link Authorization Failed' });
+      SoundManager.playThud();
+    }
+  };
+
+  const handleSeverLink = () => {
+    updateOracleConfig({ syncEnabled: false });
+    SoundManager.playPop();
   };
 
   const handleExportJSON = () => {
@@ -67,6 +94,7 @@ const SettingsDashboard = () => {
   const handleCreateSnapshot = async () => {
     try {
       setIsDumping(true);
+      SoundManager.playPop();
       const blob = await dumpDb();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -74,9 +102,11 @@ const SettingsDashboard = () => {
       a.download = `chronos-snapshot-${new Date().toISOString().split('T')[0]}.pgdump`;
       a.click();
       URL.revokeObjectURL(url);
+      SoundManager.playSyncSuccess();
     } catch (err) {
       console.error('Snapshot failed:', err);
       alert('Failed to create system snapshot.');
+      SoundManager.playThud();
     } finally {
       setIsDumping(false);
     }
@@ -89,12 +119,15 @@ const SettingsDashboard = () => {
     if (window.confirm('CRITICAL: This will replace your entire local database with the snapshot. Proceed?')) {
       try {
         setIsRestoring(true);
+        SoundManager.playSwell();
         await restoreDb(file);
-        await initialize(); // Reload state from the new DB
+        await initialize();
+        SoundManager.playSyncSuccess();
         window.location.reload();
       } catch (err) {
         console.error('Restore failed:', err);
         alert('Failed to restore snapshot. Ensure it is a valid .pgdump file.');
+        SoundManager.playThud();
       } finally {
         setIsRestoring(false);
       }
@@ -117,13 +150,11 @@ const SettingsDashboard = () => {
       </header>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-        {/* Profile Section */}
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
           <div className="flex items-center gap-3 border-b border-outline-variant pb-4 mb-4">
             <User className="text-primary" />
             <h3 className="font-display font-bold text-xl">Pilot Profile</h3>
           </div>
-          
           <div className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Pilot Name</label>
@@ -153,13 +184,11 @@ const SettingsDashboard = () => {
           </div>
         </section>
 
-        {/* Oracle Section */}
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
           <div className="flex items-center gap-3 border-b border-outline-variant pb-4 mb-4">
             <Cpu className="text-secondary" />
             <h3 className="font-display font-bold text-xl">AI Oracle (Neural Link)</h3>
           </div>
-          
           <div className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">API Key</label>
@@ -191,19 +220,16 @@ const SettingsDashboard = () => {
           </div>
         </section>
 
-        {/* Communication Array Section */}
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
           <div className="flex items-center gap-3 border-b border-outline-variant pb-4 mb-4">
             <Globe className="text-primary-container" />
             <h3 className="font-display font-bold text-xl">Communication Array</h3>
           </div>
-          
           <div className="space-y-4">
             <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
               <Cloud size={14} className="text-secondary" />
               Stellar Sync (Cloud)
             </h4>
-            
             <div className="p-4 rounded-2xl bg-surface-high border border-outline-variant space-y-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -212,30 +238,27 @@ const SettingsDashboard = () => {
                     {syncStatus.lastSyncedAt ? `Last Uplink: ${new Date(syncStatus.lastSyncedAt).toLocaleString()}` : 'Array Disconnected'}
                   </p>
                 </div>
-                <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${localOracle.syncEnabled ? 'bg-success/20 text-success border border-success/30' : 'bg-surface-low text-on-surface-variant border border-outline-variant'}`}>
-                  {localOracle.syncEnabled ? 'Active' : 'Offline'}
+                <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${oracleConfig.syncEnabled ? 'bg-success/20 text-success border border-success/30' : 'bg-surface-low text-on-surface-variant border border-outline-variant'}`}>
+                  {oracleConfig.syncEnabled ? 'Active' : 'Offline'}
                 </div>
               </div>
-
               <div className="grid grid-cols-2 gap-3">
                 <button 
-                  onClick={() => setLocalOracle({ ...localOracle, syncEnabled: !localOracle.syncEnabled })}
-                  className={`flex items-center justify-center gap-2 p-3 rounded-xl border transition-all font-bold text-[10px] uppercase tracking-widest ${localOracle.syncEnabled ? 'bg-error/10 border-error/20 text-error hover:bg-error/20' : 'bg-primary/10 border-primary/20 text-primary hover:bg-primary/20'}`}
+                  onClick={oracleConfig.syncEnabled ? handleSeverLink : handleEstablishLink}
+                  className={`flex items-center justify-center gap-2 p-3 rounded-xl border transition-all font-bold text-[10px] uppercase tracking-widest ${oracleConfig.syncEnabled ? 'bg-error/10 border-error/20 text-error hover:bg-error/20' : 'bg-primary/10 border-primary/20 text-primary hover:bg-primary/20'}`}
                 >
                   <Link size={14} />
-                  {localOracle.syncEnabled ? 'Sever Link' : 'Establish Link'}
+                  {oracleConfig.syncEnabled ? 'Sever Link' : 'Establish Link'}
                 </button>
-                
                 <button 
                   onClick={handleSyncNow}
-                  disabled={!localOracle.syncEnabled || syncStatus.isSyncing}
+                  disabled={!oracleConfig.syncEnabled || syncStatus.isSyncing}
                   className="flex items-center justify-center gap-2 p-3 rounded-xl bg-secondary/10 border border-secondary/20 text-secondary hover:bg-secondary/20 transition-all font-bold text-[10px] uppercase tracking-widest disabled:opacity-30"
                 >
                   <RefreshCcw size={14} className={syncStatus.isSyncing ? 'animate-spin' : ''} />
                   {syncStatus.isSyncing ? 'Uplinking...' : 'Sync Now'}
                 </button>
               </div>
-
               {syncStatus.error && (
                 <div className="flex items-center gap-2 text-error text-[10px] font-bold bg-error/5 p-2 rounded-lg border border-error/10">
                   <AlertCircle size={12} />
@@ -244,7 +267,6 @@ const SettingsDashboard = () => {
               )}
             </div>
           </div>
-
           <div className="space-y-4 pt-4 border-t border-outline-variant">
             <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
               <Database size={14} className="text-primary" />
@@ -259,7 +281,6 @@ const SettingsDashboard = () => {
                 <Database size={20} className={isDumping ? 'animate-pulse' : 'group-hover:-translate-y-1 transition-transform'} />
                 <span className="font-bold uppercase text-xs tracking-widest">{isDumping ? 'Dumping...' : 'Create Snapshot'}</span>
               </button>
-              
               <label className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-surface-high border border-outline-variant hover:border-secondary hover:text-secondary transition-all group cursor-pointer">
                 <RefreshCcw size={20} className={isRestoring ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'} />
                 <span className="font-bold uppercase text-xs tracking-widest">Restore Snapshot</span>
@@ -267,7 +288,6 @@ const SettingsDashboard = () => {
               </label>
             </div>
           </div>
-          
           <div className="pt-4 border-t border-outline-variant">
             <button 
               onClick={handleReset}
@@ -279,13 +299,11 @@ const SettingsDashboard = () => {
           </div>
         </section>
 
-        {/* Preferences Section */}
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
           <div className="flex items-center gap-3 border-b border-outline-variant pb-4 mb-4">
             <RefreshCcw className="text-secondary" />
             <h3 className="font-display font-bold text-xl">System Preferences</h3>
           </div>
-          
           <div className="flex items-center justify-between p-4 rounded-2xl bg-surface-high border border-outline-variant">
             <div>
               <h4 className="font-bold text-sm">Confirm Deletion</h4>
@@ -303,7 +321,6 @@ const SettingsDashboard = () => {
           </div>
         </section>
 
-        {/* Info Section */}
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl flex flex-col justify-center items-center text-center space-y-4">
           <RefreshCcw className="text-on-surface-variant animate-spin-slow" size={48} />
           <div>

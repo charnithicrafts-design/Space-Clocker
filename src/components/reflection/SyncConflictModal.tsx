@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, RefreshCcw, ArrowRight, X } from 'lucide-react';
+import { SoundManager } from '../../utils/SoundManager';
 
 interface SyncConflictModalProps {
   isOpen: boolean;
@@ -10,6 +11,21 @@ interface SyncConflictModalProps {
 }
 
 const SyncConflictModal: React.FC<SyncConflictModalProps> = ({ isOpen, onClose, onResolve, remoteDate }) => {
+  React.useEffect(() => {
+    if (isOpen) {
+      SoundManager.playSwell();
+    }
+  }, [isOpen]);
+
+  const handleResolve = (strategy: 'local' | 'remote') => {
+    if (strategy === 'remote') {
+      SoundManager.playUplink();
+    } else {
+      SoundManager.playPop();
+    }
+    onResolve(strategy);
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -69,7 +85,7 @@ const SyncConflictModal: React.FC<SyncConflictModalProps> = ({ isOpen, onClose, 
 
               <div className="grid grid-cols-1 gap-3 pt-4">
                 <button 
-                  onClick={() => onResolve('remote')}
+                  onClick={() => handleResolve('remote')}
                   className="flex items-center justify-between p-4 rounded-2xl bg-secondary text-on-secondary font-black uppercase tracking-tighter hover:shadow-[0_0_20px_rgba(var(--color-secondary-rgb),0.3)] transition-all group"
                 >
                   <div className="flex items-center gap-3">
@@ -79,7 +95,7 @@ const SyncConflictModal: React.FC<SyncConflictModalProps> = ({ isOpen, onClose, 
                 </button>
                 
                 <button 
-                  onClick={() => onResolve('local')}
+                  onClick={() => handleResolve('local')}
                   className="flex items-center justify-between p-4 rounded-2xl border border-outline-variant text-on-surface-variant hover:text-white hover:border-white/30 transition-all font-bold uppercase text-xs tracking-widest"
                 >
                   <span>Stay in Local Trajectory</span>

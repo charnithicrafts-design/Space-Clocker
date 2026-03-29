@@ -40,6 +40,59 @@ export class SoundManager {
     oscillator.stop(this.context.currentTime + 1.0);
   }
 
+  static async playUplink() {
+    await this.ensureContext();
+    if (!this.context) return;
+    const osc1 = this.context.createOscillator();
+    const osc2 = this.context.createOscillator();
+    const gain = this.context.createGain();
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(this.context.destination);
+
+    osc1.type = 'sine';
+    osc2.type = 'square';
+    
+    osc1.frequency.setValueAtTime(440, this.context.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(1760, this.context.currentTime + 0.5);
+    
+    osc2.frequency.setValueAtTime(220, this.context.currentTime);
+    osc2.frequency.exponentialRampToValueAtTime(880, this.context.currentTime + 0.5);
+
+    gain.gain.setValueAtTime(0.05, this.context.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, this.context.currentTime + 0.5);
+
+    osc1.start();
+    osc2.start();
+    osc1.stop(this.context.currentTime + 0.5);
+    osc2.stop(this.context.currentTime + 0.5);
+  }
+
+  static async playSyncSuccess() {
+    await this.ensureContext();
+    if (!this.context) return;
+    const osc = this.context.createOscillator();
+    const gain = this.context.createGain();
+
+    osc.connect(gain);
+    gain.connect(this.context.destination);
+
+    osc.type = 'sine';
+    const now = this.context.currentTime;
+    
+    // Arpeggio
+    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+      osc.frequency.setValueAtTime(freq, now + i * 0.1);
+    });
+
+    gain.gain.setValueAtTime(0.1, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+    osc.start();
+    osc.stop(now + 0.6);
+  }
+
   private static async ensureContext() {
     if (this.context && this.context.state === 'suspended') {
       await this.context.resume();
