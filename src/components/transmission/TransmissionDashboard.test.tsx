@@ -101,4 +101,23 @@ describe('TransmissionDashboard', () => {
     expect(screen.getByText('Pilot\'s Discussion & Analysis')).toBeDefined();
     expect(screen.getByText('"Test narrative"')).toBeDefined();
   });
+
+  it('copies share link to clipboard when clicking Share Signal', async () => {
+    const mockClipboard = {
+      writeText: vi.fn().mockResolvedValue(undefined)
+    };
+    vi.stubGlobal('navigator', { clipboard: mockClipboard });
+
+    render(
+      <MemoryRouter>
+        <TransmissionDashboard />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByText('Daily Briefing'));
+    fireEvent.click(screen.getByText('Share Signal'));
+
+    expect(mockClipboard.writeText).toHaveBeenCalledWith(expect.stringContaining('/transmission/share#'));
+    expect(screen.getByText('Signal Copied')).toBeDefined();
+  });
 });

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useReactToPrint } from 'react-to-print';
 import { 
   Signal, 
   Plus, 
@@ -13,12 +14,29 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { useTrackStore, Transmission } from '../../store/useTrackStore';
+import { generateShareLink } from '../../utils/TransmissionExporter';
 
 const TransmissionDashboard = () => {
   const { transmissions, generateTransmission, deleteTransmission } = useTrackStore();
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedTx, setSelectedTx] = useState<Transmission | null>(null);
   const [viewMode, setViewMode] = useState<'glossy' | 'raw'>('glossy');
+  const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle');
+
+  const contentRef = useRef<HTMLDivElement>(null);
+  const handlePrint = useReactToPrint({
+    contentRef,
+    documentTitle: selectedTx ? `${selectedTx.id}_BRIEFING` : 'TRANSMISSION',
+  });
+
+  const handleShare = () => {
+    if (selectedTx) {
+      const link = generateShareLink(selectedTx);
+      navigator.clipboard.writeText(link);
+      setShareStatus('copied');
+      setTimeout(() => setShareStatus('idle'), 2000);
+    }
+  };
 
   const formatDate = (dateStr: string) => {
     try {
@@ -134,6 +152,7 @@ const TransmissionDashboard = () => {
             {selectedTx ? (
               <motion.div
                 key={selectedTx.id}
+                ref={contentRef}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -150,7 +169,7 @@ const TransmissionDashboard = () => {
                     <p className="text-on-surface-variant font-medium">Transmission Date: {formatFullDate(selectedTx.timestamp)}</p>
                   </div>
                   
-                  <div className="flex items-center gap-2 bg-surface-low p-1.5 rounded-2xl border border-outline-variant/30">
+                  <div className="flex items-center gap-2 bg-surface-low p-1.5 rounded-2xl border border-outline-variant/30 no-print">
                     <button 
                       onClick={() => setViewMode('glossy')}
                       className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${viewMode === 'glossy' ? 'bg-primary text-on-primary shadow-lg shadow-primary/20' : 'text-on-surface-variant hover:text-primary'}`}
@@ -268,7 +287,7 @@ const TransmissionDashboard = () => {
                   )}
                 </div>
 
-                <div className="mt-12 flex justify-between items-center pt-8 border-t border-outline-variant/20">
+                <div className="mt-12 flex justify-between items-center pt-8 border-t border-outline-variant/20 no-print">
                   <button 
                     onClick={() => {
                       if (confirm('Declassify and delete this transmission permanently?')) {
@@ -282,11 +301,17 @@ const TransmissionDashboard = () => {
                   </button>
                   
                   <div className="flex gap-4">
-                     <button className="flex items-center gap-2 px-5 py-2.5 bg-surface-high rounded-xl text-sm font-bold hover:text-primary transition-all">
+                     <button 
+                      onClick={handleShare}
+                      className="flex items-center gap-2 px-5 py-2.5 bg-surface-high rounded-xl text-sm font-bold hover:text-primary transition-all"
+                     >
                        <Share2 size={18} />
-                       Share Signal
+                       {shareStatus === 'copied' ? 'Signal Copied' : 'Share Signal'}
                      </button>
-                     <button className="flex items-center gap-2 px-6 py-2.5 bg-secondary text-on-secondary rounded-xl text-sm font-bold shadow-lg shadow-secondary/20 transition-all active:scale-95">
+                     <button 
+                      onClick={() => handlePrint()}
+                      className="flex items-center gap-2 px-6 py-2.5 bg-secondary text-on-secondary rounded-xl text-sm font-bold shadow-lg shadow-secondary/20 transition-all active:scale-95"
+                     >
                        <Download size={18} />
                        Export PDF
                      </button>

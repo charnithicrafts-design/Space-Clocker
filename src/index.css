@@ -38,6 +38,21 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
+
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+    body {
+      background: white !important;
+      color: black !important;
+    }
+    .glass-panel {
+      background: transparent !important;
+      backdrop-filter: none !important;
+      border: 1px solid #eee !important;
+    }
+  }
 }
 
 body {
