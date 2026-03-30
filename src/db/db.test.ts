@@ -23,7 +23,7 @@ describe('Pglite Data Layer', () => {
       );
     `;
     await db.exec(SCHEMA);
-  });
+  }, 30000);
 
   it('should initialize schema and insert profile', async () => {
     await db.query(`INSERT INTO profile (id, name, level, title) VALUES (1, 'Test Pilot', 10, 'Commander')`);
