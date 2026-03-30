@@ -2,45 +2,97 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { OracleService } from './OracleService';
 import { OracleConfig } from '../store/useTrackStore';
 
-describe('OracleService', () => {
+/**
+ * OracleService Test Suite: Deep Space Insight
+ * Aligning with Space-Clocker Engineering Standards (AAA, Isolated State, Space-Themed)
+ */
+
+describe('OracleService: Deep Space Wisdom Protocol', () => {
   const mockConfig: OracleConfig = {
-    providerUrl: 'http://localhost:8000',
-    apiKey: 'sk-test-123',
-    model: 'gpt-4',
+    providerUrl: 'https://oracle.nebula.ai/v1',
+    apiKey: 'nebula-secret-key-111',
+    model: 'quantum-vision-v4',
   };
 
+  const fetchMock = vi.fn();
+
   beforeEach(() => {
-    vi.stubGlobal('fetch', vi.fn());
+    vi.stubGlobal('fetch', fetchMock);
+    vi.clearAllMocks();
   });
 
-  it('should throw error if config is missing', async () => {
-    const invalidConfig = { providerUrl: '', apiKey: '', model: '' };
-    await expect(OracleService.query(invalidConfig, 'hello', '')).rejects.toThrow('Oracle configuration missing.');
-  });
+  describe('query (Prophecy Uplink)', () => {
+    it('should consult the Oracle and return stellar guidance', async () => {
+      // Arrange
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ 
+          choices: [{ message: { content: 'The stars align for your productivity, Commander.' } }] 
+        }),
+      });
 
-  it('should call fetch with correct parameters', async () => {
-    (fetch as any).mockResolvedValue({
-      ok: true,
-      json: async () => ({ choices: [{ message: { content: 'hello world' } }] }),
+      // Act
+      const result = await OracleService.query(
+        mockConfig, 
+        'What is my trajectory?', 
+        'Sector 7 logs: Focus high.'
+      );
+      
+      // Assert
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://oracle.nebula.ai/v1/chat/completions', 
+        expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({
+            'Authorization': 'Bearer nebula-secret-key-111',
+          }),
+        })
+      );
+      expect(result).toBe('The stars align for your productivity, Commander.');
     });
 
-    const result = await OracleService.query(mockConfig, 'prompt', 'context');
-    
-    expect(fetch).toHaveBeenCalledWith('http://localhost:8000/chat/completions', expect.objectContaining({
-      method: 'POST',
-      headers: expect.objectContaining({
-        'Authorization': 'Bearer sk-test-123',
-      }),
-    }));
-    expect(result).toBe('hello world');
-  });
+    it('should throw error if configuration is lost in the void', async () => {
+      // Arrange
+      const missingConfig = { providerUrl: '', apiKey: '', model: '' } as OracleConfig;
 
-  it('should throw error if response is not ok', async () => {
-    (fetch as any).mockResolvedValue({
-      ok: false,
-      statusText: 'Unauthorized',
+      // Act & Assert
+      await expect(OracleService.query(missingConfig, 'hello', ''))
+        .rejects.toThrow('Oracle configuration missing.');
     });
 
-    await expect(OracleService.query(mockConfig, 'prompt', 'context')).rejects.toThrow('Oracle query failed: Unauthorized');
+    it('should throw error if the Oracle signal is corrupted (Response Not OK)', async () => {
+      // Arrange
+      fetchMock.mockResolvedValueOnce({
+        ok: false,
+        statusText: 'Cosmic Interference',
+      });
+
+      // Act & Assert
+      await expect(OracleService.query(mockConfig, 'prompt', 'context'))
+        .rejects.toThrow('Oracle query failed: Cosmic Interference');
+    });
+  });
+
+  describe('getDailyDebrief (Log Analysis)', () => {
+    it('should synthesize a debrief from daily logs and reflections', async () => {
+      // Arrange
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ 
+          choices: [{ message: { content: 'Daily mission report: 90% efficiency.' } }] 
+        }),
+      });
+
+      const tasks = [{ id: 1, title: 'Calibrate Warp Drive', completed: true }];
+      const reflections = ['Focused well during the meteor shower.'];
+      const stats = { focusTime: 3600 };
+
+      // Act
+      const debrief = await OracleService.getDailyDebrief(mockConfig, tasks, reflections, stats);
+
+      // Assert
+      expect(fetchMock).toHaveBeenCalled();
+      expect(debrief).toBe('Daily mission report: 90% efficiency.');
+    });
   });
 });

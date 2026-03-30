@@ -4,10 +4,11 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { PGlite } from '@electric-sql/pglite';
 
-describe('Pglite Data Layer', () => {
+describe('Pglite Data Layer - Stellar Database', () => {
   let db: PGlite;
 
   beforeEach(async () => {
+    // Arrange: Initialize a fresh in-memory database and schema for isolated state
     db = new PGlite('memory://');
     const SCHEMA = `
       CREATE TABLE IF NOT EXISTS profile (
@@ -25,33 +26,53 @@ describe('Pglite Data Layer', () => {
     await db.exec(SCHEMA);
   }, 30000);
 
-  it('should initialize schema and insert profile', async () => {
-    await db.query(`INSERT INTO profile (id, name, level, title) VALUES (1, 'Test Pilot', 10, 'Commander')`);
-    const res = await db.query(`SELECT * FROM profile WHERE id = 1`);
-    expect(res.rows[0]).toEqual({
+  it('should initialize schema and persist profile telemetry', async () => {
+    // Arrange
+    const commanderData = {
       id: 1,
-      name: 'Test Pilot',
-      level: 10,
-      title: 'Commander'
-    });
+      name: 'Commander Shepard',
+      level: 50,
+      title: 'Spectre'
+    };
+
+    // Act: Insert profile record into the stellar database
+    await db.query(
+      `INSERT INTO profile (id, name, level, title) VALUES ($1, $2, $3, $4)`,
+      [commanderData.id, commanderData.name, commanderData.level, commanderData.title]
+    );
+    
+    // Assert: Verify data integrity in the data layer
+    const res = await db.query(`SELECT * FROM profile WHERE id = 1`);
+    expect(res.rows[0]).toEqual(commanderData);
   });
 
-  it('should handle task CRUD', async () => {
-    // Create
-    await db.query(`INSERT INTO tasks (id, title, completed) VALUES ('t1', 'Test Task', false)`);
+  it('should handle stellar task CRUD lifecycle', async () => {
+    // Arrange: Define mission data
+    const missionId = 'mission-01';
+    const missionTitle = 'Calibrate Normandy Sensors';
     
-    // Read
-    let res = await db.query<any>(`SELECT * FROM tasks WHERE id = 't1'`);
-    expect(res.rows[0].title).toBe('Test Task');
+    // Act (Create): Schedule a new mission task
+    await db.query(
+      `INSERT INTO tasks (id, title, completed) VALUES ($1, $2, $3)`,
+      [missionId, missionTitle, false]
+    );
     
-    // Update
-    await db.query(`UPDATE tasks SET completed = true WHERE id = 't1'`);
-    res = await db.query<any>(`SELECT completed FROM tasks WHERE id = 't1'`);
+    // Assert (Read)
+    let res = await db.query<any>(`SELECT * FROM tasks WHERE id = $1`, [missionId]);
+    expect(res.rows[0].title).toBe(missionTitle);
+    
+    // Act (Update): Complete the mission
+    await db.query(`UPDATE tasks SET completed = true WHERE id = $1`, [missionId]);
+    
+    // Assert (Update)
+    res = await db.query<any>(`SELECT completed FROM tasks WHERE id = $1`, [missionId]);
     expect(res.rows[0].completed).toBe(true);
     
-    // Delete
-    await db.query(`DELETE FROM tasks WHERE id = 't1'`);
+    // Act (Delete): Purge mission logs from database
+    await db.query(`DELETE FROM tasks WHERE id = $1`, [missionId]);
+    
+    // Assert (Delete)
     res = await db.query<any>(`SELECT count(*) as count FROM tasks`);
-    expect(res.rows[0].count).toBe(0);
+    expect(Number(res.rows[0].count)).toBe(0);
   });
 });

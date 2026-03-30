@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send, Rocket, X, Edit2, Trash2 } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
+import CommandModal from '../layout/CommandModal';
 
 const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: string; key?: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -363,16 +364,10 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
 
 const NebulaMap = () => {
   const { ambitions, addAmbition } = useTrackStore();
-  const [isLaunching, setIsLaunching] = useState(false);
-  const [newAmbitionTitle, setNewAmbitionTitle] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleLaunch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newAmbitionTitle.trim()) return;
-    addAmbition(newAmbitionTitle);
-    SoundManager.playSwell();
-    setNewAmbitionTitle('');
-    setIsLaunching(false);
+  const handleLaunch = async (title: string) => {
+    await addAmbition(title);
   };
 
   return (
@@ -380,69 +375,35 @@ const NebulaMap = () => {
       <header className="mb-8 flex justify-between items-end">
         <div>
           <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Architect Mode</h2>
-          <h1 className="text-4xl font-display font-black text-primary">The Nebula Map</h1>
+          <h1 className="text-4xl font-display font-black text-primary text-glow-primary">The Nebula Map</h1>
           <p className="text-on-surface-variant">Deconstruct your ambitions into stellar milestones.</p>
         </div>
         
-        <AnimatePresence mode="wait">
-          {!isLaunching ? (
-            <motion.button 
-              key="launch-btn"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              onClick={() => setIsLaunching(true)}
-              className="flex items-center gap-2 bg-primary-container text-on-primary px-6 py-3 rounded-2xl font-bold hover:shadow-[0_0_20px_rgba(var(--color-primary-container-rgb),0.3)] transition-all group"
-            >
-              <Rocket size={20} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
-              <span>LAUNCH TRAJECTORY</span>
-            </motion.button>
-          ) : (
-            <motion.form 
-              key="launch-form"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              onSubmit={handleLaunch}
-              className="flex gap-2 bg-surface-high p-2 rounded-2xl border border-primary shadow-lg"
-            >
-              <input 
-                autoFocus
-                className="bg-transparent px-4 py-2 focus:outline-none text-sm w-64"
-                placeholder="Name your new ambition..."
-                value={newAmbitionTitle}
-                onChange={(e) => setNewAmbitionTitle(e.target.value)}
-              />
-              <button type="submit" className="p-2 bg-primary-container text-on-primary rounded-xl">
-                <Send size={18} />
-              </button>
-              <button 
-                type="button" 
-                onClick={() => setIsLaunching(false)}
-                className="p-2 text-on-surface-variant hover:text-white"
-              >
-                <X size={18} />
-              </button>
-            </motion.form>
-          )}
-        </AnimatePresence>
+        <motion.button 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center gap-2 bg-primary-container text-on-primary px-6 py-3 rounded-2xl font-bold hover:shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.3)] transition-all group border-2 border-primary/20"
+        >
+          <Rocket size={20} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
+          <span>LAUNCH TRAJECTORY</span>
+        </motion.button>
       </header>
       
       {ambitions.length === 0 ? (
-        <div className="glass-panel border-2 border-dashed border-outline-variant rounded-[3rem] p-20 flex flex-col items-center justify-center text-center space-y-6">
-          <div className="w-24 h-24 bg-surface-high rounded-full flex items-center justify-center text-on-surface-variant opacity-20">
-            <Rocket size={48} />
+        <div className="glass-panel border-2 border-dashed border-outline-variant rounded-[3.5rem] p-24 flex flex-col items-center justify-center text-center space-y-8 transition-all hover:border-primary/30 group">
+          <div className="w-28 h-28 bg-surface-high/50 rounded-full flex items-center justify-center text-on-surface-variant opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500">
+            <Rocket size={56} />
           </div>
           <div>
-            <h2 className="text-2xl font-display font-bold text-white">No Trajectories Detected</h2>
-            <p className="text-on-surface-variant max-w-md mt-2">The nebula is quiet. Launch a new trajectory to begin architecting your path to the stars.</p>
+            <h2 className="text-3xl font-display font-black text-white uppercase tracking-tighter">Nebula Silent</h2>
+            <p className="text-on-surface-variant max-w-md mt-3 leading-relaxed">Your mission log is empty. Initiate your first orbital trajectory to begin deconstructing complex objectives into actionable steps.</p>
           </div>
           <button 
-            onClick={() => setIsLaunching(true)}
-            className="text-primary font-bold hover:text-primary-container transition-colors flex items-center gap-2"
+            onClick={() => setIsModalOpen(true)}
+            className="bg-primary/10 text-primary px-8 py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-xs border border-primary/20 hover:bg-primary hover:text-on-primary transition-all"
           >
-            <Plus size={20} />
-            <span>INITIATE FIRST LAUNCH</span>
+            INITIATE FIRST LAUNCH
           </button>
         </div>
       ) : (
@@ -467,6 +428,15 @@ const NebulaMap = () => {
         <ComputeRelayCard />
         <NextMilestoneCard />
       </section>
+
+      <CommandModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleLaunch}
+        title="Launch New Trajectory"
+        placeholder="Name your next macro ambition..."
+        icon={Rocket}
+      />
     </div>
   );
 };

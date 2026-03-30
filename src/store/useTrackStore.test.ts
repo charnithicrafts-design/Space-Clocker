@@ -1,13 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// Use hoisted to define mock objects that vi.mock will use
+// Strategic Mocking: Use hoisted to define mock objects for architectural seams (DB and External Services)
 const { mockDb, mockSyncService } = vi.hoisted(() => {
   return {
     mockDb: {
       query: vi.fn().mockResolvedValue({ rows: [] }),
       waitReady: Promise.resolve(),
       close: vi.fn().mockResolvedValue(undefined),
-      dumpDataDir: vi.fn().mockResolvedValue(new Blob(['test-dump'])),
+      dumpDataDir: vi.fn().mockResolvedValue(new Blob(['void-data-dump'])),
     },
     mockSyncService: {
       checkDivergence: vi.fn(),
@@ -18,90 +18,125 @@ const { mockDb, mockSyncService } = vi.hoisted(() => {
   };
 });
 
-// Mock DbClient BEFORE any imports
+// Mock External Seams BEFORE any imports to ensure store uses controlled mocks
 vi.mock('../db/client', () => ({
   getDb: vi.fn(() => mockDb),
-  dumpDb: vi.fn(() => Promise.resolve(new Blob(['test-dump']))),
+  dumpDb: vi.fn(() => Promise.resolve(new Blob(['void-data-dump']))),
   restoreDb: vi.fn(() => Promise.resolve()),
 }));
 
-// Mock SyncService BEFORE any imports
 vi.mock('../services/SyncService', () => ({
   syncService: mockSyncService
 }));
 
 import { useTrackStore } from './useTrackStore';
 
-describe('useTrackStore - Communication Array', () => {
+describe('useTrackStore - Mission Control Store', () => {
   beforeEach(() => {
+    // Isolated State: Reset store and mocks before each mission sortie
     vi.restoreAllMocks();
     vi.clearAllMocks();
-    // Reset store state
+    
     useTrackStore.setState({
-      profile: { name: 'Valentina', level: 42, title: 'Galactic Voyager' },
+      profile: { name: 'Valentina', level: 42, title: 'Galactic Voyager', xp: 0 },
       syncStatus: { isSyncing: false, lastSyncedAt: undefined },
-      oracleConfig: { apiKey: '', model: 'gemini-1.5-pro', providerUrl: '' },
+      oracleConfig: { 
+        apiKey: '', 
+        model: 'gemini-1.5-pro', 
+        providerUrl: 'https://generativelanguage.googleapis.com/v1beta/openai' 
+      },
       ambitions: [],
       tasks: [],
       voids: [],
       reflections: [],
       internships: [],
       skills: [],
+      transmissions: [],
       stats: { streak: 0, tasksCompleted: 0, totalFocusHours: 0 },
-      preferences: { confirmDelete: true }
+      preferences: { confirmDelete: true, uiMode: 'simple' }
     });
     
     mockDb.query.mockResolvedValue({ rows: [] });
   });
 
-  it('should update sync status', () => {
-    const store = useTrackStore.getState();
-    store.setSyncStatus({ isSyncing: true, error: 'Test Error' });
+  it('should update telemetry sync status correctly', () => {
+    // Arrange: Define an error state telemetry update
+    const errorTelemetry = { isSyncing: false, error: 'Communication Array Malfunction' };
     
-    expect(useTrackStore.getState().syncStatus.isSyncing).toBe(true);
-    expect(useTrackStore.getState().syncStatus.error).toBe('Test Error');
+    // Act: Set the new sync status
+    useTrackStore.getState().setSyncStatus(errorTelemetry);
+    
+    // Assert: Verify store reflects the telemetry update
+    const state = useTrackStore.getState();
+    expect(state.syncStatus.isSyncing).toBe(false);
+    expect(state.syncStatus.error).toBe('Communication Array Malfunction');
   });
 
-  it('should check sync via syncService', async () => {
-    const store = useTrackStore.getState();
+  it('should detect divergence via SyncService telemetry', async () => {
+    // Arrange: Mock the SyncService to report remote divergence
     vi.mocked(mockSyncService.checkDivergence).mockResolvedValue('remote_newer');
     
-    const status = await store.checkSync();
+    // Act: Check sync status
+    const status = await useTrackStore.getState().checkSync();
     
+    // Assert: Verify SyncService was engaged and returned the correct signal
     expect(mockSyncService.checkDivergence).toHaveBeenCalled();
     expect(status).toBe('remote_newer');
   });
 
-  it('should perform pull and re-initialize', async () => {
-    const store = useTrackStore.getState();
-    
-    mockDb.query.mockResolvedValueOnce({ rows: [{ remote_file_id: 'remote-123' }] });
-    
-    // Mock initialize
-    const initializeSpy = vi.spyOn(store, 'initialize').mockResolvedValue(undefined);
+  it('should pull remote stellar updates and re-initialize local state', async () => {
+    // Arrange: Setup mock data for remote file ID and spy on initialize
+    const remoteFileId = 'nebula-remote-777';
+    mockDb.query.mockResolvedValueOnce({ rows: [{ remote_file_id: remoteFileId }] });
+    const initializeSpy = vi.spyOn(useTrackStore.getState(), 'initialize').mockResolvedValue(undefined);
 
-    await store.performPull();
+    // Act: Execute pull operation
+    await useTrackStore.getState().performPull();
     
+    // Assert: Verify DB query for metadata and SyncService pull execution
     expect(mockDb.query).toHaveBeenCalledWith(expect.stringContaining('SELECT remote_file_id'));
-    expect(mockSyncService.pullUpdate).toHaveBeenCalledWith('remote-123');
+    expect(mockSyncService.pullUpdate).toHaveBeenCalledWith(remoteFileId);
     expect(initializeSpy).toHaveBeenCalled();
   });
 
-  it('should initialize state from database', async () => {
-    const store = useTrackStore.getState();
-    
+  it('should synchronize local state with stellar database records on initialization', async () => {
+    // Arrange: Mock comprehensive database response with space-themed data
     mockDb.query.mockImplementation(async (query: string) => {
-      if (query.includes('FROM profile')) return { rows: [{ name: 'Test Pilot', level: 10, title: 'Commander' }] };
-      if (query.includes('FROM oracle_config')) return { rows: [{ apiKey: 'key', model: 'm', providerUrl: 'u' }] };
-      if (query.includes('FROM preferences')) return { rows: [{ confirmDelete: true }] };
-      if (query.includes('FROM stats')) return { rows: [{ streak: 5, tasksCompleted: 10, totalFocusHours: 20 }] };
+      if (query.includes('FROM profile')) {
+        return { rows: [{ name: 'Commander Shepard', level: 50, xp: 500, title: 'Spectre' }] };
+      }
+      if (query.includes('FROM oracle_config')) {
+        return { rows: [{ apiKey: 'normandy-key', model: 'edi-v1', providerUrl: 'citadel-api' }] };
+      }
+      if (query.includes('FROM preferences')) {
+        return { rows: [{ confirmDelete: false, uiMode: 'professional' }] };
+      }
       return { rows: [] };
     });
 
-    await store.initialize();
+    // Act: Initialize the store from the database
+    await useTrackStore.getState().initialize();
     
-    const finalState = useTrackStore.getState();
-    expect(finalState.profile.name).toBe('Test Pilot');
-    expect(finalState.oracleConfig.apiKey).toBe('key');
+    // Assert: Verify all state domains are correctly hydrated
+    const state = useTrackStore.getState();
+    expect(state.profile.name).toBe('Commander Shepard');
+    expect(state.profile.title).toBe('Spectre');
+    expect(state.oracleConfig.apiKey).toBe('normandy-key');
+    expect(state.preferences.uiMode).toBe('professional');
+  });
+  
+  it('should manifest a new ambition in the stellar database logs', async () => {
+    // Arrange
+    const missionAmbition = 'Reclaim the Omega Relay';
+    
+    // Act
+    await useTrackStore.getState().addAmbition(missionAmbition);
+    
+    // Assert: Verify database persistence and local state update
+    expect(mockDb.query).toHaveBeenCalledWith(
+      expect.stringContaining('INSERT INTO ambitions'),
+      expect.arrayContaining([expect.any(String), missionAmbition, 0, 0, 'yearly'])
+    );
+    expect(useTrackStore.getState().ambitions[0].title).toBe(missionAmbition);
   });
 });

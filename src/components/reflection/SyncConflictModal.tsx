@@ -57,6 +57,7 @@ const SyncConflictModal: React.FC<SyncConflictModalProps> = ({ isOpen, onClose, 
               </div>
               <button 
                 onClick={onClose}
+                aria-label="Close"
                 className="ml-auto p-2 text-on-surface-variant hover:text-white transition-colors"
               >
                 <X size={24} />
