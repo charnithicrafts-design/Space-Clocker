@@ -8,6 +8,7 @@ import CalendarShell from './components/horizon/CalendarShell';
 import EventHorizon from './components/horizon/EventHorizon';
 import SkillsMatrix from './components/skills/SkillsMatrix';
 import SettingsDashboard from './components/settings/SettingsDashboard';
+import TransmissionDashboard from './components/transmission/TransmissionDashboard';
 import SyncConflictModal from './components/reflection/SyncConflictModal';
 import { useTrackStore } from './store/useTrackStore';
 
@@ -48,6 +49,7 @@ const App = () => {
           <Route path="/timeline" element={<CalendarShell />} />
           <Route path="/horizon" element={<EventHorizon />} />
           <Route path="/skills" element={<SkillsMatrix />} />
+          <Route path="/transmission" element={<TransmissionDashboard />} />
           <Route path="/settings" element={<SettingsDashboard />} />
         </Routes>
 

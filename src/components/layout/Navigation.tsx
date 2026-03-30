@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Target, Clock, Brain, Telescope, Settings, CalendarDays, Globe, RefreshCcw, AlertCircle } from 'lucide-react';
+import { LayoutDashboard, Target, Clock, Brain, Telescope, Settings, CalendarDays, Globe, RefreshCcw, AlertCircle, Signal } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 
 interface NavLinkProps {
@@ -28,6 +28,7 @@ const Navigation = () => {
     { to: '/timeline', icon: CalendarDays, label: 'Timeline' },
     { to: '/skills', icon: Brain, label: 'Skills' },
     { to: '/horizon', icon: Telescope, label: 'Horizon' },
+    { to: '/transmission', icon: Signal, label: 'Transmission' },
   ];
 
   return (

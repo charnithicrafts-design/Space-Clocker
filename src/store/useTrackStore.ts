@@ -79,6 +79,19 @@ export interface Preferences {
   confirmDelete: boolean;
 }
 
+export interface Transmission {
+  id: string;
+  timestamp: string;
+  tier: 'daily' | 'weekly' | 'quarterly' | 'yearly' | 'milestone';
+  title: string;
+  pdaNarrative: string;
+  pdaReflections: string[];
+  voidAnalysis: { voidId: string; text: string; count: number; impact: string }[];
+  skillsReconciliation: { skillId: string; name: string; delta: number; current: number }[];
+  rawLogs: { tasksCompleted: number; totalTasks: number; focusHours: number };
+  metadata: { targetOrg?: 'NASA' | 'ISRO'; securityClearance: string };
+}
+
 interface TrackStore {
   profile: Profile;
   ambitions: Ambition[];
@@ -87,6 +100,7 @@ interface TrackStore {
   reflections: Reflection[];
   internships: InternshipPeriod[];
   skills: Skill[];
+  transmissions: Transmission[];
   stats: {
     streak: number;
     tasksCompleted: number;
@@ -107,6 +121,10 @@ interface TrackStore {
   addInternship: (internship: InternshipPeriod) => Promise<void>;
   updateSkill: (id: string, current: number, target: number) => Promise<void>;
   
+  // Transmission Actions
+  generateTransmission: (tier: Transmission['tier'], title: string, narrative: string, targetOrg?: 'NASA' | 'ISRO') => Promise<void>;
+  deleteTransmission: (id: string) => Promise<void>;
+
   // Macro Engine Actions
   addMilestone: (ambitionId: string, title: string) => Promise<void>;
   updateMilestone: (ambitionId: string, milestoneId: string, title: string) => Promise<void>;
@@ -163,6 +181,7 @@ export const useTrackStore = create<TrackStore>()(
         { id: '5', name: 'Cybersecurity', currentProficiency: 50, targetProficiency: 75, recommendation: 'Steady Progress. Focus on Network Security and Cryptography.' },
         { id: '6', name: 'Cloud Infrastructure (AWS/GCP)', currentProficiency: 70, targetProficiency: 85, recommendation: 'On Track. Acquire Professional Certification for Google.' }
       ],
+      transmissions: [],
       stats: { streak: 12, tasksCompleted: 154, totalFocusHours: 420 },
       oracleConfig: {
         apiKey: '',
@@ -295,6 +314,81 @@ export const useTrackStore = create<TrackStore>()(
         ]);
         set((state) => ({
           skills: state.skills.map((s) => s.id === id ? { ...s, currentProficiency: current, targetProficiency: target } : s)
+        }));
+      },
+
+      generateTransmission: async (tier, title, narrative, targetOrg) => {
+        const state = get();
+        const { getDb } = await import('../db/client');
+        const db = getDb();
+
+        const pdaReflections = state.reflections.map(r => r.content);
+        const voidAnalysis = state.voids.map(v => ({
+          voidId: v.id,
+          text: v.text,
+          count: v.engagedCount,
+          impact: v.impact
+        }));
+        const skillsReconciliation = state.skills.map(s => ({
+          skillId: s.id,
+          name: s.name,
+          delta: 0,
+          current: s.currentProficiency
+        }));
+
+        const totalTasks = state.tasks.length + state.ambitions.reduce((acc, a) => acc + a.milestones.reduce((m_acc, m) => m_acc + m.tasks.length, 0), 0);
+        const completedTasks = state.tasks.filter(t => t.completed).length + state.ambitions.reduce((acc, a) => acc + a.milestones.reduce((m_acc, m) => m_acc + m.tasks.filter(t => t.completed).length, 0), 0);
+        
+        const rawLogs = {
+          tasksCompleted: completedTasks,
+          totalTasks: totalTasks,
+          focusHours: state.stats.totalFocusHours
+        };
+
+        const newTransmission: Transmission = {
+          id: `TX-${new Date().getFullYear()}-${tier.toUpperCase()}-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          tier,
+          title,
+          pdaNarrative: narrative,
+          pdaReflections,
+          voidAnalysis,
+          skillsReconciliation,
+          rawLogs,
+          metadata: {
+            targetOrg,
+            securityClearance: 'LEVEL-1-UNCLASSIFIED'
+          }
+        };
+
+        await db.query(
+          `INSERT INTO transmissions (id, timestamp, tier, title, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, raw_logs, metadata) 
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+          [
+            newTransmission.id,
+            newTransmission.timestamp,
+            newTransmission.tier,
+            newTransmission.title,
+            newTransmission.pdaNarrative,
+            JSON.stringify(newTransmission.pdaReflections),
+            JSON.stringify(newTransmission.voidAnalysis),
+            JSON.stringify(newTransmission.skillsReconciliation),
+            JSON.stringify(newTransmission.rawLogs),
+            JSON.stringify(newTransmission.metadata)
+          ]
+        );
+
+        set(state => ({
+          transmissions: [newTransmission, ...state.transmissions]
+        }));
+      },
+
+      deleteTransmission: async (id) => {
+        const { getDb } = await import('../db/client');
+        const db = getDb();
+        await db.query(`DELETE FROM transmissions WHERE id = $1`, [id]);
+        set(state => ({
+          transmissions: state.transmissions.filter(tx => tx.id !== id)
         }));
       },
 
@@ -505,6 +599,19 @@ export const useTrackStore = create<TrackStore>()(
         const reflections = (await db.query<Reflection>(`SELECT id, date, content, type FROM reflections`)).rows;
         const skills = (await db.query<Skill>(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation FROM skills`)).rows;
         const internships = (await db.query<any>(`SELECT organization, start_date as "start", end_date as "end" FROM internships`)).rows;
+        const transmissionsRaw = (await db.query<any>(`SELECT * FROM transmissions ORDER BY timestamp DESC`)).rows;
+        const transmissions: Transmission[] = transmissionsRaw.map(tx => ({
+          id: tx.id,
+          timestamp: tx.timestamp,
+          tier: tx.tier,
+          title: tx.title,
+          pdaNarrative: tx.pda_narrative,
+          pdaReflections: JSON.parse(tx.pda_reflections || '[]'),
+          voidAnalysis: JSON.parse(tx.void_analysis || '[]'),
+          skillsReconciliation: JSON.parse(tx.skills_reconciliation || '[]'),
+          rawLogs: JSON.parse(tx.raw_logs || '{}'),
+          metadata: JSON.parse(tx.metadata || '{}')
+        }));
 
         set({
           profile: profile || get().profile,
@@ -516,7 +623,8 @@ export const useTrackStore = create<TrackStore>()(
           voids,
           reflections,
           skills,
-          internships
+          internships,
+          transmissions
         });
       }
     }),

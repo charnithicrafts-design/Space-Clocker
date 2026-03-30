@@ -89,3 +89,16 @@ CREATE TABLE IF NOT EXISTS internships (
   start_date DATE NOT NULL,
   end_date DATE NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS transmissions (
+  id TEXT PRIMARY KEY,
+  timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+  tier TEXT NOT NULL, -- 'daily' | 'weekly' | 'quarterly' | 'yearly' | 'milestone'
+  title TEXT NOT NULL,
+  pda_narrative TEXT,
+  pda_reflections TEXT, -- JSON string
+  void_analysis TEXT, -- JSON string
+  skills_reconciliation TEXT, -- JSON string
+  raw_logs TEXT, -- JSON string
+  metadata TEXT -- JSON string (target_org, etc.)
+);

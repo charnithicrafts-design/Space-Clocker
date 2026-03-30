@@ -100,6 +100,19 @@ CREATE TABLE IF NOT EXISTS internships (
   start_date TEXT NOT NULL,
   end_date TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS transmissions (
+  id TEXT PRIMARY KEY,
+  timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
+  tier TEXT NOT NULL,
+  title TEXT NOT NULL,
+  pda_narrative TEXT,
+  pda_reflections TEXT,
+  void_analysis TEXT,
+  skills_reconciliation TEXT,
+  raw_logs TEXT,
+  metadata TEXT
+);
 `;
 
 export async function initDb() {
