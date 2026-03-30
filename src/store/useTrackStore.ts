@@ -120,6 +120,7 @@ interface TrackStore {
   updateAmbition: (id: string, title: string) => Promise<void>;
   addTask: (time: string, title: string, ambitionId?: string, extra?: Partial<Task>) => Promise<void>;
   updateTask: (taskId: string, updates: Partial<Task>) => Promise<void>;
+  updateTaskDate: (taskId: string, date: string) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
   toggleTask: (taskId: string) => Promise<void>;
   addReflection: (content: string, type: Reflection['type']) => Promise<void>;
@@ -228,7 +229,7 @@ export const useTrackStore = create<TrackStore>()(
         title, 
         completed: false, 
         horizon: 'daily', 
-        plannedDate: new Date().toISOString(),
+        plannedDate: extra?.plannedDate || new Date().toISOString().split('T')[0],
         weightage: 10,
         ...extra 
       };
@@ -252,18 +253,28 @@ export const useTrackStore = create<TrackStore>()(
     },
 
     updateTask: async (taskId, updates) => {
-      const task = get().tasks.find(t => t.id === taskId);
-      if (task) {
-        const { getDb } = await import('../db/client');
-        const db = getDb();
-        if (updates.title !== undefined) await db.query(`UPDATE tasks SET title = $1 WHERE id = $2`, [updates.title, taskId]);
-        if (updates.completed !== undefined) await db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [updates.completed, taskId]);
-        if (updates.time !== undefined) await db.query(`UPDATE tasks SET time = $1 WHERE id = $2`, [updates.time, taskId]);
-        if (updates.endTime !== undefined) await db.query(`UPDATE tasks SET end_time = $1 WHERE id = $2`, [updates.endTime, taskId]);
-        if (updates.deadline !== undefined) await db.query(`UPDATE tasks SET deadline = $1 WHERE id = $2`, [updates.deadline, taskId]);
-      }
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      
+      if (updates.title !== undefined) await db.query(`UPDATE tasks SET title = $1 WHERE id = $2`, [updates.title, taskId]);
+      if (updates.completed !== undefined) await db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [updates.completed, taskId]);
+      if (updates.time !== undefined) await db.query(`UPDATE tasks SET time = $1 WHERE id = $2`, [updates.time, taskId]);
+      if (updates.endTime !== undefined) await db.query(`UPDATE tasks SET end_time = $1 WHERE id = $2`, [updates.endTime, taskId]);
+      if (updates.deadline !== undefined) await db.query(`UPDATE tasks SET deadline = $1 WHERE id = $2`, [updates.deadline, taskId]);
+      if (updates.weightage !== undefined) await db.query(`UPDATE tasks SET weightage = $1 WHERE id = $2`, [updates.weightage, taskId]);
+      if (updates.plannedDate !== undefined) await db.query(`UPDATE tasks SET planned_date = $1 WHERE id = $2`, [updates.plannedDate, taskId]);
+      
       set((state) => ({
         tasks: state.tasks.map((t) => t.id === taskId ? { ...t, ...updates } : t)
+      }));
+    },
+
+    updateTaskDate: async (taskId, date) => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      await db.query(`UPDATE tasks SET planned_date = $1 WHERE id = $2`, [date, taskId]);
+      set((state) => ({
+        tasks: state.tasks.map((t) => t.id === taskId ? { ...t, plannedDate: date } : t)
       }));
     },
 
