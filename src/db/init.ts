@@ -112,10 +112,13 @@ CREATE TABLE IF NOT EXISTS transmissions (
   timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
   tier TEXT NOT NULL,
   title TEXT NOT NULL,
+  start_date TEXT,
+  end_date TEXT,
   pda_narrative TEXT,
   pda_reflections TEXT,
   void_analysis TEXT,
   skills_reconciliation TEXT,
+  mission_metrics TEXT,
   raw_logs TEXT,
   metadata TEXT
 );
@@ -136,6 +139,9 @@ export async function initDb() {
       ALTER TABLE tasks ADD COLUMN IF NOT EXISTS weightage INTEGER DEFAULT 10;
       ALTER TABLE skills ADD COLUMN IF NOT EXISTS ambition_id TEXT;
       ALTER TABLE skills ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'personal';
+      ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS start_date TEXT;
+      ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS end_date TEXT;
+      ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS mission_metrics TEXT;
     `);
   } catch (e) {
     console.error('Schema migration failed:', e);

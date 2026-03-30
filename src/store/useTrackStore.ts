@@ -800,10 +800,13 @@ export const useTrackStore = create<TrackStore>()(
         timestamp: tx.timestamp,
         tier: tx.tier,
         title: tx.title,
+        startDate: tx.start_date,
+        endDate: tx.end_date,
         pdaNarrative: tx.pda_narrative,
         pdaReflections: JSON.parse(tx.pda_reflections || '[]'),
         voidAnalysis: JSON.parse(tx.void_analysis || '[]'),
         skillsReconciliation: JSON.parse(tx.skills_reconciliation || '[]'),
+        missionMetrics: JSON.parse(tx.mission_metrics || '{"accomplished":[],"missed":[]}'),
         rawLogs: JSON.parse(tx.raw_logs || '{}'),
         metadata: JSON.parse(tx.metadata || '{}')
       }));
