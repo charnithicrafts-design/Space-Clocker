@@ -6,18 +6,26 @@ import { SoundManager } from '../../utils/SoundManager';
 interface ReflectionModalProps {
   isOpen: boolean;
   onClose: () => void;
+  type?: Reflection['type'];
+  title?: string;
 }
 
-const ReflectionModal: React.FC<ReflectionModalProps> = ({ isOpen, onClose }) => {
+const ReflectionModal: React.FC<ReflectionModalProps> = ({ isOpen, onClose, type = 'daily-summary', title = 'Neural Reflection' }) => {
   const [text, setText] = useState('');
   const addReflection = useTrackStore((state) => state.addReflection);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!text.trim()) return;
     SoundManager.playSwell();
-    addReflection(text, 'daily-summary');
+    await addReflection(text, type);
     setText('');
     onClose();
+  };
+
+  const getPlaceholder = () => {
+    if (type === 'missed-task') return "Analyze the trajectory deviation. Why was this parameter not reached?";
+    if (type === 'void-engaged') return "The void beckons. What specific anomaly pulled you from your mission?";
+    return "Log your daily progress. What corrections are needed for the next solar cycle?";
   };
 
   return (
@@ -34,16 +42,16 @@ const ReflectionModal: React.FC<ReflectionModalProps> = ({ isOpen, onClose }) =>
             animate={{ scale: 1, opacity: 1 }}
             className="glass-panel border border-outline-variant p-6 rounded-2xl w-full max-w-md"
           >
-            <h2 className="font-display text-xl mb-4 text-primary">Daily Reflection</h2>
+            <h2 className="font-display text-xl mb-4 text-primary">{title}</h2>
             <textarea
               className="w-full h-32 bg-surface-low border border-outline-variant rounded-xl p-4 text-on-surface mb-4"
-              placeholder="What pulled you into the void? What needs correction?"
+              placeholder={getPlaceholder()}
               value={text}
               onChange={(e) => setText(e.target.value)}
             />
             <div className="flex gap-3">
               <button onClick={onClose} className="flex-1 p-3 rounded-lg bg-surface-high">Cancel</button>
-              <button onClick={handleSubmit} className="flex-1 p-3 rounded-lg bg-primary-container text-on-primary">Log Entry</button>
+              <button onClick={handleSubmit} className="flex-1 p-3 rounded-lg bg-primary-container text-on-primary font-bold uppercase tracking-widest text-[10px]">Log Entry</button>
             </div>
           </motion.div>
         </motion.div>

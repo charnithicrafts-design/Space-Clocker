@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS profile (
   id INTEGER PRIMARY KEY DEFAULT 1,
   name TEXT DEFAULT 'Valentina',
   level INTEGER DEFAULT 1,
+  xp INTEGER DEFAULT 0,
   title TEXT DEFAULT 'Galactic Voyager',
   CONSTRAINT single_profile CHECK (id = 1)
 );
@@ -12,6 +13,7 @@ CREATE TABLE IF NOT EXISTS profile (
 CREATE TABLE IF NOT EXISTS preferences (
   id INTEGER PRIMARY KEY DEFAULT 1,
   confirm_delete BOOLEAN DEFAULT true,
+  ui_mode TEXT DEFAULT 'simple', -- 'simple' | 'professional'
   CONSTRAINT single_prefs CHECK (id = 1)
 );
 
@@ -52,6 +54,9 @@ CREATE TABLE IF NOT EXISTS tasks (
   milestone_id TEXT REFERENCES milestones(id) ON DELETE CASCADE,
   ambition_id TEXT REFERENCES ambitions(id) ON DELETE CASCADE, -- Optional direct link for non-milestone tasks
   time TEXT,
+  end_time TEXT, -- 'Descent Completion' (space-themed)
+  deadline TIMESTAMP,
+  weightage INTEGER DEFAULT 10, -- XP points for completion
   title TEXT NOT NULL,
   completed BOOLEAN DEFAULT false,
   horizon TEXT DEFAULT 'daily',

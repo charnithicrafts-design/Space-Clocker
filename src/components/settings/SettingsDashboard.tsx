@@ -304,20 +304,43 @@ const SettingsDashboard = () => {
             <RefreshCcw className="text-secondary" />
             <h3 className="font-display font-bold text-xl">System Preferences</h3>
           </div>
-          <div className="flex items-center justify-between p-4 rounded-2xl bg-surface-high border border-outline-variant">
-            <div>
-              <h4 className="font-bold text-sm">Confirm Deletion</h4>
-              <p className="text-xs text-on-surface-variant">Ask for confirmation before removing tasks or milestones.</p>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-surface-high border border-outline-variant">
+              <div>
+                <h4 className="font-bold text-sm">UI Strategy</h4>
+                <p className="text-xs text-on-surface-variant">Switch between Simple and Professional modes.</p>
+              </div>
+              <div className="flex bg-surface-low p-1 rounded-xl border border-outline-variant">
+                <button 
+                  onClick={() => { setLocalPrefs({ ...localPrefs, uiMode: 'simple' }); SoundManager.playPop(); }}
+                  className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${localPrefs.uiMode === 'simple' ? 'bg-primary text-on-primary shadow-lg' : 'text-on-surface-variant hover:text-white'}`}
+                >
+                  Simple
+                </button>
+                <button 
+                  onClick={() => { setLocalPrefs({ ...localPrefs, uiMode: 'professional' }); SoundManager.playPop(); }}
+                  className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${localPrefs.uiMode === 'professional' ? 'bg-secondary text-on-secondary shadow-lg' : 'text-on-surface-variant hover:text-white'}`}
+                >
+                  Pro
+                </button>
+              </div>
             </div>
-            <button 
-              onClick={() => setLocalPrefs({ ...localPrefs, confirmDelete: !localPrefs.confirmDelete })}
-              className={`w-12 h-6 rounded-full p-1 transition-colors ${localPrefs.confirmDelete ? 'bg-primary' : 'bg-surface-low'}`}
-            >
-              <motion.div 
-                animate={{ x: localPrefs.confirmDelete ? 24 : 0 }}
-                className="w-4 h-4 bg-white rounded-full shadow-sm"
-              />
-            </button>
+            
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-surface-high border border-outline-variant">
+              <div>
+                <h4 className="font-bold text-sm">Confirm Deletion</h4>
+                <p className="text-xs text-on-surface-variant">Ask for confirmation before removing tasks or milestones.</p>
+              </div>
+              <button 
+                onClick={() => setLocalPrefs({ ...localPrefs, confirmDelete: !localPrefs.confirmDelete })}
+                className={`w-12 h-6 rounded-full p-1 transition-colors ${localPrefs.confirmDelete ? 'bg-primary' : 'bg-surface-low'}`}
+              >
+                <motion.div 
+                  animate={{ x: localPrefs.confirmDelete ? 24 : 0 }}
+                  className="w-4 h-4 bg-white rounded-full shadow-sm"
+                />
+              </button>
+            </div>
           </div>
         </section>
 

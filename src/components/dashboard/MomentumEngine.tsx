@@ -19,11 +19,19 @@ const MomentumEngine = () => {
 
       {/* Resonance Progress */}
       <div className="space-y-1 mb-8">
-        <div className="flex justify-end text-sm text-primary-container font-mono">+12%</div>
-        <div className="w-full h-2 bg-surface-high rounded-full overflow-hidden">
-          <motion.div className="h-full bg-primary-container" initial={{ width: 0 }} animate={{ width: '72%' }} transition={{ duration: 1 }} />
+        <div className="flex justify-between items-end">
+          <div className="text-xs font-mono text-on-surface-variant uppercase tracking-widest">Resonance Energy: {profile.xp} / 1000 XP</div>
+          <div className="text-sm text-primary-container font-mono">+{Math.round((profile.xp / 1000) * 100)}%</div>
         </div>
-        <p className="text-xs text-on-surface-variant font-mono">NEXT RESONANCE SHIFT IN 2,400XP</p>
+        <div className="w-full h-2 bg-surface-high rounded-full overflow-hidden">
+          <motion.div 
+            className="h-full bg-primary-container" 
+            initial={{ width: 0 }} 
+            animate={{ width: `${(profile.xp / 1000) * 100}%` }} 
+            transition={{ duration: 1, ease: "easeOut" }} 
+          />
+        </div>
+        <p className="text-xs text-on-surface-variant font-mono">NEXT RESONANCE SHIFT IN {1000 - profile.xp}XP</p>
       </div>
 
       {/* Macro Ambitions */}
