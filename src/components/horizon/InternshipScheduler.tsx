@@ -20,8 +20,11 @@ const InternshipScheduler = () => {
   };
 
   return (
-    <div className="p-6 lg:pl-80 space-y-8">
-      <h2 className="text-on-surface-variant text-sm tracking-widest uppercase font-medium">Internship Scheduler</h2>
+    <div className="space-y-8 pt-8 border-t border-outline-variant/20 mt-12">
+      <div className="flex items-center gap-3">
+        <Briefcase className="text-secondary" size={20} />
+        <h2 className="text-white text-lg font-bold tracking-tight uppercase">Deployments Scheduler</h2>
+      </div>
 
       <form onSubmit={handleAdd} className="glass-panel border border-outline-variant p-6 rounded-2xl space-y-4">
         <select value={org} onChange={(e) => setOrg(e.target.value as 'ISRO' | 'NASA')} className="w-full bg-surface-high p-3 rounded-xl border border-outline-variant">

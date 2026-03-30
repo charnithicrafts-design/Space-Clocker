@@ -21,29 +21,31 @@ Manage your daily mission logs.
 - **Critical Gravity:** Automated alerts for approaching deadlines.
 - **The Void Protocol:** Track activities to avoid (Not-To-Do list). Engaging with these impacts your mission reliability.
 
-### 4. The Void (Skills Matrix)
-Analyze your technical proficiency.
-- **Radar Chart:** Visual representation of your skill set.
-- **Skill Gaps:** Inline CRUD to manage skill targets and recommendations.
+### 4. Temporal Timeline (Stellar Chronometer)
+Visualize your journey through time.
+- **Daily View:** Standard calendar for granular planning.
+- **Weekly View:** Visualizes 4-week bars of the current month to track sustained momentum.
+- **Yearly View:** A 3-year trajectory (Previous, Current, Next) highlighting long-term alignment, specifically targeting the **NASA 2027** milestone.
 
 ### 5. Transmission (Reporting)
 Generate mission briefings for self-reflection or agency submission.
-- **Initiate Briefing:** Select a timeframe (Mission Chronometer) to analyze.
-- **PD&A:** Pilot's Discussion & Analysis for qualitative reflection.
-- **Mission Metrics:** Automated reconciliation of accomplished vs. missed objectives within the range.
-- **Export PDF:** Accessible, high-contrast briefing packets for offline review.
+- **Mission Chronometer:** Select a specific date range to analyze.
+- **Horizon Grouping:** Achievements are automatically grouped by Daily, Weekly, and Yearly horizons.
+- **Nebula Progress:** Includes completed milestones and overall trajectory alignment.
+- **Trajectory Alignment:** Automated detection of alignment with major goals like **NASA 2027**.
+- **Accessible Exports:** PDF briefings are strictly styled for WCAG 2.2 compliance (high-contrast, B&W).
 
 ## Accessibility Features
 - **Color Contrast:** Themes are optimized for WCAG AA compliance.
 - **Navigation:** Full keyboard support with visible focus rings (`Tab` to navigate).
 - **Screen Readers:** Comprehensive ARIA labels and semantic HTML structure.
-- **High-Contrast Print:** PDF exports are automatically styled for maximum readability on paper.
+- **High-Contrast Print:** PDF exports are automatically converted to pure high-contrast B&W for maximum readability.
 
 ## Getting Started
 1. **Onboarding:** Follow the Mission Control briefing on your first launch.
-2. **Setup Trajectory:** Head to the Nebula sector to define your first major ambition.
+2. **Setup Trajectory:** Head to the Nebula sector to define your first major ambition (e.g., NASA 2027).
 3. **Daily Orbit:** Check your Orbit scheduler every morning to sync your tactical objectives.
-4. **Uplink:** Generate a Weekly Transmission every Sunday to reconcile your progress.
+4. **Uplink:** Generate a Weekly or Monthly Transmission to reconcile your progress and check trajectory alignment.
 
 ---
 *End of Guide // Space-Clocker High Fidelity Network*

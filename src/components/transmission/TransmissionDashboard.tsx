@@ -230,45 +230,84 @@ const TransmissionDashboard = () => {
                         </div>
                       </section>
 
-                      {/* Mission Metrics: Accomplished vs Missed */}
+                      {/* Mission Metrics: Grouped by Horizon */}
                       {selectedTx.missionMetrics && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <section className="bg-primary/5 p-6 rounded-3xl border border-primary/20">
-                            <h3 className="text-sm font-black uppercase tracking-widest mb-4 text-primary flex items-center gap-2">
-                              <Target size={16} />
-                              Mission Accomplished
-                            </h3>
-                            <div className="space-y-2">
-                              {selectedTx.missionMetrics.accomplished.length > 0 ? (
-                                selectedTx.missionMetrics.accomplished.map(m => (
-                                  <div key={m.id} className="flex justify-between items-center text-xs p-2 bg-surface-lowest/50 rounded-lg">
-                                    <span className="font-medium">{m.title}</span>
-                                    <span className="text-primary font-bold">+{m.weightage} XP</span>
+                        <div className="space-y-6">
+                          {/* Nebula Progress */}
+                          {(selectedTx.missionMetrics.milestones || []).length > 0 && (
+                            <section className="bg-secondary/5 p-6 rounded-3xl border border-secondary/20">
+                              <h3 className="text-sm font-black uppercase tracking-widest mb-4 text-secondary flex items-center gap-2">
+                                <Target size={16} />
+                                Nebula Achievements
+                              </h3>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {(selectedTx.missionMetrics.milestones || []).map(m => (
+                                  <div key={m.id} className="p-3 bg-surface-lowest/50 rounded-xl border border-secondary/10">
+                                    <p className="text-[10px] text-secondary font-bold uppercase">{m.ambitionTitle}</p>
+                                    <p className="text-sm font-bold">{m.title}</p>
                                   </div>
-                                ))
-                              ) : (
-                                <p className="text-[10px] text-on-surface-variant italic">No objectives secured in this range.</p>
-                              )}
-                            </div>
-                          </section>
-                          <section className="bg-error/5 p-6 rounded-3xl border border-error/20">
-                            <h3 className="text-sm font-black uppercase tracking-widest mb-4 text-error flex items-center gap-2">
-                              <AlertTriangle size={16} />
-                              Mission Missed
-                            </h3>
-                            <div className="space-y-2">
-                              {selectedTx.missionMetrics.missed.length > 0 ? (
-                                selectedTx.missionMetrics.missed.map(m => (
-                                  <div key={m.id} className="flex justify-between items-center text-xs p-2 bg-surface-lowest/50 rounded-lg opacity-70">
-                                    <span className="font-medium">{m.title}</span>
-                                    <span className="text-error font-bold">-{m.weightage} XP</span>
-                                  </div>
-                                ))
-                              ) : (
-                                <p className="text-[10px] text-on-surface-variant italic">Zero deviations recorded.</p>
-                              )}
-                            </div>
-                          </section>
+                                ))}
+                              </div>
+                            </section>
+                          )}
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Accomplished Grouped */}
+                            <section className="bg-primary/5 p-6 rounded-3xl border border-primary/20">
+                              <h3 className="text-sm font-black uppercase tracking-widest mb-4 text-primary flex items-center gap-2">
+                                <Activity size={16} />
+                                Objectives Secured
+                              </h3>
+                              <div className="space-y-4">
+                                {['daily', 'weekly', 'yearly'].map(horizon => {
+                                  const items = (selectedTx.missionMetrics.accomplished || []).filter(t => t.horizon === horizon);
+                                  if (items.length === 0) return null;
+                                  return (
+                                    <div key={horizon} className="space-y-2">
+                                      <p className="text-[10px] font-black text-primary/60 uppercase tracking-tighter">{horizon} Horizon</p>
+                                      {items.map(m => (
+                                        <div key={m.id} className="flex justify-between items-center text-xs p-2 bg-surface-lowest/50 rounded-lg">
+                                          <span className="font-medium">{m.title}</span>
+                                          <span className="text-primary font-bold">+{m.weightage} XP</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  );
+                                })}
+                                {(selectedTx.missionMetrics.accomplished || []).length === 0 && (
+                                  <p className="text-[10px] text-on-surface-variant italic">No objectives secured in this range.</p>
+                                )}
+                              </div>
+                            </section>
+
+                            {/* Missed Grouped */}
+                            <section className="bg-error/5 p-6 rounded-3xl border border-error/20">
+                              <h3 className="text-sm font-black uppercase tracking-widest mb-4 text-error flex items-center gap-2">
+                                <AlertTriangle size={16} />
+                                Mission Deviations
+                              </h3>
+                              <div className="space-y-4">
+                                {['daily', 'weekly', 'yearly'].map(horizon => {
+                                  const items = (selectedTx.missionMetrics.missed || []).filter(t => t.horizon === horizon);
+                                  if (items.length === 0) return null;
+                                  return (
+                                    <div key={horizon} className="space-y-2">
+                                      <p className="text-[10px] font-black text-error/60 uppercase tracking-tighter">{horizon} Horizon</p>
+                                      {items.map(m => (
+                                        <div key={m.id} className="flex justify-between items-center text-xs p-2 bg-surface-lowest/50 rounded-lg opacity-70">
+                                          <span className="font-medium">{m.title}</span>
+                                          <span className="text-error font-bold">-{m.weightage} XP</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  );
+                                })}
+                                {(selectedTx.missionMetrics.missed || []).length === 0 && (
+                                  <p className="text-[10px] text-on-surface-variant italic">Zero deviations recorded.</p>
+                                )}
+                              </div>
+                            </section>
+                          </div>
                         </div>
                       )}
 
@@ -338,6 +377,15 @@ const TransmissionDashboard = () => {
                              <p className="font-bold">{selectedTx.rawLogs.totalTasks > 0 ? Math.round((selectedTx.rawLogs.tasksCompleted / selectedTx.rawLogs.totalTasks) * 100) : 0}%</p>
                            </div>
                          </div>
+                         {selectedTx.metadata.alignment2027 && (
+                           <div className="flex items-center gap-3 px-5 py-3 bg-primary/10 border border-primary/30 rounded-2xl animate-pulse">
+                             <Zap size={20} className="text-primary" />
+                             <div>
+                               <p className="text-[10px] uppercase font-black text-primary/70">2027 Trajectory</p>
+                               <p className="font-bold text-xs">{selectedTx.metadata.alignment2027.replace(/_/g, ' ')}</p>
+                             </div>
+                           </div>
+                         )}
                       </div>
                     </div>
                   ) : (

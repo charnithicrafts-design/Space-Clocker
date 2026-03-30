@@ -97,11 +97,12 @@ export interface Transmission {
   voidAnalysis: { voidId: string; text: string; count: number; impact: string }[];
   skillsReconciliation: { skillId: string; name: string; delta: number; current: number }[];
   missionMetrics: {
-    accomplished: { id: string; title: string; weightage: number }[];
-    missed: { id: string; title: string; weightage: number }[];
+    accomplished: { id: string; title: string; weightage: number; horizon: 'daily' | 'weekly' | 'yearly' }[];
+    missed: { id: string; title: string; weightage: number; horizon: 'daily' | 'weekly' | 'yearly' }[];
+    milestones: { id: string; title: string; ambitionTitle: string }[];
   };
   rawLogs: { tasksCompleted: number; totalTasks: number; focusHours: number };
-  metadata: { targetOrg?: 'NASA' | 'ISRO'; securityClearance: string };
+  metadata: { targetOrg?: 'NASA' | 'ISRO'; securityClearance: string; alignment2027?: string };
 }
 
 interface TrackStore {
@@ -384,10 +385,13 @@ export const useTrackStore = create<TrackStore>()(
       // Filter tasks based on date range if provided
       const filterByDate = (date?: string) => {
         if (!dateRange || !date) return true;
-        const target = new Date(date);
-        const start = new Date(dateRange.start);
-        const end = new Date(dateRange.end);
-        return target >= start && target <= end;
+        
+        // Normalize to YYYY-MM-DD for comparison
+        const targetStr = date.split('T')[0];
+        const startStr = dateRange.start.split('T')[0];
+        const endStr = dateRange.end.split('T')[0];
+        
+        return targetStr >= startStr && targetStr <= endStr;
       };
 
       const pdaReflections = state.reflections
@@ -415,17 +419,44 @@ export const useTrackStore = create<TrackStore>()(
 
       const accomplished = allTasks
         .filter(t => t.completed)
-        .map(t => ({ id: t.id, title: t.title, weightage: t.weightage || 10 }));
+        .map(t => ({ 
+          id: t.id, 
+          title: t.title, 
+          weightage: t.weightage || 10,
+          horizon: t.horizon || 'daily'
+        }));
 
       const missed = allTasks
         .filter(t => !t.completed)
-        .map(t => ({ id: t.id, title: t.title, weightage: t.weightage || 10 }));
+        .map(t => ({ 
+          id: t.id, 
+          title: t.title, 
+          weightage: t.weightage || 10,
+          horizon: t.horizon || 'daily'
+        }));
+
+      // Find milestones completed in this range (all their tasks completed and at least one task in this range)
+      const milestones = state.ambitions.flatMap(a => 
+        a.milestones
+          .filter(m => m.tasks.length > 0 && m.tasks.every(t => t.completed) && m.tasks.some(t => filterByDate(t.plannedDate)))
+          .map(m => ({ id: m.id, title: m.title, ambitionTitle: a.title }))
+      );
+
+      const accomplishedWeight = accomplished.reduce((acc, t) => acc + t.weightage, 0);
+      const missedWeight = missed.reduce((acc, t) => acc + t.weightage, 0);
+      const totalWeight = accomplishedWeight + missedWeight;
+      const reliabilityIndex = totalWeight > 0 ? Math.round((accomplishedWeight / totalWeight) * 100) : 100;
 
       const rawLogs = { 
         tasksCompleted: accomplished.length, 
         totalTasks: allTasks.length, 
-        focusHours: state.stats.totalFocusHours // Simplified
+        focusHours: state.stats.totalFocusHours 
       };
+
+      // 2027 Alignment Check
+      const has2027Goal = allTasks.some(t => t.deadline?.includes('2027') || t.plannedDate?.includes('2027')) || 
+                         state.ambitions.some(a => a.title.includes('2027'));
+      const alignment2027 = has2027Goal ? 'STATIONED_FOR_NASA_2027' : 'GENERAL_ORBIT';
 
       const newTransmission: Transmission = {
         id: `TX-${new Date().getFullYear()}-${tier.toUpperCase()}-${Date.now()}`,
@@ -438,9 +469,9 @@ export const useTrackStore = create<TrackStore>()(
         pdaReflections,
         voidAnalysis,
         skillsReconciliation,
-        missionMetrics: { accomplished, missed },
+        missionMetrics: { accomplished, missed, milestones },
         rawLogs,
-        metadata: { targetOrg, securityClearance: 'LEVEL-1-UNCLASSIFIED' }
+        metadata: { targetOrg, securityClearance: 'LEVEL-1-UNCLASSIFIED', alignment2027 }
       };
 
       await db.query(
@@ -806,7 +837,7 @@ export const useTrackStore = create<TrackStore>()(
         pdaReflections: JSON.parse(tx.pda_reflections || '[]'),
         voidAnalysis: JSON.parse(tx.void_analysis || '[]'),
         skillsReconciliation: JSON.parse(tx.skills_reconciliation || '[]'),
-        missionMetrics: JSON.parse(tx.mission_metrics || '{"accomplished":[],"missed":[]}'),
+        missionMetrics: JSON.parse(tx.mission_metrics || '{"accomplished":[],"missed":[],"milestones":[]}'),
         rawLogs: JSON.parse(tx.raw_logs || '{}'),
         metadata: JSON.parse(tx.metadata || '{}')
       }));

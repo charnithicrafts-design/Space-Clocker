@@ -118,53 +118,77 @@ const SharedTransmission = () => {
               </div>
             </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Void Analysis */}
+            {/* Nebula Achievements */}
+            {(transmission.missionMetrics?.milestones || []).length > 0 && (
               <section>
-                <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-error">
-                  <AlertTriangle size={20} />
-                  The Void Analysis
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-secondary">
+                  <Radar size={20} />
+                  Nebula Accomplishments
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {(transmission.missionMetrics.milestones || []).map(m => (
+                    <div key={m.id} className="p-4 bg-surface-low/30 rounded-2xl border border-secondary/20">
+                      <p className="text-[10px] text-secondary font-black uppercase tracking-widest mb-1">{m.ambitionTitle}</p>
+                      <p className="text-lg font-bold">{m.title}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Accomplished Grouped */}
+              <section>
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-primary">
+                  <Activity size={20} />
+                  Objectives Secured
                 </h2>
                 <div className="bg-surface-low/30 p-8 rounded-[2rem] border border-outline-variant/10 space-y-6">
-                  {transmission.voidAnalysis.length > 0 ? transmission.voidAnalysis.map((v, i) => (
-                    <div key={i} className="flex justify-between items-center">
-                      <div>
-                        <p className="font-bold">{v.text}</p>
-                        <p className="text-[10px] text-on-surface-variant uppercase tracking-widest">{v.impact} Impact Risk</p>
+                  {['daily', 'weekly', 'yearly'].map(horizon => {
+                    const items = (transmission.missionMetrics?.accomplished || []).filter(t => t.horizon === horizon);
+                    if (items.length === 0) return null;
+                    return (
+                      <div key={horizon} className="space-y-3">
+                        <p className="text-xs font-black text-primary/70 uppercase tracking-widest">{horizon} Horizon</p>
+                        {items.map(m => (
+                          <div key={m.id} className="flex justify-between items-center p-3 bg-surface-lowest/50 rounded-xl border border-primary/10">
+                            <span className="font-medium">{m.title}</span>
+                            <span className="text-primary font-bold">+{m.weightage} XP</span>
+                          </div>
+                        ))}
                       </div>
-                      <div className="text-right">
-                        <span className="text-3xl font-display font-bold text-error">{v.count}</span>
-                        <p className="text-[8px] text-on-surface-variant uppercase">Engagements</p>
-                      </div>
-                    </div>
-                  )) : (
-                    <p className="text-on-surface-variant italic text-sm">No void activities recorded.</p>
+                    );
+                  })}
+                  {(transmission.missionMetrics?.accomplished || []).length === 0 && (
+                    <p className="text-on-surface-variant italic text-sm">No objectives secured.</p>
                   )}
                 </div>
               </section>
 
-              {/* Skills Reconciliation */}
+              {/* Missed Grouped */}
               <section>
-                <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-success">
-                  <Radar size={20} />
-                  Skills Reconciliation
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-error">
+                  <AlertTriangle size={20} />
+                  Mission Deviations
                 </h2>
                 <div className="bg-surface-low/30 p-8 rounded-[2rem] border border-outline-variant/10 space-y-6">
-                  {transmission.skillsReconciliation.length > 0 ? transmission.skillsReconciliation.map((s, i) => (
-                    <div key={i} className="space-y-2">
-                      <div className="flex justify-between items-end">
-                        <span className="font-bold text-sm">{s.name}</span>
-                        <span className="text-success font-black text-xs">+{s.delta}% Delta</span>
+                  {['daily', 'weekly', 'yearly'].map(horizon => {
+                    const items = (transmission.missionMetrics?.missed || []).filter(t => t.horizon === horizon);
+                    if (items.length === 0) return null;
+                    return (
+                      <div key={horizon} className="space-y-3">
+                        <p className="text-xs font-black text-error/70 uppercase tracking-widest">{horizon} Horizon</p>
+                        {items.map(m => (
+                          <div key={m.id} className="flex justify-between items-center p-3 bg-surface-lowest/50 rounded-xl border border-error/10 opacity-70">
+                            <span className="font-medium">{m.title}</span>
+                            <span className="text-error font-bold">-{m.weightage} XP</span>
+                          </div>
+                        ))}
                       </div>
-                      <div className="h-2 bg-surface-high rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-success shadow-[0_0_12px_rgba(34,197,94,0.4)]"
-                          style={{ width: `${s.current}%` }}
-                        />
-                      </div>
-                    </div>
-                  )) : (
-                    <p className="text-on-surface-variant italic text-sm">No skill metrics reconciled.</p>
+                    );
+                  })}
+                  {(transmission.missionMetrics?.missed || []).length === 0 && (
+                    <p className="text-on-surface-variant italic text-sm">Zero deviations recorded.</p>
                   )}
                 </div>
               </section>

@@ -49,37 +49,80 @@
     .no-print {
       display: none !important;
     }
+    
+    * {
+      background: white !important;
+      color: black !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
+
     body {
       background: white !important;
       color: black !important;
     }
+
     .glass-panel {
-      background: transparent !important;
-      backdrop-filter: none !important;
-      border: 1px solid #ddd !important;
-      box-shadow: none !important;
+      background: white !important;
+      border: 1.5pt solid #333 !important;
+      border-radius: 0 !important;
       color: black !important;
-      padding: 1rem !important;
+      padding: 1.5rem !important;
+      margin-bottom: 2rem !important;
+      display: block !important;
+      page-break-inside: avoid;
     }
-    .text-primary, .text-secondary, .text-error, .text-on-surface-variant {
+
+    h1, h2, h3, h4 {
       color: black !important;
+      border-bottom: 2pt solid #000 !important;
+      padding-bottom: 5pt !important;
+      margin-top: 20pt !important;
+      margin-bottom: 10pt !important;
+      font-weight: bold !important;
     }
-    .bg-primary, .bg-secondary, .bg-surface-low, .bg-surface-high {
-      background: transparent !important;
-      border: 1px solid #eee !important;
+
+    .text-primary { color: #000 !important; font-weight: bold !important; }
+    .text-secondary { color: #000 !important; }
+    .text-error { color: #000 !important; border: 1px solid #000; padding: 2px; }
+    .text-on-surface-variant { color: #333 !important; }
+
+    .bg-primary, .bg-secondary, .bg-surface-low, .bg-surface-high, .bg-surface-lowest {
+      background: white !important;
+      border: 1px solid #ccc !important;
     }
+
+    /* Specifically for progress bars in print */
+    .h-1.5.bg-surface-high {
+      background: #eee !important;
+      border: 1px solid #000 !important;
+      height: 10pt !important;
+    }
+    
+    .bg-success, .bg-primary-container {
+      background: #333 !important; /* Visual fill that works in B&W */
+    }
+
     section {
       break-inside: avoid;
-      margin-bottom: 2rem !important;
+      margin-bottom: 30pt !important;
     }
-    h1, h2, h3 {
-      color: black !important;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 0.5rem;
-    }
+
     pre {
       white-space: pre-wrap !important;
-      border: 1px solid #eee;
+      border: 1pt solid #ccc !important;
+      padding: 10pt !important;
+      background: #f9f9f9 !important;
+    }
+    
+    time {
+      font-weight: bold !important;
     }
   }
 }

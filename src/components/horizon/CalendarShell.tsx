@@ -46,15 +46,27 @@ const CalendarShell = () => {
   }, [tasks, selectedDate]);
 
   const weeklyData = useMemo(() => {
-    const start = startOfWeek(selectedDate);
-    const end = endOfWeek(selectedDate);
-    const weekDays = eachDayOfInterval({ start, end });
+    const start = startOfMonth(currentDate);
+    const end = endOfMonth(currentDate);
+    const monthWeeks = [];
+    let currentWeekStart = startOfWeek(start);
     
-    return weekDays.map(day => ({
-      day,
-      tasks: tasks.filter(t => t.plannedDate && isSameDay(new Date(t.plannedDate), day))
-    }));
-  }, [tasks, selectedDate]);
+    while (currentWeekStart <= end) {
+      const weekEnd = endOfWeek(currentWeekStart);
+      monthWeeks.push({
+        start: currentWeekStart,
+        end: weekEnd,
+        tasks: tasks.filter(t => t.plannedDate && new Date(t.plannedDate) >= currentWeekStart && new Date(t.plannedDate) <= weekEnd)
+      });
+      currentWeekStart = addDays(currentWeekStart, 7);
+    }
+    return monthWeeks;
+  }, [tasks, currentDate]);
+
+  const trajectoryYears = useMemo(() => {
+    const currentYear = currentDate.getFullYear();
+    return [currentYear - 1, currentYear, currentYear + 1];
+  }, [currentDate]);
 
   return (
     <div className="p-6 lg:pl-80 space-y-8 min-h-screen bg-surface-lowest text-white pb-32">
@@ -196,23 +208,25 @@ const CalendarShell = () => {
             exit={{ opacity: 0, y: -20 }}
             className="space-y-6"
           >
-            <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
-              {weeklyData.map(({ day, tasks }, idx) => (
-                <div key={idx} className={`glass-panel border rounded-3xl p-4 space-y-4 min-h-[300px] ${isSameDay(day, new Date()) ? 'border-primary/50 bg-primary/5' : 'border-outline-variant'}`}>
-                  <div className="text-center pb-2 border-b border-outline-variant">
-                    <div className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em]">{format(day, 'EEE')}</div>
-                    <div className="text-lg font-display font-black">{format(day, 'd')}</div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {weeklyData.slice(0, 4).map((week, idx) => (
+                <div key={idx} className="glass-panel border border-outline-variant rounded-3xl p-6 space-y-4 min-h-[400px]">
+                  <div className="text-center pb-4 border-b border-outline-variant/30">
+                    <div className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-1">Week {idx + 1}</div>
+                    <div className="text-xs font-bold text-primary">
+                      {format(week.start, 'MMM d')} — {format(week.end, 'MMM d')}
+                    </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    {tasks.map(task => (
-                      <div key={task.id} className={`p-2 rounded-xl text-[10px] font-bold border ${task.completed ? 'bg-success/10 border-success/20 text-success/70' : 'bg-surface-high border-outline-variant text-white'}`}>
+                  <div className="space-y-3 overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
+                    {week.tasks.map(task => (
+                      <div key={task.id} className={`p-3 rounded-xl text-xs font-bold border ${task.completed ? 'bg-success/10 border-success/20 text-success/70' : 'bg-surface-high border-outline-variant text-white'}`}>
                         {task.title}
                       </div>
                     ))}
-                    {tasks.length === 0 && (
-                      <div className="text-[9px] text-center py-8 text-on-surface-variant uppercase tracking-widest font-bold italic opacity-30">
-                        Void
+                    {week.tasks.length === 0 && (
+                      <div className="text-[10px] text-center py-12 text-on-surface-variant uppercase tracking-widest font-bold italic opacity-30">
+                        No Objectives
                       </div>
                     )}
                   </div>
@@ -230,70 +244,90 @@ const CalendarShell = () => {
             exit={{ opacity: 0, scale: 1.05 }}
             className="space-y-8"
           >
-            <div className="glass-panel border border-outline-variant rounded-3xl p-8 overflow-x-auto">
-              <div className="min-w-[1200px] space-y-12">
-                <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-2xl font-display font-black uppercase tracking-tight">Stellar Roadmap {format(currentDate, 'yyyy')}</h3>
-                </div>
-
-                {/* Major Ambition Milestones */}
-                <div className="space-y-8">
-                  {ambitions.map(ambition => (
-                    <div key={ambition.id} className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <Target size={16} className="text-primary" />
-                        <span className="text-xs font-black uppercase tracking-widest">{ambition.title}</span>
-                      </div>
-                      <div className="relative h-12 flex items-center">
-                        <div className="absolute inset-0 h-0.5 bg-surface-high top-1/2 -translate-y-1/2" />
-                        {ambition.milestones.map((m, i) => (
-                          <div 
-                            key={m.id} 
-                            className="absolute flex flex-col items-center group"
-                            style={{ left: `${(i + 1) * (100 / (ambition.milestones.length + 1))}%` }}
-                          >
-                            <div className={`w-3 h-3 rounded-full border-2 border-surface-lowest shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.5)] transition-transform group-hover:scale-150 ${m.status === 'completed' ? 'bg-success' : 'bg-primary'}`} />
-                            <div className="absolute top-6 whitespace-nowrap text-[9px] font-bold uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity bg-surface-low p-2 rounded-lg border border-outline-variant z-10">
-                              {m.title}
-                            </div>
-                          </div>
-                        ))}
+            <div className="grid grid-cols-1 gap-8">
+              {trajectoryYears.map(year => (
+                <div key={year} className="glass-panel border border-outline-variant rounded-3xl p-8 relative overflow-hidden">
+                  {year === 2027 && (
+                    <div className="absolute top-0 right-0 p-4">
+                      <div className="bg-primary/20 text-primary border border-primary/30 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] animate-pulse">
+                        Target Year: NASA Space Scientist
                       </div>
                     </div>
-                  ))}
-                </div>
-
-                {/* Internships Layer */}
-                <div className="pt-8 border-t border-outline-variant">
-                  <div className="flex items-center gap-3 mb-6">
-                    <Briefcase size={16} className="text-secondary" />
-                    <span className="text-xs font-black uppercase tracking-widest">Orbital Internships</span>
+                  )}
+                  
+                  <div className="flex justify-between items-center mb-12">
+                    <h3 className="text-3xl font-display font-black uppercase tracking-tighter text-white">Stellar Cycle {year}</h3>
                   </div>
-                  <div className="grid grid-cols-12 gap-1 h-8">
-                    {eachMonthOfInterval({ start: startOfYear(currentDate), end: endOfYear(currentDate) }).map((month, i) => {
-                      const activeInternships = internships.filter(int => {
-                        const start = new Date(int.start);
-                        const end = new Date(int.end);
-                        return month >= startOfMonth(start) && month <= endOfMonth(end);
-                      });
 
-                      return (
-                        <div key={i} className="relative group">
-                          <div className={`h-full rounded-sm border border-transparent transition-colors ${activeInternships.length > 0 ? 'bg-secondary/20 border-secondary/30' : 'bg-surface-high/20'}`} />
-                          <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[8px] font-black text-on-surface-variant uppercase">
-                            {format(month, 'MMM')}
+                  <div className="space-y-12">
+                    {/* Ambitions Roadmap for this year */}
+                    <div className="space-y-8">
+                      {ambitions.map(ambition => {
+                        const yearMilestones = ambition.milestones; // Simplified: in real app, filter by year
+                        return (
+                          <div key={ambition.id} className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <div className="flex items-center gap-3">
+                                <Target size={16} className="text-primary" />
+                                <span className="text-xs font-black uppercase tracking-widest">{ambition.title}</span>
+                              </div>
+                              <span className="text-[10px] font-mono text-on-surface-variant">{ambition.progress}% Cycle Completion</span>
+                            </div>
+                            <div className="relative h-1 bg-surface-high rounded-full">
+                              <motion.div 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${ambition.progress}%` }}
+                                className="absolute inset-y-0 left-0 bg-primary shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.5)]"
+                              />
+                              <div className="absolute inset-0 flex justify-between px-4 -top-2">
+                                {yearMilestones.map(m => (
+                                  <div key={m.id} className="relative group">
+                                    <div className={`w-4 h-4 rounded-full border-4 border-surface-lowest shadow-lg transition-transform group-hover:scale-150 ${m.status === 'completed' ? 'bg-success' : 'bg-surface-high'}`} />
+                                    <div className="absolute top-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-[8px] font-bold uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity bg-surface-low p-2 rounded-lg border border-outline-variant z-10">
+                                      {m.title}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
                           </div>
-                          {activeInternships.length > 0 && (
-                             <div className="absolute top-10 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-bold uppercase bg-surface-low p-2 rounded-lg border border-secondary/30 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                               {activeInternships.map(int => int.organization).join(', ')}
-                             </div>
-                          )}
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
+
+                    {/* Internships for this year */}
+                    <div className="pt-8 border-t border-outline-variant/20">
+                      <div className="flex items-center gap-3 mb-6">
+                        <Briefcase size={16} className="text-secondary" />
+                        <span className="text-xs font-black uppercase tracking-widest">Orbital Deployments</span>
+                      </div>
+                      <div className="grid grid-cols-12 gap-1 h-10">
+                        {eachMonthOfInterval({ start: startOfYear(new Date(year, 0)), end: endOfYear(new Date(year, 0)) }).map((month, i) => {
+                          const activeInternships = internships.filter(int => {
+                            const start = new Date(int.start);
+                            const end = new Date(int.end);
+                            return month >= startOfMonth(start) && month <= endOfMonth(end);
+                          });
+
+                          return (
+                            <div key={i} className="relative group">
+                              <div className={`h-full rounded-md border border-transparent transition-colors ${activeInternships.length > 0 ? 'bg-secondary/20 border-secondary/30 shadow-[0_0_10px_rgba(var(--color-secondary-rgb),0.2)]' : 'bg-surface-high/10'}`} />
+                              <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-[7px] font-black text-on-surface-variant uppercase opacity-50">
+                                {format(month, 'MMM')}
+                              </div>
+                              {activeInternships.length > 0 && (
+                                 <div className="absolute top-12 left-1/2 -translate-x-1/2 whitespace-nowrap text-[9px] font-bold uppercase bg-surface-lowest p-2 rounded-lg border border-secondary/30 opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-2xl">
+                                   {activeInternships.map(int => int.organization).join(', ')}
+                                 </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
 
             <InternshipScheduler />
