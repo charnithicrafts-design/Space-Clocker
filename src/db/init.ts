@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS profile (
   id INTEGER PRIMARY KEY DEFAULT 1,
   name TEXT DEFAULT 'Valentina',
   level INTEGER DEFAULT 1,
+  xp INTEGER DEFAULT 0,
   title TEXT DEFAULT 'Galactic Voyager',
   CONSTRAINT single_profile CHECK (id = 1)
 );
@@ -13,6 +14,7 @@ CREATE TABLE IF NOT EXISTS profile (
 CREATE TABLE IF NOT EXISTS preferences (
   id INTEGER PRIMARY KEY DEFAULT 1,
   confirm_delete BOOLEAN DEFAULT true,
+  ui_mode TEXT DEFAULT 'simple',
   CONSTRAINT single_prefs CHECK (id = 1)
 );
 
@@ -47,6 +49,7 @@ CREATE TABLE IF NOT EXISTS ambitions (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
   progress INTEGER DEFAULT 0,
+  xp INTEGER DEFAULT 0,
   horizon TEXT DEFAULT 'yearly'
 );
 
@@ -63,6 +66,9 @@ CREATE TABLE IF NOT EXISTS tasks (
   milestone_id TEXT REFERENCES milestones(id) ON DELETE CASCADE,
   ambition_id TEXT REFERENCES ambitions(id) ON DELETE CASCADE,
   time TEXT,
+  end_time TEXT,
+  deadline TEXT,
+  weightage INTEGER DEFAULT 10,
   title TEXT NOT NULL,
   completed BOOLEAN DEFAULT false,
   horizon TEXT DEFAULT 'daily',
@@ -118,6 +124,20 @@ CREATE TABLE IF NOT EXISTS transmissions (
 export async function initDb() {
   await db.waitReady;
   await db.exec(SCHEMA);
+
+  // Schema Migrations for existing tables
+  try {
+    await db.exec(`
+      ALTER TABLE profile ADD COLUMN IF NOT EXISTS xp INTEGER DEFAULT 0;
+      ALTER TABLE preferences ADD COLUMN IF NOT EXISTS ui_mode TEXT DEFAULT 'simple';
+      ALTER TABLE ambitions ADD COLUMN IF NOT EXISTS xp INTEGER DEFAULT 0;
+      ALTER TABLE tasks ADD COLUMN IF NOT EXISTS end_time TEXT;
+      ALTER TABLE tasks ADD COLUMN IF NOT EXISTS deadline TEXT;
+      ALTER TABLE tasks ADD COLUMN IF NOT EXISTS weightage INTEGER DEFAULT 10;
+    `);
+  } catch (e) {
+    console.error('Schema migration failed:', e);
+  }
   
   // Ensure singletons exist
   await db.query(`INSERT INTO profile (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);

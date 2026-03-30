@@ -15,8 +15,8 @@ export async function migrateFromZustand() {
 
   // 1. Singletons
   if (state.profile) {
-    await db.query(`UPDATE profile SET name = $1, level = $2, title = $3 WHERE id = 1`, [
-      state.profile.name, state.profile.level, state.profile.title
+    await db.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
+      state.profile.name, state.profile.level, state.profile.xp || 0, state.profile.title
     ]);
   }
   if (state.preferences) {
@@ -38,8 +38,8 @@ export async function migrateFromZustand() {
   // 2. Ambitions & Milestones & Milestone Tasks
   if (state.ambitions) {
     for (const ambition of state.ambitions) {
-      await db.query(`INSERT INTO ambitions (id, title, progress, horizon) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`, [
-        ambition.id, ambition.title, ambition.progress, ambition.horizon
+      await db.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING`, [
+        ambition.id, ambition.title, ambition.progress, ambition.xp || 0, ambition.horizon
       ]);
 
       if (ambition.milestones) {
