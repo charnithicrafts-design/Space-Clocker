@@ -11,16 +11,25 @@ import SettingsDashboard from './components/settings/SettingsDashboard';
 import TransmissionDashboard from './components/transmission/TransmissionDashboard';
 import SharedTransmission from './components/transmission/SharedTransmission';
 import SyncConflictModal from './components/reflection/SyncConflictModal';
+import OnboardingTour from './components/layout/OnboardingTour';
 import { useTrackStore } from './store/useTrackStore';
 
 const App = () => {
-  const { initialize, checkSync, performPull, oracleConfig } = useTrackStore();
+  const { initialize, checkSync, performPull, oracleConfig, ambitions } = useTrackStore();
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     const startup = async () => {
       await initialize();
-      
+
+      const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
+      // If store is initialized and empty, and onboarding not seen, show it
+      // We check ambitions length to ensure we only show it to truly "new" users or those who cleared data
+      if (!hasSeenOnboarding) {
+        setShowOnboarding(true);
+      }
+
       // Check for sync divergence if enabled
       if (oracleConfig.syncEnabled) {
         const result = await checkSync();
@@ -39,12 +48,22 @@ const App = () => {
     setIsSyncModalOpen(false);
   };
 
+  const handleCompleteOnboarding = () => {
+    localStorage.setItem('hasSeenOnboarding', 'true');
+    setShowOnboarding(false);
+  };
+
   return (
     <Router>
       <div className="min-h-screen bg-surface-lowest text-on-surface">
         <Navigation />
-        <Routes>
-          <Route path="/" element={<MomentumEngine />} />
+
+        {showOnboarding && (
+          <OnboardingTour onComplete={handleCompleteOnboarding} />
+        )}
+
+        <main className="pb-24 lg:pb-0">
+
           <Route path="/nebula" element={<NebulaMap />} />
           <Route path="/orbit" element={<OrbitScheduler />} />
           <Route path="/timeline" element={<CalendarShell />} />
