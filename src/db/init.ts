@@ -73,7 +73,8 @@ CREATE TABLE IF NOT EXISTS tasks (
   completed BOOLEAN DEFAULT false,
   horizon TEXT DEFAULT 'daily',
   planned_date TEXT,
-  is_void BOOLEAN DEFAULT false
+  is_void BOOLEAN DEFAULT false,
+  completed_at TEXT
 );
 
 -- Support Collections
@@ -137,6 +138,7 @@ export async function initDb() {
       ALTER TABLE tasks ADD COLUMN IF NOT EXISTS end_time TEXT;
       ALTER TABLE tasks ADD COLUMN IF NOT EXISTS deadline TEXT;
       ALTER TABLE tasks ADD COLUMN IF NOT EXISTS weightage INTEGER DEFAULT 10;
+      ALTER TABLE tasks ADD COLUMN IF NOT EXISTS completed_at TEXT;
       ALTER TABLE skills ADD COLUMN IF NOT EXISTS ambition_id TEXT;
       ALTER TABLE skills ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'personal';
       ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS start_date TEXT;

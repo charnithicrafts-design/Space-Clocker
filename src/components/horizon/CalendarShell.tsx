@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTrackStore } from '../../store/useTrackStore';
+import { useTrackStore, Task } from '../../store/useTrackStore';
 import { 
   format, 
   addMonths, 
@@ -15,18 +15,48 @@ import {
   eachDayOfInterval,
   startOfYear,
   endOfYear,
-  eachMonthOfInterval
+  eachMonthOfInterval,
+  isBefore,
+  isAfter,
+  parseISO,
+  startOfDay
 } from 'date-fns';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, Target, Briefcase, Zap } from 'lucide-react';
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  Calendar as CalendarIcon, 
+  Clock, 
+  Target, 
+  Briefcase, 
+  Zap, 
+  AlertCircle, 
+  CheckCircle2, 
+  CircleDashed,
+  Play
+} from 'lucide-react';
 import InternshipScheduler from './InternshipScheduler';
 
 type Horizon = 'daily' | 'weekly' | 'yearly';
+
+/**
+ * Helper to parse YYYY-MM-DD into a local Date object without UTC shifts
+ */
+const parseLocalDate = (dateStr: string) => {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day);
+};
 
 const CalendarShell = () => {
   const { tasks, ambitions, internships } = useTrackStore();
   const [horizon, setHorizon] = useState<Horizon>('daily');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // Consolidate all tasks (standalone + milestone tasks)
+  const allTasks = useMemo(() => {
+    const milestoneTasks = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks));
+    return [...tasks, ...milestoneTasks];
+  }, [tasks, ambitions]);
 
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
   const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
@@ -37,13 +67,9 @@ const CalendarShell = () => {
     return eachDayOfInterval({ start, end });
   }, [currentDate]);
 
-  const monthTasks = useMemo(() => {
-    return tasks.filter(t => t.plannedDate && isSameMonth(new Date(t.plannedDate), currentDate));
-  }, [tasks, currentDate]);
-
   const selectedDayTasks = useMemo(() => {
-    return tasks.filter(t => t.plannedDate && isSameDay(new Date(t.plannedDate), selectedDate));
-  }, [tasks, selectedDate]);
+    return allTasks.filter(t => t.plannedDate && isSameDay(parseLocalDate(t.plannedDate), selectedDate));
+  }, [allTasks, selectedDate]);
 
   const weeklyData = useMemo(() => {
     const start = startOfMonth(currentDate);
@@ -51,22 +77,77 @@ const CalendarShell = () => {
     const monthWeeks = [];
     let currentWeekStart = startOfWeek(start);
     
+    // Cover all weeks that touch this month (usually 4-6)
     while (currentWeekStart <= end) {
       const weekEnd = endOfWeek(currentWeekStart);
       monthWeeks.push({
         start: currentWeekStart,
         end: weekEnd,
-        tasks: tasks.filter(t => t.plannedDate && new Date(t.plannedDate) >= currentWeekStart && new Date(t.plannedDate) <= weekEnd)
+        tasks: allTasks.filter(t => {
+          if (!t.plannedDate) return false;
+          const taskDate = parseLocalDate(t.plannedDate);
+          return taskDate >= currentWeekStart && taskDate <= weekEnd;
+        })
       });
       currentWeekStart = addDays(currentWeekStart, 7);
     }
     return monthWeeks;
-  }, [tasks, currentDate]);
+  }, [allTasks, currentDate]);
 
   const trajectoryYears = useMemo(() => {
     const currentYear = currentDate.getFullYear();
     return [currentYear - 1, currentYear, currentYear + 1];
   }, [currentDate]);
+
+  const getTaskStatus = (task: Task) => {
+    const now = new Date();
+    const today = startOfDay(now);
+    const taskDate = task.plannedDate ? parseLocalDate(task.plannedDate) : today;
+    
+    if (task.completed) {
+      if (task.deadline && task.completedAt) {
+        const completion = new Date(task.completedAt);
+        const deadlineDate = parseISO(task.deadline);
+        return isAfter(completion, deadlineDate) ? 'completed-late' : 'completed-on-time';
+      }
+      return 'completed-on-time';
+    }
+
+    if (isBefore(taskDate, today)) {
+      return 'backlog';
+    }
+
+    if (isSameDay(taskDate, today)) {
+      const currentTimeStr = format(now, 'HH:mm');
+      if (task.time && task.endTime) {
+        if (currentTimeStr >= task.time && currentTimeStr <= task.endTime) return 'live';
+      }
+      if (task.time && task.time > currentTimeStr) return 'next';
+    }
+
+    return 'pending';
+  };
+
+  const renderStatusIndicator = (status: string) => {
+    switch (status) {
+      case 'completed-on-time':
+        return <div className="flex items-center gap-1 text-[9px] font-black uppercase text-success tracking-tighter"><CheckCircle2 size={10} /> On Time</div>;
+      case 'completed-late':
+        return <div className="flex items-center gap-1 text-[9px] font-black uppercase text-warning tracking-tighter"><AlertCircle size={10} /> Delayed</div>;
+      case 'live':
+        return (
+          <div className="flex items-center gap-1 text-[9px] font-black uppercase text-primary tracking-tighter animate-pulse">
+            <Play size={10} fill="currentColor" /> Live Mission
+          </div>
+        );
+      case 'next':
+        return <div className="flex items-center gap-1 text-[9px] font-black uppercase text-primary/60 tracking-tighter"><CircleDashed size={10} /> Next Objective</div>;
+      case 'backlog':
+        return <div className="flex items-center gap-1 text-[9px] font-black uppercase text-error tracking-tighter"><AlertCircle size={10} /> Backlog</div>;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="p-6 lg:pl-80 space-y-8 min-h-screen bg-surface-lowest text-white pb-32">
@@ -130,7 +211,7 @@ const CalendarShell = () => {
                   {days.map((day, idx) => {
                     const isSelected = isSameDay(day, selectedDate);
                     const isCurrentMonth = isSameMonth(day, currentDate);
-                    const dayTasks = tasks.filter(t => t.plannedDate && isSameDay(new Date(t.plannedDate), day));
+                    const dayTasks = allTasks.filter(t => t.plannedDate && isSameDay(parseLocalDate(t.plannedDate), day));
                     
                     return (
                       <button
@@ -177,22 +258,28 @@ const CalendarShell = () => {
                       <p className="text-[10px] font-black uppercase tracking-widest">No Orbital Activity</p>
                     </div>
                   ) : (
-                    selectedDayTasks.sort((a,b) => (a.time || '').localeCompare(b.time || '')).map(task => (
-                      <div key={task.id} className="p-4 rounded-2xl bg-surface-high border border-outline-variant flex gap-4 items-start group hover:border-primary/30 transition-colors">
-                        <div className="text-[10px] font-mono text-primary font-bold pt-0.5">{task.time || '00:00'}</div>
-                        <div className="flex-1 min-w-0">
-                          <div className={`text-xs font-bold truncate ${task.completed ? 'line-through text-on-surface-variant' : 'text-white'}`}>
-                            {task.title}
-                          </div>
-                          {task.deadline && (
-                            <div className="text-[9px] text-error font-black uppercase tracking-tighter mt-1 flex items-center gap-1">
-                              <Zap size={10} />
-                              Deadline Lock
+                    selectedDayTasks.sort((a,b) => (a.time || '').localeCompare(b.time || '')).map(task => {
+                      const status = getTaskStatus(task);
+                      return (
+                        <div key={task.id} className="p-4 rounded-2xl bg-surface-high border border-outline-variant flex gap-4 items-start group hover:border-primary/30 transition-colors">
+                          <div className="text-[10px] font-mono text-primary font-bold pt-0.5">{task.time || '00:00'}</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-start gap-2 mb-1">
+                              <div className={`text-xs font-bold truncate ${task.completed ? 'line-through text-on-surface-variant' : 'text-white'}`}>
+                                {task.title}
+                              </div>
+                              {renderStatusIndicator(status)}
                             </div>
-                          )}
+                            {task.deadline && (
+                              <div className="text-[9px] text-error font-black uppercase tracking-tighter mt-1 flex items-center gap-1">
+                                <Zap size={10} />
+                                Deadline Lock: {format(parseISO(task.deadline), 'MMM d, HH:mm')}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      );
+                    })
                   )}
                 </div>
               </div>
@@ -208,8 +295,8 @@ const CalendarShell = () => {
             exit={{ opacity: 0, y: -20 }}
             className="space-y-6"
           >
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {weeklyData.slice(0, 4).map((week, idx) => (
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+              {weeklyData.map((week, idx) => (
                 <div key={idx} className="glass-panel border border-outline-variant rounded-3xl p-6 space-y-4 min-h-[400px]">
                   <div className="text-center pb-4 border-b border-outline-variant/30">
                     <div className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-1">Week {idx + 1}</div>
@@ -219,11 +306,18 @@ const CalendarShell = () => {
                   </div>
                   
                   <div className="space-y-3 overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
-                    {week.tasks.map(task => (
-                      <div key={task.id} className={`p-3 rounded-xl text-xs font-bold border ${task.completed ? 'bg-success/10 border-success/20 text-success/70' : 'bg-surface-high border-outline-variant text-white'}`}>
-                        {task.title}
-                      </div>
-                    ))}
+                    {week.tasks.map(task => {
+                      const status = getTaskStatus(task);
+                      return (
+                        <div key={task.id} className={`p-3 rounded-xl text-[10px] font-bold border flex flex-col gap-2 ${task.completed ? 'bg-success/10 border-success/20 text-success/70' : 'bg-surface-high border-outline-variant text-white'}`}>
+                          <div className="truncate">{task.title}</div>
+                          <div className="flex justify-between items-center opacity-80">
+                            <span>{task.time || '00:00'}</span>
+                            {renderStatusIndicator(status)}
+                          </div>
+                        </div>
+                      );
+                    })}
                     {week.tasks.length === 0 && (
                       <div className="text-[10px] text-center py-12 text-on-surface-variant uppercase tracking-widest font-bold italic opacity-30">
                         No Objectives

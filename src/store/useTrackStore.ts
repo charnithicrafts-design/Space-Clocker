@@ -18,6 +18,7 @@ export interface Task {
   horizon: 'daily' | 'weekly' | 'yearly';
   plannedDate?: string;
   isVoid?: boolean;
+  completedAt?: string;
 }
 
 export interface Milestone {
@@ -296,6 +297,7 @@ export const useTrackStore = create<TrackStore>()(
       const task = state.tasks.find(t => t.id === taskId);
       if (task) {
         const newCompleted = !task.completed;
+        const completedAt = newCompleted ? new Date().toISOString() : null;
         const xpGain = newCompleted ? (task.weightage || 10) : -(task.weightage || 10);
         
         let newXp = state.profile.xp + xpGain;
@@ -313,11 +315,11 @@ export const useTrackStore = create<TrackStore>()(
 
         const { getDb } = await import('../db/client');
         const db = getDb();
-        await db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [newCompleted, taskId]);
+        await db.query(`UPDATE tasks SET completed = $1, completed_at = $2 WHERE id = $3`, [newCompleted, completedAt, taskId]);
         await db.query(`UPDATE profile SET xp = $1, level = $2 WHERE id = 1`, [newXp, newLevel]);
 
         set((state) => ({
-          tasks: state.tasks.map((t) => t.id === taskId ? { ...t, completed: newCompleted } : t),
+          tasks: state.tasks.map((t) => t.id === taskId ? { ...t, completed: newCompleted, completedAt: completedAt || undefined } : t),
           profile: { ...state.profile, xp: newXp, level: newLevel }
         }));
       }
@@ -566,7 +568,8 @@ export const useTrackStore = create<TrackStore>()(
           const newTasks = m.tasks.map((t) => {
             if (t.id === taskId) {
               const newCompleted = !t.completed;
-              updatedTask = { ...t, completed: newCompleted };
+              const completedAt = newCompleted ? new Date().toISOString() : null;
+              updatedTask = { ...t, completed: newCompleted, completedAt: completedAt || undefined };
               xpGain = newCompleted ? (t.weightage || 25) : -(t.weightage || 25);
               return updatedTask;
             }
@@ -597,7 +600,9 @@ export const useTrackStore = create<TrackStore>()(
 
       const { getDb } = await import('../db/client');
       const db = getDb();
-      if (updatedTask) await db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [updatedTask.completed, taskId]);
+      if (updatedTask) {
+        await db.query(`UPDATE tasks SET completed = $1, completed_at = $2 WHERE id = $3`, [updatedTask.completed, updatedTask.completedAt || null, taskId]);
+      }
       await db.query(`UPDATE milestones SET status = $1 WHERE id = $2`, [newStatus, milestoneId]);
       await db.query(`UPDATE ambitions SET progress = $1, xp = $2 WHERE id = $3`, [newProgress, ambitionXp, ambitionId]);
       await db.query(`UPDATE profile SET xp = $1, level = $2 WHERE id = 1`, [newXp, newLevel]);
@@ -731,8 +736,8 @@ export const useTrackStore = create<TrackStore>()(
                 ]);
                 if (m.tasks) {
                   for (const t of m.tasks) {
-                    await db.query(`INSERT INTO tasks (id, milestone_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [
-                      t.id, m.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate
+                    await db.query(`INSERT INTO tasks (id, milestone_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`, [
+                      t.id, m.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt
                     ]);
                   }
                 }
@@ -744,8 +749,8 @@ export const useTrackStore = create<TrackStore>()(
         // Import Standalone Tasks
         if (data.tasks) {
           for (const t of data.tasks) {
-            await db.query(`INSERT INTO tasks (id, time, end_time, deadline, weightage, title, completed, horizon, planned_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, [
-              t.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate
+            await db.query(`INSERT INTO tasks (id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [
+              t.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt
             ]);
           }
         }
@@ -809,7 +814,8 @@ export const useTrackStore = create<TrackStore>()(
             ...t,
             endTime: t.end_time,
             plannedDate: t.planned_date,
-            isVoid: t.is_void === 1
+            isVoid: t.is_void === 1,
+            completedAt: t.completed_at
           }))
         }))
       }));
@@ -818,7 +824,8 @@ export const useTrackStore = create<TrackStore>()(
         ...t,
         endTime: t.end_time,
         plannedDate: t.planned_date,
-        isVoid: t.is_void === 1
+        isVoid: t.is_void === 1,
+        completedAt: t.completed_at
       }));
 
       const voids = (await db.query<VoidTask>(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`)).rows;
