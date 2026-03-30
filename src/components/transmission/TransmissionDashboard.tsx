@@ -75,7 +75,7 @@ const TransmissionDashboard = () => {
   };
 
   return (
-    <div className="ml-0 lg:ml-64 p-6 min-h-screen bg-surface-lowest transition-all duration-500 pb-24 lg:pb-6">
+    <div className="p-6 lg:pl-80 min-h-screen bg-surface-lowest transition-all duration-500 pb-24 lg:pb-6">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="font-display text-4xl font-bold text-primary flex items-center gap-3">

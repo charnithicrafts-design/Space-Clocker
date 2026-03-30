@@ -380,7 +380,7 @@ const NebulaMap = () => {
       <header className="mb-8 flex justify-between items-end">
         <div>
           <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Architect Mode</h2>
-          <h1 className="text-4xl font-display font-black text-white">The Nebula Map</h1>
+          <h1 className="text-4xl font-display font-black text-primary">The Nebula Map</h1>
           <p className="text-on-surface-variant">Deconstruct your ambitions into stellar milestones.</p>
         </div>
         

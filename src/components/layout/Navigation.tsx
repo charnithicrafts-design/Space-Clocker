@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Target, Clock, Brain, Telescope, Settings, CalendarDays, Globe, RefreshCcw, AlertCircle, Signal } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 
+import { SoundManager } from '../../utils/SoundManager';
+
 interface NavLinkProps {
   to: string;
   icon: any;
@@ -11,7 +13,11 @@ interface NavLinkProps {
 }
 
 const NavLink: React.FC<NavLinkProps> = ({ to, icon: Icon, label, active }) => (
-  <Link to={to} className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${active ? 'bg-surface-high text-primary' : 'text-on-surface-variant hover:text-primary hover:bg-surface-low'}`}>
+  <Link 
+    to={to} 
+    onClick={() => SoundManager.playPop()}
+    className={`flex items-center gap-3 p-3 rounded-xl transition-colors ${active ? 'bg-surface-high text-primary' : 'text-on-surface-variant hover:text-primary hover:bg-surface-low'}`}
+  >
     <Icon size={24} />
     <span className="hidden lg:block font-medium">{label}</span>
   </Link>
@@ -36,7 +42,12 @@ const Navigation = () => {
       {/* Mobile Nav */}
       <nav className="lg:hidden fixed bottom-6 left-6 right-6 glass-panel rounded-2xl border border-outline-variant flex justify-around items-center p-2 z-50">
         {links.map((link) => (
-          <Link key={link.to} to={link.to} className={`p-3 ${pathname === link.to ? 'text-primary' : 'text-on-surface-variant'}`}>
+          <Link 
+            key={link.to} 
+            to={link.to} 
+            onClick={() => SoundManager.playPop()}
+            className={`p-3 ${pathname === link.to ? 'text-primary' : 'text-on-surface-variant'}`}
+          >
             <link.icon size={24} />
           </Link>
         ))}

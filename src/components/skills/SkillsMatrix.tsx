@@ -170,7 +170,7 @@ const SkillsMatrix = () => {
       <header className="flex justify-between items-end">
         <div>
           <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">The Skills Matrix</h2>
-          <h1 className="text-4xl font-display font-black text-white">Technical Proficiency</h1>
+          <h1 className="text-4xl font-display font-black text-primary">Technical Proficiency</h1>
         </div>
         <div className="flex items-center gap-4 glass-panel p-2 px-4 rounded-full border border-outline-variant">
           <span className={`text-xs font-bold uppercase tracking-widest transition-colors ${!showTarget ? 'text-primary' : 'text-on-surface-variant'}`}>Current</span>

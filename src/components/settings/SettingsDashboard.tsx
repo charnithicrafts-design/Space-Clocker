@@ -145,7 +145,7 @@ const SettingsDashboard = () => {
     <div className="p-6 lg:pl-80 space-y-8 min-h-screen bg-surface-lowest text-white pb-32">
       <header className="mb-8">
         <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">System Protocol</h2>
-        <h1 className="text-4xl font-display font-black text-white">Settings</h1>
+        <h1 className="text-4xl font-display font-black text-primary">Settings</h1>
         <p className="text-on-surface-variant">Configure your trajectory and neural link.</p>
       </header>
 

@@ -12,7 +12,7 @@ const MomentumEngine = () => {
       <header className="flex justify-between items-center mb-8">
         <div>
           <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Orbit Level {profile.level}</h2>
-          <h1 className="text-4xl font-display font-black text-white">MOMENTUM ENGINE: LVL {profile.level}</h1>
+          <h1 className="text-4xl font-display font-black text-primary">MOMENTUM ENGINE: LVL {profile.level}</h1>
         </div>
         <Zap className="text-primary-container" size={32} />
       </header>

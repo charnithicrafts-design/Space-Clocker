@@ -68,7 +68,7 @@ const OrbitScheduler = () => {
     <div className="p-6 lg:pl-80 space-y-8 min-h-screen bg-surface-lowest text-white">
       <header className="mb-8">
         <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Orbit Protocol</h2>
-        <h1 className="text-4xl font-display font-black text-white">Daily Scheduler</h1>
+        <h1 className="text-4xl font-display font-black text-primary">Daily Scheduler</h1>
         <p className="text-on-surface-variant">Sync your daily actions with the stellar timeline.</p>
       </header>
 
