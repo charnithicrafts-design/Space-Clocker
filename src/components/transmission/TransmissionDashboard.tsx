@@ -160,7 +160,7 @@ const TransmissionDashboard = () => {
               )}
             </div>
           </div>
-        </div>
+        </nav>
 
         {/* The Holo-Viewer (Report Content) */}
         <div className="xl:col-span-2">
