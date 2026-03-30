@@ -12,16 +12,21 @@ vi.mock('../../utils/SoundManager', () => ({
 }));
 
 // Mock DB client
-vi.mock('../../db/client', () => ({
-  db: {
+vi.mock('../../db/client', () => {
+  const mockDb = {
     query: vi.fn().mockResolvedValue({ rows: [] }),
     exec: vi.fn().mockResolvedValue(undefined),
     waitReady: Promise.resolve(),
-  }
-}));
+  };
+  return {
+    db: mockDb,
+    getDb: vi.fn().mockReturnValue(mockDb),
+    dumpDb: vi.fn(),
+    restoreDb: vi.fn(),
+  };
+});
 
 // Mocking AudioContext
-// Mocking AudioContext properly
 class MockAudioContext {
   createOscillator = vi.fn().mockReturnValue({
     connect: vi.fn(),
