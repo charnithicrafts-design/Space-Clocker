@@ -10,10 +10,10 @@ Space-Clocker is built on the principle of **Reflecting Momentum**. It connects 
 ## 🛠 1. The Momentum Engine (Dashboard)
 Your primary flight deck. This screen provides a high-level overview of your current status.
 
-- **Orbit Level:** Your progress is gamified. Complete tasks and milestones to gain XP and increase your Orbit Level.
-- **Resonance Progress:** Watch your energy build. The resonance bar indicates how close you are to your next level-up (1,000 XP per level).
-- **Macro Ambitions:** A summary of your active trajectories. Each card shows a real-time progress percentage linked to its underlying milestones.
-- **Real-time XP:** Task completion immediately injects XP into your resonance bar. Important milestones yield higher "Resonance Weightage" (XP).
+- **Space Science Level (Momentum Rank):** Your global progress as a space science professional. This level increases based on your total achievements across all trajectories and tasks.
+- **Global Momentum Resonance:** Indicates how close you are to your next global level-up (1,000 XP per level).
+- **Macro Ambitions (Trajectories):** A summary of your active trajectories. Each trajectory now has its own **Resonance Energy** bar.
+- **Trajectory Resonance:** Watch your energy build for each specific goal. Each trajectory undergoes multiple "Resonance Phases" (500 XP per phase) as you complete relevant tasks.
 
 ---
 
@@ -23,7 +23,7 @@ The "Architect Mode" is where you deconstruct the complex into the actionable.
 - **Launch Trajectories:** Click **LAUNCH TRAJECTORY** to define a new high-level ambition (e.g., "Master Quantum-ML").
 - **Deconstruct into Milestones:** Break your ambition into manageable phases. Each trajectory can host multiple milestones.
 - **Task Splitting:** Within each milestone, use **SPLIT INTO NEW TASK** to create specific sub-goals. 
-- **Milestone Weightage:** Completing a task within a milestone grants **25 XP**, while standalone daily tasks grant **10 XP**.
+- **Resonance Weightage:** Completing a task within a milestone grants **25 XP**, contributing to BOTH that specific **Trajectory Resonance** and your global **Space Science Level**. Standalone daily tasks grant **10 XP** to your global level only.
 
 ---
 

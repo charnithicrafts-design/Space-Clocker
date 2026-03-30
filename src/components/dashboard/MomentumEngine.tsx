@@ -11,16 +11,18 @@ const MomentumEngine = () => {
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Orbit Level {profile.level}</h2>
-          <h1 className="text-4xl font-display font-black text-primary">MOMENTUM ENGINE: LVL {profile.level}</h1>
+          <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Space Science Level</h2>
+          <h1 className="text-4xl font-display font-black text-primary uppercase tracking-tighter">
+            Momentum Rank: LVL {profile.level}
+          </h1>
         </div>
         <Zap className="text-primary-container" size={32} />
       </header>
 
-      {/* Resonance Progress */}
+      {/* Global Momentum Level Resonance */}
       <div className="space-y-1 mb-8">
         <div className="flex justify-between items-end">
-          <div className="text-xs font-mono text-on-surface-variant uppercase tracking-widest">Resonance Energy: {profile.xp} / 1000 XP</div>
+          <div className="text-xs font-mono text-on-surface-variant uppercase tracking-widest">Global Momentum Resonance: {profile.xp} / 1000 XP</div>
           <div className="text-sm text-primary-container font-mono">+{Math.round((profile.xp / 1000) * 100)}%</div>
         </div>
         <div className="w-full h-2 bg-surface-high rounded-full overflow-hidden">
@@ -31,25 +33,46 @@ const MomentumEngine = () => {
             transition={{ duration: 1, ease: "easeOut" }} 
           />
         </div>
-        <p className="text-xs text-on-surface-variant font-mono">NEXT RESONANCE SHIFT IN {1000 - profile.xp}XP</p>
+        <p className="text-xs text-on-surface-variant font-mono uppercase">Next Ranking Shift In {1000 - profile.xp} XP</p>
       </div>
 
       {/* Macro Ambitions */}
-      <h2 className="text-lg font-bold text-white mb-4">Macro Ambitions</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-bold text-white uppercase tracking-wider">Macro Ambitions (Trajectories)</h2>
+        <div className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">Resonance Tracking Active</div>
+      </div>
+      
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {ambitions.map((ambition) => (
-          <div key={ambition.id} className="glass-panel border border-outline-variant p-6 rounded-3xl nebula-shadow">
-            <div className="flex justify-between items-center mb-4">
+          <div key={ambition.id} className="glass-panel border border-outline-variant p-6 rounded-3xl nebula-shadow group hover:border-primary/30 transition-colors">
+            <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="font-bold text-white text-lg">{ambition.title}</h3>
-                <p className="text-xs text-on-surface-variant uppercase">Project: Deep Core</p>
+                <h3 className="font-bold text-white text-lg group-hover:text-primary transition-colors">{ambition.title}</h3>
+                <p className="text-[10px] text-on-surface-variant uppercase font-black tracking-widest">Trajectory Resonance</p>
               </div>
-              <div className="w-12 h-12 rounded-full border border-primary-container flex items-center justify-center text-primary text-sm font-bold">
-                {ambition.progress}%
+              <div className="flex flex-col items-end">
+                <div className="w-10 h-10 rounded-full border border-primary-container flex items-center justify-center text-primary text-[10px] font-black">
+                  {ambition.progress}%
+                </div>
               </div>
             </div>
-            <div className="w-full h-2 bg-surface-high rounded-full overflow-hidden">
-              <div className="h-full bg-primary-container" style={{ width: `${ambition.progress}%` }} />
+
+            {/* Individual Ambition Resonance Bar */}
+            <div className="space-y-2">
+                <div className="flex justify-between text-[9px] font-mono uppercase">
+                    <span className="text-on-surface-variant">Resonance Energy</span>
+                    <span className="text-primary-container">{ambition.xp % 500} / 500 XP</span>
+                </div>
+                <div className="w-full h-1.5 bg-surface-high rounded-full overflow-hidden">
+                    <motion.div 
+                        className="h-full bg-gradient-to-r from-primary to-secondary"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${((ambition.xp % 500) / 500) * 100}%` }}
+                    />
+                </div>
+                <div className="text-[8px] text-right text-on-surface-variant uppercase tracking-tighter">
+                    Resonance Phase {Math.floor(ambition.xp / 500) + 1}
+                </div>
             </div>
           </div>
         ))}

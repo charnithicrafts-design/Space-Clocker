@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS ambitions (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
   progress INTEGER DEFAULT 0,
+  xp INTEGER DEFAULT 0, -- Resonance Energy for this specific trajectory
   horizon TEXT DEFAULT 'yearly'
 );
 

@@ -31,6 +31,7 @@ export interface Ambition {
   id: string;
   title: string;
   progress: number;
+  xp: number; // Resonance Energy for this specific trajectory
   milestones: Milestone[];
   horizon: 'daily' | 'weekly' | 'yearly';
 }
@@ -153,6 +154,7 @@ interface TrackStore {
 }
 
 const XP_PER_LEVEL = 1000;
+const RESONANCE_PER_AMBITION_LEVEL = 500; // Each ambition can also "level" its resonance
 
 export const useTrackStore = create<TrackStore>()(
   (set, get) => ({
@@ -200,11 +202,11 @@ export const useTrackStore = create<TrackStore>()(
     },
 
     addAmbition: async (title: string) => {
-      const newAmbition: Ambition = { id: Date.now().toString(), title, progress: 0, horizon: 'yearly', milestones: [] };
+      const newAmbition: Ambition = { id: Date.now().toString(), title, progress: 0, xp: 0, horizon: 'yearly', milestones: [] };
       const { getDb } = await import('../db/client');
       const db = getDb();
-      await db.query(`INSERT INTO ambitions (id, title, progress, horizon) VALUES ($1, $2, $3, $4)`, [
-        newAmbition.id, newAmbition.title, newAmbition.progress, newAmbition.horizon
+      await db.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [
+        newAmbition.id, newAmbition.title, newAmbition.progress, newAmbition.xp, newAmbition.horizon
       ]);
       set((state) => ({ ambitions: [...state.ambitions, newAmbition] }));
     },
@@ -411,10 +413,7 @@ export const useTrackStore = create<TrackStore>()(
       const db = getDb();
       await db.query(`UPDATE tasks SET title = $1 WHERE id = $2`, [title, taskId]);
       set((state) => ({
-        ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
-          ...a,
-          milestones: a.milestones.map((m) => m.id === milestoneId ? { ...m, tasks: m.tasks.map((t) => t.id === taskId ? { ...t, title } : t) } : m)
-        } : a)
+        ambitions: state.ambitions.map((a) => a.id === ambitionId ? { ...a, milestones: a.milestones.map((m) => m.id === milestoneId ? { ...m, tasks: m.tasks.map((t) => t.id === taskId ? { ...t, title } : t) } : m) } : a)
       }));
     },
 
@@ -436,6 +435,7 @@ export const useTrackStore = create<TrackStore>()(
       let newStatus: Milestone['status'] = 'pending';
       let newProgress = 0;
       let xpGain = 0;
+      let ambitionXp = 0;
 
       const newAmbitions = state.ambitions.map((a) => {
         if (a.id !== ambitionId) return a;
@@ -458,10 +458,15 @@ export const useTrackStore = create<TrackStore>()(
         const totalTasks = newMilestones.reduce((acc, m) => acc + m.tasks.length, 0);
         const completedTasks = newMilestones.reduce((acc, m) => acc + m.tasks.filter(t => t.completed).length, 0);
         newProgress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : a.progress;
+        
+        // Update Resonance Energy for this ambition
+        ambitionXp = a.xp + xpGain;
+        if (ambitionXp < 0) ambitionXp = 0;
 
-        return { ...a, milestones: newMilestones, progress: newProgress };
+        return { ...a, milestones: newMilestones, progress: newProgress, xp: ambitionXp };
       });
 
+      // Global Momentum Level
       let newXp = state.profile.xp + xpGain;
       let newLevel = state.profile.level;
       if (newXp >= XP_PER_LEVEL) { newLevel += 1; newXp -= XP_PER_LEVEL; }
@@ -472,7 +477,7 @@ export const useTrackStore = create<TrackStore>()(
       const db = getDb();
       if (updatedTask) await db.query(`UPDATE tasks SET completed = $1 WHERE id = $2`, [updatedTask.completed, taskId]);
       await db.query(`UPDATE milestones SET status = $1 WHERE id = $2`, [newStatus, milestoneId]);
-      await db.query(`UPDATE ambitions SET progress = $1 WHERE id = $2`, [newProgress, ambitionId]);
+      await db.query(`UPDATE ambitions SET progress = $1, xp = $2 WHERE id = $3`, [newProgress, ambitionXp, ambitionId]);
       await db.query(`UPDATE profile SET xp = $1, level = $2 WHERE id = 1`, [newXp, newLevel]);
 
       set({ ambitions: newAmbitions, profile: { ...state.profile, xp: newXp, level: newLevel } });
@@ -527,6 +532,7 @@ export const useTrackStore = create<TrackStore>()(
       
       const ambitions: Ambition[] = ambitionsRaw.map(a => ({
         ...a,
+        xp: a.xp || 0,
         milestones: milestonesRaw.filter(m => m.ambition_id === a.id).map(m => ({
           ...m,
           tasks: tasksRaw.filter(t => t.milestone_id === m.id).map(t => ({
