@@ -522,96 +522,104 @@ export const useTrackStore = create<TrackStore>()(
       const { getDb } = await import('../db/client');
       const db = getDb();
 
-      // Clear existing data (except metadata/config)
-      await db.exec(`
-        DELETE FROM ambitions;
-        DELETE FROM tasks;
-        DELETE FROM milestones;
-        DELETE FROM void_tasks;
-        DELETE FROM skills;
-        DELETE FROM internships;
-        DELETE FROM reflections;
-        DELETE FROM transmissions;
-      `);
+      try {
+        await db.query('BEGIN');
 
-      // Import Profile
-      if (data.profile) {
-        await db.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
-          data.profile.name, data.profile.level, data.profile.xp, data.profile.title
-        ]);
-      }
+        // Clear existing data (except metadata/config)
+        await db.query('DELETE FROM tasks');
+        await db.query('DELETE FROM milestones');
+        await db.query('DELETE FROM ambitions');
+        await db.query('DELETE FROM void_tasks');
+        await db.query('DELETE FROM skills');
+        await db.query('DELETE FROM internships');
+        await db.query('DELETE FROM reflections');
+        await db.query('DELETE FROM transmissions');
 
-      // Import Preferences
-      if (data.preferences) {
-        await db.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [
-          data.preferences.confirmDelete, data.preferences.uiMode
-        ]);
-      }
-
-      // Import Stats
-      if (data.stats) {
-        await db.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [
-          data.stats.streak, data.stats.tasksCompleted, data.stats.totalFocusHours
-        ]);
-      }
-
-      // Import Ambitions, Milestones, and Milestone Tasks
-      if (data.ambitions) {
-        for (const a of data.ambitions) {
-          await db.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [
-            a.id, a.title, a.progress, a.xp, a.horizon
+        // Import Profile
+        if (data.profile) {
+          await db.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
+            data.profile.name, data.profile.level, data.profile.xp, data.profile.title
           ]);
-          if (a.milestones) {
-            for (const m of a.milestones) {
-              await db.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [
-                m.id, a.id, m.title, m.status
-              ]);
-              if (m.tasks) {
-                for (const t of m.tasks) {
-                  await db.query(`INSERT INTO tasks (id, milestone_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [
-                    t.id, m.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate
-                  ]);
+        }
+
+        // Import Preferences
+        if (data.preferences) {
+          await db.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [
+            data.preferences.confirmDelete, data.preferences.uiMode
+          ]);
+        }
+
+        // Import Stats
+        if (data.stats) {
+          await db.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [
+            data.stats.streak, data.stats.tasksCompleted, data.stats.totalFocusHours
+          ]);
+        }
+
+        // Import Ambitions, Milestones, and Milestone Tasks
+        if (data.ambitions) {
+          for (const a of data.ambitions) {
+            await db.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [
+              a.id, a.title, a.progress, a.xp, a.horizon
+            ]);
+            if (a.milestones) {
+              for (const m of a.milestones) {
+                await db.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [
+                  m.id, a.id, m.title, m.status
+                ]);
+                if (m.tasks) {
+                  for (const t of m.tasks) {
+                    await db.query(`INSERT INTO tasks (id, milestone_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [
+                      t.id, m.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate
+                    ]);
+                  }
                 }
               }
             }
           }
         }
-      }
 
-      // Import Standalone Tasks
-      if (data.tasks) {
-        for (const t of data.tasks) {
-          await db.query(`INSERT INTO tasks (id, time, end_time, deadline, weightage, title, completed, horizon, planned_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, [
-            t.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate
-          ]);
+        // Import Standalone Tasks
+        if (data.tasks) {
+          for (const t of data.tasks) {
+            await db.query(`INSERT INTO tasks (id, time, end_time, deadline, weightage, title, completed, horizon, planned_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, [
+              t.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate
+            ]);
+          }
         }
-      }
 
-      // Import Voids
-      if (data.voids) {
-        for (const v of data.voids) {
-          await db.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [
-            v.id, v.text, v.impact, v.engagedCount, v.maxAllowed
-          ]);
+        // Import Voids
+        if (data.voids) {
+          for (const v of data.voids) {
+            await db.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [
+              v.id, v.text, v.impact, v.engagedCount, v.maxAllowed
+            ]);
+          }
         }
-      }
 
-      // Import Skills
-      if (data.skills) {
-        for (const s of data.skills) {
-          await db.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation) VALUES ($1, $2, $3, $4, $5)`, [
-            s.id, s.name, s.currentProficiency, s.targetProficiency, s.recommendation
-          ]);
+        // Import Skills
+        if (data.skills) {
+          for (const s of data.skills) {
+            await db.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation) VALUES ($1, $2, $3, $4, $5)`, [
+              s.id, s.name, s.current_proficiency || s.currentProficiency, s.target_proficiency || s.targetProficiency, s.recommendation
+            ]);
+          }
         }
-      }
 
-      // Import Internships
-      if (data.internships) {
-        for (const i of data.internships) {
-          await db.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [
-            Date.now().toString() + Math.random(), i.organization, i.start, i.end
-          ]);
+        // Import Internships
+        if (data.internships) {
+          for (const i of data.internships) {
+            await db.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [
+              `intern-${Date.now()}-${Math.random()}`, i.organization, i.start, i.end
+            ]);
+          }
         }
+
+        await db.query('COMMIT');
+      } catch (err) {
+        await db.query('ROLLBACK');
+        console.error('Demo data import failed:', err);
+        throw err;
       }
 
       await get().initialize();
