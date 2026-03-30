@@ -20,7 +20,8 @@ describe('Pglite Data Layer - Stellar Database', () => {
       CREATE TABLE IF NOT EXISTS tasks (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
-        completed BOOLEAN DEFAULT false
+        completed BOOLEAN DEFAULT false,
+        completed_at TEXT
       );
     `;
     await db.exec(SCHEMA);
