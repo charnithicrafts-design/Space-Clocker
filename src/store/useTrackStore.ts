@@ -93,10 +93,16 @@ export interface Transmission {
   timestamp: string;
   tier: 'daily' | 'weekly' | 'quarterly' | 'yearly' | 'milestone';
   title: string;
+  startDate?: string;
+  endDate?: string;
   pdaNarrative: string;
   pdaReflections: string[];
   voidAnalysis: { voidId: string; text: string; count: number; impact: string }[];
   skillsReconciliation: { skillId: string; name: string; delta: number; current: number }[];
+  missionMetrics: {
+    accomplished: { id: string; title: string; weightage: number }[];
+    missed: { id: string; title: string; weightage: number }[];
+  };
   rawLogs: { tasksCompleted: number; totalTasks: number; focusHours: number };
   metadata: { targetOrg?: 'NASA' | 'ISRO'; securityClearance: string };
 }
@@ -134,7 +140,7 @@ interface TrackStore {
   deleteSkill: (id: string) => Promise<void>;
   
   // Transmission Actions
-  generateTransmission: (tier: Transmission['tier'], title: string, narrative: string, targetOrg?: 'NASA' | 'ISRO') => Promise<void>;
+  generateTransmission: (tier: Transmission['tier'], title: string, narrative: string, targetOrg?: 'NASA' | 'ISRO', dateRange?: { start: string; end: string }) => Promise<void>;
   deleteTransmission: (id: string) => Promise<void>;
 
   // Macro Engine Actions
@@ -373,39 +379,81 @@ export const useTrackStore = create<TrackStore>()(
       }));
     },
 
-    generateTransmission: async (tier, title, narrative, targetOrg) => {
+    generateTransmission: async (tier, title, narrative, targetOrg, dateRange) => {
       const state = get();
       const { getDb } = await import('../db/client');
       const db = getDb();
 
-      const pdaReflections = state.reflections.map(r => r.content);
-      const voidAnalysis = state.voids.map(v => ({ voidId: v.id, text: v.text, count: v.engagedCount, impact: v.impact }));
-      const skillsReconciliation = state.skills.map(s => ({ skillId: s.id, name: s.name, delta: 0, current: s.currentProficiency }));
+      // Filter tasks based on date range if provided
+      const filterByDate = (date?: string) => {
+        if (!dateRange || !date) return true;
+        const target = new Date(date);
+        const start = new Date(dateRange.start);
+        const end = new Date(dateRange.end);
+        return target >= start && target <= end;
+      };
 
-      const totalTasks = state.tasks.length + state.ambitions.reduce((acc, a) => acc + a.milestones.reduce((m_acc, m) => m_acc + m.tasks.length, 0), 0);
-      const completedTasks = state.tasks.filter(t => t.completed).length + state.ambitions.reduce((acc, a) => acc + a.milestones.reduce((m_acc, m) => m_acc + m.tasks.filter(t => t.completed).length, 0), 0);
-      
-      const rawLogs = { tasksCompleted: completedTasks, totalTasks: totalTasks, focusHours: state.stats.totalFocusHours };
+      const pdaReflections = state.reflections
+        .filter(r => filterByDate(r.date))
+        .map(r => r.content);
+
+      const voidAnalysis = state.voids.map(v => ({ 
+        voidId: v.id, 
+        text: v.text, 
+        count: v.engagedCount, // In a real app, we'd filter engagements by date
+        impact: v.impact 
+      }));
+
+      const skillsReconciliation = state.skills.map(s => ({ 
+        skillId: s.id, 
+        name: s.name, 
+        delta: 0, 
+        current: s.currentProficiency 
+      }));
+
+      const allTasks = [
+        ...state.tasks,
+        ...state.ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks))
+      ].filter(t => filterByDate(t.plannedDate));
+
+      const accomplished = allTasks
+        .filter(t => t.completed)
+        .map(t => ({ id: t.id, title: t.title, weightage: t.weightage || 10 }));
+
+      const missed = allTasks
+        .filter(t => !t.completed)
+        .map(t => ({ id: t.id, title: t.title, weightage: t.weightage || 10 }));
+
+      const rawLogs = { 
+        tasksCompleted: accomplished.length, 
+        totalTasks: allTasks.length, 
+        focusHours: state.stats.totalFocusHours // Simplified
+      };
 
       const newTransmission: Transmission = {
         id: `TX-${new Date().getFullYear()}-${tier.toUpperCase()}-${Date.now()}`,
         timestamp: new Date().toISOString(),
         tier,
         title,
+        startDate: dateRange?.start,
+        endDate: dateRange?.end,
         pdaNarrative: narrative,
         pdaReflections,
         voidAnalysis,
         skillsReconciliation,
+        missionMetrics: { accomplished, missed },
         rawLogs,
         metadata: { targetOrg, securityClearance: 'LEVEL-1-UNCLASSIFIED' }
       };
 
       await db.query(
-        `INSERT INTO transmissions (id, timestamp, tier, title, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, raw_logs, metadata) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        `INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
         [
-          newTransmission.id, newTransmission.timestamp, newTransmission.tier, newTransmission.title, newTransmission.pdaNarrative,
-          JSON.stringify(newTransmission.pdaReflections), JSON.stringify(newTransmission.voidAnalysis), JSON.stringify(newTransmission.skillsReconciliation),
+          newTransmission.id, newTransmission.timestamp, newTransmission.tier, newTransmission.title, 
+          newTransmission.startDate, newTransmission.endDate, newTransmission.pdaNarrative,
+          JSON.stringify(newTransmission.pdaReflections), JSON.stringify(newTransmission.voidAnalysis), 
+          JSON.stringify(newTransmission.skillsReconciliation), JSON.stringify(newTransmission.missionMetrics),
           JSON.stringify(newTransmission.rawLogs), JSON.stringify(newTransmission.metadata)
         ]
       );

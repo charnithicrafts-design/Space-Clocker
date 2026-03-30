@@ -1,17 +1,16 @@
-# Track 05: Temporal Linkage & Navigation Refactor
+# Track 06: Skill Matrix Refactor
 
-Synchronize the Orbit scheduler with the Stellar Timeline and optimize the navigation for high-fidelity mission control.
+Refactor the Skills Matrix to support ambition-specific skill sets, personal skills, and full CRUD capabilities for advanced gap analysis.
 
 ## Overview
-This track bridges the gap between daily execution and long-term ambition by linking all tasks and milestones to a unified temporal timeline. It also refines the application's navigation to handle increasing complexity, especially on mobile devices.
+This track transforms the static skills matrix into a dynamic, multi-layered system where users can track their technical proficiency relative to specific ambitions (e.g., NASA, ISRO) while maintaining a personal growth track.
 
 ## Key Files
 - [Specification](./spec.md)
 - [Implementation Plan](./plan.md)
 
 ## Status
-- [ ] Research & Temporal Model Definition
-- [ ] Orbit Scheduler UI Enhancements (Date/Deadline)
-- [ ] Stellar Timeline Synchronization (Daily/Weekly/Yearly)
-- [ ] Navigation & Mobile UX Overhaul
-- [ ] Verification & Final Polish
+- [ ] Research & Schema Migration Definition
+- [ ] Store & Database Action Implementation
+- [ ] Skills Matrix UI Overhaul (Categories & CRUD)
+- [ ] Verification & Gap Analysis Polish

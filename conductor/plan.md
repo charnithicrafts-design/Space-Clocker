@@ -1,49 +1,44 @@
-# Implementation Plan: Temporal Linkage & Navigation Refactor
+# Implementation Plan: Skill Matrix Refactor
 
-## Phase 1: Temporal Model & Orbit UI (Tactical)
+## Phase 1: Database & Store (The Engine)
 
-### 1.1 Store & Database
-- Update `addTask` in `useTrackStore.ts` to accept an explicit `plannedDate`.
-- Add an action `updateTaskDate(taskId, date)` to the store.
-- Add filtering logic in the store to get tasks by date and horizon.
+### 1.1 Schema Migration
+- Update `src/db/schema.sql` with new columns in `skills` table.
+- Add `ALTER TABLE` statements to `src/db/init.ts` to update existing databases.
 
-### 1.2 Orbit Scheduler Enhancements
-- Integrate a thematic `DatePicker` (glassmorphism style) in the `Initialize New Task` section.
-- Add an inline date/deadline editor for existing tasks.
-- Implement a "Critical" visual state for tasks nearing their deadline.
+### 1.2 Store Enhancements
+- Update `Skill` interface in `src/store/useTrackStore.ts`.
+- Implement `addSkill` action with PGlite persistence.
+- Implement `deleteSkill` action with PGlite persistence.
+- Refactor `updateSkill` to support all skill fields (`name`, `current`, `target`, `recommendation`).
+- Update `initialize` logic to map new columns from the DB.
 
-### 1.3 Orbit Sub-Navigation
-- Create a `OrbitSubNav` component with tabs: `Daily`, `Weekly`, `Void`.
-- Refactor `OrbitScheduler.tsx` to switch between these views (or create separate components for each).
+## Phase 2: UI Foundation (The Layout)
 
-## Phase 2: Stellar Timeline Sync (Strategic)
+### 2.1 Category Navigation
+- Create `SkillCategoryNav` component in `SkillsMatrix.tsx`.
+- Implement state to track `selectedCategoryId` ('all', 'personal', or ambitionId).
 
-### 2.1 Daily & Weekly Timeline
-- Implement the `daily` view in `CalendarShell.tsx` to show a vertical time-blocked schedule of tasks.
-- Implement the `weekly` view to show a grid of milestones and weekly tasks.
+### 2.2 Filtering Logic
+- Update the `skills` selection in `SkillsMatrix` to filter based on the active category.
 
-### 2.2 Yearly Stellar Roadmap
-- Enhance the `yearly` view in `CalendarShell.tsx`.
-- Create a horizontal scrollable timeline showing Ambition milestones.
-- Integrate `InternshipScheduler` as a layer within this yearly view.
+## Phase 3: CRUD Operations (The Interaction)
 
-## Phase 3: Navigation Overhaul (UX)
+### 3.1 Skill Creation
+- Implement `AddSkillForm` with glassmorphism styling.
+- Ensure it defaults to the currently active category.
 
-### 3.1 Command Hub (Mobile)
-- Create `src/components/layout/CommandHub.tsx`.
-- Implement an animated overlay triggered by a central button in the mobile nav.
-- Refactor `Navigation.tsx` to use the new mobile layout.
-
-### 3.2 Desktop Sidebar Refinement
-- Group navigation links into "Tactical", "Strategic", and "Communications" categories.
-- Improve the visual hierarchy and active state styling.
+### 3.2 Skill Editing & Deletion
+- Refactor `SkillGapCard` to include "Edit" and "Delete" actions.
+- Implement an "Edit Mode" within the card for inline updates.
 
 ## Phase 4: Verification & Polish
-- **Testing:** Verify task linking across all horizons.
-- **Mobile UX:** Ensure the Command Hub feels fluid and intuitive on small screens.
-- **Audio/Visual:** Add specialized sounds for "Timeline Lock" and "Hub Activation".
+- **Testing:** Verify that adding a skill to "NASA" ambition only shows up in that category.
+- **Visuals:** Ensure the Radar Chart animates smoothly when switching categories.
+- **Audio:** Integrate `SoundManager` for all CRUD actions.
 
 ## Verification Steps
-1. Create a task with a specific date in Orbit -> Verify it appears on that date in the Timeline.
-2. Set a deadline within 1 hour -> Verify the "Critical" visual state triggers.
-3. Open Command Hub on mobile -> Verify all sectors are accessible and the animation is smooth.
+1. Create an ambition -> Go to Skills -> Verify new ambition category appears.
+2. Add a skill to "Personal" -> Verify it doesn't appear in ambition-specific views.
+3. Edit proficiency -> Verify Radar Chart updates in real-time.
+4. Delete a skill -> Verify removal from both Chart and List.

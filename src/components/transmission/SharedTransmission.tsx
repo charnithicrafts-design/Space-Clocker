@@ -49,14 +49,16 @@ const SharedTransmission = () => {
       <div className="max-w-4xl mx-auto">
         <header className="flex justify-between items-center mb-12 no-print">
           <div className="flex items-center gap-3">
-             <Signal className="text-primary" size={32} />
+             <Signal className="text-primary" size={32} aria-hidden="true" />
              <span className="font-display text-xl font-bold tracking-tight">Space-Clocker <span className="text-secondary">Uplink</span></span>
           </div>
           <button 
             onClick={() => handlePrint()}
-            className="flex items-center gap-2 px-6 py-3 bg-secondary text-on-secondary rounded-2xl font-bold shadow-lg shadow-secondary/20"
+            title="Save briefing as PDF"
+            aria-label="Save this briefing as a PDF document"
+            className="flex items-center gap-2 px-6 py-3 bg-secondary text-on-secondary rounded-2xl font-bold shadow-lg shadow-secondary/20 focus-visible:ring-2 focus-visible:ring-secondary outline-none transition-all active:scale-95"
           >
-            <Download size={20} />
+            <Download size={20} aria-hidden="true" />
             Save Briefing
           </button>
         </header>
@@ -68,18 +70,20 @@ const SharedTransmission = () => {
           className="glass-panel p-8 lg:p-12 rounded-[3rem] border border-outline-variant/30 shadow-2xl bg-surface-lowest"
         >
           <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-12 border-b border-outline-variant/20 pb-8">
-            <div>
+            <div role="presentation">
               <div className="flex items-center gap-3 mb-2">
                 <span className="px-3 py-1 bg-primary text-on-primary rounded-lg text-[10px] font-black uppercase tracking-widest">
                   {transmission.tier}
                 </span>
-                <span className="text-xs font-mono text-on-surface-variant">{transmission.id}</span>
+                <span className="text-xs font-mono text-on-surface-variant" aria-label={`Transmission ID: ${transmission.id}`}>{transmission.id}</span>
               </div>
               <h1 className="text-4xl lg:text-5xl font-bold text-on-surface">{transmission.title}</h1>
               <p className="text-on-surface-variant mt-2 font-medium">
-                {new Date(transmission.timestamp).toLocaleString(undefined, { 
-                  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
-                })}
+                <time dateTime={transmission.timestamp}>
+                  {new Date(transmission.timestamp).toLocaleString(undefined, { 
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+                  })}
+                </time>
               </p>
             </div>
 

@@ -66,9 +66,17 @@ const TransmissionDashboard = () => {
   const [newTxTier, setNewTxTier] = useState<Transmission['tier']>('daily');
   const [newTxNarrative, setNewTxNarrative] = useState('');
   const [newTxTarget, setNewTxTarget] = useState<'NASA' | 'ISRO' | undefined>();
+  const [newTxStartDate, setNewTxStartDate] = useState(new Date().toISOString().split('T')[0]);
+  const [newTxEndDate, setNewTxEndDate] = useState(new Date().toISOString().split('T')[0]);
 
   const handleGenerate = async () => {
-    await generateTransmission(newTxTier, newTxTitle || `${newTxTier.toUpperCase()} Briefing`, newTxNarrative, newTxTarget);
+    await generateTransmission(
+      newTxTier, 
+      newTxTitle || `${newTxTier.toUpperCase()} Briefing`, 
+      newTxNarrative, 
+      newTxTarget,
+      { start: newTxStartDate, end: newTxEndDate }
+    );
     setIsGenerating(false);
     setNewTxTitle('');
     setNewTxNarrative('');
@@ -87,23 +95,24 @@ const TransmissionDashboard = () => {
         
         <button 
           onClick={() => setIsGenerating(true)}
-          className="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-2xl font-bold shadow-lg hover:shadow-primary/20 transition-all active:scale-95"
+          aria-label="Initiate new mission briefing"
+          className="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-2xl font-bold shadow-lg hover:shadow-primary/20 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-lowest outline-none"
         >
-          <Plus size={20} />
+          <Plus size={20} aria-hidden="true" />
           Initiate Briefing
         </button>
       </header>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         {/* Previous Transmissions List */}
-        <div className="xl:col-span-1 space-y-6">
+        <nav className="xl:col-span-1 space-y-6" aria-label="Recent transmissions">
           <div className="glass-panel p-6 rounded-3xl border border-outline-variant/30">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              <History size={20} className="text-secondary" />
+              <History size={20} className="text-secondary" aria-hidden="true" />
               Recent Uplinks
             </h2>
             
-            <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+            <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar" role="list">
               {transmissions.length === 0 ? (
                 <div className="text-center py-12 text-on-surface-variant italic">
                   No transmissions archived.
@@ -112,9 +121,14 @@ const TransmissionDashboard = () => {
                 transmissions.map(tx => (
                   <motion.div
                     key={tx.id}
+                    role="listitem"
+                    tabIndex={0}
                     layoutId={tx.id}
                     onClick={() => setSelectedTx(tx)}
-                    className={`p-4 rounded-2xl border transition-all cursor-pointer group ${
+                    onKeyDown={(e) => e.key === 'Enter' && setSelectedTx(tx)}
+                    aria-selected={selectedTx?.id === tx.id}
+                    aria-label={`View transmission: ${tx.title} from ${formatDate(tx.timestamp)}`}
+                    className={`p-4 rounded-2xl border transition-all cursor-pointer group focus-visible:ring-2 focus-visible:ring-secondary outline-none ${
                       selectedTx?.id === tx.id 
                         ? 'bg-secondary/10 border-secondary' 
                         : 'bg-surface-low border-outline-variant/30 hover:border-secondary/50'
@@ -166,7 +180,15 @@ const TransmissionDashboard = () => {
                          {selectedTx.id}
                        </div>
                     </div>
-                    <p className="text-on-surface-variant font-medium">Transmission Date: {formatFullDate(selectedTx.timestamp)}</p>
+                    <div className="flex flex-col gap-1">
+                      <p className="text-on-surface-variant font-medium">Transmission Date: {formatFullDate(selectedTx.timestamp)}</p>
+                      {selectedTx.startDate && selectedTx.endDate && (
+                        <p className="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                          <Clock size={12} />
+                          Mission Chronometer: {formatDate(selectedTx.startDate)} — {formatDate(selectedTx.endDate)}
+                        </p>
+                      )}
+                    </div>
                   </div>
                   
                   <div className="flex items-center gap-2 bg-surface-low p-1.5 rounded-2xl border border-outline-variant/30 no-print">
@@ -205,6 +227,48 @@ const TransmissionDashboard = () => {
                           ))}
                         </div>
                       </section>
+
+                      {/* Mission Metrics: Accomplished vs Missed */}
+                      {selectedTx.missionMetrics && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <section className="bg-primary/5 p-6 rounded-3xl border border-primary/20">
+                            <h3 className="text-sm font-black uppercase tracking-widest mb-4 text-primary flex items-center gap-2">
+                              <Target size={16} />
+                              Mission Accomplished
+                            </h3>
+                            <div className="space-y-2">
+                              {selectedTx.missionMetrics.accomplished.length > 0 ? (
+                                selectedTx.missionMetrics.accomplished.map(m => (
+                                  <div key={m.id} className="flex justify-between items-center text-xs p-2 bg-surface-lowest/50 rounded-lg">
+                                    <span className="font-medium">{m.title}</span>
+                                    <span className="text-primary font-bold">+{m.weightage} XP</span>
+                                  </div>
+                                ))
+                              ) : (
+                                <p className="text-[10px] text-on-surface-variant italic">No objectives secured in this range.</p>
+                              )}
+                            </div>
+                          </section>
+                          <section className="bg-error/5 p-6 rounded-3xl border border-error/20">
+                            <h3 className="text-sm font-black uppercase tracking-widest mb-4 text-error flex items-center gap-2">
+                              <AlertTriangle size={16} />
+                              Mission Missed
+                            </h3>
+                            <div className="space-y-2">
+                              {selectedTx.missionMetrics.missed.length > 0 ? (
+                                selectedTx.missionMetrics.missed.map(m => (
+                                  <div key={m.id} className="flex justify-between items-center text-xs p-2 bg-surface-lowest/50 rounded-lg opacity-70">
+                                    <span className="font-medium">{m.title}</span>
+                                    <span className="text-error font-bold">-{m.weightage} XP</span>
+                                  </div>
+                                ))
+                              ) : (
+                                <p className="text-[10px] text-on-surface-variant italic">Zero deviations recorded.</p>
+                              )}
+                            </div>
+                          </section>
+                        </div>
+                      )}
 
                       {/* Analysis Grid */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -295,24 +359,28 @@ const TransmissionDashboard = () => {
                         setSelectedTx(null);
                       }
                     }}
-                    className="p-3 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-xl transition-all"
+                    title="Declassify and delete transmission"
+                    aria-label="Declassify and delete this transmission"
+                    className="p-3 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-xl transition-all focus-visible:ring-2 focus-visible:ring-error outline-none"
                   >
-                    <Trash2 size={20} />
+                    <Trash2 size={20} aria-hidden="true" />
                   </button>
                   
                   <div className="flex gap-4">
                      <button 
                       onClick={handleShare}
-                      className="flex items-center gap-2 px-5 py-2.5 bg-surface-high rounded-xl text-sm font-bold hover:text-primary transition-all"
+                      aria-label="Copy shareable signal link to clipboard"
+                      className="flex items-center gap-2 px-5 py-2.5 bg-surface-high rounded-xl text-sm font-bold hover:text-primary transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
                      >
-                       <Share2 size={18} />
+                       <Share2 size={18} aria-hidden="true" />
                        {shareStatus === 'copied' ? 'Signal Copied' : 'Share Signal'}
                      </button>
                      <button 
                       onClick={() => handlePrint()}
-                      className="flex items-center gap-2 px-6 py-2.5 bg-secondary text-on-secondary rounded-xl text-sm font-bold shadow-lg shadow-secondary/20 transition-all active:scale-95"
+                      aria-label="Export briefing as PDF for offline viewing"
+                      className="flex items-center gap-2 px-6 py-2.5 bg-secondary text-on-secondary rounded-xl text-sm font-bold shadow-lg shadow-secondary/20 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-secondary outline-none"
                      >
-                       <Download size={18} />
+                       <Download size={18} aria-hidden="true" />
                        Export PDF
                      </button>
                   </div>
@@ -387,6 +455,29 @@ const TransmissionDashboard = () => {
                       <option value="NASA">NASA</option>
                       <option value="ISRO">ISRO</option>
                     </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="tx-start" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Mission Start</label>
+                    <input 
+                      id="tx-start"
+                      type="date"
+                      value={newTxStartDate}
+                      onChange={(e) => setNewTxStartDate(e.target.value)}
+                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all text-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="tx-end" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Mission End</label>
+                    <input 
+                      id="tx-end"
+                      type="date"
+                      value={newTxEndDate}
+                      onChange={(e) => setNewTxEndDate(e.target.value)}
+                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all text-sm"
+                    />
                   </div>
                 </div>
 
