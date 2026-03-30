@@ -90,13 +90,17 @@ CREATE TABLE IF NOT EXISTS reflections (
   content TEXT NOT NULL,
   type TEXT DEFAULT 'daily-summary'
 );
-
 CREATE TABLE IF NOT EXISTS skills (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   current_proficiency INTEGER DEFAULT 0,
   target_proficiency INTEGER DEFAULT 100,
-  recommendation TEXT
+  recommendation TEXT,
+  ambition_id TEXT REFERENCES ambitions(id) ON DELETE CASCADE,
+  type TEXT DEFAULT 'personal'
+);
+  ambition_id TEXT REFERENCES ambitions(id) ON DELETE CASCADE,
+  type TEXT DEFAULT 'personal'
 );
 
 CREATE TABLE IF NOT EXISTS internships (

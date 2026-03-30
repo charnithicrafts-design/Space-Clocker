@@ -56,13 +56,17 @@ export interface InternshipPeriod {
   start: string;
   end: string;
 }
-
 export interface Skill {
   id: string;
   name: string;
   currentProficiency: number;
   targetProficiency: number;
   recommendation: string;
+  type: 'personal' | 'ambition';
+  ambitionId?: string;
+}
+  type: 'personal' | 'ambition';
+  ambitionId?: string;
 }
 
 export interface OracleConfig {
@@ -125,7 +129,9 @@ interface TrackStore {
   toggleTask: (taskId: string) => Promise<void>;
   addReflection: (content: string, type: Reflection['type']) => Promise<void>;
   addInternship: (internship: InternshipPeriod) => Promise<void>;
-  updateSkill: (id: string, current: number, target: number) => Promise<void>;
+  addSkill: (name: string, current: number, target: number, recommendation: string, type: Skill['type'], ambitionId?: string) => Promise<void>;
+  updateSkill: (id: string, updates: Partial<Skill>) => Promise<void>;
+  deleteSkill: (id: string) => Promise<void>;
   
   // Transmission Actions
   generateTransmission: (tier: Transmission['tier'], title: string, narrative: string, targetOrg?: 'NASA' | 'ISRO') => Promise<void>;
@@ -333,12 +339,37 @@ export const useTrackStore = create<TrackStore>()(
       set((state) => ({ internships: [...state.internships, internship] }));
     },
 
-    updateSkill: async (id, current, target) => {
+    addSkill: async (name, current, target, recommendation, type, ambitionId) => {
+      const id = `skill-${Date.now()}`;
       const { getDb } = await import('../db/client');
       const db = getDb();
-      await db.query(`UPDATE skills SET current_proficiency = $1, target_proficiency = $2 WHERE id = $3`, [current, target, id]);
+      await db.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
+        id, name, current, target, recommendation, type, ambitionId
+      ]);
+      const newSkill: Skill = { id, name, currentProficiency: current, targetProficiency: target, recommendation, type, ambitionId };
+      set((state) => ({ skills: [...state.skills, newSkill] }));
+    },
+
+    updateSkill: async (id, updates) => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      
+      if (updates.name !== undefined) await db.query(`UPDATE skills SET name = $1 WHERE id = $2`, [updates.name, id]);
+      if (updates.currentProficiency !== undefined) await db.query(`UPDATE skills SET current_proficiency = $1 WHERE id = $2`, [updates.currentProficiency, id]);
+      if (updates.targetProficiency !== undefined) await db.query(`UPDATE skills SET target_proficiency = $1 WHERE id = $2`, [updates.targetProficiency, id]);
+      if (updates.recommendation !== undefined) await db.query(`UPDATE skills SET recommendation = $1 WHERE id = $2`, [updates.recommendation, id]);
+      
       set((state) => ({
-        skills: state.skills.map((s) => s.id === id ? { ...s, currentProficiency: current, targetProficiency: target } : s)
+        skills: state.skills.map((s) => s.id === id ? { ...s, ...updates } : s)
+      }));
+    },
+
+    deleteSkill: async (id) => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      await db.query(`DELETE FROM skills WHERE id = $1`, [id]);
+      set((state) => ({
+        skills: state.skills.filter((s) => s.id !== id)
       }));
     },
 
@@ -716,7 +747,7 @@ export const useTrackStore = create<TrackStore>()(
 
       const voids = (await db.query<VoidTask>(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`)).rows;
       const reflections = (await db.query<Reflection>(`SELECT id, date, content, type FROM reflections`)).rows;
-      const skills = (await db.query<Skill>(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation FROM skills`)).rows;
+      const skills = (await db.query<any>(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`)).rows;
       const internships = (await db.query<any>(`SELECT organization, start_date as "start", end_date as "end" FROM internships`)).rows;
       const transmissionsRaw = (await db.query<any>(`SELECT * FROM transmissions ORDER BY timestamp DESC`)).rows;
       const transmissions: Transmission[] = transmissionsRaw.map(tx => ({

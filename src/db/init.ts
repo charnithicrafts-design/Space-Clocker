@@ -134,6 +134,8 @@ export async function initDb() {
       ALTER TABLE tasks ADD COLUMN IF NOT EXISTS end_time TEXT;
       ALTER TABLE tasks ADD COLUMN IF NOT EXISTS deadline TEXT;
       ALTER TABLE tasks ADD COLUMN IF NOT EXISTS weightage INTEGER DEFAULT 10;
+      ALTER TABLE skills ADD COLUMN IF NOT EXISTS ambition_id TEXT;
+      ALTER TABLE skills ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'personal';
     `);
   } catch (e) {
     console.error('Schema migration failed:', e);
