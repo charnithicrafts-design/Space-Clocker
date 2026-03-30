@@ -150,7 +150,10 @@ interface TrackStore {
   updateProfile: (updates: Partial<Profile>) => void;
   updatePreferences: (updates: Partial<Preferences>) => void;
   addOracleLog: (log: string, response?: string) => void;
-  engageVoid: (voidId: string) => void;
+  addVoidTask: (text: string, impact: VoidTask['impact'], maxAllowed: number) => Promise<void>;
+  updateVoidTask: (id: string, updates: Partial<VoidTask>) => Promise<void>;
+  deleteVoidTask: (id: string) => Promise<void>;
+  engageVoid: (voidId: string) => Promise<void>;
   importDemoData: (data: any) => Promise<void>;
   initialize: () => Promise<void>;
 }
@@ -525,9 +528,50 @@ export const useTrackStore = create<TrackStore>()(
       reflections: [...state.reflections, { id: Date.now().toString(), date: new Date().toISOString(), content: response ? `${log}\n\nOracle Response: ${response}` : log, type: 'daily-summary' }]
     })),
 
-    engageVoid: (voidId) => set((state) => ({
-      voids: state.voids.map((v) => v.id === voidId ? { ...v, engagedCount: v.engagedCount + 1 } : v)
-    })),
+    addVoidTask: async (text, impact, maxAllowed) => {
+      const newVoid: VoidTask = { id: `v-${Date.now()}`, text, impact, engagedCount: 0, maxAllowed };
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      await db.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [
+        newVoid.id, newVoid.text, newVoid.impact, newVoid.engagedCount, newVoid.maxAllowed
+      ]);
+      set((state) => ({ voids: [...state.voids, newVoid] }));
+    },
+
+    updateVoidTask: async (id, updates) => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      if (updates.text !== undefined) await db.query(`UPDATE void_tasks SET text = $1 WHERE id = $2`, [updates.text, id]);
+      if (updates.impact !== undefined) await db.query(`UPDATE void_tasks SET impact = $1 WHERE id = $2`, [updates.impact, id]);
+      if (updates.maxAllowed !== undefined) await db.query(`UPDATE void_tasks SET max_allowed = $1 WHERE id = $2`, [updates.maxAllowed, id]);
+      
+      set((state) => ({
+        voids: state.voids.map((v) => v.id === id ? { ...v, ...updates } : v)
+      }));
+    },
+
+    deleteVoidTask: async (id) => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      await db.query(`DELETE FROM void_tasks WHERE id = $1`, [id]);
+      set((state) => ({
+        voids: state.voids.filter((v) => v.id !== id)
+      }));
+    },
+
+    engageVoid: async (voidId) => {
+      const state = get();
+      const v = state.voids.find((v) => v.id === voidId);
+      if (v) {
+        const newCount = v.engagedCount + 1;
+        const { getDb } = await import('../db/client');
+        const db = getDb();
+        await db.query(`UPDATE void_tasks SET engaged_count = $1 WHERE id = $2`, [newCount, voidId]);
+        set((state) => ({
+          voids: state.voids.map((v) => v.id === voidId ? { ...v, engagedCount: newCount } : v)
+        }));
+      }
+    },
 
     importDemoData: async (data: any) => {
       const { getDb } = await import('../db/client');
