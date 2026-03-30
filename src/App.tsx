@@ -63,16 +63,18 @@ const App = () => {
         )}
 
         <main className="pb-24 lg:pb-0">
-
-          <Route path="/nebula" element={<NebulaMap />} />
-          <Route path="/orbit" element={<OrbitScheduler />} />
-          <Route path="/timeline" element={<CalendarShell />} />
-          <Route path="/horizon" element={<EventHorizon />} />
-          <Route path="/skills" element={<SkillsMatrix />} />
-          <Route path="/transmission" element={<TransmissionDashboard />} />
-          <Route path="/transmission/share" element={<SharedTransmission />} />
-          <Route path="/settings" element={<SettingsDashboard />} />
-        </Routes>
+          <Routes>
+            <Route path="/" element={<MomentumEngine />} />
+            <Route path="/nebula" element={<NebulaMap />} />
+            <Route path="/orbit" element={<OrbitScheduler />} />
+            <Route path="/timeline" element={<CalendarShell />} />
+            <Route path="/horizon" element={<EventHorizon />} />
+            <Route path="/skills" element={<SkillsMatrix />} />
+            <Route path="/transmission" element={<TransmissionDashboard />} />
+            <Route path="/transmission/share" element={<SharedTransmission />} />
+            <Route path="/settings" element={<SettingsDashboard />} />
+          </Routes>
+        </main>
 
         <SyncConflictModal 
           isOpen={isSyncModalOpen}
