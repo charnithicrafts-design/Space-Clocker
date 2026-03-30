@@ -4,20 +4,18 @@ import { MemoryRouter } from 'react-router-dom';
 import CalendarShell from './CalendarShell';
 import { useTrackStore } from '../../store/useTrackStore';
 
-// Mocking AudioContext
-vi.stubGlobal('AudioContext', vi.fn().mockImplementation(() => ({
-  createOscillator: vi.fn(),
-  createGain: vi.fn(),
-  destination: {},
-})));
-
 // Mock useTrackStore
 vi.mock('../../store/useTrackStore', () => ({
   useTrackStore: vi.fn(),
 }));
 
 describe('CalendarShell', () => {
-  const mockAddInternship = vi.fn();
+  const mockTasks = [
+    { id: '1', title: 'Task 1', plannedDate: new Date().toISOString().split('T')[0], time: '10:00', completed: false, horizon: 'daily' }
+  ];
+  const mockAmbitions = [
+    { id: 'a1', title: 'Ambition 1', milestones: [{ id: 'm1', title: 'Milestone 1', status: 'pending' }] }
+  ];
   const mockInternships = [
     { organization: 'ISRO', start: '2025-06-01', end: '2025-08-31' }
   ];
@@ -25,12 +23,13 @@ describe('CalendarShell', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (useTrackStore as any).mockReturnValue({
-      addInternship: mockAddInternship,
+      tasks: mockTasks,
+      ambitions: mockAmbitions,
       internships: mockInternships,
     });
   });
 
-  it('renders the daily focus protocol by default (Arrange/Assert)', () => {
+  it('renders the stellar chronometer by default', () => {
     // Arrange
     render(
       <MemoryRouter>
@@ -39,11 +38,12 @@ describe('CalendarShell', () => {
     );
 
     // Assert
-    expect(screen.getByText(/Daily Focus Protocol active/i)).toBeInTheDocument();
-    expect(screen.getByText('Stellar Timeline Tracker')).toBeInTheDocument();
+    expect(screen.getByText(/Stellar Chronometer/i)).toBeInTheDocument();
+    expect(screen.getByText(/Temporal Timeline/i)).toBeInTheDocument();
+    expect(screen.getByText(/Mission Parameters/i)).toBeInTheDocument();
   });
 
-  it('transitions to the resonance matrix visualization on weekly horizon (Arrange/Act/Assert)', async () => {
+  it('transitions to the weekly view', async () => {
     // Arrange
     render(
       <MemoryRouter>
@@ -58,11 +58,12 @@ describe('CalendarShell', () => {
     });
 
     // Assert
-    expect(screen.getByText(/Resonance Matrix visualization/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Daily Focus Protocol active/i)).not.toBeInTheDocument();
+    // Use findBy to handle AnimatePresence transitions
+    const taskElement = await screen.findByText('Task 1');
+    expect(taskElement).toBeInTheDocument();
   });
 
-  it('navigates to the internship scheduler on yearly horizon (Arrange/Act/Assert)', async () => {
+  it('navigates to the yearly horizon and shows roadmap', async () => {
     // Arrange
     render(
       <MemoryRouter>
@@ -77,7 +78,10 @@ describe('CalendarShell', () => {
     });
 
     // Assert
-    expect(screen.getByText('Internship Scheduler')).toBeInTheDocument();
-    expect(screen.getByText('ISRO Internship')).toBeInTheDocument();
+    // Use findBy to handle AnimatePresence transitions
+    const roadmapHeader = await screen.findByText(/Stellar Roadmap/i);
+    expect(roadmapHeader).toBeInTheDocument();
+    expect(screen.getByText('Ambition 1')).toBeInTheDocument();
+    expect(screen.getByText('Orbital Internships')).toBeInTheDocument();
   });
 });

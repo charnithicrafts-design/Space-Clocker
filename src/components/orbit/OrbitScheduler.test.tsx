@@ -23,6 +23,9 @@ describe('OrbitScheduler', () => {
   const mockToggleTask = vi.fn();
   const mockDeleteTask = vi.fn();
   const mockUpdateTask = vi.fn();
+  const mockUpdateTaskDate = vi.fn();
+
+  const today = new Date().toISOString().split('T')[0];
 
   const mockTasks = [
     {
@@ -30,14 +33,16 @@ describe('OrbitScheduler', () => {
       time: '08:00',
       title: 'Initialize Life Support Systems',
       completed: false,
-      horizon: 'daily'
+      horizon: 'daily',
+      plannedDate: today
     },
     {
       id: 'task-2',
       time: '12:00',
       title: 'Calibrate Quantum Array',
       completed: true,
-      horizon: 'daily'
+      horizon: 'daily',
+      plannedDate: today
     }
   ];
 
@@ -61,6 +66,7 @@ describe('OrbitScheduler', () => {
       toggleTask: mockToggleTask,
       deleteTask: mockDeleteTask,
       updateTask: mockUpdateTask,
+      updateTaskDate: mockUpdateTaskDate,
       profile: mockProfile,
       preferences: mockPreferences
     });
@@ -72,7 +78,7 @@ describe('OrbitScheduler', () => {
     render(<OrbitScheduler />);
 
     // Assert
-    expect(screen.getByText(/Daily Mission Log/i)).toBeInTheDocument();
+    expect(screen.getByText(/Mission Control/i)).toBeInTheDocument();
     expect(screen.getByText('Initialize Life Support Systems')).toBeInTheDocument();
     expect(screen.getByText('Calibrate Quantum Array')).toBeInTheDocument();
   });
@@ -94,7 +100,7 @@ describe('OrbitScheduler', () => {
       expect.any(String),
       'Deploy Voyager Probe',
       undefined,
-      expect.objectContaining({ weightage: 10 })
+      expect.objectContaining({ weightage: 10, plannedDate: today })
     );
     expect(SoundManager.playPop).toHaveBeenCalled();
   });
