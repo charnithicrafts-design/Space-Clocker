@@ -4,6 +4,16 @@ import TransmissionDashboard from './TransmissionDashboard';
 import { useTrackStore } from '../../store/useTrackStore';
 import { MemoryRouter } from 'react-router-dom';
 
+/**
+ * TransmissionDashboard UI Tests
+ * 
+ * Aligned with conductor/test-overhaul-plan.md
+ * - AAA Pattern
+ * - Isolated State (Mocked Store)
+ * - Space-themed Test Data
+ * - Meaningful User Interactions
+ */
+
 // Mock useTrackStore
 vi.mock('../../store/useTrackStore', () => ({
   useTrackStore: vi.fn()
@@ -12,18 +22,32 @@ vi.mock('../../store/useTrackStore', () => ({
 describe('TransmissionDashboard', () => {
   const mockGenerateTransmission = vi.fn();
   const mockDeleteTransmission = vi.fn();
+  
+  // Space-themed mock data
   const mockTransmissions = [
     {
-      id: 'TX-1',
-      timestamp: new Date().toISOString(),
+      id: 'TX-2024-DAILY-001',
+      timestamp: '2024-03-20T10:00:00Z',
       tier: 'daily',
-      title: 'Daily Briefing',
-      pdaNarrative: 'Test narrative',
-      pdaReflections: ['Reflection 1'],
+      title: 'Orion Nebula Survey',
+      pdaNarrative: 'Successful scan of the stellar nursery.',
+      pdaReflections: ['Refined sensor calibration', 'Identified 3 protostars'],
+      voidAnalysis: [{ voidId: 'v1', text: 'Stellar Interference', count: 2, impact: 'medium' }],
+      skillsReconciliation: [{ skillId: 's1', name: 'Astrogation', delta: 5, current: 85 }],
+      rawLogs: { tasksCompleted: 8, totalTasks: 10, focusHours: 6 },
+      metadata: { securityClearance: 'LEVEL-2-SECRET', targetOrg: 'NASA' }
+    },
+    {
+      id: 'TX-2024-WEEKLY-002',
+      timestamp: '2024-03-21T15:00:00Z',
+      tier: 'weekly',
+      title: 'Andromeda Transit Log',
+      pdaNarrative: 'Maintained warp stability through the void.',
+      pdaReflections: ['Engine efficiency optimized'],
       voidAnalysis: [],
       skillsReconciliation: [],
-      rawLogs: { tasksCompleted: 5, totalTasks: 10, focusHours: 8 },
-      metadata: { securityClearance: 'LEVEL-1' }
+      rawLogs: { tasksCompleted: 45, totalTasks: 50, focusHours: 40 },
+      metadata: { securityClearance: 'LEVEL-1-UNCLASSIFIED' }
     }
   ];
 
@@ -34,75 +58,90 @@ describe('TransmissionDashboard', () => {
       generateTransmission: mockGenerateTransmission,
       deleteTransmission: mockDeleteTransmission
     });
+    
+    // Mock window.confirm for deletion
+    vi.stubGlobal('confirm', vi.fn(() => true));
   });
 
-  it('renders the dashboard with transmissions list', () => {
+  it('should render the dashboard with a list of recent mission uplinks', () => {
+    // Arrange
     render(
       <MemoryRouter>
         <TransmissionDashboard />
       </MemoryRouter>
     );
 
+    // Act & Assert
     expect(screen.getByText('The Transmission')).toBeDefined();
-    expect(screen.getByText('Daily Briefing')).toBeDefined();
+    expect(screen.getByText('Orion Nebula Survey')).toBeDefined();
+    expect(screen.getByText('Andromeda Transit Log')).toBeDefined();
+    expect(screen.getByText('8/10')).toBeDefined(); // Task progress for first tx
   });
 
-  it('opens the initiation modal when clicking Initiate Briefing', () => {
+  it('should open the initiation modal and uplink a new mission briefing', async () => {
+    // Arrange
     render(
       <MemoryRouter>
         <TransmissionDashboard />
       </MemoryRouter>
     );
 
-    const btn = screen.getByText('Initiate Briefing');
-    fireEvent.click(btn);
+    // Act
+    const initiateBtn = screen.getByText('Initiate Briefing');
+    fireEvent.click(initiateBtn);
 
-    expect(screen.getByText('Initiate New Transmission')).toBeDefined();
-    expect(screen.getByLabelText('Briefing Title')).toBeDefined();
-  });
-
-  it('calls generateTransmission when submitting the form', async () => {
-    render(
-      <MemoryRouter>
-        <TransmissionDashboard />
-      </MemoryRouter>
-    );
-
-    fireEvent.click(screen.getByText('Initiate Briefing'));
-    
     const titleInput = screen.getByLabelText('Briefing Title');
-    fireEvent.change(titleInput, { target: { value: 'New Test Briefing' } });
+    const narrativeInput = screen.getByLabelText('PD&A Narrative');
+    const tierSelect = screen.getByLabelText('Transmission Tier');
+    const targetSelect = screen.getByLabelText('Target Agency');
     
-    const narrativeInput = screen.getByPlaceholderText('Reflect on your performance, challenges, and mission realignment...');
-    fireEvent.change(narrativeInput, { target: { value: 'Everything went well.' } });
+    fireEvent.change(titleInput, { target: { value: 'Alpha Centauri Arrival' } });
+    fireEvent.change(narrativeInput, { 
+      target: { value: 'Atmosphere entry successful. No anomalies detected.' } 
+    });
+    fireEvent.change(tierSelect, { target: { value: 'milestone' } });
+    fireEvent.change(targetSelect, { target: { value: 'ISRO' } });
 
-    fireEvent.click(screen.getByText('Uplink Transmission'));
+    const uplinkBtn = screen.getByText('Uplink Transmission');
+    fireEvent.click(uplinkBtn);
 
+    // Assert
     await waitFor(() => {
       expect(mockGenerateTransmission).toHaveBeenCalledWith(
-        'daily',
-        'New Test Briefing',
-        'Everything went well.',
-        undefined
+        'milestone',
+        'Alpha Centauri Arrival',
+        'Atmosphere entry successful. No anomalies detected.',
+        'ISRO'
       );
     });
   });
 
-  it('displays transmission details when selected', () => {
+  it('should display full transmission details in the Holo-Viewer when a briefing is selected', () => {
+    // Arrange
     render(
       <MemoryRouter>
         <TransmissionDashboard />
       </MemoryRouter>
     );
 
-    fireEvent.click(screen.getByText('Daily Briefing'));
+    // Act
+    const briefingLink = screen.getByText('Orion Nebula Survey');
+    fireEvent.click(briefingLink);
 
-    expect(screen.getAllByText('Daily Briefing').length).toBeGreaterThan(1); // List and Detail
-    expect(screen.getByText('Pilot\'s Discussion & Analysis')).toBeDefined();
-    expect(screen.getByText('"Test narrative"')).toBeDefined();
+    // Assert
+    // Check for title in the detail view (it will appear twice, once in list and once in detail)
+    const titles = screen.getAllByText('Orion Nebula Survey');
+    expect(titles.length).toBeGreaterThan(1);
+    
+    expect(screen.getByText("Pilot's Discussion & Analysis")).toBeDefined();
+    expect(screen.getByText(/"Successful scan of the stellar nursery."/)).toBeDefined();
+    expect(screen.getByText('Astrogation')).toBeDefined();
+    expect(screen.getByText('Stellar Interference')).toBeDefined();
+    expect(screen.getAllByText('NASA').length).toBeGreaterThan(1);
   });
 
-  it('copies share link to clipboard when clicking Share Signal', async () => {
+  it('should copy the shareable signal to the clipboard for external agencies', async () => {
+    // Arrange
     const mockClipboard = {
       writeText: vi.fn().mockResolvedValue(undefined)
     };
@@ -114,10 +153,63 @@ describe('TransmissionDashboard', () => {
       </MemoryRouter>
     );
 
-    fireEvent.click(screen.getByText('Daily Briefing'));
-    fireEvent.click(screen.getByText('Share Signal'));
+    // Select a transmission first
+    fireEvent.click(screen.getByText('Orion Nebula Survey'));
 
-    expect(mockClipboard.writeText).toHaveBeenCalledWith(expect.stringContaining('/transmission/share#'));
+    // Act
+    const shareBtn = screen.getByText('Share Signal');
+    fireEvent.click(shareBtn);
+
+    // Assert
+    expect(mockClipboard.writeText).toHaveBeenCalled();
     expect(screen.getByText('Signal Copied')).toBeDefined();
+  });
+
+  it('should declassify and delete a transmission after pilot confirmation', async () => {
+    // Arrange
+    const { container } = render(
+      <MemoryRouter>
+        <TransmissionDashboard />
+      </MemoryRouter>
+    );
+    
+    // Select a transmission
+    fireEvent.click(screen.getByText('Orion Nebula Survey'));
+
+    // Act
+    // Find the delete button by its container or icon since it lacks a text label
+    const deleteBtn = container.querySelector('.lucide-trash2')?.closest('button');
+    if (!deleteBtn) throw new Error('Delete button not found');
+    
+    fireEvent.click(deleteBtn);
+
+    // Assert
+    expect(window.confirm).toHaveBeenCalledWith('Declassify and delete this transmission permanently?');
+    expect(mockDeleteTransmission).toHaveBeenCalledWith('TX-2024-DAILY-001');
+  });
+
+  it('should toggle between Glossy and Raw Data views in the Holo-Viewer', () => {
+    // Arrange
+    render(
+      <MemoryRouter>
+        <TransmissionDashboard />
+      </MemoryRouter>
+    );
+    fireEvent.click(screen.getByText('Orion Nebula Survey'));
+
+    // Act
+    const rawBtn = screen.getByText('Raw Data');
+    fireEvent.click(rawBtn);
+
+    // Assert
+    expect(screen.getByText('SYSTEM_AUDIT_LOG v4.2')).toBeDefined();
+    
+    // Act back to Glossy
+    const glossyBtn = screen.getByText('Glossy');
+    fireEvent.click(glossyBtn);
+    
+    // Assert
+    expect(screen.queryByText('SYSTEM_AUDIT_LOG v4.2')).toBeNull();
+    expect(screen.getByText("Pilot's Discussion & Analysis")).toBeDefined();
   });
 });

@@ -1,102 +1,180 @@
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import SettingsDashboard from './SettingsDashboard';
 import { useTrackStore } from '../../store/useTrackStore';
 import { syncService } from '../../services/SyncService';
-import * as DbClient from '../../db/client';
+import { dumpDb, restoreDb } from '../../db/client';
 import { SoundManager } from '../../utils/SoundManager';
 
-// Mock SoundManager
+// Mock Dependencies
+vi.mock('../../store/useTrackStore', () => ({
+  useTrackStore: vi.fn()
+}));
+
+vi.mock('../../services/SyncService', () => ({
+  syncService: {
+    pushUpdate: vi.fn(),
+    authorize: vi.fn()
+  }
+}));
+
+vi.mock('../../db/client', () => ({
+  dumpDb: vi.fn(),
+  restoreDb: vi.fn()
+}));
+
 vi.mock('../../utils/SoundManager', () => ({
   SoundManager: {
     playUplink: vi.fn(),
     playSyncSuccess: vi.fn(),
     playThud: vi.fn(),
-    playSwell: vi.fn(),
     playPop: vi.fn(),
+    playSwell: vi.fn()
   }
 }));
 
-// Mock URL methods
+// Mock URL methods for blob handling
 global.URL.createObjectURL = vi.fn().mockReturnValue('mock-url');
 global.URL.revokeObjectURL = vi.fn();
 
-// Mock DbClient
-vi.mock('../../db/client', () => ({
-  dumpDb: vi.fn().mockResolvedValue(new Blob(['test-dump'])),
-  restoreDb: vi.fn().mockResolvedValue(undefined),
-  getDb: vi.fn().mockReturnValue({
-    query: vi.fn().mockResolvedValue({ rows: [] }),
-  }),
-}));
-
-// Mock SyncService
-vi.mock('../../services/SyncService', () => ({
-  syncService: {
-    pushUpdate: vi.fn().mockResolvedValue({ syncedAt: '2023-01-01T00:00:00Z' }),
-    authorize: vi.fn().mockResolvedValue('token'),
-  }
-}));
-
 describe('SettingsDashboard', () => {
+  const mockUpdateProfile = vi.fn();
+  const mockUpdateOracleConfig = vi.fn();
+  const mockUpdatePreferences = vi.fn();
+  const mockSetSyncStatus = vi.fn();
+
+  const mockInitialState = {
+    profile: {
+      name: 'Commander Valentina',
+      title: 'Galactic Voyager',
+      level: 42,
+      xp: 8500
+    },
+    oracleConfig: {
+      apiKey: 'sk-nebula-123',
+      clientId: 'google-client-id-456',
+      providerUrl: 'https://nebula.api',
+      syncEnabled: false
+    },
+    preferences: {
+      uiMode: 'simple',
+      confirmDelete: true
+    },
+    syncStatus: {
+      isSyncing: false,
+      lastSyncedAt: undefined,
+      error: undefined
+    },
+    updateProfile: mockUpdateProfile,
+    updateOracleConfig: mockUpdateOracleConfig,
+    updatePreferences: mockUpdatePreferences,
+    setSyncStatus: mockSetSyncStatus
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
-    useTrackStore.setState({
-      profile: { name: 'Valentina', level: 42, title: 'Galactic Voyager' },
-      oracleConfig: { apiKey: '', model: 'm', providerUrl: '', syncEnabled: false, clientId: '' },
-      syncStatus: { isSyncing: false }
+    (useTrackStore as any).mockReturnValue(mockInitialState);
+  });
+
+  it('renders pilot profile and system settings with space-themed data', () => {
+    // Arrange
+    render(<SettingsDashboard />);
+
+    // Assert
+    expect(screen.getByDisplayValue('Commander Valentina')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Galactic Voyager')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Communication Array/i })).toBeInTheDocument();
+  });
+
+  it('saves updated system protocol changes', async () => {
+    // Arrange
+    render(<SettingsDashboard />);
+    const nameInput = screen.getByDisplayValue('Commander Valentina');
+    const saveButton = screen.getByText(/Sync Changes/i);
+
+    // Act
+    await act(async () => {
+      fireEvent.change(nameInput, { target: { value: 'Admiral Shepard' } });
+      fireEvent.click(saveButton);
     });
+
+    // Assert
+    expect(mockUpdateProfile).toHaveBeenCalledWith(expect.objectContaining({ name: 'Admiral Shepard' }));
+    expect(screen.getByText(/Sync Successful/i)).toBeInTheDocument();
   });
 
-  it('renders correctly', () => {
+  it('triggers stellar sync uplink flow', async () => {
+    // Arrange
+    (useTrackStore as any).mockReturnValue({
+      ...mockInitialState,
+      oracleConfig: { ...mockInitialState.oracleConfig, syncEnabled: true }
+    });
+    (syncService.pushUpdate as any).mockResolvedValue({ syncedAt: '2024-01-01T12:00:00Z' });
     render(<SettingsDashboard />);
-    expect(screen.getByText('System Protocol')).toBeInTheDocument();
-    expect(screen.getByText('Communication Array')).toBeInTheDocument();
+    const syncButton = screen.getByRole('button', { name: /Sync Now/i });
+
+    // Act
+    await act(async () => {
+      fireEvent.click(syncButton);
+    });
+
+    // Assert
+    expect(mockSetSyncStatus).toHaveBeenCalledWith({ isSyncing: true, error: undefined });
+    expect(syncService.pushUpdate).toHaveBeenCalled();
+    expect(SoundManager.playUplink).toHaveBeenCalled();
+    expect(SoundManager.playSyncSuccess).toHaveBeenCalled();
   });
 
-  it('triggers create snapshot flow', async () => {
+  it('handles neural link authorization (Establish Link)', async () => {
+    // Arrange
     render(<SettingsDashboard />);
-    
-    // Mock anchor click
-    const anchorClickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
-    
-    const snapshotBtn = screen.getByText('Create Snapshot');
-    fireEvent.click(snapshotBtn);
-    
+    const linkButton = screen.getByRole('button', { name: /Establish Link/i });
+
+    // Act
+    await act(async () => {
+      fireEvent.click(linkButton);
+    });
+
+    // Assert
+    expect(syncService.authorize).toHaveBeenCalledWith('google-client-id-456');
+    expect(mockUpdateOracleConfig).toHaveBeenCalledWith({ syncEnabled: true });
+    expect(SoundManager.playSyncSuccess).toHaveBeenCalled();
+  });
+
+  it('creates a chronos backup snapshot', async () => {
+    // Arrange
+    const mockBlob = new Blob(['mock-data'], { type: 'application/octet-stream' });
+    (dumpDb as any).mockResolvedValue(mockBlob);
+    render(<SettingsDashboard />);
+    const snapshotButton = screen.getByText(/Create Snapshot/i);
+
+    // Act
+    await act(async () => {
+      fireEvent.click(snapshotButton);
+    });
+
+    // Assert
     await waitFor(() => {
-      expect(DbClient.dumpDb).toHaveBeenCalled();
+      expect(dumpDb).toHaveBeenCalled();
       expect(SoundManager.playPop).toHaveBeenCalled();
+      expect(SoundManager.playSyncSuccess).toHaveBeenCalled();
     });
   });
 
-  it('triggers sync now flow', async () => {
-    useTrackStore.setState({
-      oracleConfig: { ...useTrackStore.getState().oracleConfig, syncEnabled: true }
-    });
-    
+  it('toggles UI strategy between Simple and Pro modes', async () => {
+    // Arrange
     render(<SettingsDashboard />);
-    
-    const syncButtons = screen.getAllByText(/Sync Now/);
-    fireEvent.click(syncButtons[0]);
-    
-    await waitFor(() => {
-      expect(syncService.pushUpdate).toHaveBeenCalled();
-      expect(SoundManager.playUplink).toHaveBeenCalled();
-    });
-  });
+    const proButton = screen.getByRole('button', { name: /Pro/i });
 
-  it('handles Neural Link establishment', async () => {
-    useTrackStore.setState({
-      oracleConfig: { ...useTrackStore.getState().oracleConfig, clientId: 'test-client-id', syncEnabled: false }
+    // Act
+    await act(async () => {
+      fireEvent.click(proButton);
     });
-    
-    render(<SettingsDashboard />);
-    
-    const linkBtn = screen.getByText('Establish Link');
-    fireEvent.click(linkBtn);
-    
-    await waitFor(() => {
-      expect(syncService.authorize).toHaveBeenCalledWith('test-client-id');
-    });
+
+    // Assert
+    // Note: Local state change within the component, but we check if SoundManager played
+    expect(SoundManager.playPop).toHaveBeenCalled();
+    // We can also verify that the button gets the active class if we want to be thorough
+    expect(proButton).toHaveClass('bg-secondary');
   });
 });

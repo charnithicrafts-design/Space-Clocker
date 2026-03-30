@@ -1,11 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+// Use hoisted to define mock objects for architectural isolation
 const { mockPGliteConstructor } = vi.hoisted(() => {
   const constructorMock = vi.fn().mockImplementation(function() {
     return {
       waitReady: Promise.resolve(),
       close: vi.fn().mockResolvedValue(undefined),
-      dumpDataDir: vi.fn().mockResolvedValue(new Blob(['test-dump'], { type: 'application/octet-stream' })),
+      dumpDataDir: vi.fn().mockResolvedValue(new Blob(['nebula-dump-data'], { type: 'application/octet-stream' })),
       query: vi.fn().mockResolvedValue({ rows: [] }),
     };
   });
@@ -14,6 +15,7 @@ const { mockPGliteConstructor } = vi.hoisted(() => {
   };
 });
 
+// Strategic Mocking: Mock PGlite before any imports to control the singleton instance
 vi.mock('@electric-sql/pglite', () => {
   return {
     PGlite: mockPGliteConstructor,
@@ -23,39 +25,52 @@ vi.mock('@electric-sql/pglite', () => {
 import { PGlite } from '@electric-sql/pglite';
 import * as DbClient from './client';
 
-describe('DbClient', () => {
+describe('DbClient - Orbital Interface', () => {
   beforeEach(() => {
-    // We don't clear all mocks because we want to track the initial call during module load if possible,
-    // but actually it's better to just test the functionality.
+    // Reset mocks between runs to ensure isolated state
+    vi.clearAllMocks();
   });
 
-  it('should return the db instance via getDb', () => {
+  it('should provide access to the singleton database instance', () => {
+    // Arrange & Act
     const db = DbClient.getDb();
+    
+    // Assert
     expect(db).toBeDefined();
     expect(typeof db.query).toBe('function');
   });
 
-  it('should dump the database', async () => {
+  it('should capture a binary snapshot of the stellar database', async () => {
+    // Arrange
     const db = DbClient.getDb();
-    // Mock dumpDataDir on the current instance
-    vi.mocked(db.dumpDataDir).mockResolvedValue(new Blob(['specific-dump']));
+    const expectedDumpData = 'stellar-core-telemetry-dump';
+    vi.mocked(db.dumpDataDir).mockResolvedValue(new Blob([expectedDumpData]));
     
+    // Act
     const blob = await DbClient.dumpDb();
+    
+    // Assert
     expect(db.dumpDataDir).toHaveBeenCalled();
-    expect(await blob.text()).toBe('specific-dump');
+    expect(await blob.text()).toBe(expectedDumpData);
   });
 
-  it('should restore the database from a blob', async () => {
-    const mockBlob = new Blob(['restored-data'], { type: 'application/octet-stream' });
-    const oldDb = DbClient.getDb();
+  it('should restore database state from a telemetry blob', async () => {
+    // Arrange
+    const telemetryBlob = new Blob(['restored-nebula-state'], { type: 'application/octet-stream' });
+    const decommissionedDb = DbClient.getDb();
     
-    await DbClient.restoreDb(mockBlob);
+    // Act
+    await DbClient.restoreDb(telemetryBlob);
+    const activeDb = DbClient.getDb();
     
-    const newDb = DbClient.getDb();
+    // Assert: Previous instance was closed for safety
+    expect(decommissionedDb.close).toHaveBeenCalled();
+    expect(activeDb).not.toBe(decommissionedDb);
     
-    expect(oldDb.close).toHaveBeenCalled();
-    expect(newDb).not.toBe(oldDb);
-    // The constructor should have been called at least twice (one initial, one for restore)
-    expect(mockPGliteConstructor).toHaveBeenCalledWith('idb://space-clocker-db', { loadDataDir: mockBlob });
+    // Assert: New instance initialized with telemetry data dir
+    expect(mockPGliteConstructor).toHaveBeenCalledWith(
+      'idb://space-clocker-db', 
+      expect.objectContaining({ loadDataDir: telemetryBlob })
+    );
   });
 });
