@@ -1,0 +1,82 @@
+{
+  "profile": {
+    "name": "Valentina",
+    "level": 12,
+    "xp": 450,
+    "title": "Senior Exobiologist"
+  },
+  "preferences": {
+    "confirmDelete": true,
+    "uiMode": "professional"
+  },
+  "stats": {
+    "streak": 15,
+    "tasksCompleted": 342,
+    "totalFocusHours": 128
+  },
+  "ambitions": [
+    {
+      "id": "amb-1",
+      "title": "Establish Martian Colony",
+      "progress": 75,
+      "xp": 1200,
+      "horizon": "yearly",
+      "milestones": [
+        {
+          "id": "ms-1-1",
+          "title": "Life Support Calibration",
+          "status": "completed",
+          "tasks": [
+            { "id": "t-1-1-1", "title": "Oxygen Scrubber Test", "completed": true, "weightage": 50, "time": "08:00" },
+            { "id": "t-1-1-2", "title": "Water Recycling Integrity", "completed": true, "weightage": 50, "time": "10:00" }
+          ]
+        },
+        {
+          "id": "ms-1-2",
+          "title": "Geological Survey",
+          "status": "active",
+          "tasks": [
+            { "id": "t-1-2-1", "title": "Drill Core Analysis", "completed": true, "weightage": 25, "time": "09:00" },
+            { "id": "t-1-2-2", "title": "Spectroscopic Mapping", "completed": false, "weightage": 25, "time": "14:00" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "amb-2",
+      "title": "Jupiter Cloud Mining",
+      "progress": 30,
+      "xp": 450,
+      "horizon": "yearly",
+      "milestones": [
+        {
+          "id": "ms-2-1",
+          "title": "Atmospheric Probe Deployment",
+          "status": "active",
+          "tasks": [
+            { "id": "t-2-1-1", "title": "Pressure Shield Calibration", "completed": true, "weightage": 50, "time": "11:00" },
+            { "id": "t-2-1-2", "title": "Signal Relay Test", "completed": false, "weightage": 50, "time": "16:00" }
+          ]
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    { "id": "st-1", "title": "Morning System Diagnostic", "completed": true, "time": "07:00", "horizon": "daily", "weightage": 10 },
+    { "id": "st-2", "title": "Stellar Navigation Update", "completed": false, "time": "19:00", "horizon": "daily", "weightage": 15 },
+    { "id": "st-3", "title": "NASA Senior Space Scientist Application", "completed": false, "time": "12:00", "horizon": "yearly", "deadline": "2027-12-31T23:59:59Z", "weightage": 500 }
+  ],
+  "skills": [
+    { "id": "sk-1", "name": "Astro-navigation", "currentProficiency": 85, "targetProficiency": 100, "recommendation": "Study advanced pulsar-based positioning." },
+    { "id": "sk-2", "name": "Quantum Mechanics", "currentProficiency": 60, "targetProficiency": 95, "recommendation": "Review entanglement correlation protocols." },
+    { "id": "sk-3", "name": "Exoplanet Analysis", "currentProficiency": 40, "targetProficiency": 80, "recommendation": "Focus on spectroscopic biosignature detection." }
+  ],
+  "internships": [
+    { "organization": "ISRO", "start": "2024-06-01", "end": "2024-08-31" },
+    { "organization": "NASA", "start": "2025-01-15", "end": "2025-05-15" }
+  ],
+  "voids": [
+    { "id": "v-1", "text": "Infinite Scrolling", "impact": "high", "engagedCount": 12, "maxAllowed": 3 },
+    { "id": "v-2", "text": "Deep Space Junk Food", "impact": "medium", "engagedCount": 5, "maxAllowed": 2 }
+  ]
+}
