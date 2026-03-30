@@ -65,9 +65,6 @@ export interface Skill {
   type: 'personal' | 'ambition';
   ambitionId?: string;
 }
-  type: 'personal' | 'ambition';
-  ambitionId?: string;
-}
 
 export interface OracleConfig {
   apiKey: string;

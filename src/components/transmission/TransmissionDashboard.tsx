@@ -11,7 +11,9 @@ import {
   Share2,
   Radar,
   Activity,
-  AlertTriangle
+  AlertTriangle,
+  Clock,
+  Target
 } from 'lucide-react';
 import { useTrackStore, Transmission } from '../../store/useTrackStore';
 import { generateShareLink } from '../../utils/TransmissionExporter';
