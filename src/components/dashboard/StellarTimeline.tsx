@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTrackStore, HistoricalEvent } from '../../store/useTrackStore';
-import { Trophy, Target, AlertCircle, Calendar, GraduationCap, Briefcase, Award, Zap } from 'lucide-react';
+import { Trophy, Target, Calendar, GraduationCap, Briefcase, Award, Zap, Plus, Trash2 } from 'lucide-react';
+import HistoryModal from './HistoryModal';
+import ConfirmModal from '../layout/ConfirmModal';
+import { SoundManager } from '../../utils/SoundManager';
 
 const CategoryIcon = ({ category, size = 20, className = "" }: { category: HistoricalEvent['category'], size?: number, className?: string }) => {
   switch (category) {
@@ -23,11 +26,24 @@ const TypeIcon = ({ type }: { type: HistoricalEvent['type'] }) => {
 };
 
 const StellarTimeline = () => {
-  const { history } = useTrackStore();
+  const { history, addHistoricalEvent, deleteHistoricalEvent } = useTrackStore();
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [deleteEventId, setDeleteEventId] = useState<string | null>(null);
 
   const sortedHistory = history && Array.isArray(history) 
     ? [...history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     : [];
+
+  const handleAddEvent = async (event: Omit<HistoricalEvent, 'id'>) => {
+    await addHistoricalEvent(event);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (deleteEventId) {
+      await deleteHistoricalEvent(deleteEventId);
+      setDeleteEventId(null);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -36,15 +52,24 @@ const StellarTimeline = () => {
           <Calendar size={20} className="text-primary-container" />
           Stellar History (Past Missions)
         </h2>
-        <div className="text-[10px] font-black text-primary-container uppercase tracking-[0.2em] bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-          Historical Sync Active
-        </div>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            setIsAddModalOpen(true);
+            SoundManager.playPop();
+          }}
+          className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.1)]"
+        >
+          <Plus size={14} />
+          Add Mission Record
+        </motion.button>
       </div>
 
       <div className="relative pl-8 space-y-8 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-gradient-to-b before:from-primary/50 before:via-outline-variant/30 before:to-transparent">
         {sortedHistory.length === 0 ? (
           <div className="glass-panel p-8 rounded-2xl border border-dashed border-outline-variant/50 text-center">
-            <p className="text-on-surface-variant text-sm uppercase font-mono">No historical records synchronized. Launch your first mission to begin.</p>
+            <p className="text-on-surface-variant text-sm uppercase font-mono">No historical records synchronized. Archive your past achievements to begin.</p>
           </div>
         ) : (
           sortedHistory.map((event, index) => (
@@ -61,13 +86,13 @@ const StellarTimeline = () => {
               </div>
 
               {/* Content Card */}
-              <div className="glass-panel p-5 rounded-2xl border border-outline-variant/30 group-hover:border-primary/20 transition-all hover:bg-surface-high/30">
-                <div className="flex justify-between items-start mb-2">
+              <div className="glass-panel p-5 rounded-2xl border border-outline-variant/30 group-hover:border-primary/20 transition-all hover:bg-surface-high/30 relative overflow-hidden">
+                <div className="flex justify-between items-start mb-2 pr-8">
                   <div className="flex items-center gap-3">
                     <TypeIcon type={event.type} />
                     <h3 className="font-bold text-white group-hover:text-primary transition-colors">{event.title}</h3>
                   </div>
-                  <span className="text-[10px] font-mono text-on-surface-variant uppercase bg-surface-high px-2 py-0.5 rounded border border-outline-variant/30">
+                  <span className="text-[10px] font-mono text-on-surface-variant uppercase bg-surface-high px-2 py-0.5 rounded border border-outline-variant/30 whitespace-nowrap">
                     {new Date(event.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short' })}
                   </span>
                 </div>
@@ -83,11 +108,34 @@ const StellarTimeline = () => {
                     </span>
                   ))}
                 </div>
+
+                {/* Delete Action */}
+                <button 
+                  onClick={() => setDeleteEventId(event.id)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-on-surface-variant/0 group-hover:text-error hover:bg-error/10 rounded-full transition-all duration-300"
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
             </motion.div>
           ))
         )}
       </div>
+
+      <HistoryModal 
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleAddEvent}
+      />
+
+      <ConfirmModal 
+        isOpen={!!deleteEventId}
+        onClose={() => setDeleteEventId(null)}
+        onConfirm={handleDeleteConfirm}
+        title="Extract Historical Data?"
+        message="This action will permanently remove this mission record from your stellar archives. Are you sure you want to proceed?"
+        confirmText="Confirm Extraction"
+      />
     </div>
   );
 };

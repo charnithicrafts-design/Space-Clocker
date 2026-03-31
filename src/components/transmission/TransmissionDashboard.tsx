@@ -18,13 +18,17 @@ import {
 } from 'lucide-react';
 import { useTrackStore, Transmission } from '../../store/useTrackStore';
 import { generateShareLink } from '../../utils/TransmissionExporter';
+import ConfirmModal from '../layout/ConfirmModal';
 
 const TransmissionDashboard = () => {
-  const { transmissions, generateTransmission, deleteTransmission } = useTrackStore();
+  const { transmissions, ambitions, generateTransmission, deleteTransmission } = useTrackStore();
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedTx, setSelectedTx] = useState<Transmission | null>(null);
   const [viewMode, setViewMode] = useState<'glossy' | 'raw'>('glossy');
   const [shareStatus, setShareStatus] = useState<'idle' | 'copied'>('idle');
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteTxId, setDeleteTxId] = useState<string | null>(null);
 
   const contentRef = useRef<HTMLDivElement>(null);
   const handlePrint = useReactToPrint({
@@ -71,6 +75,8 @@ const TransmissionDashboard = () => {
   const [newTxTarget, setNewTxTarget] = useState<'NASA' | 'ISRO' | undefined>();
   const [newTxStartDate, setNewTxStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [newTxEndDate, setNewTxEndDate] = useState(new Date().toISOString().split('T')[0]);
+  const [newTxTargetAmbitionId, setNewTxTargetAmbitionId] = useState<string | undefined>();
+  const [newTxTargetMilestoneId, setNewTxTargetMilestoneId] = useState<string | undefined>();
 
   const handleGenerate = async () => {
     await generateTransmission(
@@ -78,11 +84,15 @@ const TransmissionDashboard = () => {
       newTxTitle || `${newTxTier.toUpperCase()} Briefing`, 
       newTxNarrative, 
       newTxTarget,
-      { start: newTxStartDate, end: newTxEndDate }
+      { start: newTxStartDate, end: newTxEndDate },
+      newTxTargetAmbitionId,
+      newTxTargetMilestoneId
     );
     setIsGenerating(false);
     setNewTxTitle('');
     setNewTxNarrative('');
+    setNewTxTargetAmbitionId(undefined);
+    setNewTxTargetMilestoneId(undefined);
   };
 
   return (
@@ -155,6 +165,9 @@ const TransmissionDashboard = () => {
                       {tx.metadata.targetOrg && (
                         <span className="flex items-center gap-1 text-primary"><Radar size={10}/> {tx.metadata.targetOrg}</span>
                       )}
+                      {(tx.metadata.targetAmbitionId || tx.metadata.targetMilestoneId) && (
+                        <span className="flex items-center gap-1 text-secondary"><Target size={10}/> Targeted</span>
+                      )}
                     </div>
                   </motion.div>
                 ))
@@ -185,12 +198,20 @@ const TransmissionDashboard = () => {
                     </div>
                     <div className="flex flex-col gap-1">
                       <p className="text-on-surface-variant font-medium">Transmission Date: {formatFullDate(selectedTx.timestamp)}</p>
-                      {selectedTx.startDate && selectedTx.endDate && (
-                        <p className="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-2">
-                          <Clock size={12} />
-                          Mission Chronometer: {formatDate(selectedTx.startDate)} — {formatDate(selectedTx.endDate)}
-                        </p>
-                      )}
+                      <div className="flex flex-wrap gap-x-4 gap-y-1">
+                        {selectedTx.startDate && selectedTx.endDate && (
+                          <p className="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                            <Clock size={12} />
+                            Mission Chronometer: {formatDate(selectedTx.startDate)} — {formatDate(selectedTx.endDate)}
+                          </p>
+                        )}
+                        {selectedTx.metadata.targetAmbitionId && (
+                          <p className="text-secondary text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                            <Target size={12} />
+                            Trajectory: {ambitions.find(a => a.id === selectedTx.metadata.targetAmbitionId)?.title || 'Unknown Trajectory'}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
                   
@@ -405,9 +426,9 @@ const TransmissionDashboard = () => {
                 <div className="mt-12 flex justify-between items-center pt-8 border-t border-outline-variant/20 no-print">
                   <button 
                     onClick={() => {
-                      if (confirm('Declassify and delete this transmission permanently?')) {
-                        deleteTransmission(selectedTx.id);
-                        setSelectedTx(null);
+                      if (selectedTx) {
+                        setDeleteTxId(selectedTx.id);
+                        setIsDeleteModalOpen(true);
                       }
                     }}
                     title="Declassify and delete transmission"
@@ -505,6 +526,42 @@ const TransmissionDashboard = () => {
                       <option value="">None (Standard)</option>
                       <option value="NASA">NASA</option>
                       <option value="ISRO">ISRO</option>
+                      <option value="GOOGLE">GOOGLE</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="tx-ambition" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Target Trajectory</label>
+                    <select 
+                      id="tx-ambition"
+                      value={newTxTargetAmbitionId || ''}
+                      onChange={(e) => {
+                        setNewTxTargetAmbitionId(e.target.value || undefined);
+                        setNewTxTargetMilestoneId(undefined);
+                      }}
+                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all"
+                    >
+                      <option value="">All Ambitions</option>
+                      {ambitions.map(a => (
+                        <option key={a.id} value={a.id}>{a.title}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="tx-milestone" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Target Milestone</label>
+                    <select 
+                      id="tx-milestone"
+                      value={newTxTargetMilestoneId || ''}
+                      onChange={(e) => setNewTxTargetMilestoneId(e.target.value || undefined)}
+                      disabled={!newTxTargetAmbitionId}
+                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <option value="">All Milestones</option>
+                      {newTxTargetAmbitionId && ambitions.find(a => a.id === newTxTargetAmbitionId)?.milestones.map(m => (
+                        <option key={m.id} value={m.id}>{m.title}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -575,6 +632,21 @@ const TransmissionDashboard = () => {
           </div>
         )}
       </AnimatePresence>
+
+      <ConfirmModal 
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={async () => {
+          if (deleteTxId) {
+            await deleteTransmission(deleteTxId);
+            if (selectedTx?.id === deleteTxId) setSelectedTx(null);
+            setDeleteTxId(null);
+          }
+        }}
+        title="Declassify Transmission?"
+        message="This intelligence report will be permanently purged from the stellar archives. This action cannot be reversed."
+        confirmText="Confirm Purge"
+      />
     </div>
   );
 };

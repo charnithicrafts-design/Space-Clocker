@@ -7,6 +7,7 @@ import { Plus, Trash2, Clock, AlertTriangle, ShieldCheck, Zap, BrainCircuit, Cal
 import ReflectionModal from '../reflection/ReflectionModal';
 import OrbitSubNav, { OrbitHorizon } from './OrbitSubNav';
 import VoidList from '../void-protocol/VoidList';
+import ConfirmModal from '../layout/ConfirmModal';
 
 const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
   <div className="fixed bottom-24 right-8 w-24 h-24 group z-40">
@@ -43,6 +44,9 @@ const OrbitScheduler = () => {
   
   const [isReflectionOpen, setIsReflectionOpen] = useState(false);
   const [reflectionType, setReflectionType] = useState<'daily-summary' | 'missed-task'>('daily-summary');
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null);
 
   const isPro = preferences.uiMode === 'professional';
 
@@ -107,12 +111,22 @@ const OrbitScheduler = () => {
   };
 
   const handleDelete = useCallback((id: string) => {
-    if (preferences.confirmDelete && !window.confirm('Eject this mission task from orbit?')) {
+    if (preferences.confirmDelete) {
+      setDeleteTaskId(id);
+      setIsDeleteModalOpen(true);
       return;
     }
     SoundManager.playThud();
     deleteTask(id);
   }, [deleteTask, preferences.confirmDelete]);
+
+  const handleDeleteConfirm = async () => {
+    if (deleteTaskId) {
+      SoundManager.playThud();
+      await deleteTask(deleteTaskId);
+      setDeleteTaskId(null);
+    }
+  };
 
   const completionPercentage = useMemo(() => {
     if (filteredTasks.length === 0) return 0;
@@ -381,6 +395,15 @@ const OrbitScheduler = () => {
         onClose={() => setIsReflectionOpen(false)} 
         type={reflectionType}
         title={reflectionType === 'daily-summary' ? 'Neural Debrief' : 'Trajectory Analysis'}
+      />
+
+      <ConfirmModal 
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Eject Task from Orbit?"
+        message="This mission parameter will be permanently removed from your current rotation. Proceed with extraction?"
+        confirmText="Confirm Extraction"
       />
     </div>
   );
