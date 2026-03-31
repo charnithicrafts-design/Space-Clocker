@@ -117,9 +117,6 @@ const MomentumEngine = () => {
         })}
       </section>
 
-      {/* Stellar History */}
-      <StellarTimeline />
-
       {/* Widgets & Anomalies */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="grid grid-cols-2 gap-4">
@@ -162,6 +159,9 @@ const MomentumEngine = () => {
         </div>
       </section>
 
+      {/* Stellar History */}
+      <StellarTimeline />
+      
       {/* FAB */}
       <motion.button 
         whileHover={{ scale: 1.1, rotate: 90 }}

@@ -24,7 +24,7 @@ const steps: Step[] = [
   },
   {
     title: "Stellar History",
-    content: "Your historical achievements—successes, misses, and tactical pivots—are now part of your Stellar Timeline. This history fuels your Momentum Engine and levels up your Astro-Technical rank.",
+    content: "Your historical achievements—successes, misses, and tactical pivots—are now part of your Stellar Timeline. This history fuels your Momentum Engine and levels up your Space-Scientist rank.",
     icon: CheckCircle2,
     target: "history",
     route: "/"

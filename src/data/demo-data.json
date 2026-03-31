@@ -17,7 +17,7 @@
   "history": [
     {
       "id": "hist-1",
-      "title": "ISRO Antarkish Hackathon - Winner",
+      "title": "ISRO Antarkish Hackathon",
       "date": "2024-08-23",
       "type": "success",
       "category": "hackathon",
@@ -35,12 +35,12 @@
     },
     {
       "id": "hist-3",
-      "title": "GIS Certification - IIRS Dehradun",
+      "title": "GDG Gandhinagar AI agent app development challenge",
       "date": "2025-03-15",
       "type": "success",
       "category": "certification",
-      "description": "Advanced certification in Remote Sensing and Geographical Information Systems.",
-      "skills": ["GIS", "Remote Sensing"]
+      "description": "Advanced automation application using google's Agent Development framework, awarded for innovative use of AI agents in real-world problem solving.",
+      "skills": ["AI/ML", "AI Agent Development"]
     },
     {
       "id": "hist-4",
@@ -91,7 +91,7 @@
     },
     {
       "id": "amb-2",
-      "title": "NASA DEVELOP GIS Participation",
+      "title": "NASA GIS Data Scientist",
       "progress": 20,
       "xp": 600,
       "horizon": "yearly",
