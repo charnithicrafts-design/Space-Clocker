@@ -13,7 +13,8 @@ import {
   Activity,
   AlertTriangle,
   Clock,
-  Target
+  Target,
+  Zap
 } from 'lucide-react';
 import { useTrackStore, Transmission } from '../../store/useTrackStore';
 import { generateShareLink } from '../../utils/TransmissionExporter';
