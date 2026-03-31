@@ -34,6 +34,7 @@ describe('TransmissionDashboard', () => {
       pdaReflections: ['Refined sensor calibration', 'Identified 3 protostars'],
       voidAnalysis: [{ voidId: 'v1', text: 'Stellar Interference', count: 2, impact: 'medium' }],
       skillsReconciliation: [{ skillId: 's1', name: 'Astrogation', delta: 5, current: 85 }],
+      missionMetrics: { accomplished: [], missed: [], milestones: [] },
       rawLogs: { tasksCompleted: 8, totalTasks: 10, focusHours: 6 },
       metadata: { securityClearance: 'LEVEL-2-SECRET', targetOrg: 'NASA' }
     },
@@ -46,6 +47,7 @@ describe('TransmissionDashboard', () => {
       pdaReflections: ['Engine efficiency optimized'],
       voidAnalysis: [],
       skillsReconciliation: [],
+      missionMetrics: { accomplished: [], missed: [], milestones: [] },
       rawLogs: { tasksCompleted: 45, totalTasks: 50, focusHours: 40 },
       metadata: { securityClearance: 'LEVEL-1-UNCLASSIFIED' }
     }
@@ -111,7 +113,8 @@ describe('TransmissionDashboard', () => {
         'milestone',
         'Alpha Centauri Arrival',
         'Atmosphere entry successful. No anomalies detected.',
-        'ISRO'
+        'ISRO',
+        expect.any(Object)
       );
     });
   });

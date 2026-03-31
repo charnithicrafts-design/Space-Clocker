@@ -25,6 +25,11 @@ describe('SharedTransmission', () => {
     pdaReflections: ['Soil samples collected', 'Water ice detected at 2m depth'],
     voidAnalysis: [{ voidId: 'v2', text: 'Dust Storm Delay', count: 1, impact: 'high' }],
     skillsReconciliation: [{ skillId: 's2', name: 'Exo-Geology', delta: 12, current: 92 }],
+    missionMetrics: {
+      accomplished: [],
+      missed: [],
+      milestones: []
+    },
     rawLogs: { tasksCompleted: 15, totalTasks: 15, focusHours: 48 },
     metadata: { securityClearance: 'TOP-SECRET-EYES-ONLY', targetOrg: 'NASA' }
   };

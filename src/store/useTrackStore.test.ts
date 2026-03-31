@@ -139,4 +139,34 @@ describe('useTrackStore - Mission Control Store', () => {
     );
     expect(useTrackStore.getState().ambitions[0].title).toBe(missionAmbition);
   });
+
+  it('should log a historical event in the stellar archives', async () => {
+    // Arrange
+    const event: any = {
+      title: 'ISRO Antarkish Hackathon',
+      date: '2024-08-23',
+      type: 'success',
+      category: 'hackathon',
+      description: 'Victory in satellite imagery analysis.',
+      skills: ['GIS', 'AI/ML']
+    };
+    
+    // Act
+    await useTrackStore.getState().addHistoricalEvent(event);
+    
+    // Assert: Verify database persistence and local state update
+    expect(mockDb.query).toHaveBeenCalledWith(
+      expect.stringContaining('INSERT INTO stellar_history'),
+      expect.arrayContaining([
+        expect.stringContaining('hist-'),
+        event.title,
+        event.date,
+        event.type,
+        event.category,
+        event.description,
+        JSON.stringify(event.skills)
+      ])
+    );
+    expect(useTrackStore.getState().history[0].title).toBe(event.title);
+  });
 });

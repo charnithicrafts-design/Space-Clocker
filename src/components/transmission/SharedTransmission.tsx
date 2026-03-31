@@ -136,6 +136,34 @@ const SharedTransmission = () => {
               </section>
             )}
 
+            {/* Skills Reconciliation */}
+            {(transmission.skillsReconciliation || []).length > 0 && (
+              <section>
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-secondary">
+                  <Radar size={20} />
+                  Skills & Mastery Shifts
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {transmission.skillsReconciliation.map(s => (
+                    <div key={s.skillId} className="p-4 bg-surface-low/30 rounded-2xl border border-outline-variant/10">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-bold text-white">{s.name}</span>
+                        <span className={`text-[10px] font-black ${s.delta >= 0 ? 'text-success' : 'text-error'}`}>
+                          {s.delta >= 0 ? '+' : ''}{s.delta}%
+                        </span>
+                      </div>
+                      <div className="w-full h-1 bg-surface-high rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-secondary" 
+                          style={{ width: `${s.current}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Accomplished Grouped */}
               <section>
@@ -172,6 +200,19 @@ const SharedTransmission = () => {
                   Mission Deviations
                 </h2>
                 <div className="bg-surface-low/30 p-8 rounded-[2rem] border border-outline-variant/10 space-y-6">
+                  {/* Void Analysis */}
+                  {(transmission.voidAnalysis || []).length > 0 && (
+                    <div className="space-y-3 mb-6">
+                      <p className="text-xs font-black text-error/70 uppercase tracking-widest">Void Protocol Engagements</p>
+                      {transmission.voidAnalysis.map(v => (
+                        <div key={v.voidId} className="flex justify-between items-center p-3 bg-surface-lowest/50 rounded-xl border border-error/10 opacity-70">
+                          <span className="font-medium">{v.text}</span>
+                          <span className="text-error font-bold">{v.count}x</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   {['daily', 'weekly', 'yearly'].map(horizon => {
                     const items = (transmission.missionMetrics?.missed || []).filter(t => t.horizon === horizon);
                     if (items.length === 0) return null;

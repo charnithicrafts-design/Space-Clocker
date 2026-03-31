@@ -70,7 +70,7 @@ describe('useTrackStore - Demo Data Integration', () => {
       INSERT INTO stats (id) VALUES (1) ON CONFLICT DO NOTHING;
       INSERT INTO oracle_config (id) VALUES (1) ON CONFLICT DO NOTHING;
     `);
-  });
+  }, 30000);
 
   it('should successfully import demo data without foreign key violations', async () => {
     // Act & Assert

@@ -44,12 +44,12 @@
     },
     {
       "id": "hist-4",
-      "title": "LPI Summer Internship (NASA) - Application",
-      "date": "2025-12-01",
-      "type": "missed",
-      "category": "internship",
-      "description": "Application submitted but did not pass the final selection due to citizenship constraints. Pivoted to ISRO focus.",
-      "skills": ["Planetary Science", "Data Analysis"]
+      "title": "Cybersecurity Foundations - Tech Mahindra",
+      "date": "2024-12-10",
+      "type": "success",
+      "category": "certification",
+      "description": "Side certification focusing on enterprise network security and threat mitigation.",
+      "skills": ["Cybersecurity"]
     },
     {
       "id": "hist-5",
@@ -106,18 +106,45 @@
           ]
         }
       ]
+    },
+    {
+      "id": "amb-3",
+      "title": "Google Quantum Engineer 2028",
+      "progress": 10,
+      "xp": 300,
+      "horizon": "yearly",
+      "milestones": [
+        {
+          "id": "ms-3-1",
+          "title": "AI/ML Current Path Acceleration",
+          "status": "active",
+          "tasks": [
+            { "id": "t-3-1-1", "title": "TensorFlow Quantum Integration", "completed": false, "weightage": 30, "time": "07:30" },
+            { "id": "t-3-1-2", "title": "Quantum-Enhanced Generative Models", "completed": false, "weightage": 40, "time": "15:00" }
+          ]
+        },
+        {
+          "id": "ms-3-2",
+          "title": "Quantum Software Stack (Cirq)",
+          "status": "pending",
+          "tasks": [
+            { "id": "t-3-2-1", "title": "Master Logical Qubit Error Correction", "completed": false, "weightage": 50, "time": "09:00" }
+          ]
+        }
+      ]
     }
   ],
   "tasks": [
-    { "id": "st-1", "title": "Morning Cybersecurity Drill", "completed": true, "time": "07:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-03-31" },
+    { "id": "st-1", "title": "Quantum Algorithm Review", "completed": true, "time": "07:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-03-31" },
     { "id": "st-2", "title": "ISRO Exam Pattern Analysis", "completed": false, "time": "19:00", "horizon": "daily", "weightage": 30, "plannedDate": "2026-03-31" },
-    { "id": "st-3", "title": "NASA Space Apps 2026 Team Formation", "completed": false, "time": "12:00", "horizon": "yearly", "deadline": "2026-09-01T23:59:59Z", "weightage": 100 }
+    { "id": "st-3", "title": "Google Quantum AI Internship Prep", "completed": false, "time": "12:00", "horizon": "yearly", "deadline": "2027-01-01T23:59:59Z", "weightage": 100 }
   ],
   "skills": [
     { "id": "sk-1", "name": "GIS & Remote Sensing", "currentProficiency": 80, "targetProficiency": 100, "recommendation": "Master Google Earth Engine and ArcPy." },
-    { "id": "sk-2", "name": "Cybersecurity", "currentProficiency": 75, "targetProficiency": 95, "recommendation": "Study satellite link encryption standards." },
-    { "id": "sk-3", "name": "Full Stack (MERN)", "currentProficiency": 90, "targetProficiency": 100, "recommendation": "Focus on high-availability cloud architecture." },
-    { "id": "sk-4", "name": "Python for Science", "currentProficiency": 85, "targetProficiency": 95, "recommendation": "Review NumPy and SciPy for data modeling." }
+    { "id": "sk-2", "name": "AI/ML & Deep Learning", "currentProficiency": 75, "targetProficiency": 95, "recommendation": "Focus on Quantum-Classical hybrid neural networks." },
+    { "id": "sk-3", "name": "Quantum Computing", "currentProficiency": 30, "targetProficiency": 90, "recommendation": "Study Milestone 5 Scale-up requirements at Google Quantum AI." },
+    { "id": "sk-4", "name": "Python for Science", "currentProficiency": 85, "targetProficiency": 95, "recommendation": "Review Cirq and TensorFlow Quantum." },
+    { "id": "sk-5", "name": "Cybersecurity", "currentProficiency": 60, "targetProficiency": 80, "recommendation": "Maintain baseline security protocols (Tech Mahindra Cert)." }
   ],
   "voids": [
     { "id": "v-1", "text": "Social Media Doomscrolling", "impact": "high", "engagedCount": 8, "maxAllowed": 2 },

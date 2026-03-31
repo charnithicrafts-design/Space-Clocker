@@ -17,49 +17,49 @@ interface Step {
 const steps: Step[] = [
   {
     title: "Mission Briefing",
-    content: "Welcome, Cadet Nithya Dharshini. Your previous accolades in the ISRO Antarkish Hackathon and NASA Space Apps have been synchronized. We've initialized your trajectory toward the 2027 Scientist 'SC' mission.",
+    content: "Welcome, Cadet Nithya Dharshini. Your previous accolades in the ISRO Antarkish Hackathon and NASA Space Apps have been synchronized. We've initialized your trajectory toward ISRO 2027 and Google Quantum 2028.",
     icon: Rocket,
     target: "mission-briefing",
     route: "/"
   },
   {
     title: "Stellar History",
-    content: "Your historical achievements—successes, misses, and tactical pivots—are now part of your Stellar Timeline. This history fuels your Momentum Engine and levels up your Space-Scientist rank.",
+    content: "Your historical achievements—successes, misses, and side certifications like your Tech Mahindra Cybersecurity credential—are now part of your Stellar Timeline.",
     icon: CheckCircle2,
     target: "history",
     route: "/"
   },
   {
     title: "Momentum Engine",
-    content: "This is your Momentum Engine. It tracks your overall progress. Notice how your level (Rank 15) reflects your background in Cybersecurity and GIS.",
+    content: "This is your Momentum Engine. Notice how your level (Rank 15) reflects your expertise in GIS, AI/ML, and your progress toward Quantum Advantage.",
     icon: LayoutDashboard,
     target: "dashboard",
     route: "/"
   },
   {
     title: "Architect Mode",
-    content: "In Architect Mode (Nebula), we've mapped your 2027 ISRO ambition into technical milestones like the IIRS PG Diploma. Deconstruct any mission here.",
+    content: "In Architect Mode (Nebula), we've mapped your dual-track mission: ISRO Scientist 'SC' and Google Quantum Systems Engineering. Deconstruct any complex goal here.",
     icon: Target,
     target: "nebula",
     route: "/nebula"
   },
   {
     title: "Daily Orbit",
-    content: "Manage your daily orbital tasks, like Cybersecurity drills. Use the 'Void Protocol' to lock out distractions that threaten your 2027 trajectory.",
+    content: "Manage daily tasks like Quantum Algorithm reviews. Use the 'Void Protocol' to lock out distractions that might stall your 2028 trajectory.",
     icon: Clock,
     target: "orbit",
     route: "/orbit"
   },
   {
     title: "The Void",
-    content: "Visualize your proficiency in the Skills Matrix. Your current mastery in GIS and Full Stack is impressive, but ISRO requires deep focus on Satellite Forensics.",
+    content: "Visualize proficiency in the Skills Matrix. Your mastery in Python and GIS is strong; now we pivot toward logical qubit error correction and QML.",
     icon: Brain,
     target: "skills",
     route: "/skills"
   },
   {
     title: "Launch Sequence",
-    content: "System check complete. Your path to ISRO/NASA is paved with your past victories. Chart your course to the stars, Commander Nithya.",
+    content: "System check complete. Your path to ISRO, NASA, and Google is clear. Chart your course to the quantum horizon, Commander Nithya.",
     icon: CheckCircle2,
     target: "complete",
     route: "/"
