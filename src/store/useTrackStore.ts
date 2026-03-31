@@ -481,12 +481,32 @@ export const useTrackStore = create<TrackStore>()(
 
         const skillsReconciliation = state.skills
           .filter(s => !targetAmbitionId || s.ambitionId === targetAmbitionId)
-          .map(s => ({ 
-            skillId: s.id, 
-            name: s.name, 
-            delta: 0, 
-            current: s.currentProficiency 
-          }));
+          .map(s => {
+            // Calculate a small delta if tasks were accomplished for this ambition
+            let delta = 0;
+            if (accomplished.length > 0) {
+              const relevantTasks = accomplished.filter(t => {
+                const isDirect = state.tasks.find(st => st.id === t.id && st.ambitionId === s.ambitionId);
+                const isMilestoneTask = state.ambitions.find(a => a.id === s.ambitionId)?.milestones.some(m => m.tasks.some(mt => mt.id === t.id));
+                return isDirect || isMilestoneTask;
+              });
+              
+              if (relevantTasks.length > 0) {
+                // Each task adds 1-2% proficiency delta for the demo
+                delta = relevantTasks.length + Math.floor(Math.random() * 2);
+              } else if (!targetAmbitionId) {
+                // If it's a general report, give a small boost to all skills if anything was accomplished
+                delta = Math.min(2, accomplished.length);
+              }
+            }
+
+            return { 
+              skillId: s.id, 
+              name: s.name, 
+              delta, 
+              current: Math.min(100, s.currentProficiency + delta)
+            };
+          });
 
         // Gather all potential tasks
         let allPotentialTasks = [
@@ -924,8 +944,8 @@ export const useTrackStore = create<TrackStore>()(
           // Import Skills
           if (data.skills) {
             for (const s of data.skills) {
-              await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation) VALUES ($1, $2, $3, $4, $5)`, [
-                s.id, s.name, s.current_proficiency || s.currentProficiency, s.target_proficiency || s.targetProficiency, s.recommendation
+              await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
+                s.id, s.name, s.current_proficiency || s.currentProficiency, s.target_proficiency || s.targetProficiency, s.recommendation, s.type || 'personal', s.ambition_id || s.ambitionId
               ]);
             }
           }

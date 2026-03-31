@@ -68,7 +68,7 @@
       "progress": 45,
       "xp": 1300,
       "horizon": "yearly",
-      "linkedSkills": ["sk-1", "sk-4", "sk-5"],
+      "linkedSkills": ["sk-5", "sk-6", "sk-7"],
       "milestones": [
         {
           "id": "ms-1-1",
@@ -96,7 +96,7 @@
       "progress": 20,
       "xp": 600,
       "horizon": "yearly",
-      "linkedSkills": ["sk-1", "sk-2"],
+      "linkedSkills": ["sk-1", "sk-8", "sk-9"],
       "milestones": [
         {
           "id": "ms-2-1",
@@ -115,7 +115,7 @@
       "progress": 10,
       "xp": 300,
       "horizon": "yearly",
-      "linkedSkills": ["sk-2", "sk-3", "sk-4"],
+      "linkedSkills": ["sk-2", "sk-3", "sk-4", "sk-10"],
       "milestones": [
         {
           "id": "ms-3-1",
@@ -147,10 +147,16 @@
     { "id": "sk-2", "name": "AI/ML & Deep Learning", "currentProficiency": 75, "targetProficiency": 95, "recommendation": "Focus on Quantum-Classical hybrid neural networks.", "type": "ambition", "ambitionId": "amb-3" },
     { "id": "sk-3", "name": "Quantum Computing", "currentProficiency": 30, "targetProficiency": 90, "recommendation": "Study Milestone 5 Scale-up requirements at Google Quantum AI.", "type": "ambition", "ambitionId": "amb-3" },
     { "id": "sk-4", "name": "Python for Science", "currentProficiency": 85, "targetProficiency": 95, "recommendation": "Review Cirq and TensorFlow Quantum.", "type": "ambition", "ambitionId": "amb-3" },
-    { "id": "sk-5", "name": "Cybersecurity", "currentProficiency": 60, "targetProficiency": 80, "recommendation": "Maintain baseline security protocols (Tech Mahindra Cert).", "type": "ambition", "ambitionId": "amb-1" }
+    { "id": "sk-5", "name": "Cybersecurity", "currentProficiency": 65, "targetProficiency": 85, "recommendation": "Focus on Satellite Link encryption protocols.", "type": "ambition", "ambitionId": "amb-1" },
+    { "id": "sk-6", "name": "Satellite Communication", "currentProficiency": 40, "targetProficiency": 90, "recommendation": "Study S-band and C-band transponder logic.", "type": "ambition", "ambitionId": "amb-1" },
+    { "id": "sk-7", "name": "Space Systems Engineering", "currentProficiency": 35, "targetProficiency": 80, "recommendation": "Review ISRO's mission planning documentation.", "type": "ambition", "ambitionId": "amb-1" },
+    { "id": "sk-8", "name": "Geospatial Data Science", "currentProficiency": 55, "targetProficiency": 95, "recommendation": "Deep dive into Landsat 9 and Sentinel-2 data products.", "type": "ambition", "ambitionId": "amb-2" },
+    { "id": "sk-9", "name": "Cloud Computing (AWS/GCP)", "currentProficiency": 50, "targetProficiency": 85, "recommendation": "Focus on serverless architectures for heavy geospatial processing.", "type": "ambition", "ambitionId": "amb-2" },
+    { "id": "sk-10", "name": "Quantum Information Theory", "currentProficiency": 25, "targetProficiency": 85, "recommendation": "Study entanglement-assisted communication channels.", "type": "ambition", "ambitionId": "amb-3" }
   ],
   "voids": [
     { "id": "v-1", "text": "Social Media Doomscrolling", "impact": "high", "engagedCount": 8, "maxAllowed": 2 },
-    { "id": "v-2", "text": "Excessive Gaming", "impact": "medium", "engagedCount": 3, "maxAllowed": 1 }
+    { "id": "v-2", "text": "Excessive Gaming", "impact": "medium", "engagedCount": 3, "maxAllowed": 1 },
+    { "id": "v-3", "text": "Late food", "impact": "low", "engagedCount": 2, "maxAllowed": 3 }
   ]
 }

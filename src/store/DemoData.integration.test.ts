@@ -82,6 +82,12 @@ describe('useTrackStore - Demo Data Integration', () => {
     expect(state.ambitions.length).toBe(demoData.ambitions.length);
     expect(state.tasks.length).toBe(demoData.tasks.length);
     expect(state.history.length).toBe(demoData.history.length);
+    
+    // Verify skills are imported with ambition_id and type
+    expect(state.skills.length).toBe(demoData.skills.length);
+    const skillWithAmbition = state.skills.find(s => s.ambitionId === 'amb-2');
+    expect(skillWithAmbition).toBeDefined();
+    expect(skillWithAmbition?.type).toBe('ambition');
   });
 
   it('should clear existing data before importing demo data', async () => {
