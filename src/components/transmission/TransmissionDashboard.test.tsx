@@ -19,6 +19,17 @@ vi.mock('../../store/useTrackStore', () => ({
   useTrackStore: vi.fn()
 }));
 
+// Mock SoundManager
+vi.mock('../../utils/SoundManager', () => ({
+  SoundManager: {
+    playPop: vi.fn(),
+    playThud: vi.fn(),
+    playSwell: vi.fn(),
+    playBleep: vi.fn(),
+    playHiss: vi.fn(),
+  }
+}));
+
 describe('TransmissionDashboard', () => {
   const mockGenerateTransmission = vi.fn();
   const mockDeleteTransmission = vi.fn();
@@ -197,13 +208,18 @@ describe('TransmissionDashboard', () => {
 
     // Act
     // Find the delete button by its container or icon since it lacks a text label
-    const deleteBtn = container.querySelector('.lucide-trash2')?.closest('button');
-    if (!deleteBtn) throw new Error('Delete button not found');
+    const deleteBtn = screen.getByLabelText(/Declassify and delete this transmission/i);
     
     fireEvent.click(deleteBtn);
 
+    // Check if modal is open
+    expect(screen.getByText(/Declassify Transmission/i)).toBeInTheDocument();
+
+    // Confirm purge
+    const confirmButton = screen.getByRole('button', { name: /Confirm Purge/i });
+    fireEvent.click(confirmButton);
+
     // Assert
-    expect(window.confirm).toHaveBeenCalledWith('Declassify and delete this transmission permanently?');
     expect(mockDeleteTransmission).toHaveBeenCalledWith('TX-2024-DAILY-001');
   });
 

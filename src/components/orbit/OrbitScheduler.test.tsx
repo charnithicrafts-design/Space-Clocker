@@ -129,8 +129,16 @@ describe('OrbitScheduler', () => {
       fireEvent.click(deleteButtons[0]);
     });
 
+    // Check if modal is open
+    expect(screen.getByText(/Eject Task from Orbit/i)).toBeInTheDocument();
+    
+    // Confirm deletion
+    const confirmButton = screen.getByRole('button', { name: /Confirm Extraction/i });
+    await act(async () => {
+      fireEvent.click(confirmButton);
+    });
+
     // Assert
-    expect(window.confirm).toHaveBeenCalled();
     expect(mockDeleteTask).toHaveBeenCalledWith('task-1');
     expect(SoundManager.playThud).toHaveBeenCalled();
   });
