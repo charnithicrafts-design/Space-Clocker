@@ -99,9 +99,6 @@ CREATE TABLE IF NOT EXISTS skills (
   ambition_id TEXT REFERENCES ambitions(id) ON DELETE CASCADE,
   type TEXT DEFAULT 'personal'
 );
-  ambition_id TEXT REFERENCES ambitions(id) ON DELETE CASCADE,
-  type TEXT DEFAULT 'personal'
-);
 
 CREATE TABLE IF NOT EXISTS internships (
   id TEXT PRIMARY KEY,
@@ -115,10 +112,13 @@ CREATE TABLE IF NOT EXISTS transmissions (
   timestamp TEXT DEFAULT CURRENT_TIMESTAMP,
   tier TEXT NOT NULL,
   title TEXT NOT NULL,
+  start_date TEXT,
+  end_date TEXT,
   pda_narrative TEXT,
   pda_reflections TEXT,
   void_analysis TEXT,
   skills_reconciliation TEXT,
+  mission_metrics TEXT,
   raw_logs TEXT,
   metadata TEXT
 );
