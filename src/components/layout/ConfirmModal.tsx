@@ -21,7 +21,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   title, 
   message,
   confirmText = "Confirm Extraction",
-  cancelText = "Abort Mission",
+  cancelText = "Keep Mission",
   variant = 'danger'
 }) => {
   const handleConfirm = () => {
@@ -79,7 +79,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
             <div className="flex gap-4">
               <button 
                 onClick={handleCancel} 
-                className="flex-1 p-4 rounded-2xl bg-surface-high text-on-surface-variant font-bold uppercase tracking-widest text-xs hover:text-white transition-all"
+                className="flex-1 p-4 rounded-2xl bg-surface-highest text-white font-bold uppercase tracking-widest text-xs hover:bg-surface-high transition-all border border-outline-variant/30"
               >
                 {cancelText}
               </button>

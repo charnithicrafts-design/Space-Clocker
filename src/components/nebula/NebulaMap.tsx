@@ -4,6 +4,7 @@ import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send, Rocket, 
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 import CommandModal from '../layout/CommandModal';
+import ConfirmModal from '../layout/ConfirmModal';
 
 const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: string; key?: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +14,10 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
   const [editMilestoneTitle, setEditMilestoneTitle] = useState(milestone.title);
   const [editTaskTitle, setEditTaskTitle] = useState('');
   const [newTaskTitle, setNewTaskTitle] = useState('');
+  
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null);
+
   const { toggleMilestoneTask, addMilestoneTask, updateMilestoneTask, updateMilestone, deleteMilestoneTask, preferences } = useTrackStore();
   
   const totalTasks = milestone.tasks?.length || 0;
@@ -50,11 +55,21 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
 
   const handleDeleteTask = (e: React.MouseEvent, taskId: string) => {
     e.stopPropagation();
-    if (preferences.confirmDelete && !window.confirm('Delete this task from milestone?')) {
+    if (preferences.confirmDelete) {
+      setDeleteTaskId(taskId);
+      setIsDeleteModalOpen(true);
       return;
     }
     deleteMilestoneTask(ambitionId, milestone.id, taskId);
     SoundManager.playThud();
+  };
+
+  const handleDeleteConfirm = () => {
+    if (deleteTaskId) {
+      deleteMilestoneTask(ambitionId, milestone.id, deleteTaskId);
+      SoundManager.playThud();
+      setDeleteTaskId(null);
+    }
   };
 
   const startEditingMilestone = (e: React.MouseEvent) => {
@@ -190,6 +205,15 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ConfirmModal 
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Extract Task from Milestone?"
+        message="This task will be permanently removed from your stellar roadmap. Proceed with extraction?"
+        confirmText="Confirm Extraction"
+      />
     </div>
   );
 };

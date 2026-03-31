@@ -103,7 +103,7 @@ const CommandModal: React.FC<CommandModalProps> = ({
                   onClick={onClose} 
                   className="flex-1 p-4 rounded-2xl bg-surface-high text-on-surface-variant font-bold uppercase tracking-widest text-xs hover:text-white transition-all"
                 >
-                  Abord Mission
+                  Abord Mission Now
                 </button>
                 <button 
                   type="submit"

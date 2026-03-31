@@ -53,10 +53,24 @@ describe('TransmissionDashboard', () => {
     }
   ];
 
+  const mockAmbitions = [
+    {
+      id: 'a1',
+      title: 'Deep Space Explorer',
+      progress: 45,
+      xp: 1200,
+      milestones: [
+        { id: 'm1', title: 'Propulsion Mastery', tasks: [], status: 'active' }
+      ],
+      horizon: 'yearly'
+    }
+  ];
+
   beforeEach(() => {
     vi.clearAllMocks();
     (useTrackStore as any).mockReturnValue({
       transmissions: mockTransmissions,
+      ambitions: mockAmbitions,
       generateTransmission: mockGenerateTransmission,
       deleteTransmission: mockDeleteTransmission
     });
@@ -114,7 +128,9 @@ describe('TransmissionDashboard', () => {
         'Alpha Centauri Arrival',
         'Atmosphere entry successful. No anomalies detected.',
         'ISRO',
-        expect.any(Object)
+        expect.any(Object), // dateRange
+        undefined, // targetAmbitionId
+        undefined  // targetMilestoneId
       );
     });
   });
