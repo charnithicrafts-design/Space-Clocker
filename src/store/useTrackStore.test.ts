@@ -169,4 +169,29 @@ describe('useTrackStore - Mission Control Store', () => {
     );
     expect(useTrackStore.getState().history[0].title).toBe(event.title);
   });
+
+  it('should generate a mission transmission briefing without reference errors', async () => {
+    // Arrange: Setup skills and ambitions to trigger the reconciliation logic
+    useTrackStore.setState({
+      skills: [{ id: 's1', name: 'Astrogation', currentProficiency: 50, ambitionId: 'a1', targetProficiency: 100, recommendation: 'Study more', type: 'ambition' }],
+      ambitions: [{ id: 'a1', title: 'NASA 2027', progress: 0, xp: 0, horizon: 'yearly', milestones: [] }],
+      tasks: [
+        { id: 't1', title: 'Orbit Calculation', completed: true, weightage: 20, horizon: 'daily', time: '10:00', plannedDate: new Date().toISOString().split('T')[0], ambitionId: 'a1' }
+      ]
+    });
+
+    // Act: Generate the transmission
+    await useTrackStore.getState().generateTransmission(
+      'daily',
+      'Daily Progress Report',
+      'Successful orbit insertion.'
+    );
+
+    // Assert: Verify transmission was created and reconciliation calculated correctly
+    const state = useTrackStore.getState();
+    expect(state.transmissions.length).toBe(1);
+    expect(state.transmissions[0].title).toBe('Daily Progress Report');
+    expect(state.transmissions[0].skillsReconciliation[0].delta).toBeGreaterThan(0);
+    expect(state.transmissions[0].missionMetrics.accomplished.length).toBe(1);
+  });
 });

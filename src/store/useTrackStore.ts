@@ -480,35 +480,6 @@ export const useTrackStore = create<TrackStore>()(
           impact: v.impact 
         }));
 
-        const skillsReconciliation = state.skills
-          .filter(s => !targetAmbitionId || s.ambitionId === targetAmbitionId)
-          .map(s => {
-            // Calculate a small delta if tasks were accomplished for this ambition
-            let delta = 0;
-            if (accomplished.length > 0) {
-              const relevantTasks = accomplished.filter(t => {
-                const isDirect = state.tasks.find(st => st.id === t.id && st.ambitionId === s.ambitionId);
-                const isMilestoneTask = state.ambitions.find(a => a.id === s.ambitionId)?.milestones.some(m => m.tasks.some(mt => mt.id === t.id));
-                return isDirect || isMilestoneTask;
-              });
-              
-              if (relevantTasks.length > 0) {
-                // Each task adds 1-2% proficiency delta for the demo
-                delta = relevantTasks.length + Math.floor(Math.random() * 2);
-              } else if (!targetAmbitionId) {
-                // If it's a general report, give a small boost to all skills if anything was accomplished
-                delta = Math.min(2, accomplished.length);
-              }
-            }
-
-            return { 
-              skillId: s.id, 
-              name: s.name, 
-              delta, 
-              current: Math.min(100, s.currentProficiency + delta)
-            };
-          });
-
         // Gather all potential tasks
         let allPotentialTasks = [
           ...state.tasks,
@@ -548,6 +519,35 @@ export const useTrackStore = create<TrackStore>()(
             weightage: t.weightage || 10,
             horizon: t.horizon || 'daily'
           }));
+
+        const skillsReconciliation = state.skills
+          .filter(s => !targetAmbitionId || s.ambitionId === targetAmbitionId)
+          .map(s => {
+            // Calculate a small delta if tasks were accomplished for this ambition
+            let delta = 0;
+            if (accomplished.length > 0) {
+              const relevantTasks = accomplished.filter(t => {
+                const isDirect = state.tasks.find(st => st.id === t.id && st.ambitionId === s.ambitionId);
+                const isMilestoneTask = state.ambitions.find(a => a.id === s.ambitionId)?.milestones.some(m => m.tasks.some(mt => mt.id === t.id));
+                return isDirect || isMilestoneTask;
+              });
+              
+              if (relevantTasks.length > 0) {
+                // Each task adds 1-2% proficiency delta for the demo
+                delta = relevantTasks.length + Math.floor(Math.random() * 2);
+              } else if (!targetAmbitionId) {
+                // If it's a general report, give a small boost to all skills if anything was accomplished
+                delta = Math.min(2, accomplished.length);
+              }
+            }
+
+            return { 
+              skillId: s.id, 
+              name: s.name, 
+              delta, 
+              current: Math.min(100, s.currentProficiency + delta)
+            };
+          });
 
         const missed = filteredTasks
           .filter(t => !t.completed)
