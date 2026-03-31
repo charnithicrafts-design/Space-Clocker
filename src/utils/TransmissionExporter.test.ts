@@ -17,6 +17,11 @@ describe('TransmissionExporter: Signal Modulation Protocol', () => {
     pdaReflections: ['Refracted thought on nebula growth.'],
     voidAnalysis: [{ voidId: 'v1', text: 'Black Hole Distraction', count: 1, impact: 'high' }],
     skillsReconciliation: [{ skillId: 's1', name: 'Astro-Mathematics', delta: 12, current: 450 }],
+    missionMetrics: {
+      accomplished: [],
+      missed: [],
+      milestones: []
+    },
     rawLogs: { tasksCompleted: 15, totalTasks: 20, focusHours: 8 },
     metadata: { securityClearance: 'LEVEL-9' }
   };
