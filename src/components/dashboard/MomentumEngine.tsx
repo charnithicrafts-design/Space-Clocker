@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { Plus, Zap, Rocket, AlertTriangle, ChevronRight, CheckCircle2 } from 'lucide-react';
 import CommandModal from '../layout/CommandModal';
+import StellarTimeline from './StellarTimeline';
 
 const MomentumEngine = () => {
   const { profile, ambitions, addAmbition } = useTrackStore();
@@ -115,6 +116,9 @@ const MomentumEngine = () => {
           );
         })}
       </section>
+
+      {/* Stellar History */}
+      <StellarTimeline />
 
       {/* Widgets & Anomalies */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">

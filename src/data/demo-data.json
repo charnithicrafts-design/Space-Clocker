@@ -1,82 +1,126 @@
 {
   "profile": {
-    "name": "Valentina",
-    "level": 12,
-    "xp": 450,
-    "title": "Senior Exobiologist"
+    "name": "Nithya Dharshini",
+    "level": 15,
+    "xp": 720,
+    "title": "Astro-Technical Strategist"
   },
   "preferences": {
     "confirmDelete": true,
     "uiMode": "professional"
   },
   "stats": {
-    "streak": 15,
-    "tasksCompleted": 342,
-    "totalFocusHours": 128
+    "streak": 28,
+    "tasksCompleted": 512,
+    "totalFocusHours": 245
   },
+  "history": [
+    {
+      "id": "hist-1",
+      "title": "ISRO Antarkish Hackathon - Winner",
+      "date": "2024-08-23",
+      "type": "success",
+      "category": "hackathon",
+      "description": "Developed an AI-driven satellite imagery analysis tool for real-time flood mapping using GIS data.",
+      "skills": ["GIS", "Python", "AI/ML"]
+    },
+    {
+      "id": "hist-2",
+      "title": "NASA International Space Apps Challenge - Global Finalist",
+      "date": "2025-10-05",
+      "type": "success",
+      "category": "hackathon",
+      "description": "Created a cybersecurity protocol for securing satellite-to-ground communication links.",
+      "skills": ["Cybersecurity", "Network Protocols"]
+    },
+    {
+      "id": "hist-3",
+      "title": "GIS Certification - IIRS Dehradun",
+      "date": "2025-03-15",
+      "type": "success",
+      "category": "certification",
+      "description": "Advanced certification in Remote Sensing and Geographical Information Systems.",
+      "skills": ["GIS", "Remote Sensing"]
+    },
+    {
+      "id": "hist-4",
+      "title": "LPI Summer Internship (NASA) - Application",
+      "date": "2025-12-01",
+      "type": "missed",
+      "category": "internship",
+      "description": "Application submitted but did not pass the final selection due to citizenship constraints. Pivoted to ISRO focus.",
+      "skills": ["Planetary Science", "Data Analysis"]
+    },
+    {
+      "id": "hist-5",
+      "title": "Full Stack Development Internship",
+      "date": "2024-06-01",
+      "type": "success",
+      "category": "internship",
+      "description": "3-month intensive internship focusing on MERN stack and cloud deployment.",
+      "skills": ["Full Stack", "React", "Node.js"]
+    }
+  ],
   "ambitions": [
     {
       "id": "amb-1",
-      "title": "Establish Martian Colony",
-      "progress": 75,
-      "xp": 1200,
+      "title": "ISRO Scientist 'SC' (Computer Science) 2027",
+      "progress": 45,
+      "xp": 1500,
       "horizon": "yearly",
       "milestones": [
         {
           "id": "ms-1-1",
-          "title": "Life Support Calibration",
-          "status": "completed",
+          "title": "IIRS PG Diploma in GIS",
+          "status": "active",
           "tasks": [
-            { "id": "t-1-1-1", "title": "Oxygen Scrubber Test", "completed": true, "weightage": 50, "time": "08:00" },
-            { "id": "t-1-1-2", "title": "Water Recycling Integrity", "completed": true, "weightage": 50, "time": "10:00" }
+            { "id": "t-1-1-1", "title": "Master ArcGIS Pro & QGIS", "completed": true, "weightage": 50, "time": "08:00" },
+            { "id": "t-1-1-2", "title": "Geospatial Data Modeling Final Project", "completed": false, "weightage": 50, "time": "10:00" }
           ]
         },
         {
           "id": "ms-1-2",
-          "title": "Geological Survey",
-          "status": "active",
+          "title": "ISRO Technical Assistant Prep",
+          "status": "pending",
           "tasks": [
-            { "id": "t-1-2-1", "title": "Drill Core Analysis", "completed": true, "weightage": 25, "time": "09:00" },
-            { "id": "t-1-2-2", "title": "Spectroscopic Mapping", "completed": false, "weightage": 25, "time": "14:00" }
+            { "id": "t-1-2-1", "title": "Advanced Linux System Admin", "completed": false, "weightage": 25, "time": "09:00" },
+            { "id": "t-1-2-2", "title": "Network Security Forensics", "completed": false, "weightage": 25, "time": "14:00" }
           ]
         }
       ]
     },
     {
       "id": "amb-2",
-      "title": "Jupiter Cloud Mining",
-      "progress": 30,
-      "xp": 450,
+      "title": "NASA DEVELOP GIS Participation",
+      "progress": 20,
+      "xp": 600,
       "horizon": "yearly",
       "milestones": [
         {
           "id": "ms-2-1",
-          "title": "Atmospheric Probe Deployment",
+          "title": "Open Data API Integration",
           "status": "active",
           "tasks": [
-            { "id": "t-2-1-1", "title": "Pressure Shield Calibration", "completed": true, "weightage": 50, "time": "11:00" },
-            { "id": "t-2-1-2", "title": "Signal Relay Test", "completed": false, "weightage": 50, "time": "16:00" }
+            { "id": "t-2-1-1", "title": "NASA Earthdata Login API Setup", "completed": true, "weightage": 50, "time": "11:00" },
+            { "id": "t-2-1-2", "title": "Landsat 9 Data Stream Analysis", "completed": false, "weightage": 50, "time": "16:00" }
           ]
         }
       ]
     }
   ],
   "tasks": [
-    { "id": "st-1", "title": "Morning System Diagnostic", "completed": true, "time": "07:00", "horizon": "daily", "weightage": 10 },
-    { "id": "st-2", "title": "Stellar Navigation Update", "completed": false, "time": "19:00", "horizon": "daily", "weightage": 15 },
-    { "id": "st-3", "title": "NASA Senior Space Scientist Application", "completed": false, "time": "12:00", "horizon": "yearly", "deadline": "2027-12-31T23:59:59Z", "weightage": 500 }
+    { "id": "st-1", "title": "Morning Cybersecurity Drill", "completed": true, "time": "07:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-03-31" },
+    { "id": "st-2", "title": "ISRO Exam Pattern Analysis", "completed": false, "time": "19:00", "horizon": "daily", "weightage": 30, "plannedDate": "2026-03-31" },
+    { "id": "st-3", "title": "NASA Space Apps 2026 Team Formation", "completed": false, "time": "12:00", "horizon": "yearly", "deadline": "2026-09-01T23:59:59Z", "weightage": 100 }
   ],
   "skills": [
-    { "id": "sk-1", "name": "Astro-navigation", "currentProficiency": 85, "targetProficiency": 100, "recommendation": "Study advanced pulsar-based positioning." },
-    { "id": "sk-2", "name": "Quantum Mechanics", "currentProficiency": 60, "targetProficiency": 95, "recommendation": "Review entanglement correlation protocols." },
-    { "id": "sk-3", "name": "Exoplanet Analysis", "currentProficiency": 40, "targetProficiency": 80, "recommendation": "Focus on spectroscopic biosignature detection." }
-  ],
-  "internships": [
-    { "organization": "ISRO", "start": "2024-06-01", "end": "2024-08-31" },
-    { "organization": "NASA", "start": "2025-01-15", "end": "2025-05-15" }
+    { "id": "sk-1", "name": "GIS & Remote Sensing", "currentProficiency": 80, "targetProficiency": 100, "recommendation": "Master Google Earth Engine and ArcPy." },
+    { "id": "sk-2", "name": "Cybersecurity", "currentProficiency": 75, "targetProficiency": 95, "recommendation": "Study satellite link encryption standards." },
+    { "id": "sk-3", "name": "Full Stack (MERN)", "currentProficiency": 90, "targetProficiency": 100, "recommendation": "Focus on high-availability cloud architecture." },
+    { "id": "sk-4", "name": "Python for Science", "currentProficiency": 85, "targetProficiency": 95, "recommendation": "Review NumPy and SciPy for data modeling." }
   ],
   "voids": [
-    { "id": "v-1", "text": "Infinite Scrolling", "impact": "high", "engagedCount": 12, "maxAllowed": 3 },
-    { "id": "v-2", "text": "Deep Space Junk Food", "impact": "medium", "engagedCount": 5, "maxAllowed": 2 }
+    { "id": "v-1", "text": "Social Media Doomscrolling", "impact": "high", "engagedCount": 8, "maxAllowed": 2 },
+    { "id": "v-2", "text": "Excessive Gaming", "impact": "medium", "engagedCount": 3, "maxAllowed": 1 }
   ]
 }

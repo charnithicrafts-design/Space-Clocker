@@ -52,6 +52,16 @@ export interface Reflection {
   type: 'missed-task' | 'void-engaged' | 'daily-summary';
 }
 
+export interface HistoricalEvent {
+  id: string;
+  title: string;
+  date: string;
+  type: 'success' | 'missed' | 'failed';
+  category: 'internship' | 'hackathon' | 'certification' | 'academic' | 'project';
+  description: string;
+  skills: string[]; // Names of skills influenced
+}
+
 export interface InternshipPeriod {
   organization: 'ISRO' | 'NASA';
   start: string;
@@ -112,6 +122,7 @@ interface TrackStore {
   tasks: Task[];
   voids: VoidTask[];
   reflections: Reflection[];
+  history: HistoricalEvent[];
   internships: InternshipPeriod[];
   skills: Skill[];
   transmissions: Transmission[];
@@ -133,6 +144,7 @@ interface TrackStore {
   deleteTask: (taskId: string) => Promise<void>;
   toggleTask: (taskId: string) => Promise<void>;
   addReflection: (content: string, type: Reflection['type']) => Promise<void>;
+  addHistoricalEvent: (event: Omit<HistoricalEvent, 'id'>) => Promise<void>;
   addInternship: (internship: InternshipPeriod) => Promise<void>;
   addSkill: (name: string, current: number, target: number, recommendation: string, type: Skill['type'], ambitionId?: string) => Promise<void>;
   updateSkill: (id: string, updates: Partial<Skill>) => Promise<void>;
@@ -333,6 +345,17 @@ export const useTrackStore = create<TrackStore>()(
         newReflection.id, newReflection.date, newReflection.content, newReflection.type
       ]);
       set((state) => ({ reflections: [...state.reflections, newReflection] }));
+    },
+
+    addHistoricalEvent: async (event) => {
+      const id = `hist-${Date.now()}`;
+      const newEvent = { ...event, id };
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      await db.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
+        id, newEvent.title, newEvent.date, newEvent.type, newEvent.category, newEvent.description, JSON.stringify(newEvent.skills)
+      ]);
+      set((state) => ({ history: [...state.history, newEvent] }));
     },
 
     addInternship: async (internship) => {
@@ -701,6 +724,7 @@ export const useTrackStore = create<TrackStore>()(
         await db.query('DELETE FROM internships');
         await db.query('DELETE FROM reflections');
         await db.query('DELETE FROM transmissions');
+        await db.query('DELETE FROM stellar_history');
 
         // Import Profile
         if (data.profile) {
@@ -782,6 +806,15 @@ export const useTrackStore = create<TrackStore>()(
           }
         }
 
+        // Import History
+        if (data.history) {
+          for (const h of data.history) {
+            await db.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
+              h.id, h.title, h.date, h.type, h.category, h.description, JSON.stringify(h.skills)
+            ]);
+          }
+        }
+
         await db.query('COMMIT');
       } catch (err) {
         await db.query('ROLLBACK');
@@ -830,6 +863,11 @@ export const useTrackStore = create<TrackStore>()(
 
       const voids = (await db.query<VoidTask>(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`)).rows;
       const reflections = (await db.query<Reflection>(`SELECT id, date, content, type FROM reflections`)).rows;
+      const historyRaw = (await db.query<any>(`SELECT * FROM stellar_history`)).rows;
+      const history: HistoricalEvent[] = historyRaw.map(h => ({
+        ...h,
+        skills: JSON.parse(h.skills || '[]')
+      }));
       const skills = (await db.query<any>(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`)).rows;
       const internships = (await db.query<any>(`SELECT organization, start_date as "start", end_date as "end" FROM internships`)).rows;
       const transmissionsRaw = (await db.query<any>(`SELECT * FROM transmissions ORDER BY timestamp DESC`)).rows;
@@ -858,6 +896,7 @@ export const useTrackStore = create<TrackStore>()(
         tasks: standaloneTasks,
         voids,
         reflections,
+        history,
         skills,
         internships,
         transmissions

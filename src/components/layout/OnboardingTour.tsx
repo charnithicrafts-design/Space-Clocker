@@ -17,42 +17,49 @@ interface Step {
 const steps: Step[] = [
   {
     title: "Mission Briefing",
-    content: "Welcome, Cadet Valentina. You've been assigned to the Stellar Trajectory program. We've initialized a demo profile to show you how to navigate the cosmos.",
+    content: "Welcome, Cadet Nithya Dharshini. Your previous accolades in the ISRO Antarkish Hackathon and NASA Space Apps have been synchronized. We've initialized your trajectory toward the 2027 Scientist 'SC' mission.",
     icon: Rocket,
     target: "mission-briefing",
     route: "/"
   },
   {
+    title: "Stellar History",
+    content: "Your historical achievements—successes, misses, and tactical pivots—are now part of your Stellar Timeline. This history fuels your Momentum Engine and levels up your Astro-Technical rank.",
+    icon: CheckCircle2,
+    target: "history",
+    route: "/"
+  },
+  {
     title: "Momentum Engine",
-    content: "This is your Momentum Engine. It tracks your overall progress and macro ambitions. Notice how your level increases as you complete trajectories.",
+    content: "This is your Momentum Engine. It tracks your overall progress. Notice how your level (Rank 15) reflects your background in Cybersecurity and GIS.",
     icon: LayoutDashboard,
     target: "dashboard",
     route: "/"
   },
   {
     title: "Architect Mode",
-    content: "In Architect Mode (Nebula), you deconstruct macro ambitions into de-coupled milestones. Examine the 'Martian Colony' trajectory to see how sub-goals are structured.",
+    content: "In Architect Mode (Nebula), we've mapped your 2027 ISRO ambition into technical milestones like the IIRS PG Diploma. Deconstruct any mission here.",
     icon: Target,
     target: "nebula",
     route: "/nebula"
   },
   {
     title: "Daily Orbit",
-    content: "Manage your daily orbital tasks here. Use the 'Void Protocol' to identify and avoid distractions that might derail your mission.",
+    content: "Manage your daily orbital tasks, like Cybersecurity drills. Use the 'Void Protocol' to lock out distractions that threaten your 2027 trajectory.",
     icon: Clock,
     target: "orbit",
     route: "/orbit"
   },
   {
     title: "The Void",
-    content: "Visualize your technical proficiency in the Skills Matrix. Your goal is to expand your reach across all critical domains required for your future career.",
+    content: "Visualize your proficiency in the Skills Matrix. Your current mastery in GIS and Full Stack is impressive, but ISRO requires deep focus on Satellite Forensics.",
     icon: Brain,
     target: "skills",
     route: "/skills"
   },
   {
-    title: "Mission Ready",
-    content: "System check complete. You are now authorized to chart your own course through the stars. Good luck, Commander.",
+    title: "Launch Sequence",
+    content: "System check complete. Your path to ISRO/NASA is paved with your past victories. Chart your course to the stars, Commander Nithya.",
     icon: CheckCircle2,
     target: "complete",
     route: "/"

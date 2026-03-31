@@ -123,6 +123,16 @@ CREATE TABLE IF NOT EXISTS transmissions (
   raw_logs TEXT,
   metadata TEXT
 );
+
+CREATE TABLE IF NOT EXISTS stellar_history (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  date TEXT NOT NULL,
+  type TEXT NOT NULL,
+  category TEXT NOT NULL,
+  description TEXT,
+  skills TEXT
+);
 `;
 
 export async function initDb() {
@@ -144,6 +154,15 @@ export async function initDb() {
       ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS start_date TEXT;
       ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS end_date TEXT;
       ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS mission_metrics TEXT;
+      CREATE TABLE IF NOT EXISTS stellar_history (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        date TEXT NOT NULL,
+        type TEXT NOT NULL,
+        category TEXT NOT NULL,
+        description TEXT,
+        skills TEXT
+      );
     `);
   } catch (e) {
     console.error('Schema migration failed:', e);
