@@ -68,14 +68,15 @@
       "progress": 45,
       "xp": 1300,
       "horizon": "yearly",
+      "linkedSkills": ["sk-1", "sk-4", "sk-5"],
       "milestones": [
         {
           "id": "ms-1-1",
           "title": "IIRS PG Diploma in GIS",
           "status": "active",
           "tasks": [
-            { "id": "t-1-1-1", "title": "Master ArcGIS Pro & QGIS", "completed": true, "weightage": 50, "time": "08:00" },
-            { "id": "t-1-1-2", "title": "Geospatial Data Modeling Final Project", "completed": false, "weightage": 50, "time": "10:00" }
+            { "id": "t-1-1-1", "title": "Master ArcGIS Pro & QGIS", "completed": true, "weightage": 50, "time": "08:00", "horizon": "weekly", "plannedDate": "2026-03-30" },
+            { "id": "t-1-1-2", "title": "Geospatial Data Modeling Final Project", "completed": false, "weightage": 50, "time": "10:00", "horizon": "weekly", "plannedDate": "2026-04-05" }
           ]
         },
         {
@@ -83,8 +84,8 @@
           "title": "ISRO Technical Assistant Prep",
           "status": "pending",
           "tasks": [
-            { "id": "t-1-2-1", "title": "Advanced Linux System Admin", "completed": false, "weightage": 25, "time": "09:00" },
-            { "id": "t-1-2-2", "title": "Network Security Forensics", "completed": false, "weightage": 25, "time": "14:00" }
+            { "id": "t-1-2-1", "title": "Advanced Linux System Admin", "completed": false, "weightage": 25, "time": "09:00", "horizon": "daily", "plannedDate": "2026-04-01" },
+            { "id": "t-1-2-2", "title": "Network Security Forensics", "completed": false, "weightage": 25, "time": "14:00", "horizon": "daily", "plannedDate": "2026-04-01" }
           ]
         }
       ]
@@ -95,14 +96,15 @@
       "progress": 20,
       "xp": 600,
       "horizon": "yearly",
+      "linkedSkills": ["sk-1", "sk-2"],
       "milestones": [
         {
           "id": "ms-2-1",
           "title": "Open Data API Integration",
           "status": "active",
           "tasks": [
-            { "id": "t-2-1-1", "title": "NASA Earthdata Login API Setup", "completed": true, "weightage": 50, "time": "11:00" },
-            { "id": "t-2-1-2", "title": "Landsat 9 Data Stream Analysis", "completed": false, "weightage": 50, "time": "16:00" }
+            { "id": "t-2-1-1", "title": "NASA Earthdata Login API Setup", "completed": true, "weightage": 50, "time": "11:00", "horizon": "weekly", "plannedDate": "2026-03-29" },
+            { "id": "t-2-1-2", "title": "Landsat 9 Data Stream Analysis", "completed": false, "weightage": 50, "time": "16:00", "horizon": "weekly", "plannedDate": "2026-04-10" }
           ]
         }
       ]
@@ -113,14 +115,15 @@
       "progress": 10,
       "xp": 300,
       "horizon": "yearly",
+      "linkedSkills": ["sk-2", "sk-3", "sk-4"],
       "milestones": [
         {
           "id": "ms-3-1",
           "title": "AI/ML Current Path Acceleration",
           "status": "active",
           "tasks": [
-            { "id": "t-3-1-1", "title": "TensorFlow Quantum Integration", "completed": false, "weightage": 30, "time": "07:30" },
-            { "id": "t-3-1-2", "title": "Quantum-Enhanced Generative Models", "completed": false, "weightage": 40, "time": "15:00" }
+            { "id": "t-3-1-1", "title": "TensorFlow Quantum Integration", "completed": false, "weightage": 30, "time": "07:30", "horizon": "daily", "plannedDate": "2026-03-31" },
+            { "id": "t-3-1-2", "title": "Quantum-Enhanced Generative Models", "completed": false, "weightage": 40, "time": "15:00", "horizon": "daily", "plannedDate": "2026-03-31" }
           ]
         },
         {
@@ -128,7 +131,7 @@
           "title": "Quantum Software Stack (Cirq)",
           "status": "pending",
           "tasks": [
-            { "id": "t-3-2-1", "title": "Master Logical Qubit Error Correction", "completed": false, "weightage": 50, "time": "09:00" }
+            { "id": "t-3-2-1", "title": "Master Logical Qubit Error Correction", "completed": false, "weightage": 50, "time": "09:00", "horizon": "weekly", "plannedDate": "2026-04-15" }
           ]
         }
       ]
@@ -137,14 +140,14 @@
   "tasks": [
     { "id": "st-1", "title": "Quantum Algorithm Review", "completed": true, "time": "07:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-03-31" },
     { "id": "st-2", "title": "ISRO Exam Pattern Analysis", "completed": false, "time": "19:00", "horizon": "daily", "weightage": 30, "plannedDate": "2026-03-31" },
-    { "id": "st-3", "title": "Google Quantum AI Internship Prep", "completed": false, "time": "12:00", "horizon": "yearly", "deadline": "2027-01-01T23:59:59Z", "weightage": 100 }
+    { "id": "st-3", "title": "Google Quantum AI Internship Prep", "completed": false, "time": "12:00", "horizon": "yearly", "deadline": "2027-01-01T23:59:59Z", "weightage": 100, "plannedDate": "2026-06-01" }
   ],
   "skills": [
-    { "id": "sk-1", "name": "GIS & Remote Sensing", "currentProficiency": 80, "targetProficiency": 100, "recommendation": "Master Google Earth Engine and ArcPy." },
-    { "id": "sk-2", "name": "AI/ML & Deep Learning", "currentProficiency": 75, "targetProficiency": 95, "recommendation": "Focus on Quantum-Classical hybrid neural networks." },
-    { "id": "sk-3", "name": "Quantum Computing", "currentProficiency": 30, "targetProficiency": 90, "recommendation": "Study Milestone 5 Scale-up requirements at Google Quantum AI." },
-    { "id": "sk-4", "name": "Python for Science", "currentProficiency": 85, "targetProficiency": 95, "recommendation": "Review Cirq and TensorFlow Quantum." },
-    { "id": "sk-5", "name": "Cybersecurity", "currentProficiency": 60, "targetProficiency": 80, "recommendation": "Maintain baseline security protocols (Tech Mahindra Cert)." }
+    { "id": "sk-1", "name": "GIS & Remote Sensing", "currentProficiency": 80, "targetProficiency": 100, "recommendation": "Master Google Earth Engine and ArcPy.", "type": "ambition", "ambitionId": "amb-2" },
+    { "id": "sk-2", "name": "AI/ML & Deep Learning", "currentProficiency": 75, "targetProficiency": 95, "recommendation": "Focus on Quantum-Classical hybrid neural networks.", "type": "ambition", "ambitionId": "amb-3" },
+    { "id": "sk-3", "name": "Quantum Computing", "currentProficiency": 30, "targetProficiency": 90, "recommendation": "Study Milestone 5 Scale-up requirements at Google Quantum AI.", "type": "ambition", "ambitionId": "amb-3" },
+    { "id": "sk-4", "name": "Python for Science", "currentProficiency": 85, "targetProficiency": 95, "recommendation": "Review Cirq and TensorFlow Quantum.", "type": "ambition", "ambitionId": "amb-3" },
+    { "id": "sk-5", "name": "Cybersecurity", "currentProficiency": 60, "targetProficiency": 80, "recommendation": "Maintain baseline security protocols (Tech Mahindra Cert).", "type": "ambition", "ambitionId": "amb-1" }
   ],
   "voids": [
     { "id": "v-1", "text": "Social Media Doomscrolling", "impact": "high", "engagedCount": 8, "maxAllowed": 2 },

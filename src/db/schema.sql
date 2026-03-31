@@ -72,7 +72,8 @@ CREATE TABLE IF NOT EXISTS tasks (
   completed BOOLEAN DEFAULT false,
   horizon TEXT DEFAULT 'daily',
   planned_date TEXT,
-  is_void BOOLEAN DEFAULT false
+  is_void BOOLEAN DEFAULT false,
+  completed_at TEXT
 );
 
 -- Support Collections
@@ -121,4 +122,14 @@ CREATE TABLE IF NOT EXISTS transmissions (
   mission_metrics TEXT,
   raw_logs TEXT,
   metadata TEXT
+);
+
+CREATE TABLE IF NOT EXISTS stellar_history (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  date TEXT NOT NULL,
+  type TEXT NOT NULL, -- 'success' | 'missed' | 'failed'
+  category TEXT NOT NULL, -- 'internship' | 'hackathon' | 'certification' | 'academic' | 'project'
+  description TEXT,
+  skills TEXT -- JSON string of skill names
 );

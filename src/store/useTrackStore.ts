@@ -113,7 +113,13 @@ export interface Transmission {
     milestones: { id: string; title: string; ambitionTitle: string }[];
   };
   rawLogs: { tasksCompleted: number; totalTasks: number; focusHours: number };
-  metadata: { targetOrg?: 'NASA' | 'ISRO'; securityClearance: string; alignment2027?: string };
+  metadata: { 
+    targetOrg?: 'NASA' | 'ISRO' | 'GOOGLE'; 
+    securityClearance: string; 
+    alignment2027?: string;
+    targetAmbitionId?: string;
+    targetMilestoneId?: string;
+  };
 }
 
 interface TrackStore {
@@ -145,13 +151,23 @@ interface TrackStore {
   toggleTask: (taskId: string) => Promise<void>;
   addReflection: (content: string, type: Reflection['type']) => Promise<void>;
   addHistoricalEvent: (event: Omit<HistoricalEvent, 'id'>) => Promise<void>;
+  updateHistoricalEvent: (id: string, updates: Partial<HistoricalEvent>) => Promise<void>;
+  deleteHistoricalEvent: (id: string) => Promise<void>;
   addInternship: (internship: InternshipPeriod) => Promise<void>;
   addSkill: (name: string, current: number, target: number, recommendation: string, type: Skill['type'], ambitionId?: string) => Promise<void>;
   updateSkill: (id: string, updates: Partial<Skill>) => Promise<void>;
   deleteSkill: (id: string) => Promise<void>;
   
   // Transmission Actions
-  generateTransmission: (tier: Transmission['tier'], title: string, narrative: string, targetOrg?: 'NASA' | 'ISRO', dateRange?: { start: string; end: string }) => Promise<void>;
+  generateTransmission: (
+    tier: Transmission['tier'], 
+    title: string, 
+    narrative: string, 
+    targetOrg?: 'NASA' | 'ISRO' | 'GOOGLE', 
+    dateRange?: { start: string; end: string },
+    targetAmbitionId?: string,
+    targetMilestoneId?: string
+  ) => Promise<void>;
   deleteTransmission: (id: string) => Promise<void>;
 
   // Macro Engine Actions
@@ -359,6 +375,31 @@ export const useTrackStore = create<TrackStore>()(
       set((state) => ({ history: [...state.history, newEvent] }));
     },
 
+    updateHistoricalEvent: async (id, updates) => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      
+      if (updates.title !== undefined) await db.query(`UPDATE stellar_history SET title = $1 WHERE id = $2`, [updates.title, id]);
+      if (updates.date !== undefined) await db.query(`UPDATE stellar_history SET date = $1 WHERE id = $2`, [updates.date, id]);
+      if (updates.type !== undefined) await db.query(`UPDATE stellar_history SET type = $1 WHERE id = $2`, [updates.type, id]);
+      if (updates.category !== undefined) await db.query(`UPDATE stellar_history SET category = $1 WHERE id = $2`, [updates.category, id]);
+      if (updates.description !== undefined) await db.query(`UPDATE stellar_history SET description = $1 WHERE id = $2`, [updates.description, id]);
+      if (updates.skills !== undefined) await db.query(`UPDATE stellar_history SET skills = $1 WHERE id = $2`, [JSON.stringify(updates.skills), id]);
+      
+      set((state) => ({
+        history: state.history.map((h) => h.id === id ? { ...h, ...updates } : h)
+      }));
+    },
+
+    deleteHistoricalEvent: async (id) => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      await db.query(`DELETE FROM stellar_history WHERE id = $1`, [id]);
+      set((state) => ({
+        history: state.history.filter((h) => h.id !== id)
+      }));
+    },
+
     addInternship: async (internship) => {
       const id = Date.now().toString();
       const { getDb } = await import('../db/client');
@@ -403,116 +444,172 @@ export const useTrackStore = create<TrackStore>()(
       }));
     },
 
-    generateTransmission: async (tier, title, narrative, targetOrg, dateRange) => {
-      const state = get();
-      const { getDb } = await import('../db/client');
-      const db = getDb();
+    generateTransmission: async (tier, title, narrative, targetOrg, dateRange, targetAmbitionId, targetMilestoneId) => {
+      try {
+        const state = get();
+        const { getDb } = await import('../db/client');
+        const db = getDb();
 
-      // Filter tasks based on date range if provided
-      const filterByDate = (date?: string) => {
-        if (!dateRange || !date) return true;
-        
-        // Normalize to YYYY-MM-DD for comparison
-        const targetStr = date.split('T')[0];
-        const startStr = dateRange.start.split('T')[0];
-        const endStr = dateRange.end.split('T')[0];
-        
-        return targetStr >= startStr && targetStr <= endStr;
-      };
+        // Filter tasks based on date range if provided
+        const filterByDate = (date?: string) => {
+          if (!dateRange) return true;
+          if (!date) {
+            // If no date, only include in specific tiers
+            return tier === 'milestone' || tier === 'yearly' || tier === 'quarterly';
+          }
+          
+          // Normalize to YYYY-MM-DD for comparison
+          const targetStr = date.split('T')[0];
+          const startStr = dateRange.start.split('T')[0];
+          const endStr = dateRange.end.split('T')[0];
+          
+          return targetStr >= startStr && targetStr <= endStr;
+        };
 
-      const pdaReflections = state.reflections
-        .filter(r => filterByDate(r.date))
-        .map(r => r.content);
+        const pdaReflections = state.reflections
+          .filter(r => filterByDate(r.date))
+          .map(r => r.content);
 
-      const voidAnalysis = state.voids.map(v => ({ 
-        voidId: v.id, 
-        text: v.text, 
-        count: v.engagedCount, // In a real app, we'd filter engagements by date
-        impact: v.impact 
-      }));
-
-      const skillsReconciliation = state.skills.map(s => ({ 
-        skillId: s.id, 
-        name: s.name, 
-        delta: 0, 
-        current: s.currentProficiency 
-      }));
-
-      const allTasks = [
-        ...state.tasks,
-        ...state.ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks))
-      ].filter(t => filterByDate(t.plannedDate));
-
-      const accomplished = allTasks
-        .filter(t => t.completed)
-        .map(t => ({ 
-          id: t.id, 
-          title: t.title, 
-          weightage: t.weightage || 10,
-          horizon: t.horizon || 'daily'
+        const voidAnalysis = state.voids.map(v => ({ 
+          voidId: v.id, 
+          text: v.text, 
+          count: v.engagedCount, 
+          impact: v.impact 
         }));
 
-      const missed = allTasks
-        .filter(t => !t.completed)
-        .map(t => ({ 
-          id: t.id, 
-          title: t.title, 
-          weightage: t.weightage || 10,
-          horizon: t.horizon || 'daily'
-        }));
+        const skillsReconciliation = state.skills
+          .filter(s => !targetAmbitionId || s.ambitionId === targetAmbitionId)
+          .map(s => ({ 
+            skillId: s.id, 
+            name: s.name, 
+            delta: 0, 
+            current: s.currentProficiency 
+          }));
 
-      // Find milestones completed in this range (all their tasks completed and at least one task in this range)
-      const milestones = state.ambitions.flatMap(a => 
-        a.milestones
-          .filter(m => m.tasks.length > 0 && m.tasks.every(t => t.completed) && m.tasks.some(t => filterByDate(t.plannedDate)))
-          .map(m => ({ id: m.id, title: m.title, ambitionTitle: a.title }))
-      );
+        // Gather all potential tasks
+        let allPotentialTasks = [
+          ...state.tasks,
+          ...state.ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks))
+        ];
 
-      const accomplishedWeight = accomplished.reduce((acc, t) => acc + t.weightage, 0);
-      const missedWeight = missed.reduce((acc, t) => acc + t.weightage, 0);
-      const totalWeight = accomplishedWeight + missedWeight;
-      const reliabilityIndex = totalWeight > 0 ? Math.round((accomplishedWeight / totalWeight) * 100) : 100;
+        // Filter by ambition/milestone if targeted
+        if (targetAmbitionId) {
+          allPotentialTasks = allPotentialTasks.filter(t => {
+            const isDirect = state.tasks.find(st => st.id === t.id && st.ambitionId === targetAmbitionId);
+            const isMilestoneTask = state.ambitions.find(a => a.id === targetAmbitionId)?.milestones.some(m => m.tasks.some(mt => mt.id === t.id));
+            return isDirect || isMilestoneTask;
+          });
+        }
+        
+        if (targetMilestoneId) {
+          allPotentialTasks = allPotentialTasks.filter(t => {
+            return state.ambitions.some(a => a.milestones.find(m => m.id === targetMilestoneId)?.tasks.some(mt => mt.id === t.id));
+          });
+        }
 
-      const rawLogs = { 
-        tasksCompleted: accomplished.length, 
-        totalTasks: allTasks.length, 
-        focusHours: state.stats.totalFocusHours 
-      };
+        // Apply Horizon filtering based on Transmission Tier
+        const horizonFilteredTasks = allPotentialTasks.filter(t => {
+          if (tier === 'daily') return t.horizon === 'daily';
+          if (tier === 'weekly') return t.horizon === 'daily' || t.horizon === 'weekly';
+          return true;
+        });
 
-      // 2027 Alignment Check
-      const has2027Goal = allTasks.some(t => t.deadline?.includes('2027') || t.plannedDate?.includes('2027')) || 
-                         state.ambitions.some(a => a.title.includes('2027'));
-      const alignment2027 = has2027Goal ? 'STATIONED_FOR_NASA_2027' : 'GENERAL_ORBIT';
+        // Apply Date filtering
+        const filteredTasks = horizonFilteredTasks.filter(t => filterByDate(t.plannedDate));
 
-      const newTransmission: Transmission = {
-        id: `TX-${new Date().getFullYear()}-${tier.toUpperCase()}-${Date.now()}`,
-        timestamp: new Date().toISOString(),
-        tier,
-        title,
-        startDate: dateRange?.start,
-        endDate: dateRange?.end,
-        pdaNarrative: narrative,
-        pdaReflections,
-        voidAnalysis,
-        skillsReconciliation,
-        missionMetrics: { accomplished, missed, milestones },
-        rawLogs,
-        metadata: { targetOrg, securityClearance: 'LEVEL-1-UNCLASSIFIED', alignment2027 }
-      };
+        const accomplished = filteredTasks
+          .filter(t => t.completed)
+          .map(t => ({ 
+            id: t.id, 
+            title: t.title, 
+            weightage: t.weightage || 10,
+            horizon: t.horizon || 'daily'
+          }));
 
-      await db.query(
-        `INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
-        [
-          newTransmission.id, newTransmission.timestamp, newTransmission.tier, newTransmission.title, 
-          newTransmission.startDate, newTransmission.endDate, newTransmission.pdaNarrative,
-          JSON.stringify(newTransmission.pdaReflections), JSON.stringify(newTransmission.voidAnalysis), 
-          JSON.stringify(newTransmission.skillsReconciliation), JSON.stringify(newTransmission.missionMetrics),
-          JSON.stringify(newTransmission.rawLogs), JSON.stringify(newTransmission.metadata)
-        ]
-      );
+        const missed = filteredTasks
+          .filter(t => !t.completed)
+          .map(t => ({ 
+            id: t.id, 
+            title: t.title, 
+            weightage: t.weightage || 10,
+            horizon: t.horizon || 'daily'
+          }));
 
-      set(state => ({ transmissions: [newTransmission, ...state.transmissions] }));
+        const milestones = state.ambitions.flatMap(a => 
+          a.milestones
+            .filter(m => m.tasks.length > 0 && m.tasks.every(t => t.completed) && m.tasks.some(t => filterByDate(t.plannedDate)))
+            .map(m => ({ id: m.id, title: m.title, ambitionTitle: a.title }))
+        );
+
+        // If targeted, filter milestones too
+        let filteredMilestones = milestones;
+        if (targetAmbitionId) {
+          filteredMilestones = milestones.filter(m => state.ambitions.find(a => a.id === targetAmbitionId)?.milestones.some(am => am.id === m.id));
+        }
+
+        const accomplishedWeight = accomplished.reduce((acc, t) => acc + t.weightage, 0);
+        const missedWeight = missed.reduce((acc, t) => acc + t.weightage, 0);
+        const totalWeight = accomplishedWeight + missedWeight;
+        const reliabilityIndex = totalWeight > 0 ? Math.round((accomplishedWeight / totalWeight) * 100) : 100;
+
+        const rawLogs = { 
+          tasksCompleted: accomplished.length, 
+          totalTasks: filteredTasks.length, 
+          focusHours: state.stats.totalFocusHours 
+        };
+
+        // Refined Alignment logic
+        let alignment2027 = 'GENERAL_ORBIT';
+        const targetAmbition = targetAmbitionId ? state.ambitions.find(a => a.id === targetAmbitionId) : null;
+        if (targetAmbition) {
+          if (targetAmbition.title.includes('NASA')) alignment2027 = 'STATIONED_FOR_NASA_2027';
+          else if (targetAmbition.title.includes('ISRO')) alignment2027 = 'STATIONED_FOR_ISRO_2027';
+          else if (targetAmbition.title.includes('Google')) alignment2027 = 'STATIONED_FOR_GOOGLE_2028';
+        } else {
+          const has2027Goal = filteredTasks.some(t => t.deadline?.includes('2027') || t.plannedDate?.includes('2027')) || 
+                             state.ambitions.some(a => a.title.includes('2027'));
+          if (has2027Goal) alignment2027 = 'STATIONED_FOR_NASA_2027';
+        }
+
+        const newTransmission: Transmission = {
+          id: `TX-${new Date().getFullYear()}-${tier.toUpperCase()}-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          tier,
+          title,
+          startDate: dateRange?.start,
+          endDate: dateRange?.end,
+          pdaNarrative: narrative,
+          pdaReflections,
+          voidAnalysis,
+          skillsReconciliation,
+          missionMetrics: { accomplished, missed, milestones: filteredMilestones },
+          rawLogs,
+          metadata: { 
+            targetOrg, 
+            securityClearance: 'LEVEL-1-UNCLASSIFIED', 
+            alignment2027,
+            targetAmbitionId,
+            targetMilestoneId
+          }
+        };
+
+        await db.query(
+          `INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) 
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
+          [
+            newTransmission.id, newTransmission.timestamp, newTransmission.tier, newTransmission.title, 
+            newTransmission.startDate, newTransmission.endDate, newTransmission.pdaNarrative,
+            JSON.stringify(newTransmission.pdaReflections), JSON.stringify(newTransmission.voidAnalysis), 
+            JSON.stringify(newTransmission.skillsReconciliation), JSON.stringify(newTransmission.missionMetrics),
+            JSON.stringify(newTransmission.rawLogs), JSON.stringify(newTransmission.metadata)
+          ]
+        );
+
+        set(state => ({ transmissions: [newTransmission, ...state.transmissions] }));
+      } catch (error) {
+        console.error('Transmission generation failure:', error);
+        throw error;
+      }
     },
 
     deleteTransmission: async (id) => {
