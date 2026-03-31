@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTrackStore } from '../../store/useTrackStore';
+import { useTrackStore, Reflection } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 
 interface ReflectionModalProps {
@@ -17,7 +17,7 @@ const ReflectionModal: React.FC<ReflectionModalProps> = ({ isOpen, onClose, type
   const handleSubmit = async () => {
     if (!text.trim()) return;
     SoundManager.playSwell();
-    await addReflection(text, type);
+    await addReflection(text, type as Reflection['type']);
     setText('');
     onClose();
   };
