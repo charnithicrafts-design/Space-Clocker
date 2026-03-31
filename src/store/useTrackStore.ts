@@ -182,7 +182,7 @@ interface TrackStore {
 }
 
 const XP_PER_LEVEL = 1000;
-const RESONANCE_PER_AMBITION_LEVEL = 500; // Each ambition can also "level" its resonance
+const RESONANCE_PER_AMBITION_LEVEL = 2500; // Each ambition can also "level" its resonance
 
 export const useTrackStore = create<TrackStore>()(
   (set, get) => ({
