@@ -16,7 +16,9 @@ const RadarChart = ({ skills, showTarget }: { skills: Skill[], showTarget: boole
       id: `placeholder-${i}`,
       name: '---',
       currentProficiency: 0,
-      targetProficiency: 0
+      targetProficiency: 0,
+      recommendation: '',
+      type: 'personal' as const
     }))
   ];
 
@@ -141,7 +143,7 @@ const RadarChart = ({ skills, showTarget }: { skills: Skill[], showTarget: boole
   );
 };
 
-const SkillGapCard = ({ skill }: { skill: Skill }) => {
+const SkillGapCard: React.FC<{ skill: Skill }> = ({ skill }) => {
   const { updateSkill, deleteSkill, preferences } = useTrackStore();
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(skill.name);
