@@ -173,10 +173,12 @@ interface TrackStore {
   // Macro Engine Actions
   addMilestone: (ambitionId: string, title: string) => Promise<void>;
   updateMilestone: (ambitionId: string, milestoneId: string, title: string) => Promise<void>;
+  deleteMilestone: (ambitionId: string, milestoneId: string) => Promise<void>;
   addMilestoneTask: (ambitionId: string, milestoneId: string, title: string) => Promise<void>;
   updateMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string, title: string) => Promise<void>;
   deleteMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => Promise<void>;
   toggleMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => Promise<void>;
+  deleteAmbition: (id: string) => Promise<void>;
 
   // Data Portability Actions
   importData: (data: Partial<TrackStore>) => void;
@@ -671,6 +673,39 @@ export const useTrackStore = create<TrackStore>()(
           ...a,
           milestones: a.milestones.map((m) => m.id === milestoneId ? { ...m, tasks: m.tasks.filter((t) => t.id !== taskId) } : m)
         } : a)
+      }));
+    },
+
+    deleteMilestone: async (ambitionId, milestoneId) => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      // First delete tasks belonging to this milestone
+      await db.query(`DELETE FROM tasks WHERE milestone_id = $1`, [milestoneId]);
+      // Then delete the milestone
+      await db.query(`DELETE FROM milestones WHERE id = $1`, [milestoneId]);
+      
+      set((state) => ({
+        ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
+          ...a,
+          milestones: a.milestones.filter((m) => m.id !== milestoneId)
+        } : a)
+      }));
+    },
+
+    deleteAmbition: async (id) => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      // First delete tasks belonging to milestones of this ambition
+      await db.query(`DELETE FROM tasks WHERE milestone_id IN (SELECT id FROM milestones WHERE ambition_id = $1)`, [id]);
+      // Delete standalone tasks belonging to this ambition
+      await db.query(`DELETE FROM tasks WHERE ambition_id = $1`, [id]);
+      // Delete milestones
+      await db.query(`DELETE FROM milestones WHERE ambition_id = $1`, [id]);
+      // Delete the ambition
+      await db.query(`DELETE FROM ambitions WHERE id = $1`, [id]);
+      
+      set((state) => ({
+        ambitions: state.ambitions.filter((a) => a.id !== id)
       }));
     },
 

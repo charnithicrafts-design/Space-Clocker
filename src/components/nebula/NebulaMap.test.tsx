@@ -45,6 +45,8 @@ describe('NebulaMap', () => {
   const mockUpdateMilestone = vi.fn();
   const mockUpdateMilestoneTask = vi.fn();
   const mockDeleteMilestoneTask = vi.fn();
+  const mockDeleteMilestone = vi.fn();
+  const mockDeleteAmbition = vi.fn();
   const mockAddMilestoneTask = vi.fn();
 
   beforeEach(() => {
@@ -56,9 +58,11 @@ describe('NebulaMap', () => {
       toggleMilestoneTask: mockToggleMilestoneTask,
       updateAmbition: mockUpdateAmbition,
       updateMilestone: mockUpdateMilestone,
+      deleteMilestone: mockDeleteMilestone,
       updateMilestoneTask: mockUpdateMilestoneTask,
       deleteMilestoneTask: mockDeleteMilestoneTask,
       addMilestoneTask: mockAddMilestoneTask,
+      deleteAmbition: mockDeleteAmbition,
       preferences: { confirmDelete: false },
     });
   });
@@ -145,18 +149,11 @@ describe('NebulaMap', () => {
     render(<NebulaMap />);
     fireEvent.click(screen.getByText('Atmospheric Scrubber Installation'));
     
-    // Find delete button for the task (it has Trash2 icon)
-    // In our mock data, task-2 is not completed, so it should have a delete button when hovered
-    // Since we are in a test environment, we can just look for the button
-    const deleteButtons = screen.getAllByRole('button').filter(b => b.querySelector('svg'));
-    // Usually, we'd need a more specific selector, but let's try to find it by icon-like class if possible
-    // Or just click the first one that looks like a delete button
-    const taskDeleteButton = deleteButtons.find(b => b.className.includes('hover:text-error'));
+    // Find delete button for the task using aria-label
+    const taskDeleteButton = screen.getByLabelText('Delete task Verify O2 output');
 
     // Act
-    if (taskDeleteButton) {
-      fireEvent.click(taskDeleteButton);
-    }
+    fireEvent.click(taskDeleteButton);
 
     // Assert
     expect(mockDeleteMilestoneTask).toHaveBeenCalledWith('ambition-alpha', 'milestone-1', 'task-2');

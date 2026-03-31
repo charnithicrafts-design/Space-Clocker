@@ -16,9 +16,10 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
   const [newTaskTitle, setNewTaskTitle] = useState('');
   
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteMilestoneModalOpen, setIsDeleteMilestoneModalOpen] = useState(false);
   const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null);
 
-  const { toggleMilestoneTask, addMilestoneTask, updateMilestoneTask, updateMilestone, deleteMilestoneTask, preferences } = useTrackStore();
+  const { toggleMilestoneTask, addMilestoneTask, updateMilestoneTask, updateMilestone, deleteMilestoneTask, deleteMilestone, preferences } = useTrackStore();
   
   const totalTasks = milestone.tasks?.length || 0;
   const completedTasks = milestone.tasks?.filter((t: any) => t.completed).length || 0;
@@ -72,6 +73,21 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
     }
   };
 
+  const handleDeleteMilestone = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (preferences.confirmDelete) {
+      setIsDeleteMilestoneModalOpen(true);
+      return;
+    }
+    deleteMilestone(ambitionId, milestone.id);
+    SoundManager.playThud();
+  };
+
+  const handleDeleteMilestoneConfirm = () => {
+    deleteMilestone(ambitionId, milestone.id);
+    SoundManager.playThud();
+  };
+
   const startEditingMilestone = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsEditingMilestone(true);
@@ -110,12 +126,22 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
           ) : (
             <div className="flex items-center gap-2 group">
               <span className="font-bold text-white">{milestone.title}</span>
-              <button 
-                onClick={startEditingMilestone}
-                className="opacity-0 group-hover:opacity-100 p-1 hover:text-primary transition-all"
-              >
-                <Edit2 size={14} />
-              </button>
+              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                <button 
+                  onClick={startEditingMilestone}
+                  className="p-1 hover:text-primary transition-all"
+                  title="Edit Milestone"
+                >
+                  <Edit2 size={14} />
+                </button>
+                <button 
+                  onClick={handleDeleteMilestone}
+                  className="p-1 hover:text-error transition-all"
+                  title="Delete Milestone"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -164,17 +190,19 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
                 {!task.completed && editingTaskId !== task.id && (
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
                     <button 
-                      onClick={(e) => startEditingTask(e, task)}
-                      className="p-1 hover:text-primary"
-                    >
-                      <Edit2 size={12} />
-                    </button>
-                    <button 
-                      onClick={(e) => handleDeleteTask(e, task.id)}
-                      className="p-1 hover:text-error"
-                    >
-                      <Trash2 size={12} />
-                    </button>
+                  onClick={(e) => startEditingTask(e, task)}
+                  className="p-1 hover:text-primary"
+                  aria-label={`Edit task ${task.title}`}
+                >
+                  <Edit2 size={12} />
+                </button>
+                <button 
+                  onClick={(e) => handleDeleteTask(e, task.id)}
+                  className="p-1 hover:text-error"
+                  aria-label={`Delete task ${task.title}`}
+                >
+                  <Trash2 size={12} />
+                </button>
                   </div>
                 )}
               </div>
@@ -214,6 +242,15 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
         message="This task will be permanently removed from your stellar roadmap. Proceed with extraction?"
         confirmText="Confirm Extraction"
       />
+
+      <ConfirmModal 
+        isOpen={isDeleteMilestoneModalOpen}
+        onClose={() => setIsDeleteMilestoneModalOpen(false)}
+        onConfirm={handleDeleteMilestoneConfirm}
+        title="Collapse Milestone?"
+        message="This milestone and all its sub-tasks will be permanently archived into the void. Proceed?"
+        confirmText="Confirm Collapse"
+      />
     </div>
   );
 };
@@ -246,12 +283,13 @@ const ComputeRelayCard = () => (
 );
 
 const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: boolean; key?: any }) => {
-  const { addMilestone, updateAmbition } = useTrackStore();
+  const { addMilestone, updateAmbition, deleteAmbition, preferences } = useTrackStore();
   const [isOpen, setIsOpen] = useState(isPriority || false);
   const [isEditingAmbition, setIsEditingAmbition] = useState(false);
   const [editAmbitionTitle, setEditAmbitionTitle] = useState(ambition.title);
   const [newMilestoneTitle, setNewMilestoneTitle] = useState('');
   const [isAddingMilestone, setIsAddingMilestone] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleAddMilestone = (e: React.FormEvent) => {
     e.preventDefault();
@@ -275,6 +313,21 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
       SoundManager.playPop();
     }
     setIsEditingAmbition(false);
+  };
+
+  const handleDeleteAmbition = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (preferences.confirmDelete) {
+      setIsDeleteModalOpen(true);
+      return;
+    }
+    deleteAmbition(ambition.id);
+    SoundManager.playThud();
+  };
+
+  const handleDeleteConfirm = () => {
+    deleteAmbition(ambition.id);
+    SoundManager.playThud();
   };
 
   return (
@@ -312,12 +365,22 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
             ) : (
               <div className="flex items-center gap-3 group/title">
                 <h1 className={`${isPriority ? 'text-2xl' : 'text-lg'} font-display font-bold text-white mt-1`}>{ambition.title}</h1>
-                <button 
-                  onClick={startEditingAmbition}
-                  className="opacity-0 group-hover/title:opacity-100 p-1 hover:text-primary transition-all mt-1"
-                >
-                  <Edit2 size={16} />
-                </button>
+                <div className="flex items-center gap-1 opacity-0 group-hover/title:opacity-100 transition-all mt-1">
+                  <button 
+                    onClick={startEditingAmbition}
+                    className="p-1 hover:text-primary transition-all"
+                    title="Edit Trajectory"
+                  >
+                    <Edit2 size={16} />
+                  </button>
+                  <button 
+                    onClick={handleDeleteAmbition}
+                    className="p-1 hover:text-error transition-all"
+                    title="Abort Trajectory"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               </div>
             )}
             
@@ -382,6 +445,15 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
           </motion.section>
         )}
       </AnimatePresence>
+
+      <ConfirmModal 
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Abort Trajectory?"
+        message="This will permanently delete the entire trajectory, including all milestones and tasks. This action cannot be reversed."
+        confirmText="Confirm Abort"
+      />
     </motion.div>
   );
 };
