@@ -191,6 +191,7 @@ export const useTrackStore = create<TrackStore>()(
     tasks: [],
     voids: [],
     reflections: [],
+    history: [],
     internships: [],
     skills: [],
     transmissions: [],

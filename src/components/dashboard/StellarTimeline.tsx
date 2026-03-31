@@ -25,7 +25,9 @@ const TypeIcon = ({ type }: { type: HistoricalEvent['type'] }) => {
 const StellarTimeline = () => {
   const { history } = useTrackStore();
 
-  const sortedHistory = [...history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const sortedHistory = history && Array.isArray(history) 
+    ? [...history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    : [];
 
   return (
     <div className="space-y-6">
