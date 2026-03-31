@@ -19,9 +19,24 @@ const CategoryIcon = ({ category, size = 20, className = "" }: { category: Histo
 
 const TypeIcon = ({ type }: { type: HistoricalEvent['type'] }) => {
   switch (type) {
-    case 'success': return <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_rgba(var(--color-success-rgb),0.6)]" />;
-    case 'missed': return <div className="w-2 h-2 rounded-full bg-warning shadow-[0_0_8px_rgba(var(--color-warning-rgb),0.6)]" />;
-    case 'failed': return <div className="w-2 h-2 rounded-full bg-error shadow-[0_0_8px_rgba(var(--color-error-rgb),0.6)]" />;
+    case 'success': return (
+      <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 border border-success/30">
+        <div className="w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_8px_rgba(var(--color-success-rgb),0.6)]" />
+        <span className="text-[8px] font-black uppercase tracking-widest text-success">Mission Success</span>
+      </div>
+    );
+    case 'missed': return (
+      <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-warning/10 border border-warning/30">
+        <div className="w-1.5 h-1.5 rounded-full bg-warning shadow-[0_0_8px_rgba(var(--color-warning-rgb),0.6)]" />
+        <span className="text-[8px] font-black uppercase tracking-widest text-warning">Objective Missed</span>
+      </div>
+    );
+    case 'failed': return (
+      <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-error/10 border border-error/30">
+        <div className="w-1.5 h-1.5 rounded-full bg-error shadow-[0_0_8px_rgba(var(--color-error-rgb),0.6)]" />
+        <span className="text-[8px] font-black uppercase tracking-widest text-error">System Failure</span>
+      </div>
+    );
   }
 };
 
@@ -42,6 +57,15 @@ const StellarTimeline = () => {
     if (deleteEventId) {
       await deleteHistoricalEvent(deleteEventId);
       setDeleteEventId(null);
+    }
+  };
+
+  const getStatusColor = (type: HistoricalEvent['type']) => {
+    switch (type) {
+      case 'success': return 'border-success/20 hover:border-success/40';
+      case 'missed': return 'border-warning/20 hover:border-warning/40';
+      case 'failed': return 'border-error/20 hover:border-error/40';
+      default: return 'border-outline-variant/30 hover:border-primary/20';
     }
   };
 
@@ -81,14 +105,22 @@ const StellarTimeline = () => {
               className="relative group"
             >
               {/* Timeline Node */}
-              <div className="absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-surface-high border-2 border-outline-variant flex items-center justify-center z-10 group-hover:border-primary/50 transition-colors">
-                <CategoryIcon category={event.category} size={12} className="text-on-surface-variant group-hover:text-primary transition-colors" />
+              <div className={`absolute -left-8 top-1.5 w-6 h-6 rounded-full bg-surface-high border-2 flex items-center justify-center z-10 transition-colors ${
+                event.type === 'success' ? 'border-success/50 group-hover:bg-success/10' : 
+                event.type === 'missed' ? 'border-warning/50 group-hover:bg-warning/10' : 
+                'border-error/50 group-hover:bg-error/10'
+              }`}>
+                <CategoryIcon category={event.category} size={12} className={`${
+                  event.type === 'success' ? 'text-success' : 
+                  event.type === 'missed' ? 'text-warning' : 
+                  'text-error'
+                }`} />
               </div>
 
               {/* Content Card */}
-              <div className="glass-panel p-5 rounded-2xl border border-outline-variant/30 group-hover:border-primary/20 transition-all hover:bg-surface-high/30 relative overflow-hidden">
+              <div className={`glass-panel p-5 rounded-2xl border transition-all hover:bg-surface-high/30 relative overflow-hidden ${getStatusColor(event.type)}`}>
                 <div className="flex justify-between items-start mb-2 pr-8">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col gap-2">
                     <TypeIcon type={event.type} />
                     <h3 className="font-bold text-white group-hover:text-primary transition-colors">{event.title}</h3>
                   </div>

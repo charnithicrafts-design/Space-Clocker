@@ -19,6 +19,7 @@ export interface Task {
   plannedDate?: string;
   isVoid?: boolean;
   completedAt?: string;
+  ambitionId?: string;
 }
 
 export interface Milestone {
@@ -999,7 +1000,8 @@ export const useTrackStore = create<TrackStore>()(
             endTime: t.end_time,
             plannedDate: t.planned_date,
             isVoid: t.is_void === 1,
-            completedAt: t.completed_at
+            completedAt: t.completed_at,
+            ambitionId: t.ambition_id
           }))
         }))
       }));
@@ -1009,7 +1011,8 @@ export const useTrackStore = create<TrackStore>()(
         endTime: t.end_time,
         plannedDate: t.planned_date,
         isVoid: t.is_void === 1,
-        completedAt: t.completed_at
+        completedAt: t.completed_at,
+        ambitionId: t.ambition_id
       }));
 
       const voids = (await db.query<VoidTask>(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`)).rows;

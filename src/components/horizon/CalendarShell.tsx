@@ -32,7 +32,9 @@ import {
   AlertCircle, 
   CheckCircle2, 
   CircleDashed,
-  Play
+  Play,
+  Trophy,
+  Award
 } from 'lucide-react';
 import InternshipScheduler from './InternshipScheduler';
 
@@ -47,7 +49,7 @@ const parseLocalDate = (dateStr: string) => {
 };
 
 const CalendarShell = () => {
-  const { tasks, ambitions, internships } = useTrackStore();
+  const { tasks, ambitions, internships, history } = useTrackStore();
   const [horizon, setHorizon] = useState<Horizon>('daily');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -71,6 +73,10 @@ const CalendarShell = () => {
     return allTasks.filter(t => t.plannedDate && isSameDay(parseLocalDate(t.plannedDate), selectedDate));
   }, [allTasks, selectedDate]);
 
+  const selectedDayHistory = useMemo(() => {
+    return history.filter(h => isSameDay(parseISO(h.date), selectedDate));
+  }, [history, selectedDate]);
+
   const weeklyData = useMemo(() => {
     const start = startOfMonth(currentDate);
     const end = endOfMonth(currentDate);
@@ -87,12 +93,16 @@ const CalendarShell = () => {
           if (!t.plannedDate) return false;
           const taskDate = parseLocalDate(t.plannedDate);
           return taskDate >= currentWeekStart && taskDate <= weekEnd;
+        }),
+        history: history.filter(h => {
+          const eventDate = parseISO(h.date);
+          return eventDate >= currentWeekStart && eventDate <= weekEnd;
         })
       });
       currentWeekStart = addDays(currentWeekStart, 7);
     }
     return monthWeeks;
-  }, [allTasks, currentDate]);
+  }, [allTasks, history, currentDate]);
 
   const trajectoryYears = useMemo(() => {
     const currentYear = currentDate.getFullYear();
@@ -212,6 +222,7 @@ const CalendarShell = () => {
                     const isSelected = isSameDay(day, selectedDate);
                     const isCurrentMonth = isSameMonth(day, currentDate);
                     const dayTasks = allTasks.filter(t => t.plannedDate && isSameDay(parseLocalDate(t.plannedDate), day));
+                    const dayHistory = history.filter(h => isSameDay(parseISO(h.date), day));
                     
                     return (
                       <button
@@ -226,13 +237,14 @@ const CalendarShell = () => {
                         <span className={`text-sm font-bold ${isSelected ? 'text-primary' : 'text-white'}`}>
                           {format(day, 'd')}
                         </span>
-                        {dayTasks.length > 0 && (
-                          <div className="flex gap-0.5">
-                            {dayTasks.slice(0, 3).map((t, i) => (
-                              <div key={i} className={`w-1 h-1 rounded-full ${t.completed ? 'bg-success' : 'bg-primary'}`} />
-                            ))}
-                          </div>
-                        )}
+                        <div className="flex gap-0.5 mt-1">
+                          {dayTasks.slice(0, 2).map((t, i) => (
+                            <div key={`t-${i}`} className={`w-1 h-1 rounded-full ${t.completed ? 'bg-success' : 'bg-primary'}`} />
+                          ))}
+                          {dayHistory.slice(0, 2).map((h, i) => (
+                            <div key={`h-${i}`} className={`w-1 h-1 rounded-full ${h.type === 'success' ? 'bg-success' : 'bg-error'}`} />
+                          ))}
+                        </div>
                       </button>
                     );
                   })}
@@ -247,12 +259,29 @@ const CalendarShell = () => {
                   <CalendarIcon className="text-primary" size={20} />
                   <div>
                     <h3 className="font-display font-black uppercase text-sm tracking-tight">Mission Parameters</h3>
-                    <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">{format(selectedDate, 'EEEE, MMM do')}</p>
+                    <p className="text-[10px] text-on-surface-variant font-black uppercase tracking-widest">{format(selectedDate, 'EEEE, MMM do')}</p>
                   </div>
                 </div>
 
                 <div className="space-y-4">
-                  {selectedDayTasks.length === 0 ? (
+                  {selectedDayHistory.length > 0 && (
+                    <div className="space-y-3 mb-6">
+                      <div className="text-[9px] font-black uppercase text-secondary tracking-widest px-1">Historical Archive</div>
+                      {selectedDayHistory.map(event => (
+                        <div key={event.id} className="p-3 rounded-2xl bg-secondary/5 border border-secondary/20 flex gap-3 items-start">
+                          <Trophy size={14} className="text-secondary mt-0.5 shrink-0" />
+                          <div className="min-w-0">
+                            <div className="text-[10px] font-black text-white uppercase truncate">{event.title}</div>
+                            <div className={`text-[8px] font-black uppercase tracking-tighter mt-0.5 ${event.type === 'success' ? 'text-success' : 'text-error'}`}>
+                              {event.type === 'success' ? 'Achievement Unlocked' : 'Mission Record'}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {selectedDayTasks.length === 0 && selectedDayHistory.length === 0 ? (
                     <div className="py-12 text-center border border-dashed border-outline-variant rounded-2xl opacity-40">
                       <Clock size={32} className="mx-auto mb-2 text-on-surface-variant" />
                       <p className="text-[10px] font-black uppercase tracking-widest">No Orbital Activity</p>
@@ -306,6 +335,14 @@ const CalendarShell = () => {
                   </div>
                   
                   <div className="space-y-3 overflow-y-auto max-h-[300px] pr-2 custom-scrollbar">
+                    {/* Render History in Weekly */}
+                    {week.history.map(event => (
+                      <div key={event.id} className="p-3 rounded-xl text-[9px] font-black uppercase bg-secondary/10 border border-secondary/30 text-secondary flex items-center gap-2">
+                        <Trophy size={12} />
+                        <span className="truncate">{event.title}</span>
+                      </div>
+                    ))}
+
                     {week.tasks.map(task => {
                       const status = getTaskStatus(task);
                       return (
@@ -318,7 +355,7 @@ const CalendarShell = () => {
                         </div>
                       );
                     })}
-                    {week.tasks.length === 0 && (
+                    {week.tasks.length === 0 && week.history.length === 0 && (
                       <div className="text-[10px] text-center py-12 text-on-surface-variant uppercase tracking-widest font-bold italic opacity-30">
                         No Objectives
                       </div>
@@ -354,6 +391,25 @@ const CalendarShell = () => {
                   </div>
 
                   <div className="space-y-12">
+                    {/* Historical Events for this year */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 mb-4">
+                        <Award size={16} className="text-secondary" />
+                        <span className="text-xs font-black uppercase tracking-widest text-secondary">Chronicle Achievements</span>
+                      </div>
+                      <div className="flex flex-wrap gap-3">
+                        {history.filter(h => new Date(h.date).getFullYear() === year).map(event => (
+                          <div key={event.id} className="glass-panel p-3 px-5 rounded-2xl border border-secondary/30 bg-secondary/5 flex items-center gap-3 group hover:border-secondary transition-all">
+                            <div className={`w-2 h-2 rounded-full ${event.type === 'success' ? 'bg-success shadow-[0_0_10px_rgba(var(--color-success-rgb),0.5)]' : 'bg-error shadow-[0_0_10px_rgba(var(--color-error-rgb),0.5)]'}`} />
+                            <div className="flex flex-col">
+                              <span className="text-[10px] font-black text-white uppercase tracking-tight">{event.title}</span>
+                              <span className="text-[8px] font-bold text-on-surface-variant uppercase">{format(parseISO(event.date), 'MMMM do')}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
                     {/* Ambitions Roadmap for this year */}
                     <div className="space-y-8">
                       {ambitions.map(ambition => {

@@ -5,9 +5,9 @@ import { Brain, Target, Info, ChevronRight, Plus, Trash2, Edit3, Check, X, User,
 import { SoundManager } from '../../utils/SoundManager';
 
 const RadarChart = ({ skills, showTarget }: { skills: Skill[], showTarget: boolean }) => {
-  const size = 320;
+  const size = 400;
   const center = size / 2;
-  const radius = size * 0.4;
+  const radius = size * 0.3;
   
   // Radar chart needs at least 3 points to look like a polygon
   const displaySkills = skills.length >= 3 ? skills : [
@@ -81,15 +81,24 @@ const RadarChart = ({ skills, showTarget }: { skills: Skill[], showTarget: boole
 
         {/* Labels */}
         {displaySkills.map((s, i) => {
-          const { x, y } = getCoordinates(115, i);
+          const { x, y } = getCoordinates(120, i);
           const nameLines = s.name.split(' & ');
+          
+          // Dynamic text anchor based on position
+          let textAnchor = "middle";
+          if (x < center - 20) textAnchor = "end";
+          else if (x > center + 20) textAnchor = "start";
+
+          // Vertical adjustment
+          const dy = y < center - 20 ? -5 : y > center + 20 ? 15 : 5;
+
           return (
             <text
               key={i}
               x={x}
-              y={y}
-              textAnchor="middle"
-              className="fill-on-surface-variant text-[9px] font-black tracking-tighter uppercase"
+              y={y + dy}
+              textAnchor={textAnchor}
+              className="fill-on-surface-variant text-[10px] font-black tracking-tight uppercase"
             >
               {nameLines.map((line: string, idx: number) => (
                 <tspan key={idx} x={x} dy={idx === 0 ? 0 : 10}>{line}</tspan>

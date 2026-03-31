@@ -80,6 +80,7 @@ describe('CalendarShell', () => {
       tasks: mockTasks,
       ambitions: mockAmbitions,
       internships: mockInternships,
+      history: [],
     });
   });
 
