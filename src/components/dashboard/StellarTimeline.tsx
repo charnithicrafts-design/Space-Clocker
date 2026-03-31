@@ -3,14 +3,14 @@ import { motion } from 'framer-motion';
 import { useTrackStore, HistoricalEvent } from '../../store/useTrackStore';
 import { Trophy, Target, AlertCircle, Calendar, GraduationCap, Briefcase, Award, Zap } from 'lucide-react';
 
-const CategoryIcon = ({ category, size = 20 }: { category: HistoricalEvent['category'], size?: number }) => {
+const CategoryIcon = ({ category, size = 20, className = "" }: { category: HistoricalEvent['category'], size?: number, className?: string }) => {
   switch (category) {
-    case 'internship': return <Briefcase size={size} />;
-    case 'hackathon': return <Award size={size} />;
-    case 'certification': return <Trophy size={size} />;
-    case 'academic': return <GraduationCap size={size} />;
-    case 'project': return <Zap size={size} />;
-    default: return <Target size={size} />;
+    case 'internship': return <Briefcase size={size} className={className} />;
+    case 'hackathon': return <Award size={size} className={className} />;
+    case 'certification': return <Trophy size={size} className={className} />;
+    case 'academic': return <GraduationCap size={size} className={className} />;
+    case 'project': return <Zap size={size} className={className} />;
+    default: return <Target size={size} className={className} />;
   }
 };
 
