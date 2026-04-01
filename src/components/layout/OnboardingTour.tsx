@@ -124,28 +124,36 @@ const OnboardingTour = ({ onComplete }: { onComplete: () => void }) => {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full pt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full pt-4 relative z-20">
                 <button 
-                  onClick={handleStartWithDemo}
-                  className="flex flex-col items-center gap-4 p-6 rounded-3xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all group"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleStartWithDemo();
+                  }}
+                  className="flex flex-col items-center gap-4 p-6 rounded-3xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all group cursor-pointer"
                 >
-                  <div className="p-4 rounded-2xl bg-primary/20 text-primary group-hover:scale-110 transition-transform">
+                  <div className="p-4 rounded-2xl bg-primary/20 text-primary group-hover:scale-110 transition-transform pointer-events-none">
                     <Database size={24} />
                   </div>
-                  <div className="text-left">
+                  <div className="text-left pointer-events-none">
                     <div className="font-black text-white uppercase tracking-wider text-sm">Import Demo</div>
                     <div className="text-xs text-on-surface-variant">See a pre-configured flight plan</div>
                   </div>
                 </button>
 
                 <button 
-                  onClick={handleStartFromScratch}
-                  className="flex flex-col items-center gap-4 p-6 rounded-3xl bg-surface-high/10 border border-surface-high/20 hover:bg-surface-high/20 transition-all group"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleStartFromScratch();
+                  }}
+                  className="flex flex-col items-center gap-4 p-6 rounded-3xl bg-surface-high/10 border border-surface-high/20 hover:bg-surface-high/20 transition-all group cursor-pointer"
                 >
-                  <div className="p-4 rounded-2xl bg-surface-high/20 text-on-surface group-hover:scale-110 transition-transform">
+                  <div className="p-4 rounded-2xl bg-surface-high/20 text-on-surface group-hover:scale-110 transition-transform pointer-events-none">
                     <Eraser size={24} />
                   </div>
-                  <div className="text-left">
+                  <div className="text-left pointer-events-none">
                     <div className="font-black text-white uppercase tracking-wider text-sm">Start Fresh</div>
                     <div className="text-xs text-on-surface-variant">Initialize a clean mission slate</div>
                   </div>
