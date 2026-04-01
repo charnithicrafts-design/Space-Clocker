@@ -34,7 +34,8 @@ import {
   CircleDashed,
   Play,
   Trophy,
-  Award
+  Award,
+  BrainCircuit
 } from 'lucide-react';
 import InternshipScheduler from './InternshipScheduler';
 
@@ -49,7 +50,7 @@ const parseLocalDate = (dateStr: string) => {
 };
 
 const CalendarShell = () => {
-  const { tasks, ambitions, internships, history } = useTrackStore();
+  const { tasks, ambitions, internships, history, skills } = useTrackStore();
   const [horizon, setHorizon] = useState<Horizon>('daily');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -73,7 +74,7 @@ const CalendarShell = () => {
     return allTasks.filter(t => {
       if (!t.plannedDate || !isSameDay(parseLocalDate(t.plannedDate), selectedDate)) return false;
       
-      // Daily view logic
+      // Daily view logic (Matching Orbit side)
       if (horizon === 'daily') {
         // Milestone tasks should not be shown in daily timeline
         if (t.milestoneId) return false;
@@ -515,6 +516,39 @@ const CalendarShell = () => {
                           </div>
                         );
                       })}
+                    </div>
+
+                    {/* Skill Resonance Gap Analysis for this year */}
+                    <div className="pt-8 border-t border-outline-variant/20">
+                      <div className="flex items-center gap-3 mb-6">
+                        <BrainCircuit size={16} className="text-primary" />
+                        <span className="text-xs font-black uppercase tracking-widest text-primary">Skill Resonance Gap Analysis</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {skills.slice(0, 6).map(skill => (
+                          <div key={skill.id} className="glass-panel p-4 rounded-2xl border border-outline-variant hover:border-primary/30 transition-all">
+                            <div className="flex justify-between items-start mb-3">
+                              <span className="text-[10px] font-black uppercase tracking-widest text-white">{skill.name}</span>
+                              <span className="text-[10px] font-mono text-primary">{skill.currentProficiency}% → {skill.targetProficiency}%</span>
+                            </div>
+                            <div className="relative h-1.5 bg-surface-high rounded-full overflow-hidden">
+                              <div 
+                                className="absolute inset-y-0 left-0 bg-on-surface-variant/30"
+                                style={{ width: `${skill.targetProficiency}%` }}
+                              />
+                              <motion.div 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${skill.currentProficiency}%` }}
+                                className="absolute inset-y-0 left-0 bg-primary shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.5)]"
+                              />
+                            </div>
+                            <div className="mt-2 flex justify-between items-center">
+                               <span className="text-[8px] font-black uppercase tracking-tighter text-on-surface-variant">Resonance Gap</span>
+                               <span className="text-[8px] font-mono text-primary-container">+{skill.targetProficiency - skill.currentProficiency}% Required</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
                     {/* Internships for this year */}
