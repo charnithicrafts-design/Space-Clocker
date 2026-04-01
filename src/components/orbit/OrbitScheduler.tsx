@@ -31,7 +31,7 @@ const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
 ));
 
 const OrbitScheduler = () => {
-  const { tasks, toggleTask, addTask, updateTask, updateTaskDate, deleteTask, preferences, profile } = useTrackStore();
+  const { tasks, toggleTask, addTask, updateTask, updateTaskDate, deleteTask, preferences, profile, ambitions } = useTrackStore();
   const [activeHorizon, setActiveHorizon] = useState<OrbitHorizon>('daily');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
@@ -50,15 +50,53 @@ const OrbitScheduler = () => {
 
   const isPro = preferences.uiMode === 'professional';
 
+  // Consolidate all tasks (standalone + milestone tasks)
+  const allTasks = useMemo(() => {
+    const milestoneTasks = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks));
+    return [...tasks, ...milestoneTasks];
+  }, [tasks, ambitions]);
+
   // Filter tasks based on selected date and active horizon
   const filteredTasks = useMemo(() => {
     if (activeHorizon === 'void') return [];
-    return tasks.filter(t => {
-      const isCorrectHorizon = t.horizon === activeHorizon;
+    
+    return allTasks.filter(t => {
+      if (!t.plannedDate) return false;
+      
       const isCorrectDate = t.plannedDate === selectedDate;
-      return isCorrectHorizon && isCorrectDate;
+      
+      if (activeHorizon === 'daily') {
+        // Daily view logic:
+        // 1. Milestone tasks should not be shown in daily timeline
+        if (t.milestoneId) return false;
+        // 2. Daily tasks should be shown for the selected date
+        if (t.horizon === 'daily' && isCorrectDate) return true;
+        // 3. Weekly tasks' deadline can be shown in daily timeline
+        if (t.horizon === 'weekly' && t.deadline) {
+           const deadlineDate = t.deadline.split('T')[0];
+           return deadlineDate === selectedDate;
+        }
+        return false;
+      }
+      
+      if (activeHorizon === 'weekly') {
+        // Weekly view logic:
+        // 1. Daily tasks should not be shown in weekly timeline
+        if (t.horizon === 'daily') return false;
+        // 2. Milestone task's deadline should be shown in weekly timeline
+        if (t.milestoneId) {
+          if (!t.deadline) return false;
+          const deadlineDate = t.deadline.split('T')[0];
+          return deadlineDate === selectedDate;
+        }
+        // 3. Weekly tasks should be shown for the selected date
+        if (t.horizon === 'weekly' && isCorrectDate) return true;
+        return false;
+      }
+
+      return false;
     });
-  }, [tasks, activeHorizon, selectedDate]);
+  }, [allTasks, activeHorizon, selectedDate]);
 
   const anomalies = useMemo(() => analyzeSchedule(filteredTasks), [filteredTasks]);
 
