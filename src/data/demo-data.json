@@ -102,11 +102,15 @@
     }
   ],
   "tasks": [
+    { "id": "st-past-2", "title": "Orbital Decay Analysis - Initial Baseline", "completed": true, "time": "09:00", "horizon": "daily", "weightage": 10, "plannedDate": "2026-03-29" },
+    { "id": "st-past-3", "title": "Geospatial coordinate system setup", "completed": true, "time": "14:00", "horizon": "daily", "weightage": 15, "plannedDate": "2026-03-30" },
     { "id": "st-past-1", "title": "Orbit Prep: Satellite Telemetry Check", "completed": true, "time": "06:30", "horizon": "daily", "weightage": 15, "plannedDate": "2026-03-31" },
     { "id": "st-1", "title": "Daily Orbit: Quantum Algorithm Review", "completed": true, "time": "07:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-04-01" },
     { "id": "st-2", "title": "Weekly Objective: GIS Diploma Module 3", "completed": false, "time": "10:00", "horizon": "weekly", "weightage": 50, "plannedDate": "2026-04-01", "deadline": "2026-04-03T18:00:00Z" },
     { "id": "st-3", "title": "Daily Orbit: ISRO Exam Pattern Drill", "completed": false, "time": "19:00", "horizon": "daily", "weightage": 30, "plannedDate": "2026-04-01" },
-    { "id": "st-future-1", "title": "Future Sync: Deep Space Network Update", "completed": false, "time": "08:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-04-02" }
+    { "id": "st-future-1", "title": "Future Sync: Deep Space Network Update", "completed": false, "time": "08:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-04-02" },
+    { "id": "st-future-2", "title": "Stellar Mapping: Alpha Centauri Sector", "completed": false, "time": "21:00", "horizon": "daily", "weightage": 25, "plannedDate": "2026-04-02" },
+    { "id": "st-future-3", "title": "Exoplanet Atmosphere Simulation", "completed": false, "time": "11:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-04-03" }
   ],
   "skills": [
     { "id": "sk-2", "name": "AI/ML & Deep Learning", "currentProficiency": 75, "targetProficiency": 95, "recommendation": "Focus on Quantum-Classical hybrid neural networks.", "type": "ambition", "ambitionId": "amb-2" },
