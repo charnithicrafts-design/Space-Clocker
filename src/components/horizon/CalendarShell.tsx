@@ -72,19 +72,22 @@ const CalendarShell = () => {
 
   const selectedDayTasks = useMemo(() => {
     return allTasks.filter(t => {
-      if (!t.plannedDate || !isSameDay(parseLocalDate(t.plannedDate), selectedDate)) return false;
-      
+      const isCorrectDate = t.plannedDate && isSameDay(parseLocalDate(t.plannedDate), selectedDate);
+      const isDeadlineDate = t.deadline && isSameDay(parseISO(t.deadline), selectedDate);
+
       // Daily view logic (Matching Orbit side)
       if (horizon === 'daily') {
-        // Milestone tasks should not be shown in daily timeline
-        if (t.milestoneId) return false;
-        // Daily tasks should be shown
-        if (t.horizon === 'daily') return true;
-        // Weekly tasks' deadline can be shown in daily timeline
-        if (t.horizon === 'weekly' && t.deadline) return true;
+        // 1. Show Daily tasks for the selected date (standalone or milestone)
+        if (t.horizon === 'daily' && isCorrectDate) return true;
+        
+        // 2. Weekly tasks' deadline can be shown in daily timeline
+        if (t.horizon === 'weekly' && isDeadlineDate) return true;
+        
         return false;
       }
-      return true;
+      
+      // Default to plannedDate for other horizons (Weekly/Yearly)
+      return isCorrectDate;
     });
   }, [allTasks, selectedDate, horizon]);
 

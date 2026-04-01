@@ -67,11 +67,9 @@ const OrbitScheduler = () => {
       
       if (activeHorizon === 'daily') {
         // Daily view logic:
-        // 1. Milestone tasks should not be shown in daily timeline
-        if (t.milestoneId) return false;
-        // 2. Daily tasks should be shown for the selected date
+        // 1. Show Daily tasks for the selected date (standalone or milestone)
         if (t.horizon === 'daily' && isCorrectDate) return true;
-        // 3. Weekly tasks' deadline can be shown in daily timeline
+        // 2. Weekly tasks' deadline can be shown in daily timeline
         if (t.horizon === 'weekly' && t.deadline) {
            const deadlineDate = t.deadline.split('T')[0];
            return deadlineDate === selectedDate;
