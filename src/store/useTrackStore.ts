@@ -197,11 +197,11 @@ interface TrackStore {
   deleteVoidTask: (id: string) => Promise<void>;
   engageVoid: (voidId: string) => Promise<void>;
   importDemoData: (data: any) => Promise<void>;
+  clearAllData: () => Promise<void>;
   initialize: () => Promise<void>;
 }
 
 const XP_PER_LEVEL = 1000;
-const RESONANCE_PER_AMBITION_LEVEL = 2500; // Each ambition can also "level" its resonance
 
 export const useTrackStore = create<TrackStore>()(
   (set, get) => ({
@@ -453,19 +453,12 @@ export const useTrackStore = create<TrackStore>()(
         const { getDb } = await import('../db/client');
         const db = getDb();
 
-        // Filter tasks based on date range if provided
         const filterByDate = (date?: string) => {
           if (!dateRange) return true;
-          if (!date) {
-            // If no date, only include in specific tiers
-            return tier === 'milestone' || tier === 'yearly' || tier === 'quarterly';
-          }
-          
-          // Normalize to YYYY-MM-DD for comparison
+          if (!date) return tier === 'milestone' || tier === 'yearly' || tier === 'quarterly';
           const targetStr = date.split('T')[0];
           const startStr = dateRange.start.split('T')[0];
           const endStr = dateRange.end.split('T')[0];
-          
           return targetStr >= startStr && targetStr <= endStr;
         };
 
@@ -480,13 +473,11 @@ export const useTrackStore = create<TrackStore>()(
           impact: v.impact 
         }));
 
-        // Gather all potential tasks
         let allPotentialTasks = [
           ...state.tasks,
           ...state.ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks))
         ];
 
-        // Filter by ambition/milestone if targeted
         if (targetAmbitionId) {
           allPotentialTasks = allPotentialTasks.filter(t => {
             const isDirect = state.tasks.find(st => st.id === t.id && st.ambitionId === targetAmbitionId);
@@ -501,14 +492,12 @@ export const useTrackStore = create<TrackStore>()(
           });
         }
 
-        // Apply Horizon filtering based on Transmission Tier
         const horizonFilteredTasks = allPotentialTasks.filter(t => {
           if (tier === 'daily') return t.horizon === 'daily';
           if (tier === 'weekly') return t.horizon === 'daily' || t.horizon === 'weekly';
           return true;
         });
 
-        // Apply Date filtering
         const filteredTasks = horizonFilteredTasks.filter(t => filterByDate(t.plannedDate));
 
         const accomplished = filteredTasks
@@ -523,7 +512,6 @@ export const useTrackStore = create<TrackStore>()(
         const skillsReconciliation = state.skills
           .filter(s => !targetAmbitionId || s.ambitionId === targetAmbitionId)
           .map(s => {
-            // Calculate a small delta if tasks were accomplished for this ambition
             let delta = 0;
             if (accomplished.length > 0) {
               const relevantTasks = accomplished.filter(t => {
@@ -531,16 +519,9 @@ export const useTrackStore = create<TrackStore>()(
                 const isMilestoneTask = state.ambitions.find(a => a.id === s.ambitionId)?.milestones.some(m => m.tasks.some(mt => mt.id === t.id));
                 return isDirect || isMilestoneTask;
               });
-              
-              if (relevantTasks.length > 0) {
-                // Each task adds 1-2% proficiency delta for the demo
-                delta = relevantTasks.length + Math.floor(Math.random() * 2);
-              } else if (!targetAmbitionId) {
-                // If it's a general report, give a small boost to all skills if anything was accomplished
-                delta = Math.min(2, accomplished.length);
-              }
+              if (relevantTasks.length > 0) delta = relevantTasks.length + Math.floor(Math.random() * 2);
+              else if (!targetAmbitionId) delta = Math.min(2, accomplished.length);
             }
-
             return { 
               skillId: s.id, 
               name: s.name, 
@@ -564,16 +545,8 @@ export const useTrackStore = create<TrackStore>()(
             .map(m => ({ id: m.id, title: m.title, ambitionTitle: a.title }))
         );
 
-        // If targeted, filter milestones too
         let filteredMilestones = milestones;
-        if (targetAmbitionId) {
-          filteredMilestones = milestones.filter(m => state.ambitions.find(a => a.id === targetAmbitionId)?.milestones.some(am => am.id === m.id));
-        }
-
-        const accomplishedWeight = accomplished.reduce((acc, t) => acc + t.weightage, 0);
-        const missedWeight = missed.reduce((acc, t) => acc + t.weightage, 0);
-        const totalWeight = accomplishedWeight + missedWeight;
-        const reliabilityIndex = totalWeight > 0 ? Math.round((accomplishedWeight / totalWeight) * 100) : 100;
+        if (targetAmbitionId) filteredMilestones = milestones.filter(m => state.ambitions.find(a => a.id === targetAmbitionId)?.milestones.some(am => am.id === m.id));
 
         const rawLogs = { 
           tasksCompleted: accomplished.length, 
@@ -581,7 +554,6 @@ export const useTrackStore = create<TrackStore>()(
           focusHours: state.stats.totalFocusHours 
         };
 
-        // Refined Alignment logic
         let alignment2027 = 'GENERAL_ORBIT';
         const targetAmbition = targetAmbitionId ? state.ambitions.find(a => a.id === targetAmbitionId) : null;
         if (targetAmbition) {
@@ -700,11 +672,8 @@ export const useTrackStore = create<TrackStore>()(
     deleteMilestone: async (ambitionId, milestoneId) => {
       const { getDb } = await import('../db/client');
       const db = getDb();
-      // First delete tasks belonging to this milestone
       await db.query(`DELETE FROM tasks WHERE milestone_id = $1`, [milestoneId]);
-      // Then delete the milestone
       await db.query(`DELETE FROM milestones WHERE id = $1`, [milestoneId]);
-      
       set((state) => ({
         ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
           ...a,
@@ -716,15 +685,10 @@ export const useTrackStore = create<TrackStore>()(
     deleteAmbition: async (id) => {
       const { getDb } = await import('../db/client');
       const db = getDb();
-      // First delete tasks belonging to milestones of this ambition
       await db.query(`DELETE FROM tasks WHERE milestone_id IN (SELECT id FROM milestones WHERE ambition_id = $1)`, [id]);
-      // Delete standalone tasks belonging to this ambition
       await db.query(`DELETE FROM tasks WHERE ambition_id = $1`, [id]);
-      // Delete milestones
       await db.query(`DELETE FROM milestones WHERE ambition_id = $1`, [id]);
-      // Delete the ambition
       await db.query(`DELETE FROM ambitions WHERE id = $1`, [id]);
-      
       set((state) => ({
         ambitions: state.ambitions.filter((a) => a.id !== id)
       }));
@@ -756,98 +720,70 @@ export const useTrackStore = create<TrackStore>()(
           newStatus = allTasksCompleted ? 'completed' : (newTasks.some(t => t.completed) ? 'active' : 'pending');
           return { ...m, tasks: newTasks, status: newStatus };
         });
-
         const totalTasks = newMilestones.reduce((acc, m) => acc + m.tasks.length, 0);
         const completedTasks = newMilestones.reduce((acc, m) => acc + m.tasks.filter(t => t.completed).length, 0);
         newProgress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : a.progress;
-        
-        // Update Resonance Energy for this ambition
-        ambitionXp = a.xp + xpGain;
-        if (ambitionXp < 0) ambitionXp = 0;
-
+        ambitionXp = Math.max(0, a.xp + xpGain);
         return { ...a, milestones: newMilestones, progress: newProgress, xp: ambitionXp };
       });
 
-      // Global Momentum Level
       let newXp = state.profile.xp + xpGain;
       let newLevel = state.profile.level;
       if (newXp >= XP_PER_LEVEL) { newLevel += 1; newXp -= XP_PER_LEVEL; }
       else if (newXp < 0 && newLevel > 1) { newLevel -= 1; newXp += XP_PER_LEVEL; }
-      else if (newXp < 0) { newXp = 0; }
+      else if (newXp < 0) newXp = 0;
 
       const { getDb } = await import('../db/client');
       const db = getDb();
-      if (updatedTask) {
-        await db.query(`UPDATE tasks SET completed = $1, completed_at = $2 WHERE id = $3`, [updatedTask.completed, updatedTask.completedAt || null, taskId]);
-      }
+      if (updatedTask) await db.query(`UPDATE tasks SET completed = $1, completed_at = $2 WHERE id = $3`, [updatedTask.completed, updatedTask.completedAt || null, taskId]);
       await db.query(`UPDATE milestones SET status = $1 WHERE id = $2`, [newStatus, milestoneId]);
       await db.query(`UPDATE ambitions SET progress = $1, xp = $2 WHERE id = $3`, [newProgress, ambitionXp, ambitionId]);
       await db.query(`UPDATE profile SET xp = $1, level = $2 WHERE id = 1`, [newXp, newLevel]);
-
       set({ ambitions: newAmbitions, profile: { ...state.profile, xp: newXp, level: newLevel } });
     },
 
     importData: (data) => set((state) => ({ ...state, ...data })),
-
     updateOracleConfig: (config) => set((state) => ({ oracleConfig: { ...state.oracleConfig, ...config } })),
-    
     updateProfile: (updates) => set((state) => {
       const newProfile = { ...state.profile, ...updates };
       import('../db/client').then(({ getDb }) => {
         const db = getDb();
-        db.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
-          newProfile.name, newProfile.level, newProfile.xp, newProfile.title
-        ]);
+        db.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [newProfile.name, newProfile.level, newProfile.xp, newProfile.title]);
       });
       return { profile: newProfile };
     }),
-
     updatePreferences: (updates) => set((state) => {
       const newPrefs = { ...state.preferences, ...updates };
       import('../db/client').then(({ getDb }) => {
         const db = getDb();
-        db.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [
-          newPrefs.confirmDelete, newPrefs.uiMode
-        ]);
+        db.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [newPrefs.confirmDelete, newPrefs.uiMode]);
       });
       return { preferences: newPrefs };
     }),
-
     addOracleLog: (log, response) => set((state) => ({
       reflections: [...state.reflections, { id: Date.now().toString(), date: new Date().toISOString(), content: response ? `${log}\n\nOracle Response: ${response}` : log, type: 'daily-summary' }]
     })),
-
     addVoidTask: async (text, impact, maxAllowed) => {
       const newVoid: VoidTask = { id: `v-${Date.now()}`, text, impact, engagedCount: 0, maxAllowed };
       const { getDb } = await import('../db/client');
       const db = getDb();
-      await db.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [
-        newVoid.id, newVoid.text, newVoid.impact, newVoid.engagedCount, newVoid.maxAllowed
-      ]);
+      await db.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [newVoid.id, newVoid.text, newVoid.impact, newVoid.engagedCount, newVoid.maxAllowed]);
       set((state) => ({ voids: [...state.voids, newVoid] }));
     },
-
     updateVoidTask: async (id, updates) => {
       const { getDb } = await import('../db/client');
       const db = getDb();
       if (updates.text !== undefined) await db.query(`UPDATE void_tasks SET text = $1 WHERE id = $2`, [updates.text, id]);
       if (updates.impact !== undefined) await db.query(`UPDATE void_tasks SET impact = $1 WHERE id = $2`, [updates.impact, id]);
       if (updates.maxAllowed !== undefined) await db.query(`UPDATE void_tasks SET max_allowed = $1 WHERE id = $2`, [updates.maxAllowed, id]);
-      
-      set((state) => ({
-        voids: state.voids.map((v) => v.id === id ? { ...v, ...updates } : v)
-      }));
+      set((state) => ({ voids: state.voids.map((v) => v.id === id ? { ...v, ...updates } : v) }));
     },
-
     deleteVoidTask: async (id) => {
       const { getDb } = await import('../db/client');
       const db = getDb();
       await db.query(`DELETE FROM void_tasks WHERE id = $1`, [id]);
-      set((state) => ({
-        voids: state.voids.filter((v) => v.id !== id)
-      }));
+      set((state) => ({ voids: state.voids.filter((v) => v.id !== id) }));
     },
-
     engageVoid: async (voidId) => {
       const state = get();
       const v = state.voids.find((v) => v.id === voidId);
@@ -856,20 +792,15 @@ export const useTrackStore = create<TrackStore>()(
         const { getDb } = await import('../db/client');
         const db = getDb();
         await db.query(`UPDATE void_tasks SET engaged_count = $1 WHERE id = $2`, [newCount, voidId]);
-        set((state) => ({
-          voids: state.voids.map((v) => v.id === voidId ? { ...v, engagedCount: newCount } : v)
-        }));
+        set((state) => ({ voids: state.voids.map((v) => v.id === voidId ? { ...v, engagedCount: newCount } : v) }));
       }
     },
 
-    importDemoData: async (data: any) => {
+    clearAllData: async () => {
       const { getDb } = await import('../db/client');
       const db = getDb();
-
       try {
         await db.transaction(async (tx) => {
-          // Clear existing data (except metadata/config)
-          // The order of DELETE is important for FK constraints if not using CASCADE properly
           await tx.query('DELETE FROM tasks');
           await tx.query('DELETE FROM milestones');
           await tx.query('DELETE FROM ambitions');
@@ -879,93 +810,72 @@ export const useTrackStore = create<TrackStore>()(
           await tx.query('DELETE FROM reflections');
           await tx.query('DELETE FROM transmissions');
           await tx.query('DELETE FROM stellar_history');
+          await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, ['Valentina', 1, 0, 'Galactic Voyager']);
+          await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [true, 'simple']);
+          await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [0, 0, 0]);
+        });
+      } catch (err) {
+        console.error('Data clear failed:', err);
+        throw err;
+      }
+      await get().initialize();
+    },
 
-          // Import Profile
-          if (data.profile) {
-            await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
-              data.profile.name, data.profile.level, data.profile.xp, data.profile.title
-            ]);
-          }
-
-          // Import Preferences
-          if (data.preferences) {
-            await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [
-              data.preferences.confirmDelete, data.preferences.uiMode
-            ]);
-          }
-
-          // Import Stats
-          if (data.stats) {
-            await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [
-              data.stats.streak, data.stats.tasksCompleted, data.stats.totalFocusHours
-            ]);
-          }
-
-          // Import Ambitions, Milestones, and Milestone Tasks
+    importDemoData: async (data: any) => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      try {
+        await db.transaction(async (tx) => {
+          await tx.query('DELETE FROM tasks');
+          await tx.query('DELETE FROM milestones');
+          await tx.query('DELETE FROM ambitions');
+          await tx.query('DELETE FROM void_tasks');
+          await tx.query('DELETE FROM skills');
+          await tx.query('DELETE FROM internships');
+          await tx.query('DELETE FROM reflections');
+          await tx.query('DELETE FROM transmissions');
+          await tx.query('DELETE FROM stellar_history');
+          if (data.profile) await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [data.profile.name, data.profile.level, data.profile.xp, data.profile.title]);
+          if (data.preferences) await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [data.preferences.confirmDelete, data.preferences.uiMode]);
+          if (data.stats) await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [data.stats.streak, data.stats.tasksCompleted, data.stats.totalFocusHours]);
           if (data.ambitions) {
             for (const a of data.ambitions) {
-              await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [
-                a.id, a.title, a.progress, a.xp, a.horizon
-              ]);
+              await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [a.id, a.title, a.progress, a.xp, a.horizon]);
               if (a.milestones) {
                 for (const m of a.milestones) {
-                  await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [
-                    m.id, a.id, m.title, m.status
-                  ]);
+                  await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [m.id, a.id, m.title, m.status]);
                   if (m.tasks) {
                     for (const t of m.tasks) {
-                      await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`, [
-                        t.id, m.id, a.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt
-                      ]);
+                      await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`, [t.id, m.id, a.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt]);
                     }
                   }
                 }
               }
             }
           }
-
-          // Import Standalone Tasks
           if (data.tasks) {
             for (const t of data.tasks) {
-              await tx.query(`INSERT INTO tasks (id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [
-                t.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt
-              ]);
+              await tx.query(`INSERT INTO tasks (id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [t.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt]);
             }
           }
-
-          // Import Voids
           if (data.voids) {
             for (const v of data.voids) {
-              await tx.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [
-                v.id, v.text, v.impact, v.engagedCount, v.maxAllowed
-              ]);
+              await tx.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [v.id, v.text, v.impact, v.engagedCount, v.maxAllowed]);
             }
           }
-
-          // Import Skills
           if (data.skills) {
             for (const s of data.skills) {
-              await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
-                s.id, s.name, s.current_proficiency || s.currentProficiency, s.target_proficiency || s.targetProficiency, s.recommendation, s.type || 'personal', s.ambition_id || s.ambitionId
-              ]);
+              await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [s.id, s.name, s.current_proficiency || s.currentProficiency, s.target_proficiency || s.targetProficiency, s.recommendation, s.type || 'personal', s.ambition_id || s.ambitionId]);
             }
           }
-
-          // Import Internships
           if (data.internships) {
             for (const i of data.internships) {
-              await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [
-                `intern-${Date.now()}-${Math.random()}`, i.organization, i.start, i.end
-              ]);
+              await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [`intern-${Date.now()}-${Math.random()}`, i.organization, i.start, i.end]);
             }
           }
-
-          // Import History
           if (data.history) {
             for (const h of data.history) {
-              await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
-                h.id, h.title, h.date, h.type, h.category, h.description, JSON.stringify(h.skills)
-              ]);
+              await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [h.id, h.title, h.date, h.type, h.category, h.description, JSON.stringify(h.skills)]);
             }
           }
         });
@@ -973,23 +883,19 @@ export const useTrackStore = create<TrackStore>()(
         console.error('Demo data import failed:', err);
         throw err;
       }
-
       await get().initialize();
     },
 
     initialize: async () => {
       const { getDb } = await import('../db/client');
       const db = getDb();
-      
       const profile = (await db.query<Profile>(`SELECT name, level, xp, title FROM profile WHERE id = 1`)).rows[0];
       const preferences = (await db.query<any>(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`)).rows[0];
       const stats = (await db.query<any>(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`)).rows[0];
       const oracleConfig = (await db.query<OracleConfig>(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`)).rows[0];
-      
       const ambitionsRaw = (await db.query<any>(`SELECT * FROM ambitions`)).rows;
       const milestonesRaw = (await db.query<any>(`SELECT * FROM milestones`)).rows;
       const tasksRaw = (await db.query<any>(`SELECT * FROM tasks`)).rows;
-      
       const ambitions: Ambition[] = ambitionsRaw.map(a => ({
         ...a,
         xp: a.xp || 0,
@@ -1005,7 +911,6 @@ export const useTrackStore = create<TrackStore>()(
           }))
         }))
       }));
-
       const standaloneTasks = tasksRaw.filter(t => !t.milestone_id).map(t => ({
         ...t,
         endTime: t.end_time,
@@ -1014,14 +919,10 @@ export const useTrackStore = create<TrackStore>()(
         completedAt: t.completed_at,
         ambitionId: t.ambition_id
       }));
-
       const voids = (await db.query<VoidTask>(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`)).rows;
       const reflections = (await db.query<Reflection>(`SELECT id, date, content, type FROM reflections`)).rows;
       const historyRaw = (await db.query<any>(`SELECT * FROM stellar_history`)).rows;
-      const history: HistoricalEvent[] = historyRaw.map(h => ({
-        ...h,
-        skills: JSON.parse(h.skills || '[]')
-      }));
+      const history: HistoricalEvent[] = historyRaw.map(h => ({ ...h, skills: JSON.parse(h.skills || '[]') }));
       const skills = (await db.query<any>(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`)).rows;
       const internships = (await db.query<any>(`SELECT organization, start_date as "start", end_date as "end" FROM internships`)).rows;
       const transmissionsRaw = (await db.query<any>(`SELECT * FROM transmissions ORDER BY timestamp DESC`)).rows;
@@ -1040,7 +941,6 @@ export const useTrackStore = create<TrackStore>()(
         rawLogs: JSON.parse(tx.raw_logs || '{}'),
         metadata: JSON.parse(tx.metadata || '{}')
       }));
-
       set({
         profile: profile || get().profile,
         preferences: preferences || get().preferences,
