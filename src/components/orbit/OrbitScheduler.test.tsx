@@ -68,7 +68,9 @@ describe('OrbitScheduler', () => {
       updateTask: mockUpdateTask,
       updateTaskDate: mockUpdateTaskDate,
       profile: mockProfile,
-      preferences: mockPreferences
+      preferences: mockPreferences,
+      ambitions: [],
+      skills: []
     });
     vi.stubGlobal('confirm', vi.fn().mockReturnValue(true));
   });
