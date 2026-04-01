@@ -13,6 +13,9 @@ export default defineConfig(({mode}) => {
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+        workbox: {
+          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+        },
         manifest: {
           name: 'Space-Clocker',
           short_name: 'SpaceClocker',
@@ -41,6 +44,18 @@ export default defineConfig(({mode}) => {
         }
       })
     ],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+            'ui-vendor': ['framer-motion', 'motion', 'lucide-react', 'clsx', 'tailwind-merge'],
+            'db-vendor': ['@electric-sql/pglite'],
+          },
+        },
+      },
+      chunkSizeWarningLimit: 1000,
+    },
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },
