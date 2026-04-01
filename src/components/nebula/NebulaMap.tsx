@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send, Rocket, X, Edit2, Trash2 } from 'lucide-react';
+import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send, Rocket, X, Edit2, Trash2, Timer, AlertTriangle, Calendar } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 import CommandModal from '../layout/CommandModal';
@@ -12,8 +12,18 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [isEditingMilestone, setIsEditingMilestone] = useState(false);
   const [editMilestoneTitle, setEditMilestoneTitle] = useState(milestone.title);
+  
   const [editTaskTitle, setEditTaskTitle] = useState('');
+  const [editTaskTime, setEditTaskTime] = useState('');
+  const [editTaskEndTime, setEditTaskEndTime] = useState('');
+  const [editTaskDeadline, setEditTaskDeadline] = useState('');
+  const [editTaskDate, setEditTaskDate] = useState('');
+
   const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [newTime, setNewTime] = useState('09:00');
+  const [newEndTime, setNewEndTime] = useState('');
+  const [newDeadline, setNewDeadline] = useState('');
+  const [newDate, setNewDate] = useState(new Date().toISOString().split('T')[0]);
   
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteMilestoneModalOpen, setIsDeleteMilestoneModalOpen] = useState(false);
@@ -27,9 +37,17 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
   const handleAddTask = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTaskTitle.trim()) return;
-    addMilestoneTask(ambitionId, milestone.id, newTaskTitle);
+    addMilestoneTask(ambitionId, milestone.id, newTaskTitle, {
+      time: newTime,
+      endTime: newEndTime || undefined,
+      deadline: newDeadline || undefined,
+      plannedDate: newDate,
+      horizon: 'daily'
+    });
     SoundManager.playPop();
     setNewTaskTitle('');
+    setNewEndTime('');
+    setNewDeadline('');
     setIsAddingTask(false);
   };
 
@@ -43,12 +61,22 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
     if (task.completed) return;
     setEditingTaskId(task.id);
     setEditTaskTitle(task.title);
+    setEditTaskTime(task.time || '09:00');
+    setEditTaskEndTime(task.endTime || '');
+    setEditTaskDeadline(task.deadline || '');
+    setEditTaskDate(task.plannedDate || new Date().toISOString().split('T')[0]);
   };
 
   const saveTaskEdit = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingTaskId && editTaskTitle.trim()) {
-      updateMilestoneTask(ambitionId, milestone.id, editingTaskId, editTaskTitle);
+      updateMilestoneTask(ambitionId, milestone.id, editingTaskId, {
+        title: editTaskTitle,
+        time: editTaskTime,
+        endTime: editTaskEndTime || undefined,
+        deadline: editTaskDeadline || undefined,
+        plannedDate: editTaskDate
+      });
       SoundManager.playPop();
     }
     setEditingTaskId(null);
@@ -161,50 +189,102 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
             {milestone.tasks.map((task: any) => (
               <div 
                 key={task.id} 
-                className="flex items-center gap-2 py-2 text-sm group"
+                className="flex flex-col py-3 border-b border-surface-high/30 last:border-0 group"
               >
-                <div 
-                  className="flex items-center gap-2 flex-1 cursor-pointer"
-                  onClick={() => handleToggleTask(task.id)}
-                >
-                  {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} className="text-on-surface-variant group-hover:text-primary transition-colors" />}
-                  
-                  {editingTaskId === task.id ? (
-                    <form onSubmit={saveTaskEdit} className="flex-1" onClick={e => e.stopPropagation()}>
-                      <input 
-                        autoFocus
-                        className="w-full bg-surface-high p-1 rounded border border-primary text-xs focus:outline-none text-white"
-                        value={editTaskTitle}
-                        onChange={(e) => setEditTaskTitle(e.target.value)}
-                        onBlur={() => setEditingTaskId(null)}
-                        onKeyDown={(e) => e.key === 'Escape' && setEditingTaskId(null)}
-                      />
-                    </form>
-                  ) : (
-                    <span className={task.completed ? "line-through text-on-surface-variant" : "text-white group-hover:text-primary-container transition-colors"}>
-                      {task.title}
-                    </span>
+                <div className="flex items-center gap-2">
+                  <div 
+                    className="flex items-center gap-2 flex-1 cursor-pointer"
+                    onClick={() => handleToggleTask(task.id)}
+                  >
+                    {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} className="text-on-surface-variant group-hover:text-primary transition-colors" />}
+                    
+                    {editingTaskId === task.id ? (
+                      <form onSubmit={saveTaskEdit} className="flex-1 flex flex-col gap-3 p-3 bg-surface-high rounded-2xl border border-primary/50" onClick={e => e.stopPropagation()}>
+                        <input 
+                          autoFocus
+                          className="w-full bg-transparent border-b border-primary/30 py-1 font-bold text-white focus:outline-none focus:border-primary"
+                          value={editTaskTitle}
+                          onChange={(e) => setEditTaskTitle(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Escape' && setEditingTaskId(null)}
+                        />
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Entry</label>
+                            <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
+                              <Clock size={12} className="text-primary" />
+                              <input type="time" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskTime} onChange={e => setEditTaskTime(e.target.value)} />
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Descent</label>
+                            <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
+                              <Timer size={12} className="text-secondary" />
+                              <input type="time" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskEndTime} onChange={e => setEditTaskEndTime(e.target.value)} />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Mission Date</label>
+                            <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
+                              <Calendar size={12} className="text-primary-container" />
+                              <input type="date" className="bg-transparent text-[10px] font-mono text-white focus:outline-none uppercase" value={editTaskDate} onChange={e => setEditTaskDate(e.target.value)} />
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest text-error">Deadline Lock</label>
+                            <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-error/30">
+                              <AlertTriangle size={12} className="text-error" />
+                              <input type="datetime-local" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskDeadline} onChange={e => setEditTaskDeadline(e.target.value)} />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex justify-end gap-2 mt-2">
+                          <button type="button" onClick={() => setEditingTaskId(null)} className="px-3 py-1 text-[10px] font-black text-on-surface-variant uppercase">Cancel</button>
+                          <button type="submit" className="px-4 py-1 bg-primary text-on-primary rounded-lg text-[10px] font-black uppercase">Save Parameters</button>
+                        </div>
+                      </form>
+                    ) : (
+                      <div className="flex flex-col">
+                        <span className={`text-sm font-bold ${task.completed ? "line-through text-on-surface-variant" : "text-white group-hover:text-primary-container transition-colors"}`}>
+                          {task.title}
+                        </span>
+                        <div className="flex gap-3 mt-1">
+                           <div className="flex items-center gap-1 text-[9px] font-mono text-on-surface-variant">
+                             <Clock size={10} /> {task.time || '09:00'}
+                           </div>
+                           {task.deadline && (
+                             <div className="flex items-center gap-1 text-[9px] font-mono text-error/70">
+                               <AlertTriangle size={10} /> {new Date(task.deadline).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                             </div>
+                           )}
+                           <div className="flex items-center gap-1 text-[9px] font-mono text-on-surface-variant/60 uppercase">
+                             <Calendar size={10} /> {task.plannedDate || 'Undated'}
+                           </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {!task.completed && editingTaskId !== task.id && (
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                      <button 
+                        onClick={(e) => startEditingTask(e, task)}
+                        className="p-1 hover:text-primary"
+                        aria-label={`Edit task ${task.title}`}
+                      >
+                        <Edit2 size={12} />
+                      </button>
+                      <button 
+                        onClick={(e) => handleDeleteTask(e, task.id)}
+                        className="p-1 hover:text-error"
+                        aria-label={`Delete task ${task.title}`}
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
                   )}
                 </div>
-
-                {!task.completed && editingTaskId !== task.id && (
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                    <button 
-                  onClick={(e) => startEditingTask(e, task)}
-                  className="p-1 hover:text-primary"
-                  aria-label={`Edit task ${task.title}`}
-                >
-                  <Edit2 size={12} />
-                </button>
-                <button 
-                  onClick={(e) => handleDeleteTask(e, task.id)}
-                  className="p-1 hover:text-error"
-                  aria-label={`Delete task ${task.title}`}
-                >
-                  <Trash2 size={12} />
-                </button>
-                  </div>
-                )}
               </div>
             ))}
 
@@ -217,16 +297,51 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
                 <span>SPLIT INTO NEW TASK</span>
               </button>
             ) : (
-              <form onSubmit={handleAddTask} className="flex gap-2 mt-2" onClick={(e) => e.stopPropagation()}>
-                <input 
-                  autoFocus
-                  className="flex-1 bg-surface-high p-2 rounded-lg border border-outline-variant text-xs focus:outline-none focus:border-primary text-white"
-                  placeholder="Sub-task title..."
-                  value={newTaskTitle}
-                  onChange={(e) => setNewTaskTitle(e.target.value)}
-                />
-                <button type="submit" className="p-2 bg-primary-container text-on-primary rounded-lg">
-                  <Send size={14} />
+              <form onSubmit={handleAddTask} className="flex flex-col gap-4 mt-2 p-4 bg-surface-high/30 rounded-2xl border border-dashed border-outline-variant" onClick={(e) => e.stopPropagation()}>
+                <div className="flex gap-2">
+                  <input 
+                    autoFocus
+                    className="flex-1 bg-surface-high p-3 rounded-xl border border-outline-variant text-xs focus:outline-none focus:border-primary text-white"
+                    placeholder="Sub-task title..."
+                    value={newTaskTitle}
+                    onChange={(e) => setNewTaskTitle(e.target.value)}
+                  />
+                  <button type="submit" className="p-3 bg-primary-container text-on-primary rounded-xl shrink-0">
+                    <Send size={16} />
+                  </button>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Entry Time</label>
+                    <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
+                      <Clock size={12} className="text-primary" />
+                      <input type="time" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={newTime} onChange={e => setNewTime(e.target.value)} />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Planned Date</label>
+                    <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
+                      <Calendar size={12} className="text-secondary" />
+                      <input type="date" className="bg-transparent text-[10px] font-mono text-white focus:outline-none uppercase" value={newDate} onChange={e => setNewDate(e.target.value)} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest text-error">Deadline Protocol (Optional)</label>
+                  <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-error/20">
+                    <AlertTriangle size={12} className="text-error" />
+                    <input type="datetime-local" className="bg-transparent text-[10px] font-mono text-white focus:outline-none w-full" value={newDeadline} onChange={e => setNewDeadline(e.target.value)} />
+                  </div>
+                </div>
+
+                <button 
+                  type="button" 
+                  onClick={() => setIsAddingTask(false)}
+                  className="text-center text-[10px] font-black text-on-surface-variant uppercase py-1 hover:text-white transition-colors"
+                >
+                  Cancel Uplink
                 </button>
               </form>
             )}

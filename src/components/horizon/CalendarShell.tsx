@@ -70,8 +70,22 @@ const CalendarShell = () => {
   }, [currentDate]);
 
   const selectedDayTasks = useMemo(() => {
-    return allTasks.filter(t => t.plannedDate && isSameDay(parseLocalDate(t.plannedDate), selectedDate));
-  }, [allTasks, selectedDate]);
+    return allTasks.filter(t => {
+      if (!t.plannedDate || !isSameDay(parseLocalDate(t.plannedDate), selectedDate)) return false;
+      
+      // Daily view logic
+      if (horizon === 'daily') {
+        // Milestone tasks should not be shown in daily timeline
+        if (t.milestoneId) return false;
+        // Daily tasks should be shown
+        if (t.horizon === 'daily') return true;
+        // Weekly tasks' deadline can be shown in daily timeline
+        if (t.horizon === 'weekly' && t.deadline) return true;
+        return false;
+      }
+      return true;
+    });
+  }, [allTasks, selectedDate, horizon]);
 
   const selectedDayHistory = useMemo(() => {
     return history.filter(h => isSameDay(parseISO(h.date), selectedDate));
@@ -92,7 +106,17 @@ const CalendarShell = () => {
         tasks: allTasks.filter(t => {
           if (!t.plannedDate) return false;
           const taskDate = parseLocalDate(t.plannedDate);
-          return taskDate >= currentWeekStart && taskDate <= weekEnd;
+          if (!(taskDate >= currentWeekStart && taskDate <= weekEnd)) return false;
+
+          // Weekly view logic
+          // Daily tasks should not be shown in weekly timeline
+          if (t.horizon === 'daily') return false;
+          // Milestone task's deadline should be shown in weekly timeline (if it has one)
+          if (t.milestoneId) return !!t.deadline;
+          // Weekly tasks should be shown
+          if (t.horizon === 'weekly') return true;
+          
+          return false;
         }),
         history: history.filter(h => {
           const eventDate = parseISO(h.date);
@@ -391,6 +415,54 @@ const CalendarShell = () => {
                   </div>
 
                   <div className="space-y-12">
+                    {/* Opportunities & Momentum for this year */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 mb-4">
+                        <Zap size={16} className="text-primary" />
+                        <span className="text-xs font-black uppercase tracking-widest text-primary">Ambition Momentum (Opportunities)</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {year === 2027 && (
+                          <div className="glass-panel p-4 rounded-3xl border border-primary/30 bg-primary/5 flex flex-col gap-3 group hover:border-primary transition-all relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity rotate-12">
+                              <Target size={64} />
+                            </div>
+                            <div className="flex justify-between items-start relative z-10">
+                              <div className="bg-primary/20 text-primary text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">ISRO HQ</div>
+                              <div className="text-[10px] font-mono text-primary">DEC 2027</div>
+                            </div>
+                            <div className="relative z-10">
+                              <div className="text-sm font-black text-white uppercase tracking-tight">ISRO Scientist SC Recruitment</div>
+                              <p className="text-[9px] text-on-surface-variant font-medium mt-1 uppercase tracking-tighter">Primary Alignment Target • High Gravity Event</p>
+                            </div>
+                            <div className="flex gap-1 mt-2 relative z-10">
+                              <div className="px-2 py-0.5 rounded-md bg-surface-high border border-outline-variant text-[7px] font-black text-on-surface-variant uppercase">Propulsion Systems</div>
+                              <div className="px-2 py-0.5 rounded-md bg-surface-high border border-outline-variant text-[7px] font-black text-on-surface-variant uppercase">Orbital Mechanics</div>
+                            </div>
+                          </div>
+                        )}
+                        {year === 2028 && (
+                          <div className="glass-panel p-4 rounded-3xl border border-secondary/30 bg-secondary/5 flex flex-col gap-3 group hover:border-secondary transition-all relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity -rotate-12">
+                              <Cpu size={64} />
+                            </div>
+                            <div className="flex justify-between items-start relative z-10">
+                              <div className="bg-secondary/20 text-secondary text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Google Quantum AI</div>
+                              <div className="text-[10px] font-mono text-secondary">JUNE 2028</div>
+                            </div>
+                            <div className="relative z-10">
+                              <div className="text-sm font-black text-white uppercase tracking-tight">Quantum Software Engineer</div>
+                              <p className="text-[9px] text-on-surface-variant font-medium mt-1 uppercase tracking-tighter">Exponential Trajectory • Future Milestone</p>
+                            </div>
+                            <div className="flex gap-1 mt-2 relative z-10">
+                              <div className="px-2 py-0.5 rounded-md bg-surface-high border border-outline-variant text-[7px] font-black text-on-surface-variant uppercase">Qubit Synthesis</div>
+                              <div className="px-2 py-0.5 rounded-md bg-surface-high border border-outline-variant text-[7px] font-black text-on-surface-variant uppercase">Stellar Compute</div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
                     {/* Historical Events for this year */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-3 mb-4">

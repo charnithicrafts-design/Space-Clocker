@@ -213,38 +213,36 @@ const OrbitScheduler = () => {
                   onChange={(e) => setNewTask(e.target.value)}
                 />
                 <div className="flex gap-2">
-                  <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
-                    <Clock size={14} className="text-on-surface-variant" />
-                    <input 
-                      type="time"
-                      className="bg-transparent text-xs font-mono focus:outline-none"
-                      value={newTime}
-                      onChange={(e) => setNewTime(e.target.value)}
-                    />
+                  <div className="flex flex-wrap items-center gap-4">
+                    <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
+                      <Clock size={14} className="text-on-surface-variant" />
+                      <input 
+                        type="time"
+                        className="bg-transparent text-xs font-mono focus:outline-none"
+                        value={newTime}
+                        onChange={(e) => setNewTime(e.target.value)}
+                      />
+                    </div>
+                    
+                    <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
+                      <Timer size={14} className="text-on-surface-variant" />
+                      <input 
+                        type="time"
+                        className="bg-transparent text-xs font-mono focus:outline-none"
+                        value={newEndTime}
+                        onChange={(e) => setNewEndTime(e.target.value)}
+                      />
+                    </div>
+                    <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
+                      <AlertTriangle size={14} className="text-error" />
+                      <input 
+                        type="datetime-local"
+                        className="bg-transparent text-[10px] font-mono focus:outline-none w-32"
+                        value={newDeadline}
+                        onChange={(e) => setNewDeadline(e.target.value)}
+                      />
+                    </div>
                   </div>
-                  
-                  {isPro && (
-                    <>
-                      <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
-                        <Timer size={14} className="text-on-surface-variant" />
-                        <input 
-                          type="time"
-                          className="bg-transparent text-xs font-mono focus:outline-none"
-                          value={newEndTime}
-                          onChange={(e) => setNewEndTime(e.target.value)}
-                        />
-                      </div>
-                      <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
-                        <AlertTriangle size={14} className="text-error" />
-                        <input 
-                          type="datetime-local"
-                          className="bg-transparent text-[10px] font-mono focus:outline-none w-32"
-                          value={newDeadline}
-                          onChange={(e) => setNewDeadline(e.target.value)}
-                        />
-                      </div>
-                    </>
-                  )}
                 </div>
                 <button type="submit" aria-label="Add task" className="px-8 py-4 bg-primary-container text-on-primary rounded-2xl font-black uppercase tracking-widest hover:shadow-[0_0_25px_rgba(var(--color-primary-container-rgb),0.4)] transition-all flex items-center gap-2">
                   <Plus size={20} />

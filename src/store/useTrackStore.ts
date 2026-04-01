@@ -20,6 +20,7 @@ export interface Task {
   isVoid?: boolean;
   completedAt?: string;
   ambitionId?: string;
+  milestoneId?: string;
 }
 
 export interface Milestone {
@@ -175,8 +176,8 @@ interface TrackStore {
   addMilestone: (ambitionId: string, title: string) => Promise<void>;
   updateMilestone: (ambitionId: string, milestoneId: string, title: string) => Promise<void>;
   deleteMilestone: (ambitionId: string, milestoneId: string) => Promise<void>;
-  addMilestoneTask: (ambitionId: string, milestoneId: string, title: string) => Promise<void>;
-  updateMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string, title: string) => Promise<void>;
+  addMilestoneTask: (ambitionId: string, milestoneId: string, title: string, extra?: Partial<Task>) => Promise<void>;
+  updateMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string, updates: Partial<Task>) => Promise<void>;
   deleteMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => Promise<void>;
   toggleMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => Promise<void>;
   deleteAmbition: (id: string) => Promise<void>;
@@ -633,12 +634,20 @@ export const useTrackStore = create<TrackStore>()(
       }));
     },
 
-    addMilestoneTask: async (ambitionId, milestoneId, title) => {
-      const newTask: Task = { id: Date.now().toString(), time: '00:00', title, completed: false, horizon: 'daily', weightage: 25 };
+    addMilestoneTask: async (ambitionId, milestoneId, title, extra) => {
+      const newTask: Task = { 
+        id: Date.now().toString(), 
+        time: extra?.time || '00:00', 
+        title, 
+        completed: false, 
+        horizon: extra?.horizon || 'daily', 
+        weightage: 25,
+        ...extra 
+      };
       const { getDb } = await import('../db/client');
       const db = getDb();
-      await db.query(`INSERT INTO tasks (id, milestone_id, time, weightage, title, completed, horizon) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
-        newTask.id, milestoneId, newTask.time, newTask.weightage, newTask.title, newTask.completed, newTask.horizon
+      await db.query(`INSERT INTO tasks (id, milestone_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [
+        newTask.id, milestoneId, newTask.time, newTask.endTime, newTask.deadline, newTask.weightage, newTask.title, newTask.completed, newTask.horizon, newTask.plannedDate
       ]);
       set((state) => ({
         ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
@@ -648,12 +657,20 @@ export const useTrackStore = create<TrackStore>()(
       }));
     },
 
-    updateMilestoneTask: async (ambitionId, milestoneId, taskId, title) => {
+    updateMilestoneTask: async (ambitionId, milestoneId, taskId, updates) => {
       const { getDb } = await import('../db/client');
       const db = getDb();
-      await db.query(`UPDATE tasks SET title = $1 WHERE id = $2`, [title, taskId]);
+      
+      if (updates.title !== undefined) await db.query(`UPDATE tasks SET title = $1 WHERE id = $2`, [updates.title, taskId]);
+      if (updates.time !== undefined) await db.query(`UPDATE tasks SET time = $1 WHERE id = $2`, [updates.time, taskId]);
+      if (updates.endTime !== undefined) await db.query(`UPDATE tasks SET end_time = $1 WHERE id = $2`, [updates.endTime, taskId]);
+      if (updates.deadline !== undefined) await db.query(`UPDATE tasks SET deadline = $1 WHERE id = $2`, [updates.deadline, taskId]);
+      if (updates.weightage !== undefined) await db.query(`UPDATE tasks SET weightage = $1 WHERE id = $2`, [updates.weightage, taskId]);
+      if (updates.horizon !== undefined) await db.query(`UPDATE tasks SET horizon = $1 WHERE id = $2`, [updates.horizon, taskId]);
+      if (updates.plannedDate !== undefined) await db.query(`UPDATE tasks SET planned_date = $1 WHERE id = $2`, [updates.plannedDate, taskId]);
+
       set((state) => ({
-        ambitions: state.ambitions.map((a) => a.id === ambitionId ? { ...a, milestones: a.milestones.map((m) => m.id === milestoneId ? { ...m, tasks: m.tasks.map((t) => t.id === taskId ? { ...t, title } : t) } : m) } : a)
+        ambitions: state.ambitions.map((a) => a.id === ambitionId ? { ...a, milestones: a.milestones.map((m) => m.id === milestoneId ? { ...m, tasks: m.tasks.map((t) => t.id === taskId ? { ...t, ...updates } : t) } : m) } : a)
       }));
     },
 
@@ -907,7 +924,8 @@ export const useTrackStore = create<TrackStore>()(
             plannedDate: t.planned_date,
             isVoid: t.is_void === 1,
             completedAt: t.completed_at,
-            ambitionId: t.ambition_id
+            ambitionId: t.ambition_id,
+            milestoneId: t.milestone_id
           }))
         }))
       }));
@@ -917,7 +935,8 @@ export const useTrackStore = create<TrackStore>()(
         plannedDate: t.planned_date,
         isVoid: t.is_void === 1,
         completedAt: t.completed_at,
-        ambitionId: t.ambition_id
+        ambitionId: t.ambition_id,
+        milestoneId: t.milestone_id
       }));
       const voids = (await db.query<VoidTask>(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`)).rows;
       const reflections = (await db.query<Reflection>(`SELECT id, date, content, type FROM reflections`)).rows;
