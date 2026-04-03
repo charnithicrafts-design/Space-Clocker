@@ -54,17 +54,37 @@ describe('DbClient - Orbital Interface', () => {
     expect(await blob.text()).toBe(expectedDumpData);
   });
 
-  it('should restore database state from a telemetry blob', async () => {
+  it('should restore database state from a telemetry blob after clearing existing data', async () => {
     // Arrange
     const telemetryBlob = new Blob(['restored-nebula-state'], { type: 'application/octet-stream' });
     const decommissionedDb = DbClient.getDb();
     
+    // Mock IndexedDB globally
+    const mockDeleteRequest: any = { onsuccess: null, onerror: null };
+    const deleteSpy = vi.fn().mockReturnValue(mockDeleteRequest);
+    (global as any).indexedDB = { deleteDatabase: deleteSpy };
+    
     // Act
-    await DbClient.restoreDb(telemetryBlob);
+    const restorePromise = DbClient.restoreDb(telemetryBlob);
+    
+    // Give the async steps in restoreDb (db.close) time to proceed to the IDB deletion
+    await Promise.resolve();
+    await Promise.resolve();
+    
+    // Simulate success of the delete operation
+    if (mockDeleteRequest.onsuccess) {
+      mockDeleteRequest.onsuccess({} as any);
+    }
+    
+    await restorePromise;
     const activeDb = DbClient.getDb();
     
     // Assert: Previous instance was closed for safety
     expect(decommissionedDb.close).toHaveBeenCalled();
+    
+    // Assert: IndexedDB was cleared
+    expect(deleteSpy).toHaveBeenCalledWith('space-clocker-db');
+    
     expect(activeDb).not.toBe(decommissionedDb);
     
     // Assert: New instance initialized with telemetry data dir
