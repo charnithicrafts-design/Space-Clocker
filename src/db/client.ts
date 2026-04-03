@@ -16,7 +16,9 @@ export const db = {
     if (!_db) {
       console.log('[Database] Initializing PGlite (idb)...');
       try {
-        _db = new PGlite('idb://space-clocker-db');
+        _db = new PGlite('idb://space-clocker-db', {
+          relaxedDurability: true
+        });
       } catch (err) {
         console.error('[Database] Failed to create PGlite instance:', err);
         throw err;
@@ -94,7 +96,10 @@ export async function restoreDb(blob: Blob) {
   // This is the recommended modern API for loading from a tarball.
   console.log('Re-initializing database from tarball...');
   try {
-    const newDb = await PGlite.create('idb://space-clocker-db', { loadDataDir: blob });
+    const newDb = await PGlite.create('idb://space-clocker-db', { 
+      loadDataDir: blob,
+      relaxedDurability: true
+    });
     db.setInstance(newDb);
     console.log('Database restoration complete and ready.');
   } catch (error: any) {

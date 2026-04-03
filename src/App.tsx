@@ -12,30 +12,39 @@ import TransmissionDashboard from './components/transmission/TransmissionDashboa
 import SharedTransmission from './components/transmission/SharedTransmission';
 import SyncConflictModal from './components/reflection/SyncConflictModal';
 import OnboardingTour from './components/layout/OnboardingTour';
-import { useTrackStore } from './store/useTrackStore';
-
+import React, { useEffect, useState, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+...
 const App = () => {
   const { initialize, checkSync, performPull, oracleConfig, ambitions } = useTrackStore();
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const startupInitiated = useRef(false);
 
   useEffect(() => {
+    if (startupInitiated.current) return;
+    startupInitiated.current = true;
+
     const startup = async () => {
-      await initialize();
+      try {
+        await initialize();
 
-      const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
-      // If store is initialized and empty, and onboarding not seen, show it
-      // We check ambitions length to ensure we only show it to truly "new" users or those who cleared data
-      if (!hasSeenOnboarding) {
-        setShowOnboarding(true);
-      }
-
-      // Check for sync divergence if enabled
-      if (oracleConfig.syncEnabled) {
-        const result = await checkSync();
-        if (result === 'remote_newer') {
-          setIsSyncModalOpen(true);
+        const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
+        // If store is initialized and empty, and onboarding not seen, show it
+        // We check ambitions length to ensure we only show it to truly "new" users or those who cleared data
+        if (!hasSeenOnboarding) {
+          setShowOnboarding(true);
         }
+
+        // Check for sync divergence if enabled
+        if (oracleConfig.syncEnabled) {
+          const result = await checkSync();
+          if (result === 'remote_newer') {
+            setIsSyncModalOpen(true);
+          }
+        }
+      } catch (err) {
+        console.error('[App] Startup failure:', err);
       }
     };
     startup();
