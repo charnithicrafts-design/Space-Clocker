@@ -4,7 +4,15 @@ export async function migrateFromZustand() {
   const stored = localStorage.getItem('space-clocker-storage');
   if (!stored) return;
 
-  const { state } = JSON.parse(stored);
+  let parsed: any = null;
+  try {
+    parsed = JSON.parse(stored);
+  } catch (e) {
+    console.error('Failed to parse migration data:', e);
+    return;
+  }
+
+  const { state } = parsed;
   if (!state) return;
 
   // Check if migration has already happened (this is a one-time thing)
@@ -14,6 +22,9 @@ export async function migrateFromZustand() {
   console.log('Migrating data from Zustand to PGlite...');
 
   try {
+    // Clear stored string early to free up memory
+    localStorage.removeItem('space-clocker-storage-tmp'); // just in case
+    
     await db.transaction(async (tx) => {
       // 1. Singletons
       if (state.profile) {
