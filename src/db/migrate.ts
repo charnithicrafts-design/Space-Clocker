@@ -101,6 +101,11 @@ export async function migrateFromZustand() {
 
     localStorage.setItem('space-clocker-migrated', 'true');
     console.log('Migration complete.');
+    
+    // Explicitly clear references to help GC
+    (state as any) = null;
+    localStorage.removeItem('space-clocker-storage'); // Optionally clear source data to save space
+    
   } catch (err) {
     console.error('Migration failed:', err);
     // We don't mark as migrated so we can retry
