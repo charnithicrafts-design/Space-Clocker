@@ -1,6 +1,35 @@
 import { PGlite } from '@electric-sql/pglite';
 
-export let db = new PGlite('idb://space-clocker-db');
+let _db: PGlite | null = null;
+
+export const db = {
+  get waitReady() {
+    return this.getInstance().waitReady;
+  },
+  query: (...args: any[]) => (db.getInstance().query as any)(...args),
+  exec: (...args: any[]) => (db.getInstance().exec as any)(...args),
+  close: (...args: any[]) => (db.getInstance().close as any)(...args),
+  dumpDataDir: (...args: any[]) => (db.getInstance().dumpDataDir as any)(...args),
+  transaction: (...args: any[]) => (db.getInstance().transaction as any)(...args),
+  
+  getInstance: (): PGlite => {
+    if (!_db) {
+      console.log('[Database] Initializing PGlite (idb)...');
+      try {
+        _db = new PGlite('idb://space-clocker-db');
+      } catch (err) {
+        console.error('[Database] Failed to create PGlite instance:', err);
+        throw err;
+      }
+    }
+    return _db;
+  },
+
+  // Method to manually replace the instance (used in restoreDb)
+  setInstance: (newDb: PGlite) => {
+    _db = newDb;
+  }
+};
 
 export function getDb() {
   return db;
@@ -16,8 +45,8 @@ export async function restoreDb(blob: Blob) {
   
   // Close the current database connection to release IndexedDB locks.
   // This is critical for successful deletion.
-  if (db) {
-    await db.close();
+  if (_db) {
+    await _db.close();
     console.log('Current database connection closed.');
     // Give a small grace period for the connection to be fully released by the browser/PGlite.
     await new Promise(r => setTimeout(r, 200));
@@ -65,7 +94,8 @@ export async function restoreDb(blob: Blob) {
   // This is the recommended modern API for loading from a tarball.
   console.log('Re-initializing database from tarball...');
   try {
-    db = await PGlite.create('idb://space-clocker-db', { loadDataDir: blob });
+    const newDb = await PGlite.create('idb://space-clocker-db', { loadDataDir: blob });
+    db.setInstance(newDb);
     console.log('Database restoration complete and ready.');
   } catch (error: any) {
     console.error('PGlite.create failed during restoration:', error);

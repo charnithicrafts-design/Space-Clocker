@@ -12,6 +12,11 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       VitePWA({
         registerType: 'autoUpdate',
+        injectRegister: 'auto',
+        devOptions: {
+          enabled: true,
+          type: 'module'
+        },
         includeAssets: ['favicon.svg', 'apple-touch-icon.svg', 'mask-icon.svg'],
         workbox: {
           maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,

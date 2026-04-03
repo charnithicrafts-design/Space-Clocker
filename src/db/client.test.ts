@@ -53,20 +53,24 @@ describe('DbClient - Orbital Interface', () => {
     // Arrange
     const db = DbClient.getDb();
     const expectedDumpData = 'stellar-core-telemetry-dump';
-    vi.mocked(db.dumpDataDir).mockResolvedValue(new Blob([expectedDumpData]));
+    
+    // We need to mock the underlying instance's method
+    const instance = (db as any).getInstance();
+    vi.mocked(instance.dumpDataDir).mockResolvedValue(new Blob([expectedDumpData]));
     
     // Act
     const blob = await DbClient.dumpDb();
     
     // Assert
-    expect(db.dumpDataDir).toHaveBeenCalled();
+    expect(instance.dumpDataDir).toHaveBeenCalled();
     expect(await blob.text()).toBe(expectedDumpData);
   });
 
   it('should restore database state from a telemetry blob after clearing existing data', async () => {
     // Arrange
     const telemetryBlob = new Blob(['restored-nebula-state'], { type: 'application/octet-stream' });
-    const decommissionedDb = DbClient.getDb();
+    const dbProxy = DbClient.getDb() as any;
+    const decommissionedInstance = dbProxy.getInstance();
     
     // Mock IndexedDB globally with multi-call support
     const mockRequests: any[] = [];
@@ -109,17 +113,17 @@ describe('DbClient - Orbital Interface', () => {
     }
     
     await restorePromise;
-    const activeDb = DbClient.getDb();
+    const activeInstance = dbProxy.getInstance();
     
     // Assert: Previous instance was closed for safety
-    expect(decommissionedDb.close).toHaveBeenCalled();
+    expect(decommissionedInstance.close).toHaveBeenCalled();
     
     // Assert: IndexedDB was cleared for all possible names
     expect(deleteSpy).toHaveBeenCalledWith('space-clocker-db');
     expect(deleteSpy).toHaveBeenCalledWith('/pglite/space-clocker-db');
     expect(deleteSpy).toHaveBeenCalledWith('idb://space-clocker-db');
     
-    expect(activeDb).not.toBe(decommissionedDb);
+    expect(activeInstance).not.toBe(decommissionedInstance);
     
     // Assert: New instance initialized with telemetry data dir via create()
     expect(mockPGliteCreate).toHaveBeenCalledWith(
@@ -131,6 +135,8 @@ describe('DbClient - Orbital Interface', () => {
   it('should reject restoration if database deletion is blocked', async () => {
     // Arrange
     const telemetryBlob = new Blob(['blocked-state']);
+    const dbProxy = DbClient.getDb() as any;
+    const currentInstance = dbProxy.getInstance();
     
     // Mock IndexedDB to simulate a blocked deletion
     const deleteSpy = vi.fn().mockImplementation(() => {
@@ -145,7 +151,7 @@ describe('DbClient - Orbital Interface', () => {
     // Act & Assert
     await expect(DbClient.restoreDb(telemetryBlob)).rejects.toThrow('Database deletion blocked. Please close other tabs of this application and try again.');
     
-    // Previous instance was still closed
-    expect(mockPGliteConstructor.prototype.close || vi.mocked(DbClient.getDb().close)).toHaveBeenCalled();
+    // Current instance was closed
+    expect(currentInstance.close).toHaveBeenCalled();
   });
 });
