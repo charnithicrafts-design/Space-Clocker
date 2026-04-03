@@ -124,9 +124,9 @@ const SettingsDashboard = () => {
         await initialize();
         SoundManager.playSyncSuccess();
         window.location.reload();
-      } catch (err) {
+      } catch (err: any) {
         console.error('Restore failed:', err);
-        alert('Failed to restore snapshot. Ensure it is a valid .pgdump file.');
+        alert(`Restore failed: ${err.message || 'Ensure it is a valid .pgdump file.'}`);
         SoundManager.playThud();
       } finally {
         setIsRestoring(false);

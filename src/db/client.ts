@@ -12,18 +12,64 @@ export async function dumpDb() {
 }
 
 export async function restoreDb(blob: Blob) {
-  await db.close();
+  console.log('Initiating database restoration from binary snapshot...');
+  
+  // Close the current database connection to release IndexedDB locks.
+  // This is critical for successful deletion.
+  if (db) {
+    await db.close();
+    console.log('Current database connection closed.');
+    // Give a small grace period for the connection to be fully released by the browser/PGlite.
+    await new Promise(r => setTimeout(r, 200));
+  }
   
   // Clear the existing IndexedDB database before re-initializing with a tarball
   // as PGlite fails to load from a tarball if the target already exists.
   if (typeof indexedDB !== 'undefined') {
-    await new Promise<void>((resolve, reject) => {
-      const request = indexedDB.deleteDatabase('space-clocker-db');
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error('Failed to delete existing database for restoration'));
-    });
+    // PGlite uses specific naming conventions for IndexedDB depending on version/config.
+    // We attempt to delete all common variations to ensure a clean slate.
+    const dbNames = [
+      'space-clocker-db', 
+      '/pglite/space-clocker-db', 
+      'pglite-space-clocker-db',
+      'pglite/space-clocker-db',
+      'idb://space-clocker-db',
+      '/pglite/idb://space-clocker-db'
+    ];
+    
+    for (const name of dbNames) {
+      console.log(`Attempting to delete IndexedDB: "${name}"`);
+      await new Promise<void>((resolve, reject) => {
+        const request = indexedDB.deleteDatabase(name);
+        
+        request.onsuccess = () => {
+          console.log(`Successfully deleted database: "${name}"`);
+          resolve();
+        };
+        
+        request.onerror = () => {
+          console.error(`Error deleting database "${name}":`, request.error);
+          reject(new Error(`Failed to delete database ${name}: ${request.error}`));
+        };
+        
+        request.onblocked = () => {
+          console.warn(`Deletion of database "${name}" is blocked by another connection.`);
+          // If blocked, we cannot proceed as creation will fail.
+          reject(new Error(`Database deletion blocked. Please close other tabs of this application and try again.`));
+        };
+      });
+    }
   }
 
-  db = new PGlite('idb://space-clocker-db', { loadDataDir: blob });
-  await db.waitReady;
+  // Use the static PGlite.create method for re-initialization with loadDataDir.
+  // This is the recommended modern API for loading from a tarball.
+  console.log('Re-initializing database from tarball...');
+  try {
+    db = await PGlite.create('idb://space-clocker-db', { loadDataDir: blob });
+    console.log('Database restoration complete and ready.');
+  } catch (error: any) {
+    console.error('PGlite.create failed during restoration:', error);
+    // If it still fails with "already exists", we might want to try one more thing or just re-throw.
+    throw error;
+  }
 }

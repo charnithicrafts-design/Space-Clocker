@@ -1,17 +1,26 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Use hoisted to define mock objects for architectural isolation
-const { mockPGliteConstructor } = vi.hoisted(() => {
-  const constructorMock = vi.fn().mockImplementation(function() {
-    return {
-      waitReady: Promise.resolve(),
-      close: vi.fn().mockResolvedValue(undefined),
-      dumpDataDir: vi.fn().mockResolvedValue(new Blob(['nebula-dump-data'], { type: 'application/octet-stream' })),
-      query: vi.fn().mockResolvedValue({ rows: [] }),
-    };
+const { mockPGliteConstructor, mockPGliteCreate } = vi.hoisted(() => {
+  const createInstance = () => ({
+    waitReady: Promise.resolve(),
+    close: vi.fn().mockResolvedValue(undefined),
+    dumpDataDir: vi.fn().mockResolvedValue(new Blob(['nebula-dump-data'], { type: 'application/octet-stream' })),
+    query: vi.fn().mockResolvedValue({ rows: [] }),
   });
+  
+  const constructorMock = vi.fn().mockImplementation(function() {
+    return createInstance();
+  });
+  
+  const createMock = vi.fn().mockImplementation(() => Promise.resolve(createInstance()));
+  
+  // Attach the static 'create' method to the constructor mock
+  (constructorMock as any).create = createMock;
+  
   return {
     mockPGliteConstructor: constructorMock,
+    mockPGliteCreate: createMock,
   };
 });
 
@@ -59,21 +68,44 @@ describe('DbClient - Orbital Interface', () => {
     const telemetryBlob = new Blob(['restored-nebula-state'], { type: 'application/octet-stream' });
     const decommissionedDb = DbClient.getDb();
     
-    // Mock IndexedDB globally
-    const mockDeleteRequest: any = { onsuccess: null, onerror: null };
-    const deleteSpy = vi.fn().mockReturnValue(mockDeleteRequest);
+    // Mock IndexedDB globally with multi-call support
+    const mockRequests: any[] = [];
+    const deleteSpy = vi.fn().mockImplementation(() => {
+      const req = { onsuccess: null, onerror: null, onblocked: null };
+      mockRequests.push(req);
+      return req;
+    });
     (global as any).indexedDB = { deleteDatabase: deleteSpy };
     
     // Act
     const restorePromise = DbClient.restoreDb(telemetryBlob);
     
-    // Give the async steps in restoreDb (db.close) time to proceed to the IDB deletion
-    await Promise.resolve();
+    // We need to flush the microtask queue to reach the first deleteDatabase call
+    await Promise.resolve(); 
     await Promise.resolve();
     
-    // Simulate success of the delete operation
-    if (mockDeleteRequest.onsuccess) {
-      mockDeleteRequest.onsuccess({} as any);
+    // Handle all deletion attempts sequentially
+    const dbNames = [
+      'space-clocker-db', 
+      '/pglite/space-clocker-db', 
+      'pglite-space-clocker-db',
+      'pglite/space-clocker-db',
+      'idb://space-clocker-db',
+      '/pglite/idb://space-clocker-db'
+    ];
+    
+    for (let i = 0; i < dbNames.length; i++) {
+      // Wait for the request to be created if not already there
+      while (mockRequests.length <= i) {
+        await new Promise(r => setTimeout(r, 0));
+      }
+      // Simulate success for this deletion
+      if (mockRequests[i].onsuccess) {
+        mockRequests[i].onsuccess({} as any);
+      }
+      // Give it time to proceed to the next iteration or PGlite.create
+      await Promise.resolve();
+      await Promise.resolve();
     }
     
     await restorePromise;
@@ -82,15 +114,38 @@ describe('DbClient - Orbital Interface', () => {
     // Assert: Previous instance was closed for safety
     expect(decommissionedDb.close).toHaveBeenCalled();
     
-    // Assert: IndexedDB was cleared
+    // Assert: IndexedDB was cleared for all possible names
     expect(deleteSpy).toHaveBeenCalledWith('space-clocker-db');
+    expect(deleteSpy).toHaveBeenCalledWith('/pglite/space-clocker-db');
+    expect(deleteSpy).toHaveBeenCalledWith('idb://space-clocker-db');
     
     expect(activeDb).not.toBe(decommissionedDb);
     
-    // Assert: New instance initialized with telemetry data dir
-    expect(mockPGliteConstructor).toHaveBeenCalledWith(
+    // Assert: New instance initialized with telemetry data dir via create()
+    expect(mockPGliteCreate).toHaveBeenCalledWith(
       'idb://space-clocker-db', 
       expect.objectContaining({ loadDataDir: telemetryBlob })
     );
+  });
+
+  it('should reject restoration if database deletion is blocked', async () => {
+    // Arrange
+    const telemetryBlob = new Blob(['blocked-state']);
+    
+    // Mock IndexedDB to simulate a blocked deletion
+    const deleteSpy = vi.fn().mockImplementation(() => {
+      const req = { onsuccess: null, onerror: null, onblocked: null };
+      setTimeout(() => {
+        if (req.onblocked) (req as any).onblocked();
+      }, 0);
+      return req;
+    });
+    (global as any).indexedDB = { deleteDatabase: deleteSpy };
+    
+    // Act & Assert
+    await expect(DbClient.restoreDb(telemetryBlob)).rejects.toThrow('Database deletion blocked. Please close other tabs of this application and try again.');
+    
+    // Previous instance was still closed
+    expect(mockPGliteConstructor.prototype.close || vi.mocked(DbClient.getDb().close)).toHaveBeenCalled();
   });
 });
