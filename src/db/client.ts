@@ -15,11 +15,17 @@ export const db = {
   getInstance: (): PGlite => {
     if (!_db) {
       console.log('[Database] Initializing PGlite (idb)...');
+      
+      if (typeof indexedDB === 'undefined') {
+        console.error('[Database] IndexedDB not found. Trajectory data cannot be stored.');
+        throw new Error('Your browser does not support local database storage (IndexedDB).');
+      }
+
       try {
         _db = new PGlite('idb://space-clocker-db', {
           relaxedDurability: true,
           options: {
-            shared_buffers: '16MB',
+            shared_buffers: '8MB', // Further reduced from 16MB
             work_mem: '1MB'
           }
         });
@@ -104,7 +110,7 @@ export async function restoreDb(blob: Blob) {
       loadDataDir: blob,
       relaxedDurability: true,
       options: {
-        shared_buffers: '16MB',
+        shared_buffers: '8MB',
         work_mem: '1MB'
       }
     });
