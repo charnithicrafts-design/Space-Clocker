@@ -107,28 +107,7 @@ async function start() {
   }
 }
 
-// Basic PWA Status Tracking
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    // Only register if we are in a secure context or localhost
-    if (!window.isSecureContext && window.location.hostname !== 'localhost') {
-      console.warn('[PWA] ServiceWorker registration skipped due to insecure context.');
-      return;
-    }
-
-    // Use the auto-generated service worker from vite-plugin-pwa
-    // In dev mode with devOptions enabled, this will be /sw.js
-    navigator.serviceWorker.register('/sw.js', { scope: '/' })
-      .then(registration => {
-        console.log('[PWA] ServiceWorker registered with scope: ', registration.scope);
-      })
-      .catch(err => {
-        // If it fails with 404 in dev mode, it's often okay unless we are explicitly testing PWA
-        if (import.meta.env.PROD || !err.toString().includes('404')) {
-          console.error('[PWA] ServiceWorker registration failed: ', err);
-        }
-      });
-  });
-}
+// Application initialization is handled by the start() function.
+// PWA ServiceWorker registration is handled automatically by vite-plugin-pwa (injectRegister: 'auto').
 
 start();

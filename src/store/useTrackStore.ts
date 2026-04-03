@@ -906,46 +906,90 @@ export const useTrackStore = create<TrackStore>()(
     initialize: async () => {
       const { getDb } = await import('../db/client');
       const db = getDb();
-      const profile = (await db.query<Profile>(`SELECT name, level, xp, title FROM profile WHERE id = 1`)).rows[0];
-      const preferences = (await db.query<any>(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`)).rows[0];
-      const stats = (await db.query<any>(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`)).rows[0];
-      const oracleConfig = (await db.query<OracleConfig>(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`)).rows[0];
-      const ambitionsRaw = (await db.query<any>(`SELECT * FROM ambitions`)).rows;
-      const milestonesRaw = (await db.query<any>(`SELECT * FROM milestones`)).rows;
-      const tasksRaw = (await db.query<any>(`SELECT * FROM tasks`)).rows;
+      
+      // Fetch core data in parallel for efficiency
+      const [
+        profileRes, 
+        prefsRes, 
+        statsRes, 
+        oracleRes, 
+        ambitionsRes, 
+        milestonesRes, 
+        tasksRes,
+        voidsRes,
+        reflectionsRes,
+        historyRes,
+        skillsRes,
+        internshipsRes,
+        transmissionsRes
+      ] = await Promise.all([
+        db.query<Profile>(`SELECT name, level, xp, title FROM profile WHERE id = 1`),
+        db.query<any>(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`),
+        db.query<any>(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`),
+        db.query<OracleConfig>(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`),
+        db.query<any>(`SELECT * FROM ambitions`),
+        db.query<any>(`SELECT * FROM milestones`),
+        db.query<any>(`SELECT * FROM tasks`),
+        db.query<VoidTask>(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`),
+        db.query<Reflection>(`SELECT id, date, content, type FROM reflections ORDER BY date DESC LIMIT 100`),
+        db.query<any>(`SELECT * FROM stellar_history ORDER BY date DESC LIMIT 50`),
+        db.query<any>(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`),
+        db.query<any>(`SELECT organization, start_date as "start", end_date as "end" FROM internships`),
+        db.query<any>(`SELECT * FROM transmissions ORDER BY timestamp DESC LIMIT 20`)
+      ]);
+
+      const profile = profileRes.rows[0];
+      const preferences = prefsRes.rows[0];
+      const stats = statsRes.rows[0];
+      const oracleConfig = oracleRes.rows[0];
+      const ambitionsRaw = ambitionsRes.rows;
+      const milestonesRaw = milestonesRes.rows;
+      const tasksRaw = tasksRes.rows;
+
+      // Optimize mapping: Group milestones by ambition_id and tasks by milestone_id/ambition_id
+      const milestonesByAmbition = new Map<string, any[]>();
+      milestonesRaw.forEach(m => {
+        if (!milestonesByAmbition.has(m.ambition_id)) milestonesByAmbition.set(m.ambition_id, []);
+        milestonesByAmbition.get(m.ambition_id)!.push(m);
+      });
+
+      const tasksByMilestone = new Map<string, any[]>();
+      const standaloneTasks: Task[] = [];
+      
+      tasksRaw.forEach(t => {
+        const task: Task = {
+          ...t,
+          endTime: t.end_time,
+          plannedDate: t.planned_date,
+          isVoid: t.is_void === 1,
+          completedAt: t.completed_at,
+          ambitionId: t.ambition_id,
+          milestoneId: t.milestone_id
+        };
+        
+        if (t.milestone_id) {
+          if (!tasksByMilestone.has(t.milestone_id)) tasksByMilestone.set(t.milestone_id, []);
+          tasksByMilestone.get(t.milestone_id)!.push(task);
+        } else {
+          standaloneTasks.push(task);
+        }
+      });
+
       const ambitions: Ambition[] = ambitionsRaw.map(a => ({
         ...a,
         xp: a.xp || 0,
-        milestones: milestonesRaw.filter(m => m.ambition_id === a.id).map(m => ({
+        milestones: (milestonesByAmbition.get(a.id) || []).map(m => ({
           ...m,
-          tasks: tasksRaw.filter(t => t.milestone_id === m.id).map(t => ({
-            ...t,
-            endTime: t.end_time,
-            plannedDate: t.planned_date,
-            isVoid: t.is_void === 1,
-            completedAt: t.completed_at,
-            ambitionId: t.ambition_id,
-            milestoneId: t.milestone_id
-          }))
+          tasks: tasksByMilestone.get(m.id) || []
         }))
       }));
-      const standaloneTasks = tasksRaw.filter(t => !t.milestone_id).map(t => ({
-        ...t,
-        endTime: t.end_time,
-        plannedDate: t.planned_date,
-        isVoid: t.is_void === 1,
-        completedAt: t.completed_at,
-        ambitionId: t.ambition_id,
-        milestoneId: t.milestone_id
-      }));
-      const voids = (await db.query<VoidTask>(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`)).rows;
-      const reflections = (await db.query<Reflection>(`SELECT id, date, content, type FROM reflections`)).rows;
-      const historyRaw = (await db.query<any>(`SELECT * FROM stellar_history`)).rows;
-      const history: HistoricalEvent[] = historyRaw.map(h => ({ ...h, skills: JSON.parse(h.skills || '[]') }));
-      const skills = (await db.query<any>(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`)).rows;
-      const internships = (await db.query<any>(`SELECT organization, start_date as "start", end_date as "end" FROM internships`)).rows;
-      const transmissionsRaw = (await db.query<any>(`SELECT * FROM transmissions ORDER BY timestamp DESC`)).rows;
-      const transmissions: Transmission[] = transmissionsRaw.map(tx => ({
+
+      const voids = voidsRes.rows;
+      const reflections = reflectionsRes.rows;
+      const history: HistoricalEvent[] = historyRes.rows.map(h => ({ ...h, skills: JSON.parse(h.skills || '[]') }));
+      const skills = skillsRes.rows;
+      const internships = internshipsRes.rows;
+      const transmissions: Transmission[] = transmissionsRes.rows.map(tx => ({
         id: tx.id,
         timestamp: tx.timestamp,
         tier: tx.tier,
@@ -956,10 +1000,12 @@ export const useTrackStore = create<TrackStore>()(
         pdaReflections: JSON.parse(tx.pda_reflections || '[]'),
         voidAnalysis: JSON.parse(tx.void_analysis || '[]'),
         skillsReconciliation: JSON.parse(tx.skills_reconciliation || '[]'),
+        mission_metrics: JSON.parse(tx.mission_metrics || '{"accomplished":[],"missed":[],"milestones":[]}'),
         missionMetrics: JSON.parse(tx.mission_metrics || '{"accomplished":[],"missed":[],"milestones":[]}'),
         rawLogs: JSON.parse(tx.raw_logs || '{}'),
         metadata: JSON.parse(tx.metadata || '{}')
       }));
+
       set({
         profile: profile || get().profile,
         preferences: preferences || get().preferences,

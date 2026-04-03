@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/layout/Navigation';
 import MomentumEngine from './components/dashboard/MomentumEngine';
@@ -12,9 +12,8 @@ import TransmissionDashboard from './components/transmission/TransmissionDashboa
 import SharedTransmission from './components/transmission/SharedTransmission';
 import SyncConflictModal from './components/reflection/SyncConflictModal';
 import OnboardingTour from './components/layout/OnboardingTour';
-import React, { useEffect, useState, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-...
+import { useTrackStore } from './store/useTrackStore';
+
 const App = () => {
   const { initialize, checkSync, performPull, oracleConfig, ambitions } = useTrackStore();
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);

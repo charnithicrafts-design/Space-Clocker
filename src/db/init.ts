@@ -137,40 +137,46 @@ CREATE TABLE IF NOT EXISTS stellar_history (
 
 export async function initDb() {
   await db.waitReady;
-  await db.exec(SCHEMA);
 
-  // Schema Migrations for existing tables
   try {
-    await db.exec(`
-      ALTER TABLE profile ADD COLUMN IF NOT EXISTS xp INTEGER DEFAULT 0;
-      ALTER TABLE preferences ADD COLUMN IF NOT EXISTS ui_mode TEXT DEFAULT 'simple';
-      ALTER TABLE ambitions ADD COLUMN IF NOT EXISTS xp INTEGER DEFAULT 0;
-      ALTER TABLE tasks ADD COLUMN IF NOT EXISTS end_time TEXT;
-      ALTER TABLE tasks ADD COLUMN IF NOT EXISTS deadline TEXT;
-      ALTER TABLE tasks ADD COLUMN IF NOT EXISTS weightage INTEGER DEFAULT 10;
-      ALTER TABLE tasks ADD COLUMN IF NOT EXISTS completed_at TEXT;
-      ALTER TABLE skills ADD COLUMN IF NOT EXISTS ambition_id TEXT;
-      ALTER TABLE skills ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'personal';
-      ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS start_date TEXT;
-      ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS end_date TEXT;
-      ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS mission_metrics TEXT;
-      CREATE TABLE IF NOT EXISTS stellar_history (
-        id TEXT PRIMARY KEY,
-        title TEXT NOT NULL,
-        date TEXT NOT NULL,
-        type TEXT NOT NULL,
-        category TEXT NOT NULL,
-        description TEXT,
-        skills TEXT
-      );
-    `);
+    await db.transaction(async (tx) => {
+      // Create initial schema
+      await tx.exec(SCHEMA);
+
+      // Schema Migrations for existing tables
+      await tx.exec(`
+        ALTER TABLE profile ADD COLUMN IF NOT EXISTS xp INTEGER DEFAULT 0;
+        ALTER TABLE preferences ADD COLUMN IF NOT EXISTS ui_mode TEXT DEFAULT 'simple';
+        ALTER TABLE ambitions ADD COLUMN IF NOT EXISTS xp INTEGER DEFAULT 0;
+        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS end_time TEXT;
+        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS deadline TEXT;
+        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS weightage INTEGER DEFAULT 10;
+        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS completed_at TEXT;
+        ALTER TABLE skills ADD COLUMN IF NOT EXISTS ambition_id TEXT;
+        ALTER TABLE skills ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'personal';
+        ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS start_date TEXT;
+        ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS end_date TEXT;
+        ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS mission_metrics TEXT;
+        CREATE TABLE IF NOT EXISTS stellar_history (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          date TEXT NOT NULL,
+          type TEXT NOT NULL,
+          category TEXT NOT NULL,
+          description TEXT,
+          skills TEXT
+        );
+      `);
+
+      // Ensure singletons exist
+      await tx.query(`INSERT INTO profile (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
+      await tx.query(`INSERT INTO preferences (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
+      await tx.query(`INSERT INTO stats (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
+      await tx.query(`INSERT INTO oracle_config (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
+    });
+    console.log('[System] Stellar database schema synchronized.');
   } catch (e) {
-    console.error('Schema migration failed:', e);
+    console.error('[Critical] Database initialization failure:', e);
+    throw e;
   }
-  
-  // Ensure singletons exist
-  await db.query(`INSERT INTO profile (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
-  await db.query(`INSERT INTO preferences (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
-  await db.query(`INSERT INTO stats (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
-  await db.query(`INSERT INTO oracle_config (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
 }

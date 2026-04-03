@@ -17,7 +17,11 @@ export const db = {
       console.log('[Database] Initializing PGlite (idb)...');
       try {
         _db = new PGlite('idb://space-clocker-db', {
-          relaxedDurability: true
+          relaxedDurability: true,
+          options: {
+            shared_buffers: '16MB',
+            work_mem: '1MB'
+          }
         });
       } catch (err) {
         console.error('[Database] Failed to create PGlite instance:', err);
@@ -98,7 +102,11 @@ export async function restoreDb(blob: Blob) {
   try {
     const newDb = await PGlite.create('idb://space-clocker-db', { 
       loadDataDir: blob,
-      relaxedDurability: true
+      relaxedDurability: true,
+      options: {
+        shared_buffers: '16MB',
+        work_mem: '1MB'
+      }
     });
     db.setInstance(newDb);
     console.log('Database restoration complete and ready.');
