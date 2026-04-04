@@ -144,12 +144,12 @@ describe('useTrackStore - Mission Control Store', () => {
   it('should log a historical event in the stellar archives', async () => {
     // Arrange
     const event: any = {
-      title: 'ISRO Antarkish Hackathon',
+      title: 'India AI Contest',
       date: '2024-08-23',
       type: 'success',
       category: 'hackathon',
-      description: 'Victory in satellite imagery analysis.',
-      skills: ['GIS', 'AI/ML']
+      description: 'Victory in AI development.',
+      skills: ['AI/ML']
     };
     
     // Act
@@ -174,10 +174,10 @@ describe('useTrackStore - Mission Control Store', () => {
   it('should generate a mission transmission briefing without reference errors', async () => {
     // Arrange: Setup skills and ambitions to trigger the reconciliation logic
     useTrackStore.setState({
-      skills: [{ id: 's1', name: 'Astrogation', currentProficiency: 50, ambitionId: 'a1', targetProficiency: 100, recommendation: 'Study more', type: 'ambition' }],
-      ambitions: [{ id: 'a1', title: 'NASA 2027', progress: 0, xp: 0, horizon: 'yearly', milestones: [] }],
+      skills: [{ id: 's1', name: 'Cloud Arch', currentProficiency: 50, ambitionId: 'a1', targetProficiency: 100, recommendation: 'Study more', type: 'ambition' }],
+      ambitions: [{ id: 'a1', title: 'AWS 2027', progress: 0, xp: 0, horizon: 'yearly', milestones: [] }],
       tasks: [
-        { id: 't1', title: 'Orbit Calculation', completed: true, weightage: 20, horizon: 'daily', time: '10:00', plannedDate: getTodayLocalISO(), ambitionId: 'a1' }
+        { id: 't1', title: 'EC2 Config', completed: true, weightage: 20, horizon: 'daily', time: '10:00', plannedDate: getTodayLocalISO(), ambitionId: 'a1' }
       ]
     });
 

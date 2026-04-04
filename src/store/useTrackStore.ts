@@ -66,7 +66,7 @@ export interface HistoricalEvent {
 }
 
 export interface InternshipPeriod {
-  organization: 'ISRO' | 'NASA';
+  organization: string;
   start: string;
   end: string;
 }
@@ -117,7 +117,7 @@ export interface Transmission {
   };
   rawLogs: { tasksCompleted: number; totalTasks: number; focusHours: number };
   metadata: { 
-    targetOrg?: 'NASA' | 'ISRO' | 'GOOGLE'; 
+    targetOrg?: string; 
     securityClearance: string; 
     alignment2027?: string;
     targetAmbitionId?: string;
@@ -170,7 +170,7 @@ interface TrackStore {
     tier: Transmission['tier'], 
     title: string, 
     narrative: string, 
-    targetOrg?: 'NASA' | 'ISRO' | 'GOOGLE', 
+    targetOrg?: string, 
     dateRange?: { start: string; end: string },
     targetAmbitionId?: string,
     targetMilestoneId?: string
@@ -567,13 +567,17 @@ export const useTrackStore = create<TrackStore>()(
         let alignment2027 = 'GENERAL_ORBIT';
         const targetAmbition = targetAmbitionId ? state.ambitions.find(a => a.id === targetAmbitionId) : null;
         if (targetAmbition) {
-          if (targetAmbition.title.includes('NASA')) alignment2027 = 'STATIONED_FOR_NASA_2027';
-          else if (targetAmbition.title.includes('ISRO')) alignment2027 = 'STATIONED_FOR_ISRO_2027';
+          if (targetAmbition.title.includes('AWS')) alignment2027 = 'STATIONED_FOR_AWS_SPECIALIST';
+          else if (targetAmbition.title.includes('AI')) alignment2027 = 'STATIONED_FOR_INDIA_AI_WINNER';
           else if (targetAmbition.title.includes('Google')) alignment2027 = 'STATIONED_FOR_GOOGLE_2028';
         } else {
           const has2027Goal = filteredTasks.some(t => t.deadline?.includes('2027') || t.plannedDate?.includes('2027')) || 
                              state.ambitions.some(a => a.title.includes('2027'));
-          if (has2027Goal) alignment2027 = 'STATIONED_FOR_NASA_2027';
+          if (has2027Goal) {
+            if (state.ambitions.some(a => a.title.includes('AWS'))) alignment2027 = 'STATIONED_FOR_AWS_SPECIALIST';
+            else if (state.ambitions.some(a => a.title.includes('AI'))) alignment2027 = 'STATIONED_FOR_INDIA_AI_WINNER';
+            else alignment2027 = 'STATIONED_FOR_2027_TARGET';
+          }
         }
 
         const newTransmission: Transmission = {
