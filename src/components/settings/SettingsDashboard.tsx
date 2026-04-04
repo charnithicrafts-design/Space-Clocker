@@ -63,30 +63,39 @@ const SettingsDashboard = () => {
     SoundManager.playPop();
   };
 
-  const handleExportJSON = () => {
-    const data = JSON.stringify(store, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `space-clocker-backup-${getTodayLocalISO()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const handleExportJSON = async () => {
+    try {
+      const data = await store.exportData();
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `space-clocker-trajectory-${getTodayLocalISO()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      SoundManager.playSyncSuccess();
+    } catch (err) {
+      console.error('Export failed:', err);
+      alert('Trajectory export failed.');
+      SoundManager.playThud();
+    }
   };
 
   const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       try {
         const data = JSON.parse(event.target?.result as string);
-        if (window.confirm('This will overwrite your current progress. Proceed?')) {
-          importData(data);
+        if (window.confirm('This will overwrite your current trajectories with the imported data. Proceed?')) {
+          await importData(data);
+          SoundManager.playSyncSuccess();
           window.location.reload();
         }
-      } catch (err) {
-        alert('Invalid data file.');
+      } catch (err: any) {
+        alert(`Import failed: ${err.message || 'Invalid trajectory file.'}`);
+        SoundManager.playThud();
       }
     };
     reader.readAsText(file);
@@ -289,6 +298,26 @@ const SettingsDashboard = () => {
               </label>
             </div>
           </div>
+          <div className="space-y-4 pt-4 border-t border-outline-variant">
+            <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
+              <RefreshCcw size={14} className="text-secondary" />
+              Trajectory Portability (JSON)
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <button 
+                onClick={handleExportJSON}
+                className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-surface-high border border-outline-variant hover:border-primary hover:text-primary transition-all group"
+              >
+                <Download size={20} className="group-hover:-translate-y-1 transition-transform" />
+                <span className="font-bold uppercase text-xs tracking-widest">Export JSON</span>
+              </button>
+              <label className="flex items-center justify-center gap-3 p-4 rounded-2xl bg-surface-high border border-outline-variant hover:border-secondary hover:text-secondary transition-all group cursor-pointer">
+                <Upload size={20} className="group-hover:-translate-y-1 transition-transform" />
+                <span className="font-bold uppercase text-xs tracking-widest">Import JSON</span>
+                <input type="file" className="hidden" accept=".json" onChange={handleImportJSON} />
+              </label>
+            </div>
+          </div>
           <div className="pt-4 border-t border-outline-variant">
             <button 
               onClick={handleReset}
@@ -349,6 +378,7 @@ const SettingsDashboard = () => {
           <RefreshCcw className="text-on-surface-variant animate-spin-slow" size={48} />
           <div>
             <h3 className="font-display font-bold text-xl">System Version 1.3.0</h3>
+            <p className="text-secondary text-[10px] font-black tracking-widest uppercase mt-1">Schema Version 2</p>
             <p className="text-on-surface-variant text-sm mt-2 max-w-xs">
               Your trajectory data is protected by Chronos Snapshots. Use the Communication Array to sync across devices.
             </p>

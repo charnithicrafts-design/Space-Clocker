@@ -12,10 +12,11 @@ import TransmissionDashboard from './components/transmission/TransmissionDashboa
 import SharedTransmission from './components/transmission/SharedTransmission';
 import SyncConflictModal from './components/reflection/SyncConflictModal';
 import OnboardingTour from './components/layout/OnboardingTour';
+import UpdateModal from './components/layout/UpdateModal';
 import { useTrackStore } from './store/useTrackStore';
 
 const App = () => {
-  const { initialize, checkSync, performPull, oracleConfig, ambitions } = useTrackStore();
+  const { initialize, checkSync, performPull, oracleConfig, ambitions, updateAvailable } = useTrackStore();
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const startupInitiated = useRef(false);
@@ -66,9 +67,11 @@ const App = () => {
       <div className="min-h-screen bg-surface-lowest text-on-surface">
         <Navigation />
 
-        {showOnboarding && (
+        {showOnboarding && !updateAvailable && (
           <OnboardingTour onComplete={handleCompleteOnboarding} />
         )}
+
+        <UpdateModal />
 
         <main className="pb-24 lg:pb-0">
           <Routes>

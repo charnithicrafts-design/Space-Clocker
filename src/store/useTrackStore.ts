@@ -143,8 +143,12 @@ interface TrackStore {
   oracleConfig: OracleConfig;
   preferences: Preferences;
   syncStatus: SyncStatus;
+  updateAvailable: boolean;
+  pendingVersion?: string;
   
   // Actions
+  performSystemUpgrade: () => Promise<void>;
+  dismissUpdate: () => void;
   addAmbition: (title: string) => Promise<void>;
   updateAmbition: (id: string, title: string) => Promise<void>;
   addTask: (time: string, title: string, ambitionId?: string, extra?: Partial<Task>) => Promise<void>;
@@ -184,7 +188,8 @@ interface TrackStore {
   deleteAmbition: (id: string) => Promise<void>;
 
   // Data Portability Actions
-  importData: (data: Partial<TrackStore>) => void;
+  exportData: () => Promise<string>;
+  importData: (json: any) => Promise<void>;
   setSyncStatus: (status: Partial<SyncStatus>) => void;
   checkSync: () => Promise<'none' | 'remote_newer' | 'synced'>;
   performPull: () => Promise<void>;
@@ -204,6 +209,7 @@ interface TrackStore {
 }
 
 const XP_PER_LEVEL = 1000;
+export const CURRENT_APP_VERSION = '1.3.1';
 
 export const useTrackStore = create<TrackStore>()(
   (set, get) => ({
@@ -216,7 +222,7 @@ export const useTrackStore = create<TrackStore>()(
     internships: [],
     skills: [],
     transmissions: [],
-    stats: { streak: 0, tasksCompleted: 0, totalFocusHours: 0 },
+    stats: { streak: 0, tasks_completed: 0, total_focus_hours: 0 } as any,
     oracleConfig: {
       apiKey: '',
       model: 'gemini-1.5-pro',
@@ -230,6 +236,8 @@ export const useTrackStore = create<TrackStore>()(
       isSyncing: false,
       lastSyncedAt: undefined
     },
+    updateAvailable: false,
+    pendingVersion: undefined,
 
     setSyncStatus: (status) => set((state) => ({
       syncStatus: { ...state.syncStatus, ...status }
@@ -244,7 +252,7 @@ export const useTrackStore = create<TrackStore>()(
       const { syncService } = await import('../services/SyncService');
       const { getDb } = await import('../db/client');
       const db = getDb();
-      const meta = (await db.query<{ remote_file_id: string }>('SELECT remote_file_id FROM sync_metadata WHERE id = 1')).rows[0];
+      const meta = (await db.query('SELECT remote_file_id FROM sync_metadata WHERE id = 1')).rows[0];
       if (meta?.remote_file_id) {
         await syncService.pullUpdate(meta.remote_file_id);
         await get().initialize();
@@ -760,7 +768,150 @@ export const useTrackStore = create<TrackStore>()(
       set({ ambitions: newAmbitions, profile: { ...state.profile, xp: newXp, level: newLevel } });
     },
 
-    importData: (data) => set((state) => ({ ...state, ...data })),
+    exportData: async () => {
+      const state = get();
+      const exportObj = {
+        app: 'Space-Clocker',
+        version: '1.3.0',
+        timestamp: new Date().toISOString(),
+        payload: {
+          profile: state.profile,
+          ambitions: state.ambitions,
+          tasks: state.tasks,
+          voids: state.voids,
+          reflections: state.reflections,
+          history: state.history,
+          internships: state.internships,
+          skills: state.skills,
+          transmissions: state.transmissions,
+          stats: state.stats,
+          oracleConfig: state.oracleConfig,
+          preferences: state.preferences
+        }
+      };
+      return JSON.stringify(exportObj, null, 2);
+    },
+
+    importData: async (json: any) => {
+      if (!json || json.app !== 'Space-Clocker') {
+        throw new Error('Invalid trajectory data: Not a Space-Clocker backup.');
+      }
+
+      const { payload } = json;
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+
+      try {
+        await db.transaction(async (tx) => {
+          // Clear current
+          await tx.query('DELETE FROM tasks');
+          await tx.query('DELETE FROM milestones');
+          await tx.query('DELETE FROM ambitions');
+          await tx.query('DELETE FROM void_tasks');
+          await tx.query('DELETE FROM skills');
+          await tx.query('DELETE FROM internships');
+          await tx.query('DELETE FROM reflections');
+          await tx.query('DELETE FROM transmissions');
+          await tx.query('DELETE FROM stellar_history');
+
+          // Restore singletons
+          if (payload.profile) {
+            await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
+              payload.profile.name, payload.profile.level, payload.profile.xp, payload.profile.title
+            ]);
+          }
+          if (payload.preferences) {
+            await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [
+              payload.preferences.confirmDelete, payload.preferences.uiMode
+            ]);
+          }
+          if (payload.stats) {
+            await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [
+              payload.stats.streak, payload.stats.tasksCompleted, payload.stats.totalFocusHours
+            ]);
+          }
+          if (payload.oracleConfig) {
+            await tx.query(`UPDATE oracle_config SET api_key = $1, model = $2, provider_url = $3 WHERE id = 1`, [
+              payload.oracleConfig.apiKey, payload.oracleConfig.model, payload.oracleConfig.providerUrl
+            ]);
+          }
+
+          // Restore Ambitions & Milestones
+          if (payload.ambitions) {
+            for (const a of payload.ambitions) {
+              await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [
+                a.id, a.title, a.progress, a.xp || 0, a.horizon
+              ]);
+              if (a.milestones) {
+                for (const m of a.milestones) {
+                  await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [
+                    m.id, a.id, m.title, m.status
+                  ]);
+                  if (m.tasks) {
+                    for (const t of m.tasks) {
+                      await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`, [
+                        t.id, m.id, a.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt
+                      ]);
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          // Restore Standalone Tasks
+          if (payload.tasks) {
+            for (const t of payload.tasks) {
+              await tx.query(`INSERT INTO tasks (id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [
+                t.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt
+              ]);
+            }
+          }
+
+          // Other collections
+          if (payload.voids) {
+            for (const v of payload.voids) {
+              await tx.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [
+                v.id, v.text, v.impact, v.engagedCount, v.maxAllowed
+              ]);
+            }
+          }
+          if (payload.reflections) {
+            for (const r of payload.reflections) {
+              await tx.query(`INSERT INTO reflections (id, date, content, type) VALUES ($1, $2, $3, $4)`, [
+                r.id, r.date, r.content, r.type
+              ]);
+            }
+          }
+          if (payload.skills) {
+            for (const s of payload.skills) {
+              await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
+                s.id, s.name, s.currentProficiency, s.targetProficiency, s.recommendation, s.type || 'personal', s.ambitionId
+              ]);
+            }
+          }
+          if (payload.internships) {
+            for (const i of payload.internships) {
+              const id = `int-${Date.now()}-${Math.random()}`;
+              await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [
+                id, i.organization, i.start, i.end
+              ]);
+            }
+          }
+          if (payload.history) {
+            for (const h of payload.history) {
+              await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
+                h.id, h.title, h.date, h.type, h.category, h.description, JSON.stringify(h.skills)
+              ]);
+            }
+          }
+        });
+        await get().initialize();
+      } catch (err) {
+        console.error('Trajectory restoration failed:', err);
+        throw err;
+      }
+    },
     updateOracleConfig: (config) => set((state) => ({ oracleConfig: { ...state.oracleConfig, ...config } })),
     updateProfile: (updates) => set((state) => {
       const newProfile = { ...state.profile, ...updates };
@@ -904,9 +1055,40 @@ export const useTrackStore = create<TrackStore>()(
       await get().initialize();
     },
 
+    dismissUpdate: () => set({ updateAvailable: false }),
+
+    performSystemUpgrade: async () => {
+      console.log(`[Upgrade] Initiating jump to v${CURRENT_APP_VERSION}...`);
+      const { runMigrations } = await import('../db/migrate');
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+
+      try {
+        // 1. Silent Backup (Session Storage as safety net)
+        const snapshot = await get().exportData();
+        sessionStorage.setItem('pre-upgrade-backup', snapshot);
+
+        // 2. Run Database Migrations
+        await runMigrations();
+
+        // 3. Update version in DB
+        await db.query(`UPDATE system_info SET app_version = $1 WHERE id = 1`, [CURRENT_APP_VERSION]);
+
+        // 4. Refresh State
+        await get().initialize();
+        
+        set({ updateAvailable: false, pendingVersion: undefined });
+        console.log(`[Upgrade] Successfully upgraded to v${CURRENT_APP_VERSION}`);
+      } catch (err) {
+        console.error('[Upgrade] Critical failure during system jump:', err);
+        throw err;
+      }
+    },
+
     initialize: async () => {
       const { getDb } = await import('../db/client');
       const db = getDb();
+      const today = getTodayLocalISO();
       
       // Fetch core data in parallel for efficiency
       const [
@@ -922,22 +1104,37 @@ export const useTrackStore = create<TrackStore>()(
         historyRes,
         skillsRes,
         internshipsRes,
-        transmissionsRes
+        transmissionsRes,
+        systemRes
       ] = await Promise.all([
-        db.query<Profile>(`SELECT name, level, xp, title FROM profile WHERE id = 1`),
-        db.query<any>(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`),
-        db.query<any>(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`),
-        db.query<OracleConfig>(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`),
-        db.query<any>(`SELECT * FROM ambitions`),
-        db.query<any>(`SELECT * FROM milestones`),
-        db.query<any>(`SELECT * FROM tasks`),
-        db.query<VoidTask>(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`),
-        db.query<Reflection>(`SELECT id, date, content, type FROM reflections ORDER BY date DESC LIMIT 100`),
-        db.query<any>(`SELECT * FROM stellar_history ORDER BY date DESC LIMIT 50`),
-        db.query<any>(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`),
-        db.query<any>(`SELECT organization, start_date as "start", end_date as "end" FROM internships`),
-        db.query<any>(`SELECT * FROM transmissions ORDER BY timestamp DESC LIMIT 20`)
+        db.query(`SELECT name, level, xp, title FROM profile WHERE id = 1`),
+        db.query(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`),
+        db.query(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`),
+        db.query(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`),
+        db.query(`SELECT * FROM ambitions`),
+        db.query(`SELECT * FROM milestones`),
+        db.query(`SELECT * FROM tasks`),
+        db.query(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`),
+        db.query(`SELECT id, date, content, type FROM reflections ORDER BY date DESC LIMIT 100`),
+        db.query(`SELECT * FROM stellar_history ORDER BY date DESC LIMIT 50`),
+        db.query(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`),
+        db.query(`SELECT organization, start_date as "start", end_date as "end" FROM internships`),
+        db.query(`SELECT * FROM transmissions ORDER BY timestamp DESC LIMIT 20`),
+        db.query(`SELECT last_startup, app_version FROM system_info WHERE id = 1`)
       ]);
+
+      const lastStartup = systemRes.rows[0]?.last_startup;
+      const dbAppVersion = systemRes.rows[0]?.app_version;
+
+      if (dbAppVersion && dbAppVersion !== CURRENT_APP_VERSION) {
+        console.warn(`[System] Version mismatch: DB(v${dbAppVersion}) vs Code(v${CURRENT_APP_VERSION})`);
+        set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION });
+      }
+
+      if (lastStartup !== today) {
+        console.log(`[System] New solar cycle detected: ${lastStartup || 'Initialization'} -> ${today}`);
+        await db.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
+      }
 
       const profile = profileRes.rows[0];
       const preferences = prefsRes.rows[0];

@@ -153,7 +153,7 @@ export class SyncService {
     if (!meta) return 'none';
 
     const db = getDb();
-    const localMeta = (await db.query<{ last_synced_at: string }>('SELECT last_synced_at FROM sync_metadata WHERE id = 1')).rows[0];
+    const localMeta = (await db.query('SELECT last_synced_at FROM sync_metadata WHERE id = 1')).rows[0];
     
     if (!localMeta || new Date(meta.modifiedAt) > new Date(localMeta.last_synced_at)) {
       return 'remote_newer';

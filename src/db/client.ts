@@ -6,11 +6,11 @@ export const db = {
   get waitReady() {
     return this.getInstance().waitReady;
   },
-  query: (...args: any[]) => (db.getInstance().query as any)(...args),
-  exec: (...args: any[]) => (db.getInstance().exec as any)(...args),
-  close: (...args: any[]) => (db.getInstance().close as any)(...args),
-  dumpDataDir: (...args: any[]) => (db.getInstance().dumpDataDir as any)(...args),
-  transaction: (...args: any[]) => (db.getInstance().transaction as any)(...args),
+  query: (sql: string, params?: any[]) => db.getInstance().query(sql, params) as Promise<any>,
+  exec: (sql: string) => db.getInstance().exec(sql) as Promise<any>,
+  close: () => db.getInstance().close(),
+  dumpDataDir: () => db.getInstance().dumpDataDir(),
+  transaction: (callback: (tx: any) => Promise<any>) => db.getInstance().transaction(callback),
   
   getInstance: (): PGlite => {
     if (!_db) {
@@ -24,10 +24,6 @@ export const db = {
       try {
         _db = new PGlite('idb://space-clocker-db', {
           relaxedDurability: true,
-          options: {
-            shared_buffers: '8MB', // Further reduced from 16MB
-            work_mem: '1MB'
-          }
         });
       } catch (err) {
         console.error('[Database] Failed to create PGlite instance:', err);

@@ -1,4 +1,5 @@
 import { db } from './client';
+import { runMigrations } from './migrate';
 
 const SCHEMA = `
 -- Singletons/Globals
@@ -98,7 +99,9 @@ CREATE TABLE IF NOT EXISTS skills (
   name TEXT NOT NULL,
   current_proficiency INTEGER DEFAULT 0,
   target_proficiency INTEGER DEFAULT 100,
-  recommendation TEXT
+  recommendation TEXT,
+  ambition_id TEXT,
+  type TEXT DEFAULT 'personal'
 );
 
 CREATE TABLE IF NOT EXISTS internships (
@@ -123,16 +126,6 @@ CREATE TABLE IF NOT EXISTS transmissions (
   raw_logs TEXT,
   metadata TEXT
 );
-
-CREATE TABLE IF NOT EXISTS stellar_history (
-  id TEXT PRIMARY KEY,
-  title TEXT NOT NULL,
-  date TEXT NOT NULL,
-  type TEXT NOT NULL,
-  category TEXT NOT NULL,
-  description TEXT,
-  skills TEXT
-);
 `;
 
 export async function initDb() {
@@ -140,33 +133,8 @@ export async function initDb() {
 
   try {
     await db.transaction(async (tx) => {
-      // Create initial schema
+      // Create initial schema (idempotent)
       await tx.exec(SCHEMA);
-
-      // Schema Migrations for existing tables
-      await tx.exec(`
-        ALTER TABLE profile ADD COLUMN IF NOT EXISTS xp INTEGER DEFAULT 0;
-        ALTER TABLE preferences ADD COLUMN IF NOT EXISTS ui_mode TEXT DEFAULT 'simple';
-        ALTER TABLE ambitions ADD COLUMN IF NOT EXISTS xp INTEGER DEFAULT 0;
-        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS end_time TEXT;
-        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS deadline TEXT;
-        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS weightage INTEGER DEFAULT 10;
-        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS completed_at TEXT;
-        ALTER TABLE skills ADD COLUMN IF NOT EXISTS ambition_id TEXT;
-        ALTER TABLE skills ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'personal';
-        ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS start_date TEXT;
-        ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS end_date TEXT;
-        ALTER TABLE transmissions ADD COLUMN IF NOT EXISTS mission_metrics TEXT;
-        CREATE TABLE IF NOT EXISTS stellar_history (
-          id TEXT PRIMARY KEY,
-          title TEXT NOT NULL,
-          date TEXT NOT NULL,
-          type TEXT NOT NULL,
-          category TEXT NOT NULL,
-          description TEXT,
-          skills TEXT
-        );
-      `);
 
       // Ensure singletons exist
       await tx.query(`INSERT INTO profile (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
@@ -174,6 +142,10 @@ export async function initDb() {
       await tx.query(`INSERT INTO stats (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
       await tx.query(`INSERT INTO oracle_config (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
     });
+
+    // Run incremental migrations
+    await runMigrations();
+
     console.log('[System] Stellar database schema synchronized.');
   } catch (e) {
     console.error('[Critical] Database initialization failure:', e);

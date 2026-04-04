@@ -35,7 +35,8 @@ import {
   Play,
   Trophy,
   Award,
-  BrainCircuit
+  BrainCircuit,
+  Cpu
 } from 'lucide-react';
 import InternshipScheduler from './InternshipScheduler';
 import { parseLocalISO } from '../../utils/DateTimeUtils';
