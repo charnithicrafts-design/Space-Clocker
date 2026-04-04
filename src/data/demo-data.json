@@ -3,7 +3,7 @@
     "name": "Nithya Dharshini",
     "level": 15,
     "xp": 720,
-    "title": "Space-Scientist Intern"
+    "title": "AWS Certified Specialist & Data Analyst"
   },
   "preferences": {
     "confirmDelete": true,
@@ -26,12 +26,12 @@
     },
     {
       "id": "hist-2024-2",
-      "title": "ISRO Antarkish Hackathon - Winner",
+      "title": "India AI Contest - Winner",
       "date": "2024-08-23",
       "type": "success",
       "category": "hackathon",
-      "description": "Satellite imagery analysis tool using Python and basic GIS techniques.",
-      "skills": ["GIS", "Python"]
+      "description": "Generative AI model for predictive healthcare analytics using Python.",
+      "skills": ["Python", "Generative AI", "Data Science"]
     },
     {
       "id": "hist-2025-1",
@@ -44,80 +44,80 @@
     },
     {
       "id": "hist-2025-2",
-      "title": "NASA International Space Apps - Global Finalist",
+      "title": "AWS Hackathon - Global Finalist",
       "date": "2025-10-05",
       "type": "success",
       "category": "hackathon",
-      "description": "Secure communication protocols for deep space networks.",
-      "skills": ["Cybersecurity", "Network Protocols"]
+      "description": "Serverless architecture for real-time data streaming and analysis.",
+      "skills": ["AWS Lambda", "Cloud Architecture"]
     }
   ],
   "ambitions": [
     {
       "id": "amb-1",
-      "title": "ISRO Scientist 'SC' Recruitment 2027",
+      "title": "AWS Specialist & Cloud Architect Path",
       "progress": 45,
       "xp": 1300,
       "horizon": "yearly",
-      "linkedSkills": ["sk-5", "sk-6", "sk-7"],
+      "linkedSkills": ["sk-2", "sk-6", "sk-7"],
       "milestones": [
         {
           "id": "ms-1-1",
-          "title": "IIRS PG Diploma in GIS",
+          "title": "AWS Certified Solutions Architect",
           "status": "active",
           "tasks": [
-            { "id": "t-1-1-1", "title": "Master ArcGIS Pro & QGIS", "completed": true, "weightage": 50, "time": "08:00", "horizon": "weekly", "plannedDate": "2026-03-30" },
-            { "id": "t-1-1-2", "title": "Geospatial Data Modeling Final Project", "completed": false, "weightage": 50, "time": "10:00", "horizon": "weekly", "plannedDate": "2026-04-05", "deadline": "2026-04-10T18:00:00Z" }
+            { "id": "t-1-1-1", "title": "Master AWS Core Services (EC2, S3, RDS)", "completed": true, "weightage": 50, "time": "08:00", "horizon": "weekly", "plannedDate": "2026-03-30" },
+            { "id": "t-1-1-2", "title": "VPC Networking & Security Groups Lab", "completed": false, "weightage": 50, "time": "10:00", "horizon": "weekly", "plannedDate": "2026-04-05", "deadline": "2026-04-10T18:00:00Z" }
           ]
         },
         {
           "id": "ms-1-2",
-          "title": "ISRO Technical Assistant Prep",
+          "title": "Serverless Deployment Master",
           "status": "pending",
           "tasks": [
-            { "id": "t-1-2-1", "title": "Advanced Linux System Admin", "completed": false, "weightage": 25, "time": "09:00", "horizon": "daily", "plannedDate": "2026-04-01" },
-            { "id": "t-1-2-2", "title": "Network Security Forensics", "completed": false, "weightage": 25, "time": "14:00", "horizon": "daily", "plannedDate": "2026-04-01" }
+            { "id": "t-1-2-1", "title": "Advanced AWS Lambda & Step Functions", "completed": false, "weightage": 25, "time": "09:00", "horizon": "daily", "plannedDate": "2026-04-01" },
+            { "id": "t-1-2-2", "title": "DynamoDB NoSQL Design Patterns", "completed": false, "weightage": 25, "time": "14:00", "horizon": "daily", "plannedDate": "2026-04-01" }
           ]
         }
       ]
     },
     {
       "id": "amb-2",
-      "title": "Google Quantum AI Engineer 2028",
+      "title": "Lead Data Analyst Career Trajectory",
       "progress": 15,
       "xp": 450,
       "horizon": "yearly",
-      "linkedSkills": ["sk-2", "sk-3", "sk-10"],
+      "linkedSkills": ["sk-1", "sk-5", "sk-10"],
       "milestones": [
         {
           "id": "ms-3-1",
-          "title": "AI/ML Path Acceleration",
+          "title": "Advanced Statistical Modeling",
           "status": "active",
           "tasks": [
-            { "id": "t-3-1-1", "title": "TensorFlow Quantum Integration", "completed": false, "weightage": 30, "time": "07:30", "horizon": "daily", "plannedDate": "2026-03-31" },
-            { "id": "t-3-1-2", "title": "Quantum-Enhanced Generative Models", "completed": false, "weightage": 40, "time": "15:00", "horizon": "daily", "plannedDate": "2026-03-31" }
+            { "id": "t-3-1-1", "title": "Python Data Analysis with Pandas/NumPy", "completed": false, "weightage": 30, "time": "07:30", "horizon": "daily", "plannedDate": "2026-03-31" },
+            { "id": "t-3-1-2", "title": "Exploratory Data Analysis (EDA) on India AI Dataset", "completed": false, "weightage": 40, "time": "15:00", "horizon": "daily", "plannedDate": "2026-03-31" }
           ]
         }
       ]
     }
   ],
   "tasks": [
-    { "id": "st-past-2", "title": "Orbital Decay Analysis - Initial Baseline", "completed": true, "time": "09:00", "horizon": "daily", "weightage": 10, "plannedDate": "2026-03-29" },
-    { "id": "st-past-3", "title": "Geospatial coordinate system setup", "completed": true, "time": "14:00", "horizon": "daily", "weightage": 15, "plannedDate": "2026-03-30" },
-    { "id": "st-past-1", "title": "Orbit Prep: Satellite Telemetry Check", "completed": true, "time": "06:30", "horizon": "daily", "weightage": 15, "plannedDate": "2026-03-31" },
-    { "id": "st-1", "title": "Daily Orbit: Quantum Algorithm Review", "completed": true, "time": "07:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-04-01" },
-    { "id": "st-2", "title": "Weekly Objective: GIS Diploma Module 3", "completed": false, "time": "10:00", "horizon": "weekly", "weightage": 50, "plannedDate": "2026-04-01", "deadline": "2026-04-03T18:00:00Z" },
-    { "id": "st-3", "title": "Daily Orbit: ISRO Exam Pattern Drill", "completed": false, "time": "19:00", "horizon": "daily", "weightage": 30, "plannedDate": "2026-04-01" },
-    { "id": "st-future-1", "title": "Future Sync: Deep Space Network Update", "completed": false, "time": "08:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-04-02" },
-    { "id": "st-future-2", "title": "Stellar Mapping: Alpha Centauri Sector", "completed": false, "time": "21:00", "horizon": "daily", "weightage": 25, "plannedDate": "2026-04-02" },
-    { "id": "st-future-3", "title": "Exoplanet Atmosphere Simulation", "completed": false, "time": "11:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-04-03" }
+    { "id": "st-past-2", "title": "SQL Query Optimization - Performance Baseline", "completed": true, "time": "09:00", "horizon": "daily", "weightage": 10, "plannedDate": "2026-03-29" },
+    { "id": "st-past-3", "title": "Tableau Dashboard: Regional Sales Analysis", "completed": true, "time": "14:00", "horizon": "daily", "weightage": 15, "plannedDate": "2026-03-30" },
+    { "id": "st-past-1", "title": "AWS Cloud Practitioner: Practice Exam", "completed": true, "time": "06:30", "horizon": "daily", "weightage": 15, "plannedDate": "2026-03-31" },
+    { "id": "st-1", "title": "Daily Orbit: AWS Lambda Cold Start Analysis", "completed": true, "time": "07:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-04-01" },
+    { "id": "st-2", "title": "Weekly Objective: Data Visualization Module 4", "completed": false, "time": "10:00", "horizon": "weekly", "weightage": 50, "plannedDate": "2026-04-01", "deadline": "2026-04-03T18:00:00Z" },
+    { "id": "st-3", "title": "Daily Orbit: Statistics for Data Science Drill", "completed": false, "time": "19:00", "horizon": "daily", "weightage": 30, "plannedDate": "2026-04-01" },
+    { "id": "st-future-1", "title": "Future Sync: AWS CDK Infrastructure as Code", "completed": false, "time": "08:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-04-02" },
+    { "id": "st-future-2", "title": "Data Pipeline: Airflow Orchestration Study", "completed": false, "time": "21:00", "horizon": "daily", "weightage": 25, "plannedDate": "2026-04-02" },
+    { "id": "st-future-3", "title": "PowerBI: Financial Forecasting Dashboard", "completed": false, "time": "11:00", "horizon": "daily", "weightage": 20, "plannedDate": "2026-04-03" }
   ],
   "skills": [
-    { "id": "sk-2", "name": "AI/ML & Deep Learning", "currentProficiency": 75, "targetProficiency": 95, "recommendation": "Focus on Quantum-Classical hybrid neural networks.", "type": "ambition", "ambitionId": "amb-2" },
-    { "id": "sk-3", "name": "Quantum Computing", "currentProficiency": 20, "targetProficiency": 85, "recommendation": "Study Google Cirq framework and qubit error correction.", "type": "ambition", "ambitionId": "amb-2" },
-    { "id": "sk-5", "name": "Cybersecurity", "currentProficiency": 60, "targetProficiency": 90, "recommendation": "Master Satellite Link encryption and protocol security.", "type": "ambition", "ambitionId": "amb-1" },
-    { "id": "sk-6", "name": "Satellite Communication", "currentProficiency": 35, "targetProficiency": 85, "recommendation": "Study transponder logic and orbital mechanics.", "type": "ambition", "ambitionId": "amb-1" },
-    { "id": "sk-1", "name": "GIS & Remote Sensing", "currentProficiency": 70, "targetProficiency": 95, "recommendation": "Deep dive into ArcGIS Pro and Sentinel data products.", "type": "ambition", "ambitionId": "amb-1" }
+    { "id": "sk-1", "name": "Data Visualization", "currentProficiency": 70, "targetProficiency": 95, "recommendation": "Master advanced Tableau and PowerBI DAX expressions.", "type": "ambition", "ambitionId": "amb-2" },
+    { "id": "sk-2", "name": "AWS Cloud Services", "currentProficiency": 65, "targetProficiency": 95, "recommendation": "Focus on serverless computing and cloud security.", "type": "ambition", "ambitionId": "amb-1" },
+    { "id": "sk-5", "name": "Python for Data Analysis", "currentProficiency": 80, "targetProficiency": 95, "recommendation": "Explore specialized libraries like Scikit-Learn and PyTorch.", "type": "ambition", "ambitionId": "amb-2" },
+    { "id": "sk-6", "name": "Cloud Architecture", "currentProficiency": 40, "targetProficiency": 90, "recommendation": "Study multi-tier architecture and fault-tolerant systems.", "type": "ambition", "ambitionId": "amb-1" },
+    { "id": "sk-10", "name": "SQL & Database Design", "currentProficiency": 55, "targetProficiency": 85, "recommendation": "Deep dive into PostgreSQL optimization and NoSQL patterns.", "type": "ambition", "ambitionId": "amb-2" }
   ],
   "voids": [
     { "id": "v-1", "text": "Social Media Doomscrolling", "impact": "high", "engagedCount": 8, "maxAllowed": 2 },

@@ -41,13 +41,13 @@ A centralized Web Audio API utility providing short, subtle, and organic audio f
 - **"Warning Thud":** A low-frequency sound for engagement with the "Not-To-Do" list.
 - **"Reflection Swell":** A gentle ambient sound for the reflection modal.
 
-## Intuitive Demo Data (Valentina | MCA Student)
-- **Profile:** A space-loving girl aspiring to work with ISRO and NASA.
-- **Interests:** AI, Machine Learning, and Quantum Computing.
+## Intuitive Demo Data (Nithya Dharshini | MCA Student)
+- **Profile:** An aspiring AWS Certified Specialist and Data Analyst.
+- **Interests:** AI, Machine Learning, and Cloud Architecture.
 - **Ambitions:**
-  - **Macro:** "Lead Scientist at ISRO/NASA by 2027."
-  - **Goals:** "Master Quantum-ML Algorithms", "Complete MCA with Distinction", "Publish research on Orbital Mechanics Optimization".
-- **Orbit Scheduler (Daily Actions):** "Implement 3 Quantum Gates", "Train 1 Neural Network model", "Read 10 pages of Astrodynamics".
-- **Void Protocol (Not-To-Do):** "Doomscrolling Space News", "Unplanned Debugging during focus hours".
-- **Momentum Level:** "Level 42 - Galactic Voyager".
-- **Recent Reflection:** "Missed ML training session due to university lab extension. Need to adjust focus window."
+  - **Macro:** "Lead Data Architect and AWS Specialist by 2027."
+  - **Goals:** "Master AWS Core Services", "India AI Contest Winner", "Advanced Statistical Modeling".
+- **Orbit Scheduler (Daily Actions):** "AWS Lambda Cold Start Analysis", "Python Data Analysis with Pandas", "SQL Query Optimization".
+- **Void Protocol (Not-To-Do):** "Social Media Doomscrolling", "Late-Night Gaming".
+- **Momentum Level:** "Level 15 - Cloud Architect Apprentice".
+- **Recent Reflection:** "Missed SQL optimization session due to server maintenance. Need to adjust focus window."
