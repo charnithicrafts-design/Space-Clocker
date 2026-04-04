@@ -1133,6 +1133,8 @@ export const useTrackStore = create<TrackStore>()(
 
       if (lastStartup !== today) {
         console.log(`[System] New solar cycle detected: ${lastStartup || 'Initialization'} -> ${today}`);
+        const { reconcileDailyTasks } = await import('../utils/StellarScheduler');
+        await reconcileDailyTasks(db, today);
         await db.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
       }
 

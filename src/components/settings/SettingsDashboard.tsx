@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTrackStore } from '../../store/useTrackStore';
+import { useTrackStore, CURRENT_APP_VERSION } from '../../store/useTrackStore';
 import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle } from 'lucide-react';
 import { dumpDb, restoreDb } from '../../db/client';
 import { syncService } from '../../services/SyncService';
@@ -377,7 +377,7 @@ const SettingsDashboard = () => {
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl flex flex-col justify-center items-center text-center space-y-4">
           <RefreshCcw className="text-on-surface-variant animate-spin-slow" size={48} />
           <div>
-            <h3 className="font-display font-bold text-xl">System Version 1.3.0</h3>
+            <h3 className="font-display font-bold text-xl">System Version {CURRENT_APP_VERSION}</h3>
             <p className="text-secondary text-[10px] font-black tracking-widest uppercase mt-1">Schema Version 2</p>
             <p className="text-on-surface-variant text-sm mt-2 max-w-xs">
               Your trajectory data is protected by Chronos Snapshots. Use the Communication Array to sync across devices.
