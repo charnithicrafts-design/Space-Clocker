@@ -849,8 +849,8 @@ export const useTrackStore = create<TrackStore>()(
                   ]);
                   if (m.tasks) {
                     for (const t of m.tasks) {
-                      await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`, [
-                        t.id, m.id, a.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt
+                      await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
+                        t.id, m.id, a.id, t.time, t.endTime || t.end_time, t.deadline, t.weightage || 10, t.title, t.completed, t.horizon || 'daily', t.plannedDate || t.planned_date, t.completedAt || t.completed_at, t.isVoid || t.is_void || false
                       ]);
                     }
                   }
@@ -862,8 +862,8 @@ export const useTrackStore = create<TrackStore>()(
           // Restore Standalone Tasks
           if (payload.tasks) {
             for (const t of payload.tasks) {
-              await tx.query(`INSERT INTO tasks (id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [
-                t.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt
+              await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
+                t.id, t.milestoneId || t.milestone_id || null, t.ambitionId || t.ambition_id || null, t.time, t.endTime || t.end_time, t.deadline, t.weightage || 10, t.title, t.completed, t.horizon || 'daily', t.plannedDate || t.planned_date, t.completedAt || t.completed_at, t.isVoid || t.is_void || false
               ]);
             }
           }
@@ -892,9 +892,16 @@ export const useTrackStore = create<TrackStore>()(
           }
           if (payload.internships) {
             for (const i of payload.internships) {
-              const id = `int-${Date.now()}-${Math.random()}`;
+              const id = i.id || `int-${Date.now()}-${Math.random()}`;
               await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [
-                id, i.organization, i.start, i.end
+                id, i.organization, i.start_date || i.start, i.end_date || i.end
+              ]);
+            }
+          }
+          if (payload.transmissions) {
+            for (const t of payload.transmissions) {
+              await tx.query(`INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
+                t.id, t.timestamp, t.tier, t.title, t.startDate || t.start_date, t.endDate || t.end_date, t.pdaNarrative || t.pda_narrative, t.pdaReflections || t.pda_reflections, t.voidAnalysis || t.void_analysis, t.skillsReconciliation || t.skills_reconciliation, t.missionMetrics || t.mission_metrics, t.rawLogs || t.raw_logs, t.metadata
               ]);
             }
           }
@@ -905,6 +912,10 @@ export const useTrackStore = create<TrackStore>()(
               ]);
             }
           }
+
+          // SILENCE RECONCILIATION: Update last_startup to today so initialize() doesn't roll forward
+          const today = getTodayLocalISO();
+          await tx.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
         });
         await get().initialize();
       } catch (err) {
@@ -982,14 +993,17 @@ export const useTrackStore = create<TrackStore>()(
           await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, ['Valentina', 1, 0, 'Galactic Voyager']);
           await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [true, 'simple']);
           await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [0, 0, 0]);
+
+          // SILENCE RECONCILIATION
+          const today = getTodayLocalISO();
+          await tx.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
         });
+        await get().initialize();
       } catch (err) {
         console.error('Data clear failed:', err);
         throw err;
       }
-      await get().initialize();
     },
-
     importDemoData: async (data: any) => {
       const { getDb } = await import('../db/client');
       const db = getDb();
@@ -1015,7 +1029,9 @@ export const useTrackStore = create<TrackStore>()(
                   await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [m.id, a.id, m.title, m.status]);
                   if (m.tasks) {
                     for (const t of m.tasks) {
-                      await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`, [t.id, m.id, a.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt]);
+                      await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
+                        t.id, m.id, a.id, t.time, t.endTime || t.end_time, t.deadline, t.weightage || 10, t.title, t.completed, t.horizon || 'daily', t.plannedDate || t.planned_date, t.completedAt || t.completed_at, t.isVoid || t.is_void || false
+                      ]);
                     }
                   }
                 }
@@ -1024,7 +1040,9 @@ export const useTrackStore = create<TrackStore>()(
           }
           if (data.tasks) {
             for (const t of data.tasks) {
-              await tx.query(`INSERT INTO tasks (id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [t.id, t.time, t.endTime, t.deadline, t.weightage, t.title, t.completed, t.horizon || 'daily', t.plannedDate, t.completedAt]);
+              await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
+                t.id, t.milestone_id || t.milestoneId || null, t.ambition_id || t.ambitionId || null, t.time, t.end_time || t.endTime, t.deadline, t.weightage || 10, t.title, t.completed, t.horizon || t.horizon || 'daily', t.planned_date || t.plannedDate, t.completed_at || t.completedAt, t.is_void || t.isVoid || false
+              ]);
             }
           }
           if (data.voids) {
@@ -1039,7 +1057,15 @@ export const useTrackStore = create<TrackStore>()(
           }
           if (data.internships) {
             for (const i of data.internships) {
-              await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [`intern-${Date.now()}-${Math.random()}`, i.organization, i.start, i.end]);
+              const id = i.id || `intern-${Date.now()}-${Math.random()}`;
+              await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [id, i.organization, i.start_date || i.start, i.end_date || i.end]);
+            }
+          }
+          if (data.transmissions) {
+            for (const t of data.transmissions) {
+              await tx.query(`INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
+                t.id, t.timestamp, t.tier, t.title, t.start_date || t.startDate, t.end_date || t.endDate, t.pda_narrative || t.pdaNarrative, t.pda_reflections || t.pdaReflections, t.void_analysis || t.voidAnalysis, t.skills_reconciliation || t.skillsReconciliation, t.mission_metrics || t.missionMetrics, t.raw_logs || t.rawLogs, t.metadata
+              ]);
             }
           }
           if (data.history) {
@@ -1047,6 +1073,9 @@ export const useTrackStore = create<TrackStore>()(
               await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [h.id, h.title, h.date, h.type, h.category, h.description, JSON.stringify(h.skills)]);
             }
           }
+          // SILENCE RECONCILIATION
+          const today = getTodayLocalISO();
+          await tx.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
         });
       } catch (err) {
         console.error('Demo data import failed:', err);
