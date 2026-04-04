@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { getTodayLocalISO } from '../utils/DateTimeUtils';
 
 export interface Profile {
   name: string;
@@ -276,7 +277,7 @@ export const useTrackStore = create<TrackStore>()(
         title, 
         completed: false, 
         horizon: 'daily', 
-        plannedDate: extra?.plannedDate || new Date().toISOString().split('T')[0],
+        plannedDate: extra?.plannedDate || getTodayLocalISO(),
         weightage: 10,
         ...extra 
       };

@@ -5,6 +5,7 @@ import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database
 import { dumpDb, restoreDb } from '../../db/client';
 import { syncService } from '../../services/SyncService';
 import { SoundManager } from '../../utils/SoundManager';
+import { getTodayLocalISO } from '../../utils/DateTimeUtils';
 
 const SettingsDashboard = () => {
   const store = useTrackStore();
@@ -68,7 +69,7 @@ const SettingsDashboard = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `space-clocker-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `space-clocker-backup-${getTodayLocalISO()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -99,7 +100,7 @@ const SettingsDashboard = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `chronos-snapshot-${new Date().toISOString().split('T')[0]}.pgdump`;
+      a.download = `chronos-snapshot-${getTodayLocalISO()}.pgdump`;
       a.click();
       URL.revokeObjectURL(url);
       SoundManager.playSyncSuccess();

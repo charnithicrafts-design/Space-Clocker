@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useTrackStore, Transmission } from '../../store/useTrackStore';
 import { generateShareLink } from '../../utils/TransmissionExporter';
+import { getTodayLocalISO } from '../../utils/DateTimeUtils';
 import ConfirmModal from '../layout/ConfirmModal';
 
 const TransmissionDashboard = () => {
@@ -73,8 +74,8 @@ const TransmissionDashboard = () => {
   const [newTxTier, setNewTxTier] = useState<Transmission['tier']>('daily');
   const [newTxNarrative, setNewTxNarrative] = useState('');
   const [newTxTarget, setNewTxTarget] = useState<'NASA' | 'ISRO' | undefined>();
-  const [newTxStartDate, setNewTxStartDate] = useState(new Date().toISOString().split('T')[0]);
-  const [newTxEndDate, setNewTxEndDate] = useState(new Date().toISOString().split('T')[0]);
+  const [newTxStartDate, setNewTxStartDate] = useState(getTodayLocalISO());
+  const [newTxEndDate, setNewTxEndDate] = useState(getTodayLocalISO());
   const [newTxTargetAmbitionId, setNewTxTargetAmbitionId] = useState<string | undefined>();
   const [newTxTargetMilestoneId, setNewTxTargetMilestoneId] = useState<string | undefined>();
 

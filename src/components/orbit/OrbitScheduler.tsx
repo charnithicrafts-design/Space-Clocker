@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTrackStore, Task } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 import { analyzeSchedule, ScheduleAnomaly } from '../../utils/StellarScheduler';
+import { getTodayLocalISO, getLocalTimeHHmm } from '../../utils/DateTimeUtils';
 import { Plus, Trash2, Clock, AlertTriangle, ShieldCheck, Zap, BrainCircuit, Calendar, Timer } from 'lucide-react';
 import ReflectionModal from '../reflection/ReflectionModal';
 import OrbitSubNav, { OrbitHorizon } from './OrbitSubNav';
@@ -33,10 +34,10 @@ const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
 const OrbitScheduler = () => {
   const { tasks, toggleTask, addTask, updateTask, updateTaskDate, deleteTask, preferences, profile, ambitions } = useTrackStore();
   const [activeHorizon, setActiveHorizon] = useState<OrbitHorizon>('daily');
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(getTodayLocalISO());
 
   const [newTask, setNewTask] = useState('');
-  const [newTime, setNewTime] = useState(new Date().getHours().toString().padStart(2, '0') + ':00');
+  const [newTime, setNewTime] = useState(getLocalTimeHHmm().split(':')[0] + ':00');
   const [newEndTime, setNewEndTime] = useState('');
   const [newDeadline, setNewDeadline] = useState('');
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);

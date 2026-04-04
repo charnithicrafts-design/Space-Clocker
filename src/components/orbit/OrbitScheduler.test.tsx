@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import OrbitScheduler from './OrbitScheduler';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
+import { getTodayLocalISO } from '../../utils/DateTimeUtils';
 
 // Mock SoundManager
 vi.mock('../../utils/SoundManager', () => ({
@@ -25,7 +26,7 @@ describe('OrbitScheduler', () => {
   const mockUpdateTask = vi.fn();
   const mockUpdateTaskDate = vi.fn();
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayLocalISO();
 
   const mockTasks = [
     {

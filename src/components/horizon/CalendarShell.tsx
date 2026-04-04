@@ -38,16 +38,9 @@ import {
   BrainCircuit
 } from 'lucide-react';
 import InternshipScheduler from './InternshipScheduler';
+import { parseLocalISO } from '../../utils/DateTimeUtils';
 
 type Horizon = 'daily' | 'weekly' | 'yearly';
-
-/**
- * Helper to parse YYYY-MM-DD into a local Date object without UTC shifts
- */
-const parseLocalDate = (dateStr: string) => {
-  const [year, month, day] = dateStr.split('-').map(Number);
-  return new Date(year, month - 1, day);
-};
 
 const CalendarShell = () => {
   const { tasks, ambitions, internships, history, skills } = useTrackStore();
@@ -72,7 +65,7 @@ const CalendarShell = () => {
 
   const selectedDayTasks = useMemo(() => {
     return allTasks.filter(t => {
-      const isCorrectDate = t.plannedDate && isSameDay(parseLocalDate(t.plannedDate), selectedDate);
+      const isCorrectDate = t.plannedDate && isSameDay(parseLocalISO(t.plannedDate), selectedDate);
       const isDeadlineDate = t.deadline && isSameDay(parseISO(t.deadline), selectedDate);
 
       // Daily view logic (Matching Orbit side)
@@ -109,7 +102,7 @@ const CalendarShell = () => {
         end: weekEnd,
         tasks: allTasks.filter(t => {
           if (!t.plannedDate) return false;
-          const taskDate = parseLocalDate(t.plannedDate);
+          const taskDate = parseLocalISO(t.plannedDate);
           if (!(taskDate >= currentWeekStart && taskDate <= weekEnd)) return false;
 
           // Weekly view logic
@@ -140,7 +133,7 @@ const CalendarShell = () => {
   const getTaskStatus = (task: Task) => {
     const now = new Date();
     const today = startOfDay(now);
-    const taskDate = task.plannedDate ? parseLocalDate(task.plannedDate) : today;
+    const taskDate = task.plannedDate ? parseLocalISO(task.plannedDate) : today;
     
     if (task.completed) {
       if (task.deadline && task.completedAt) {
@@ -249,7 +242,7 @@ const CalendarShell = () => {
                   {days.map((day, idx) => {
                     const isSelected = isSameDay(day, selectedDate);
                     const isCurrentMonth = isSameMonth(day, currentDate);
-                    const dayTasks = allTasks.filter(t => t.plannedDate && isSameDay(parseLocalDate(t.plannedDate), day));
+                    const dayTasks = allTasks.filter(t => t.plannedDate && isSameDay(parseLocalISO(t.plannedDate), day));
                     const dayHistory = history.filter(h => isSameDay(parseISO(h.date), day));
                     
                     return (

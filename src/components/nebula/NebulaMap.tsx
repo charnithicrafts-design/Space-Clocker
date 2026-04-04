@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, CheckCircle, Circle, Zap, Clock, Cpu, Plus, Send, Rocket, X, Edit2, Trash2, Timer, AlertTriangle, Calendar } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
+import { getTodayLocalISO } from '../../utils/DateTimeUtils';
 import CommandModal from '../layout/CommandModal';
 import ConfirmModal from '../layout/ConfirmModal';
 
@@ -23,7 +24,7 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
   const [newTime, setNewTime] = useState('09:00');
   const [newEndTime, setNewEndTime] = useState('');
   const [newDeadline, setNewDeadline] = useState('');
-  const [newDate, setNewDate] = useState(new Date().toISOString().split('T')[0]);
+  const [newDate, setNewDate] = useState(getTodayLocalISO());
   
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteMilestoneModalOpen, setIsDeleteMilestoneModalOpen] = useState(false);
@@ -64,7 +65,7 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
     setEditTaskTime(task.time || '09:00');
     setEditTaskEndTime(task.endTime || '');
     setEditTaskDeadline(task.deadline || '');
-    setEditTaskDate(task.plannedDate || new Date().toISOString().split('T')[0]);
+    setEditTaskDate(task.plannedDate || getTodayLocalISO());
   };
 
   const saveTaskEdit = (e: React.FormEvent) => {

@@ -30,6 +30,7 @@ vi.mock('../services/SyncService', () => ({
 }));
 
 import { useTrackStore } from './useTrackStore';
+import { getTodayLocalISO } from '../utils/DateTimeUtils';
 
 describe('useTrackStore - Mission Control Store', () => {
   beforeEach(() => {
@@ -176,7 +177,7 @@ describe('useTrackStore - Mission Control Store', () => {
       skills: [{ id: 's1', name: 'Astrogation', currentProficiency: 50, ambitionId: 'a1', targetProficiency: 100, recommendation: 'Study more', type: 'ambition' }],
       ambitions: [{ id: 'a1', title: 'NASA 2027', progress: 0, xp: 0, horizon: 'yearly', milestones: [] }],
       tasks: [
-        { id: 't1', title: 'Orbit Calculation', completed: true, weightage: 20, horizon: 'daily', time: '10:00', plannedDate: new Date().toISOString().split('T')[0], ambitionId: 'a1' }
+        { id: 't1', title: 'Orbit Calculation', completed: true, weightage: 20, horizon: 'daily', time: '10:00', plannedDate: getTodayLocalISO(), ambitionId: 'a1' }
       ]
     });
 

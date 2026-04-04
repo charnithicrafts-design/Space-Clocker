@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trophy, Save, Star, AlertCircle } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
+import { getTodayLocalISO } from '../../utils/DateTimeUtils';
 import { HistoricalEvent } from '../../store/useTrackStore';
 
 interface HistoryModalProps {
@@ -12,7 +13,7 @@ interface HistoryModalProps {
 
 const HistoryModal: React.FC<HistoryModalProps> = ({ isOpen, onClose, onSubmit }) => {
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(getTodayLocalISO());
   const [type, setType] = useState<HistoricalEvent['type']>('success');
   const [category, setCategory] = useState<HistoricalEvent['category']>('project');
   const [description, setDescription] = useState('');
