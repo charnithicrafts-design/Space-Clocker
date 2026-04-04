@@ -47,7 +47,7 @@ describe('TransmissionDashboard', () => {
       skillsReconciliation: [{ skillId: 's1', name: 'Astrogation', delta: 5, current: 85 }],
       missionMetrics: { accomplished: [], missed: [], milestones: [] },
       rawLogs: { tasksCompleted: 8, totalTasks: 10, focusHours: 6 },
-      metadata: { securityClearance: 'LEVEL-2-SECRET', targetOrg: 'NASA' }
+      metadata: { securityClearance: 'LEVEL-2-SECRET', targetOrg: 'AWS' }
     },
     {
       id: 'TX-2024-WEEKLY-002',
@@ -120,14 +120,14 @@ describe('TransmissionDashboard', () => {
     const titleInput = screen.getByLabelText('Briefing Title');
     const narrativeInput = screen.getByLabelText('PD&A Narrative');
     const tierSelect = screen.getByLabelText('Transmission Tier');
-    const targetSelect = screen.getByLabelText('Target Agency');
+    const targetSelect = screen.getByLabelText('Target Career Track');
     
     fireEvent.change(titleInput, { target: { value: 'Alpha Centauri Arrival' } });
     fireEvent.change(narrativeInput, { 
       target: { value: 'Atmosphere entry successful. No anomalies detected.' } 
     });
     fireEvent.change(tierSelect, { target: { value: 'milestone' } });
-    fireEvent.change(targetSelect, { target: { value: 'ISRO' } });
+    fireEvent.change(targetSelect, { target: { value: 'INDIA_AI' } });
 
     const uplinkBtn = screen.getByText('Uplink Transmission');
     fireEvent.click(uplinkBtn);
@@ -138,7 +138,7 @@ describe('TransmissionDashboard', () => {
         'milestone',
         'Alpha Centauri Arrival',
         'Atmosphere entry successful. No anomalies detected.',
-        'ISRO',
+        'INDIA_AI',
         expect.any(Object), // dateRange
         undefined, // targetAmbitionId
         undefined  // targetMilestoneId
@@ -167,7 +167,7 @@ describe('TransmissionDashboard', () => {
     expect(screen.getByText(/"Successful scan of the stellar nursery."/)).toBeDefined();
     expect(screen.getByText('Astrogation')).toBeDefined();
     expect(screen.getByText('Stellar Interference')).toBeDefined();
-    expect(screen.getAllByText('NASA').length).toBeGreaterThan(1);
+    expect(screen.getAllByText('AWS').length).toBeGreaterThan(1);
   });
 
   it('should copy the shareable signal to the clipboard for external agencies', async () => {

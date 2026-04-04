@@ -73,7 +73,7 @@ const TransmissionDashboard = () => {
   const [newTxTitle, setNewTxTitle] = useState('');
   const [newTxTier, setNewTxTier] = useState<Transmission['tier']>('daily');
   const [newTxNarrative, setNewTxNarrative] = useState('');
-  const [newTxTarget, setNewTxTarget] = useState<'NASA' | 'ISRO' | undefined>();
+  const [newTxTarget, setNewTxTarget] = useState<string | undefined>();
   const [newTxStartDate, setNewTxStartDate] = useState(getTodayLocalISO());
   const [newTxEndDate, setNewTxEndDate] = useState(getTodayLocalISO());
   const [newTxTargetAmbitionId, setNewTxTargetAmbitionId] = useState<string | undefined>();
@@ -517,17 +517,17 @@ const TransmissionDashboard = () => {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="tx-target" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Target Agency</label>
+                    <label htmlFor="tx-target" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Target Career Track</label>
                     <select 
                       id="tx-target"
                       value={newTxTarget || ''}
-                      onChange={(e) => setNewTxTarget(e.target.value as any || undefined)}
+                      onChange={(e) => setNewTxTarget(e.target.value || undefined)}
                       className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all"
                     >
                       <option value="">None (Standard)</option>
-                      <option value="NASA">NASA</option>
-                      <option value="ISRO">ISRO</option>
-                      <option value="GOOGLE">GOOGLE</option>
+                      <option value="AWS">AWS Specialist</option>
+                      <option value="INDIA_AI">India AI</option>
+                      <option value="GOOGLE">Google AI</option>
                     </select>
                   </div>
                 </div>

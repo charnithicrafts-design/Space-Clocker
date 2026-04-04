@@ -1,6 +1,6 @@
 # Space-Clocker User Guide
 
-Welcome, Voyager. Space-Clocker is your high-fidelity command center for tracking trajectories toward NASA, ISRO, and beyond.
+Welcome, Voyager. Space-Clocker is your high-fidelity command center for tracking trajectories toward AWS Specialist, Data Analyst, and beyond.
 
 ## Core Sectors
 
@@ -11,7 +11,7 @@ Your high-level overview.
 
 ### 2. Nebula (Architect Mode)
 Decompose your ambitions into stellar milestones.
-- **Trajectories:** Main goals (e.g., "NASA Internship 2027").
+- **Trajectories:** Main goals (e.g., "AWS Cloud Specialist 2027").
 - **Milestones:** Significant steps within a trajectory.
 - **Stellar Tasks:** Granular actions linked to milestones.
 
@@ -25,14 +25,14 @@ Manage your daily mission logs.
 Visualize your journey through time.
 - **Daily View:** Standard calendar for granular planning.
 - **Weekly View:** Visualizes 4-week bars of the current month to track sustained momentum.
-- **Yearly View:** A 3-year trajectory (Previous, Current, Next) highlighting long-term alignment, specifically targeting the **NASA 2027** milestone.
+- **Yearly View:** A 3-year trajectory (Previous, Current, Next) highlighting long-term alignment, specifically targeting the **AWS 2027** milestone.
 
 ### 5. Transmission (Reporting)
 Generate mission briefings for self-reflection or agency submission.
 - **Mission Chronometer:** Select a specific date range to analyze.
 - **Horizon Grouping:** Achievements are automatically grouped by Daily, Weekly, and Yearly horizons.
 - **Nebula Progress:** Includes completed milestones and overall trajectory alignment.
-- **Trajectory Alignment:** Automated detection of alignment with major goals like **NASA 2027**.
+- **Trajectory Alignment:** Automated detection of alignment with major goals like **AWS 2027**.
 - **Accessible Exports:** PDF briefings are strictly styled for WCAG 2.2 compliance (high-contrast, B&W).
 
 ## Accessibility Features
@@ -43,7 +43,7 @@ Generate mission briefings for self-reflection or agency submission.
 
 ## Getting Started
 1. **Onboarding:** Follow the Mission Control briefing on your first launch.
-2. **Setup Trajectory:** Head to the Nebula sector to define your first major ambition (e.g., NASA 2027).
+2. **Setup Trajectory:** Head to the Nebula sector to define your first major ambition (e.g., AWS 2027).
 3. **Daily Orbit:** Check your Orbit scheduler every morning to sync your tactical objectives.
 4. **Uplink:** Generate a Weekly or Monthly Transmission to reconcile your progress and check trajectory alignment.
 

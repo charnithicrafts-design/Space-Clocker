@@ -403,7 +403,7 @@ const CalendarShell = () => {
                   {year === 2027 && (
                     <div className="absolute top-0 right-0 p-4">
                       <div className="bg-primary/20 text-primary border border-primary/30 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] animate-pulse">
-                        Target Year: NASA Space Scientist
+                        Target Year: AWS Cloud Specialist
                       </div>
                     </div>
                   )}
@@ -426,16 +426,16 @@ const CalendarShell = () => {
                               <Target size={64} />
                             </div>
                             <div className="flex justify-between items-start relative z-10">
-                              <div className="bg-primary/20 text-primary text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">ISRO HQ</div>
+                              <div className="bg-primary/20 text-primary text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Contest HQ</div>
                               <div className="text-[10px] font-mono text-primary">DEC 2027</div>
                             </div>
                             <div className="relative z-10">
-                              <div className="text-sm font-black text-white uppercase tracking-tight">ISRO Scientist SC Recruitment</div>
+                              <div className="text-sm font-black text-white uppercase tracking-tight">India AI Contest Winner</div>
                               <p className="text-[9px] text-on-surface-variant font-medium mt-1 uppercase tracking-tighter">Primary Alignment Target • High Gravity Event</p>
                             </div>
                             <div className="flex gap-1 mt-2 relative z-10">
-                              <div className="px-2 py-0.5 rounded-md bg-surface-high border border-outline-variant text-[7px] font-black text-on-surface-variant uppercase">Propulsion Systems</div>
-                              <div className="px-2 py-0.5 rounded-md bg-surface-high border border-outline-variant text-[7px] font-black text-on-surface-variant uppercase">Orbital Mechanics</div>
+                              <div className="px-2 py-0.5 rounded-md bg-surface-high border border-outline-variant text-[7px] font-black text-on-surface-variant uppercase">Machine Learning</div>
+                              <div className="px-2 py-0.5 rounded-md bg-surface-high border border-outline-variant text-[7px] font-black text-on-surface-variant uppercase">Data Analysis</div>
                             </div>
                           </div>
                         )}

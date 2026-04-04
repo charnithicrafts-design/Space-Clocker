@@ -12,7 +12,7 @@ dont use && in command line, you are in windows environment most likely using po
 if you are running tests, especially vitest you automatically exit the shell after test completion regardless of whether test has passed or not
 
 ## Project Overview
-**Space-Clocker** is a high-fidelity, space-themed productivity and skill-tracking application. It is designed to help users (specifically oriented toward students in technical fields like MCA) manage their "trajectories" toward ambitious goals such as NASA or ISRO. 
+**Space-Clocker** is a high-fidelity, space-themed productivity and skill-tracking application. It is designed to help users (specifically oriented toward students in technical fields like MCA) manage their "trajectories" toward ambitious goals such as AWS Specialist or Data Analyst. 
 
 The application features a modular interface with four primary modes:
 - **Dashboard (Momentum Engine):** High-level progress overview, level tracking, and macro ambitions.

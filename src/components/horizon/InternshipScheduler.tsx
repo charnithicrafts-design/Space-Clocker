@@ -6,7 +6,7 @@ import { Calendar, Briefcase } from 'lucide-react';
 
 const InternshipScheduler = () => {
   const { addInternship, internships } = useTrackStore();
-  const [org, setOrg] = useState<'ISRO' | 'NASA'>('ISRO');
+  const [org, setOrg] = useState<string>('AWS');
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
 
@@ -23,13 +23,15 @@ const InternshipScheduler = () => {
     <div className="space-y-8 pt-8 border-t border-outline-variant/20 mt-12">
       <div className="flex items-center gap-3">
         <Briefcase className="text-secondary" size={20} />
-        <h2 className="text-white text-lg font-bold tracking-tight uppercase">Deployments Scheduler</h2>
+        <h2 className="text-white text-lg font-bold tracking-tight uppercase">Career Deployment Scheduler</h2>
       </div>
 
       <form onSubmit={handleAdd} className="glass-panel border border-outline-variant p-6 rounded-2xl space-y-4">
-        <select value={org} onChange={(e) => setOrg(e.target.value as 'ISRO' | 'NASA')} className="w-full bg-surface-high p-3 rounded-xl border border-outline-variant">
-          <option value="ISRO">ISRO</option>
-          <option value="NASA">NASA</option>
+        <select value={org} onChange={(e) => setOrg(e.target.value)} className="w-full bg-surface-high p-3 rounded-xl border border-outline-variant">
+          <option value="AWS">AWS</option>
+          <option value="India AI">India AI</option>
+          <option value="Google">Google</option>
+          <option value="Microsoft">Microsoft</option>
         </select>
         <div className="grid grid-cols-2 gap-4">
           <input type="date" value={start} onChange={(e) => setStart(e.target.value)} className="bg-surface-high p-3 rounded-xl border border-outline-variant" />

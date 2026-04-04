@@ -17,42 +17,42 @@ interface Step {
 const steps: Step[] = [
   {
     title: "Mission Briefing",
-    content: "Welcome, Cadet. Your trajectory toward ISRO 2027 and Google Quantum 2028 has been initialized. Space-Clocker is your command hub for deconstructing massive ambitions into executable stellar milestones.",
+    content: "Welcome, Commander. Your trajectory toward AWS Specialist and India AI Winner has been initialized. Space-Clocker is your command hub for deconstructing massive ambitions into executable stellar milestones.",
     icon: Rocket,
     target: "mission-briefing",
     route: "/"
   },
   {
     title: "Momentum Engine",
-    content: "This is your Momentum Engine. Notice how your Rank reflects your expertise in critical fields like GIS, AI/ML, and Quantum Advantage. Every task completed fuels your trajectory.",
+    content: "This is your Momentum Engine. Notice how your Rank reflects your expertise in critical fields like Cloud Architecture, Data Analysis, and AI/ML. Every task completed fuels your trajectory.",
     icon: LayoutDashboard,
     target: "dashboard",
     route: "/"
   },
   {
     title: "Architect Mode",
-    content: "In Architect Mode (Nebula), we map your dual-track missions. Deconstruct complex goals into manageable milestones and track resonance energy for each trajectory.",
+    content: "In Architect Mode (Nebula), we map your dual-track missions. Deconstruct complex goals like AWS Certification into manageable milestones and track resonance energy for each trajectory.",
     icon: Target,
     target: "nebula",
     route: "/nebula"
   },
   {
     title: "Daily Orbit",
-    content: "Manage daily tasks and use the 'Void Protocol' to lock out distractions. Precision in your daily orbit ensures you stay aligned with the 2028 horizon.",
+    content: "Manage daily tasks and use the 'Void Protocol' to lock out distractions. Precision in your daily orbit ensures you stay aligned with your career horizon.",
     icon: Clock,
     target: "orbit",
     route: "/orbit"
   },
   {
     title: "The Void",
-    content: "Visualize proficiency in the Skills Matrix. Map your current mastery and identify the gaps you need to bridge to reach the quantum horizon.",
+    content: "Visualize proficiency in the Skills Matrix. Map your current mastery in SQL, Python, and AWS to identify the gaps you need to bridge to reach the elite tier.",
     icon: Brain,
     target: "skills",
     route: "/skills"
   },
   {
     title: "Launch Sequence",
-    content: "System check complete. Your path to ISRO, NASA, and Google is clear. Chart your course to the stars, Commander.",
+    content: "System check complete. Your path to AWS Specialist, India AI Contest, and Google is clear. Chart your course to success, Commander.",
     icon: CheckCircle2,
     target: "complete",
     route: "/"

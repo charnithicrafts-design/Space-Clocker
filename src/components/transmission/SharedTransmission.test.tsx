@@ -31,7 +31,7 @@ describe('SharedTransmission', () => {
       milestones: []
     },
     rawLogs: { tasksCompleted: 15, totalTasks: 15, focusHours: 48 },
-    metadata: { securityClearance: 'TOP-SECRET-EYES-ONLY', targetOrg: 'NASA' }
+    metadata: { securityClearance: 'TOP-SECRET-EYES-ONLY', targetOrg: 'AWS' }
   };
 
   it('should render the shared briefing when a valid signal hash is provided', () => {
@@ -49,7 +49,7 @@ describe('SharedTransmission', () => {
     expect(screen.getByText('Martian Surface Expedition')).toBeDefined();
     expect(screen.getByText(/Successfully deployed the rover/)).toBeDefined();
     expect(screen.getByText('Soil samples collected')).toBeDefined();
-    expect(screen.getByText('NASA')).toBeDefined();
+    expect(screen.getByText('AWS')).toBeDefined();
     expect(screen.getByText('TOP-SECRET-EYES-ONLY')).toBeDefined();
     expect(screen.getByText('Exo-Geology')).toBeDefined();
     expect(screen.getByText('Dust Storm Delay')).toBeDefined();

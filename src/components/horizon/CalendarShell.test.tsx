@@ -68,7 +68,7 @@ describe('CalendarShell', () => {
   ];
 
   const mockInternships = [
-    { organization: 'NASA', start: '2026-06-01', end: '2026-08-31' }
+    { organization: 'AWS', start: '2026-06-01', end: '2026-08-31' }
   ];
 
   beforeEach(() => {
