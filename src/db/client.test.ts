@@ -1,5 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+// Mock indexedDB for node environment
+global.indexedDB = {} as any;
+
 // Use hoisted to define mock objects for architectural isolation
 const { mockPGliteConstructor, mockPGliteCreate } = vi.hoisted(() => {
   const createInstance = () => ({

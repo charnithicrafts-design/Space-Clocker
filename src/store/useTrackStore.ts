@@ -293,7 +293,7 @@ export const useTrackStore = create<TrackStore>()(
       const { getDb } = await import('../db/client');
       const db = getDb();
       await db.query(`INSERT INTO tasks (id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [
-        newTask.id, newTask.time, newTask.endTime, newTask.deadline, newTask.weightage, newTask.title, newTask.completed, newTask.horizon, newTask.plannedDate, ambitionId
+        newTask.id, newTask.time, newTask.endTime || null, newTask.deadline || null, newTask.weightage, newTask.title, newTask.completed, newTask.horizon, newTask.plannedDate || null, ambitionId || null
       ]);
 
       set((state) => ({ tasks: [...state.tasks, newTask] }));
@@ -383,7 +383,7 @@ export const useTrackStore = create<TrackStore>()(
       const { getDb } = await import('../db/client');
       const db = getDb();
       await db.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
-        id, newEvent.title, newEvent.date, newEvent.type, newEvent.category, newEvent.description, JSON.stringify(newEvent.skills)
+        id, newEvent.title, newEvent.date, newEvent.type, newEvent.category, newEvent.description || null, JSON.stringify(newEvent.skills)
       ]);
       set((state) => ({ history: [...state.history, newEvent] }));
     },
@@ -428,7 +428,7 @@ export const useTrackStore = create<TrackStore>()(
       const { getDb } = await import('../db/client');
       const db = getDb();
       await db.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
-        id, name, current, target, recommendation, type, ambitionId
+        id, name, current, target, recommendation || null, type, ambitionId || null
       ]);
       const newSkill: Skill = { id, name, currentProficiency: current, targetProficiency: target, recommendation, type, ambitionId };
       set((state) => ({ skills: [...state.skills, newSkill] }));
@@ -603,7 +603,7 @@ export const useTrackStore = create<TrackStore>()(
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
           [
             newTransmission.id, newTransmission.timestamp, newTransmission.tier, newTransmission.title, 
-            newTransmission.startDate, newTransmission.endDate, newTransmission.pdaNarrative,
+            newTransmission.startDate || null, newTransmission.endDate || null, newTransmission.pdaNarrative || null,
             JSON.stringify(newTransmission.pdaReflections), JSON.stringify(newTransmission.voidAnalysis), 
             JSON.stringify(newTransmission.skillsReconciliation), JSON.stringify(newTransmission.missionMetrics),
             JSON.stringify(newTransmission.rawLogs), JSON.stringify(newTransmission.metadata)
@@ -656,7 +656,7 @@ export const useTrackStore = create<TrackStore>()(
       const { getDb } = await import('../db/client');
       const db = getDb();
       await db.query(`INSERT INTO tasks (id, milestone_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`, [
-        newTask.id, milestoneId, newTask.time, newTask.endTime, newTask.deadline, newTask.weightage, newTask.title, newTask.completed, newTask.horizon, newTask.plannedDate
+        newTask.id, milestoneId, newTask.time, newTask.endTime || null, newTask.deadline || null, newTask.weightage, newTask.title, newTask.completed, newTask.horizon, newTask.plannedDate || null
       ]);
       set((state) => ({
         ambitions: state.ambitions.map((a) => a.id === ambitionId ? {
@@ -817,22 +817,22 @@ export const useTrackStore = create<TrackStore>()(
           // Restore singletons
           if (payload.profile) {
             await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
-              payload.profile.name, payload.profile.level, payload.profile.xp, payload.profile.title
+              payload.profile.name || null, payload.profile.level || 1, payload.profile.xp || 0, payload.profile.title || null
             ]);
           }
           if (payload.preferences) {
             await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [
-              payload.preferences.confirmDelete, payload.preferences.uiMode
+              payload.preferences.confirmDelete ?? true, payload.preferences.uiMode || 'simple'
             ]);
           }
           if (payload.stats) {
             await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [
-              payload.stats.streak, payload.stats.tasksCompleted, payload.stats.totalFocusHours
+              payload.stats.streak || 0, payload.stats.tasksCompleted || 0, payload.stats.totalFocusHours || 0
             ]);
           }
           if (payload.oracleConfig) {
             await tx.query(`UPDATE oracle_config SET api_key = $1, model = $2, provider_url = $3 WHERE id = 1`, [
-              payload.oracleConfig.apiKey, payload.oracleConfig.model, payload.oracleConfig.providerUrl
+              payload.oracleConfig.apiKey || '', payload.oracleConfig.model || 'gemini-1.5-pro', payload.oracleConfig.providerUrl || null
             ]);
           }
 
@@ -840,17 +840,17 @@ export const useTrackStore = create<TrackStore>()(
           if (payload.ambitions) {
             for (const a of payload.ambitions) {
               await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [
-                a.id, a.title, a.progress, a.xp || 0, a.horizon
+                a.id, a.title, a.progress || 0, a.xp || 0, a.horizon || 'yearly'
               ]);
               if (a.milestones) {
                 for (const m of a.milestones) {
                   await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [
-                    m.id, a.id, m.title, m.status
+                    m.id, a.id, m.title, m.status || 'pending'
                   ]);
                   if (m.tasks) {
                     for (const t of m.tasks) {
                       await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
-                        t.id, m.id, a.id, t.time, t.endTime || t.end_time, t.deadline, t.weightage || 10, t.title, t.completed, t.horizon || 'daily', t.plannedDate || t.planned_date, t.completedAt || t.completed_at, t.isVoid || t.is_void || false
+                        t.id, m.id, a.id, t.time || null, t.endTime || t.end_time || null, t.deadline || null, t.weightage || 10, t.title, t.completed ?? false, t.horizon || 'daily', t.plannedDate || t.planned_date || null, t.completedAt || t.completed_at || null, t.isVoid || t.is_void || false
                       ]);
                     }
                   }
@@ -863,7 +863,7 @@ export const useTrackStore = create<TrackStore>()(
           if (payload.tasks) {
             for (const t of payload.tasks) {
               await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
-                t.id, t.milestoneId || t.milestone_id || null, t.ambitionId || t.ambition_id || null, t.time, t.endTime || t.end_time, t.deadline, t.weightage || 10, t.title, t.completed, t.horizon || 'daily', t.plannedDate || t.planned_date, t.completedAt || t.completed_at, t.isVoid || t.is_void || false
+                t.id, t.milestoneId || t.milestone_id || null, t.ambitionId || t.ambition_id || null, t.time || null, t.endTime || t.end_time || null, t.deadline || null, t.weightage || 10, t.title, t.completed ?? false, t.horizon || 'daily', t.plannedDate || t.planned_date || null, t.completedAt || t.completed_at || null, t.isVoid || t.is_void || false
               ]);
             }
           }
@@ -872,21 +872,21 @@ export const useTrackStore = create<TrackStore>()(
           if (payload.voids) {
             for (const v of payload.voids) {
               await tx.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [
-                v.id, v.text, v.impact, v.engagedCount, v.maxAllowed
+                v.id, v.text, v.impact || 'low', v.engagedCount || 0, v.maxAllowed || 3
               ]);
             }
           }
           if (payload.reflections) {
             for (const r of payload.reflections) {
               await tx.query(`INSERT INTO reflections (id, date, content, type) VALUES ($1, $2, $3, $4)`, [
-                r.id, r.date, r.content, r.type
+                r.id, r.date || null, r.content, r.type || 'daily-summary'
               ]);
             }
           }
           if (payload.skills) {
             for (const s of payload.skills) {
               await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
-                s.id, s.name, s.currentProficiency, s.targetProficiency, s.recommendation, s.type || 'personal', s.ambitionId
+                s.id, s.name, s.currentProficiency || 0, s.targetProficiency || 100, s.recommendation || null, s.type || 'personal', s.ambitionId || null
               ]);
             }
           }
@@ -901,14 +901,14 @@ export const useTrackStore = create<TrackStore>()(
           if (payload.transmissions) {
             for (const t of payload.transmissions) {
               await tx.query(`INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
-                t.id, t.timestamp, t.tier, t.title, t.startDate || t.start_date, t.endDate || t.end_date, t.pdaNarrative || t.pda_narrative, t.pdaReflections || t.pda_reflections, t.voidAnalysis || t.void_analysis, t.skillsReconciliation || t.skills_reconciliation, t.missionMetrics || t.mission_metrics, t.rawLogs || t.raw_logs, t.metadata
+                t.id, t.timestamp || null, t.tier, t.title, t.startDate || t.start_date || null, t.endDate || t.end_date || null, t.pdaNarrative || t.pda_narrative || null, t.pdaReflections || t.pda_reflections || null, t.voidAnalysis || t.void_analysis || null, t.skillsReconciliation || t.skills_reconciliation || null, t.missionMetrics || t.mission_metrics || null, t.rawLogs || t.raw_logs || null, t.metadata || null
               ]);
             }
           }
           if (payload.history) {
             for (const h of payload.history) {
               await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
-                h.id, h.title, h.date, h.type, h.category, h.description, JSON.stringify(h.skills)
+                h.id, h.title, h.date, h.type, h.category, h.description || null, h.skills ? JSON.stringify(h.skills) : null
               ]);
             }
           }
@@ -1018,19 +1018,19 @@ export const useTrackStore = create<TrackStore>()(
           await tx.query('DELETE FROM reflections');
           await tx.query('DELETE FROM transmissions');
           await tx.query('DELETE FROM stellar_history');
-          if (data.profile) await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [data.profile.name, data.profile.level, data.profile.xp, data.profile.title]);
-          if (data.preferences) await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [data.preferences.confirmDelete, data.preferences.uiMode]);
-          if (data.stats) await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [data.stats.streak, data.stats.tasksCompleted, data.stats.totalFocusHours]);
+          if (data.profile) await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [data.profile.name || null, data.profile.level || 1, data.profile.xp || 0, data.profile.title || null]);
+          if (data.preferences) await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [data.preferences.confirmDelete ?? true, data.preferences.uiMode || 'simple']);
+          if (data.stats) await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [data.stats.streak || 0, data.stats.tasksCompleted || 0, data.stats.totalFocusHours || 0]);
           if (data.ambitions) {
             for (const a of data.ambitions) {
-              await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [a.id, a.title, a.progress, a.xp, a.horizon]);
+              await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [a.id, a.title, a.progress || 0, a.xp || 0, a.horizon || 'yearly']);
               if (a.milestones) {
                 for (const m of a.milestones) {
-                  await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [m.id, a.id, m.title, m.status]);
+                  await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [m.id, a.id, m.title, m.status || 'pending']);
                   if (m.tasks) {
                     for (const t of m.tasks) {
                       await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
-                        t.id, m.id, a.id, t.time, t.endTime || t.end_time, t.deadline, t.weightage || 10, t.title, t.completed, t.horizon || 'daily', t.plannedDate || t.planned_date, t.completedAt || t.completed_at, t.isVoid || t.is_void || false
+                        t.id, m.id, a.id, t.time || null, t.endTime || t.end_time || null, t.deadline || null, t.weightage || 10, t.title, t.completed ?? false, t.horizon || 'daily', t.plannedDate || t.planned_date || null, t.completedAt || t.completed_at || null, t.isVoid || t.is_void || false
                       ]);
                     }
                   }
@@ -1041,36 +1041,36 @@ export const useTrackStore = create<TrackStore>()(
           if (data.tasks) {
             for (const t of data.tasks) {
               await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
-                t.id, t.milestone_id || t.milestoneId || null, t.ambition_id || t.ambitionId || null, t.time, t.end_time || t.endTime, t.deadline, t.weightage || 10, t.title, t.completed, t.horizon || t.horizon || 'daily', t.planned_date || t.plannedDate, t.completed_at || t.completedAt, t.is_void || t.isVoid || false
+                t.id, t.milestone_id || t.milestoneId || null, t.ambition_id || t.ambitionId || null, t.time || null, t.end_time || t.endTime || null, t.deadline || null, t.weightage || 10, t.title, t.completed ?? false, t.horizon || 'daily', t.planned_date || t.plannedDate || null, t.completed_at || t.completedAt || null, t.is_void || t.isVoid || false
               ]);
             }
           }
           if (data.voids) {
             for (const v of data.voids) {
-              await tx.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [v.id, v.text, v.impact, v.engagedCount, v.maxAllowed]);
+              await tx.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [v.id, v.text, v.impact || 'low', v.engagedCount || 0, v.maxAllowed || 3]);
             }
           }
           if (data.skills) {
             for (const s of data.skills) {
-              await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [s.id, s.name, s.current_proficiency || s.currentProficiency, s.target_proficiency || s.targetProficiency, s.recommendation, s.type || 'personal', s.ambition_id || s.ambitionId]);
+              await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [s.id, s.name, s.current_proficiency || s.currentProficiency || 0, s.target_proficiency || s.targetProficiency || 100, s.recommendation || null, s.type || 'personal', s.ambition_id || s.ambitionId || null]);
             }
           }
           if (data.internships) {
             for (const i of data.internships) {
               const id = i.id || `intern-${Date.now()}-${Math.random()}`;
-              await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [id, i.organization, i.start_date || i.start, i.end_date || i.end]);
+              await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [id, i.organization, i.start_date || i.start || null, i.end_date || i.end || null]);
             }
           }
           if (data.transmissions) {
             for (const t of data.transmissions) {
               await tx.query(`INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
-                t.id, t.timestamp, t.tier, t.title, t.start_date || t.startDate, t.end_date || t.endDate, t.pda_narrative || t.pdaNarrative, t.pda_reflections || t.pdaReflections, t.void_analysis || t.voidAnalysis, t.skills_reconciliation || t.skillsReconciliation, t.mission_metrics || t.missionMetrics, t.raw_logs || t.rawLogs, t.metadata
+                t.id, t.timestamp || null, t.tier, t.title, t.start_date || t.startDate || null, t.end_date || t.endDate || null, t.pda_narrative || t.pdaNarrative || null, t.pda_reflections || t.pdaReflections || null, t.void_analysis || t.voidAnalysis || null, t.skills_reconciliation || t.skillsReconciliation || null, t.mission_metrics || t.missionMetrics || null, t.raw_logs || t.rawLogs || null, t.metadata || null
               ]);
             }
           }
           if (data.history) {
             for (const h of data.history) {
-              await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [h.id, h.title, h.date, h.type, h.category, h.description, JSON.stringify(h.skills)]);
+              await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [h.id, h.title, h.date, h.type, h.category, h.description || null, h.skills ? JSON.stringify(h.skills) : null]);
             }
           }
           // SILENCE RECONCILIATION

@@ -124,22 +124,22 @@ export async function migrateFromZustand() {
       // 1. Singletons
       if (state.profile) {
         await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
-          state.profile.name, state.profile.level, state.profile.xp || 0, state.profile.title
+          state.profile.name || null, state.profile.level || 1, state.profile.xp || 0, state.profile.title || null
         ]);
       }
       if (state.preferences) {
         await tx.query(`UPDATE preferences SET confirm_delete = $1 WHERE id = 1`, [
-          state.preferences.confirmDelete
+          state.preferences.confirmDelete ?? true
         ]);
       }
       if (state.stats) {
         await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [
-          state.stats.streak, state.stats.tasksCompleted, state.stats.totalFocusHours
+          state.stats.streak || 0, state.stats.tasksCompleted || 0, state.stats.totalFocusHours || 0
         ]);
       }
       if (state.oracleConfig) {
         await tx.query(`UPDATE oracle_config SET api_key = $1, model = $2, provider_url = $3 WHERE id = 1`, [
-          state.oracleConfig.apiKey, state.oracleConfig.model, state.oracleConfig.providerUrl
+          state.oracleConfig.apiKey || '', state.oracleConfig.model || 'gemini-1.5-pro', state.oracleConfig.providerUrl || null
         ]);
       }
 
@@ -147,19 +147,19 @@ export async function migrateFromZustand() {
       if (state.ambitions) {
         for (const ambition of state.ambitions) {
           await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING`, [
-            ambition.id, ambition.title, ambition.progress, ambition.xp || 0, ambition.horizon
+            ambition.id, ambition.title, ambition.progress || 0, ambition.xp || 0, ambition.horizon || 'yearly'
           ]);
 
           if (ambition.milestones) {
             for (const milestone of ambition.milestones) {
               await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`, [
-                milestone.id, ambition.id, milestone.title, milestone.status
+                milestone.id, ambition.id, milestone.title, milestone.status || 'pending'
               ]);
 
               if (milestone.tasks) {
                 for (const task of milestone.tasks) {
                   await tx.query(`INSERT INTO tasks (id, milestone_id, time, title, completed, horizon, planned_date, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT DO NOTHING`, [
-                    task.id, milestone.id, task.time, task.title, task.completed, task.horizon, task.plannedDate, task.isVoid
+                    task.id, milestone.id, task.time || null, task.title, task.completed ?? false, task.horizon || 'daily', task.plannedDate || null, task.isVoid ?? false
                   ]);
                 }
               }
@@ -172,7 +172,7 @@ export async function migrateFromZustand() {
       if (state.tasks) {
         for (const task of state.tasks) {
           await tx.query(`INSERT INTO tasks (id, time, title, completed, horizon, planned_date, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT DO NOTHING`, [
-            task.id, task.time, task.title, task.completed, task.horizon, task.plannedDate, task.isVoid
+            task.id, task.time || null, task.title, task.completed ?? false, task.horizon || 'daily', task.plannedDate || null, task.isVoid ?? false
           ]);
         }
       }
@@ -181,7 +181,7 @@ export async function migrateFromZustand() {
       if (state.voids) {
         for (const v of state.voids) {
           await tx.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING`, [
-            v.id, v.text, v.impact, v.engagedCount, v.maxAllowed
+            v.id, v.text, v.impact || 'low', v.engagedCount || 0, v.maxAllowed || 3
           ]);
         }
       }
@@ -190,7 +190,7 @@ export async function migrateFromZustand() {
       if (state.reflections) {
         for (const r of state.reflections) {
           await tx.query(`INSERT INTO reflections (id, date, content, type) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING`, [
-            r.id, r.date, r.content, r.type
+            r.id, r.date || null, r.content, r.type || 'daily-summary'
           ]);
         }
       }
@@ -199,7 +199,7 @@ export async function migrateFromZustand() {
       if (state.skills) {
         for (const s of state.skills) {
           await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING`, [
-            s.id, s.name, s.currentProficiency, s.targetProficiency, s.recommendation
+            s.id, s.name, s.currentProficiency || 0, s.targetProficiency || 100, s.recommendation || null
           ]);
         }
       }
