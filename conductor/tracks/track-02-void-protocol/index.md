@@ -6,7 +6,7 @@
 - [x] **Plan**: [plan.md](./plan.md)
 
 ## Description
-This track focuses on the "anti-habit" system (Void Protocol) and the qualitative feedback loop (Reflection Modal). It completes the "Micro Engine" by handling both positive (Orbit) and negative (Void) actions, and capturing the "why" behind them.
+This track focuses on the "anti-habit" system (Void Protocol) and the qualitative feedback loop (Reflection Modal). It completes the "Micro Engine" by handling both positive (Daily Scheduler) and negative (Void) actions, and capturing the "why" behind them.
 
 ## Key Deliverables
 - `Void` data structure and store integration.

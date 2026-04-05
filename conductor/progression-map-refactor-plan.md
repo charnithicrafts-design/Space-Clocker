@@ -1,10 +1,10 @@
-# Plan: Stellar Timeline & Reflection Horizon Refactor
+# Plan: Progression Map & Reflection Horizon Refactor
 
-This plan refactors the navigation and routing to separate the **Reflection (Horizon)** functionality from the **Stellar Timeline Tracker**.
+This plan refactors the navigation and routing to separate the **Reflection (Horizon)** functionality from the **Progression Map Tracker**.
 
 ## Objective
 - Re-purpose `/horizon` to serve exclusively as the **Event Horizon** (Reflection & Recalibration) view.
-- Introduce a new route and navigation entry for the **Stellar Timeline Tracker** (using the existing `CalendarShell` component).
+- Introduce a new route and navigation entry for the **Progression Map Tracker** (using the existing `CalendarShell` component).
 - Update the UI of `EventHorizon.tsx` to match the "Critical Intercept" UX provided in the user's reference.
 
 ## Key Files & Context
@@ -24,8 +24,8 @@ This plan refactors the navigation and routing to separate the **Reflection (Hor
 - Update `src/components/layout/Navigation.tsx` to include both items.
   - **Horizon**: Label "Horizon", Icon `Telescope` (or `AlertCircle` to match "Critical Intercept").
   - **Timeline**: Label "Timeline", Icon `CalendarDays` or `Route`.
-- Since `Orbit` already uses `CalendarDays`, I'll suggest:
-  - **Orbit**: `Clock`
+- Since `Daily Scheduler` already uses `CalendarDays`, I'll suggest:
+  - **Daily Scheduler**: `Clock`
   - **Timeline**: `CalendarDays`
   - **Horizon**: `Telescope`
 
@@ -38,12 +38,12 @@ This plan refactors the navigation and routing to separate the **Reflection (Hor
   - "Recalibrate Trajectory" primary button.
   - "Bypass Horizon" close button.
 
-### 4. Stellar Timeline Refinement
+### 4. Progression Map Refinement
 - Update `src/components/horizon/CalendarShell.tsx`:
-  - Ensure the header says "Stellar Timeline Tracker".
+  - Ensure the header says "Progression Map Tracker".
   - Maintain the daily/weekly/yearly horizon picker.
 
 ## Verification & Testing
 - **Navigation Test**: Click through all sidebar links to ensure they load the correct components.
 - **Reflection Test**: Verify the "Event Horizon" view handles reflection input correctly.
-- **Timeline Test**: Verify the "Stellar Timeline" correctly displays the internship scheduler and other time-based views.
+- **Timeline Test**: Verify the "Progression Map" correctly displays the internship scheduler and other time-based views.

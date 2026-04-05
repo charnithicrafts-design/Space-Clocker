@@ -20,7 +20,7 @@ Automate the deployment of Space-Clocker to **Vercel** with optimized build asse
 
 ### 2. PWA & Service Worker Configuration
 - Ensure `VitePWA` is correctly configured for `autoUpdate`.
-- Verify manifest icons and theme colors align with the "Cosmic Dark Mode" aesthetic.
+- Verify manifest icons and theme colors align with the "Optimal Dark Mode" aesthetic.
 
 ### 3. Vercel Integration
 - **Platform:** Vercel.

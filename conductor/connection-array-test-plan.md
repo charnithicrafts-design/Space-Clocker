@@ -1,12 +1,12 @@
-# Plan: Communication Array Testing Strategy
+# Plan: Connection Array Testing Strategy
 
 ## Objective
-Implement a robust testing suite for the "Communication Array" (Stellar Sync & Chronos Backup) features, ensuring reliability of data portability and cloud synchronization.
+Implement a robust testing suite for the "Connection Array" (Sync Manifest & Temporal Backup) features, ensuring reliability of data portability and cloud synchronization.
 
 ## Scope & Impact
-- **Chronos Backup:** PGlite binary dump/restore logic.
-- **Stellar Sync:** Google Drive API interactions and state synchronization.
-- **Conflict Resolution:** Temporal Rift UI and logic.
+- **Temporal Backup:** PGlite binary dump/restore logic.
+- **Sync Manifest:** Google Drive API interactions and state synchronization.
+- **Conflict Resolution:** Divergence Manifest UI and logic.
 - **State Management:** Integration with `useTrackStore`.
 
 ## Implementation Plan
@@ -38,11 +38,11 @@ Implement a robust testing suite for the "Communication Array" (Stellar Sync & C
     - Test "Restore Snapshot": Verify it triggers the `restoreDb` flow.
     - Test "Sync Now": Verify the loading states and sound feedback.
 - **`src/components/reflection/SyncConflictModal.test.tsx`**:
-    - Verify the "Temporal Rift" modal displays correctly when `isOpen` is true.
-    - Test resolution strategies ("Adopt Remote" vs "Stay Local").
+    - Verify the "Divergence Manifest" modal displays correctly when `isOpen` is true.
+    - Test resolution strategies ("Adopt Remote Manifest" vs "Stay Local Trajectory").
 
 ### 4. High-Fidelity "E2E" Test
-- A specialized test file `src/tests/CommunicationArray.e2e.test.ts` that uses a real `PGlite` instance (in-memory) and a mocked `fetch` to simulate a full sync cycle:
+- A specialized test file `src/tests/ConnectionArray.e2e.test.ts` that uses a real `PGlite` instance (in-memory) and a mocked `fetch` to simulate a full sync cycle:
     - Initial state -> Push -> Remote updated.
     - Remote updated -> Divergence detected -> Pull -> State restored.
 

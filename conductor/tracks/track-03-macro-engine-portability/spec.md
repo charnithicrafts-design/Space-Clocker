@@ -10,10 +10,10 @@ Implement the technical skills matrix (radar chart), enhance the Macro Engine (G
 - **Categories:**
   - Data Structures & Algorithms
   - Systems Design
-  - Space Science & Orbital Mechanics
+  - Cloud Architecture & AI Modeling
   - AI/ML Frameworks
   - Cybersecurity
-  - Cloud Infrastructure (AWS/GCP)
+  - Cloud Infrastructure (AWS/Azure/GCP)
 - **Data Model:**
   - `Skill` object:
     - `id`: string
@@ -33,12 +33,12 @@ Implement the technical skills matrix (radar chart), enhance the Macro Engine (G
 - **Task Splitter:**
   - UI to break individual Milestones into smaller, actionable Tasks.
   - Integrated into the Milestone details view in "Nebula Map".
-- **Integration:** Tasks created here should be available for the daily "Orbit" view.
+- **Integration:** Tasks created here should be available for the daily "Daily Scheduler" view.
 
 ### 3. PWA & Data Portability
 - **PWA:**
   - Service Worker for offline support and manifest for home screen installation.
-  - Theme colors and icons matching the "Space-Clocker" aesthetic.
+  - Theme colors and icons matching the "Space-Clocker" professional aesthetic.
 - **Export/Import:**
   - **Export:** Generate a JSON blob of the entire `space-clocker-storage` (excluding transient UI state) and trigger a browser download.
   - **Import:** Allow user to select a JSON file, validate its structure, and overwrite the store (with a confirmation prompt).

@@ -33,7 +33,7 @@
 - Implement an "Edit Mode" within the card for inline updates.
 
 ## Phase 4: Verification & Polish
-- **Testing:** Verify that adding a skill to "NASA" ambition only shows up in that category.
+- **Testing:** Verify that adding a skill to "AWS Solutions Architect" ambition only shows up in that category.
 - **Visuals:** Ensure the Radar Chart animates smoothly when switching categories.
 - **Audio:** Integrate `SoundManager` for all CRUD actions.
 

@@ -27,7 +27,7 @@ This plan addresses the `ReferenceError: Zap is not defined` in `TransmissionDas
     - Add `start_date`, `end_date`, and `mission_metrics` columns to `transmissions` table.
 4. **`src/components/reflection/ReflectionModal.tsx`**:
     - (Done) Fix `Reflection` import.
-5. **`src/components/dashboard/StellarTimeline.tsx`**:
+5. **`src/components/dashboard/ProgressionMap.tsx`**:
     - (Done) Fix `CategoryIcon` `className` support.
 
 ### Phase 2: Update Transmission Logic & UI

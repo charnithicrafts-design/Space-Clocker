@@ -1,13 +1,13 @@
 ﻿# Product Guidelines: Space-Clocker
 
-## Prose Style: Galactic-Professional
+## Prose Style: Trajectory-Professional
 - **Tone:** Futuristic, punchy, and highly professional.
-- **Voice:** Authoritative yet inspiring. Use terminology that resonates with aerospace and advanced technology (e.g., "Trajectory", "Resonance", "Orbital Sync").
+- **Voice:** Authoritative yet inspiring. Use terminology that resonates with advanced cloud architecture and career trajectories (e.g., "Trajectory", "Resonance", "Optimal Sync").
 - **Clarity:** Keep instructions concise. Every word should serve a purpose, mimicking mission-critical communication.
 
 ## Branding & Visual Identity
 ### Color Palette
-- **Cosmic Dark Mode:** Primary background uses deep space blues and purples to create depth and focus.
+- **Optimal Dark Mode:** Primary background uses deep professional blues and purples to create depth and focus.
 - **Neon Accents:** High-contrast cyan and magenta for interactive elements, highlights, and critical feedback.
 - **Lab White/Silver:** Used for text and technical data overlays to ensure surgical precision and readability.
 

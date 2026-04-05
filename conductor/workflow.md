@@ -13,7 +13,7 @@ For every new feature or bug fix, adhere to the following iterative lifecycle:
 - **Documentation:** Define the technical approach and testing strategy.
 
 ### 3. Execution (Iterative: Plan -> Act -> Validate)
-- **Surgical Implementation:** Apply targeted changes that follow workspace standards and "Galactic-Professional" style.
+- **Surgical Implementation:** Apply targeted changes that follow workspace standards and "Trajectory-Professional" style.
 - **Automated Testing:** Every change must include a corresponding test case (Vitest).
 - **Validation:** Run 
 pm run lint and the Vitest suite to ensure integrity and prevent regressions.

@@ -28,7 +28,7 @@ Migrate the application's ephemeral state (Zustand `persist`) to a durable local
 ### Phase 3: Store/DB Integration
 1. **Sync Actions:** Update `useTrackStore` actions (e.g., `addAmbition`, `addTask`) to execute SQL commands in Pglite alongside (or instead of) updating the Zustand state.
 2. **Load Initial State:** On app boot, fetch all records from Pglite and populate the Zustand store.
-3. **Unified Tasks:** Update Orbit and Nebula queries to use the same `tasks` table with a `milestone_id` filter.
+3. **Unified Tasks:** Update Daily Scheduler and Architect Mode queries to use the same `tasks` table with a `milestone_id` filter.
 
 ### Phase 4: Verification & Polish
 1. **Data Integrity:** Verify all relationships are preserved after migration.

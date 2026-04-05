@@ -1,13 +1,13 @@
 ﻿# Initial Concept
-Space-Clocker: A high-fidelity, space-themed productivity and skill-tracking application designed for aspiring individuals in all professions.
+Space-Clocker: A high-fidelity, career-focused productivity and skill-tracking application designed for aspiring individuals in all professions.
 
 # Product Definition
 
-## Vision: "Beyond Rocket Science"
+## Vision: "Beyond Technical Excellence"
 Space-Clocker is an elite productivity and habit-tracking system designed to bridge macro-ambitions with micro-daily actions. The core philosophy is the "Dopamine Fountain"—a sleek, modern, and highly responsive interface that makes productivity incredibly satisfying through smooth micro-animations and rewarded audio interactions.
 
 ## Target Audience
-- **Aspiring Professionals:** Goal-oriented individuals seeking a high-performance tool to manage complex "trajectories".
+- **Aspiring Professionals:** Goal-oriented individuals seeking a high-performance tool to manage complex "career trajectories".
 - **UX & Aesthetic Enthusiasts:** Users who value a modern, futuristic aesthetic (dark mode, glowing accents) and minimal cognitive load.
 - **Habit-Driven Users:** Individuals looking for a "reflection and momentum loop" to link daily habits to overarching ambitions.
 
@@ -31,7 +31,7 @@ Space-Clocker is an elite productivity and habit-tracking system designed to bri
 - **Habit-Goal Linkage:** Visual progress bars that explicitly connect daily habits to long-term ambitions.
 
 ## UX & Visual Identity
-- **Aesthetic:** Modern, futuristic dark mode with deep space blues/purples and glowing accent colors for completions.
+- **Aesthetic:** Modern, futuristic dark mode with deep professional blues/purples and glowing accent colors for completions.
 - **Physics:** Spring-physics animations (via Framer Motion) for all interactive elements.
 
 ## Audio Design (SoundManager)
@@ -47,7 +47,7 @@ A centralized Web Audio API utility providing short, subtle, and organic audio f
 - **Ambitions:**
   - **Macro:** "Lead Data Architect and AWS Specialist by 2027."
   - **Goals:** "Master AWS Core Services", "India AI Contest Winner", "Advanced Statistical Modeling".
-- **Orbit Scheduler (Daily Actions):** "AWS Lambda Cold Start Analysis", "Python Data Analysis with Pandas", "SQL Query Optimization".
+- **Optimal Scheduler (Daily Actions):** "AWS Lambda Cold Start Analysis", "Python Data Analysis with Pandas", "SQL Query Optimization".
 - **Void Protocol (Not-To-Do):** "Social Media Doomscrolling", "Late-Night Gaming".
 - **Momentum Level:** "Level 15 - Cloud Architect Apprentice".
 - **Recent Reflection:** "Missed SQL optimization session due to server maintenance. Need to adjust focus window."

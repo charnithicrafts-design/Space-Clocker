@@ -5,7 +5,7 @@
 - **Vite 6:** Lightning-fast build tool and development server, configured for port 3000.
 
 ## Styling & Animation
-- **Tailwind CSS v4 (@tailwindcss/vite):** Utility-first CSS for "Cosmic Dark Mode" and "Ethereal & Translucent" components.
+- **Tailwind CSS v4 (@tailwindcss/vite):** Utility-first CSS for "Optimal Dark Mode" and "Ethereal & Translucent" components.
 - **Framer Motion:** Powering high-fidelity micro-animations and physics-based interactions.
 
 ## Audio Engine

@@ -1,7 +1,7 @@
 # Plan: Accessibility Audit & Data-Driven Reporting
 
 ## Objective
-Enhance the mission briefing (Transmission) with real user data from Nebula and Orbit, while ensuring the generated reports (and their PDF exports) meet WCAG 2.2 accessibility standards.
+Enhance the career briefing (Transmission) with real user data from Architect Mode and Daily Scheduler, while ensuring the generated reports (and their PDF exports) meet WCAG 2.2 accessibility standards.
 
 ## Key Files & Context
 - `src/store/useTrackStore.ts`: Update `Transmission` interface and `generateTransmission` logic.
@@ -22,9 +22,9 @@ Enhance the mission briefing (Transmission) with real user data from Nebula and 
 
 ### 2. UI Layer: Semantic & Grouped Achievements
 - **`TransmissionDashboard.tsx`**:
-    - Group the "Mission Accomplished" and "Mission Missed" sections by Horizon (Daily/Weekly/Yearly).
-    - Add a "Nebula Progress" section highlighting completed milestones.
-    - Add a "Mission Director's Summary" (Reliability Index and focus hours).
+    - Group the "Trajectory Milestone Accomplished" and "Trajectory Milestone Missed" sections by Horizon (Daily/Weekly/Yearly).
+    - Add an "Architect Mode Progress" section highlighting completed milestones.
+    - Add a "Professional Summary" (Reliability Index and focus hours).
     - Ensure all icons have `aria-hidden="true"` and meaningful labels are provided.
 
 ### 3. Accessibility Layer: High Contrast & WCAG 2.2
@@ -39,7 +39,7 @@ Enhance the mission briefing (Transmission) with real user data from Nebula and 
 
 ### 4. Documentation
 - **`USER_GUIDE.md`**:
-    - Explain how the "Mission Chronometer" selects tasks and milestones.
+    - Explain how the "Trajectory Chronometer" selects tasks and milestones.
     - Detail the Horizon grouping in the report.
 
 ## Verification & Testing

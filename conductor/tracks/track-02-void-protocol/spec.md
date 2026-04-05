@@ -10,7 +10,7 @@ Implement the "Void Protocol" (anti-habit tracking) and the "Reflection Loop" (q
 - **Data Model:**
   - `Void` entity:
     - `id`: string (UUID)
-    - `text`: string (e.g., "Doomscrolling Space News")
+    - `text`: string (e.g., "Doomscrolling Tech News")
     - `impact`: 'low' | 'medium' | 'high'
     - `engagedCount`: number (times engaged today)
     - `maxAllowed`: number (threshold before critical warning)
@@ -30,11 +30,11 @@ Implement the "Void Protocol" (anti-habit tracking) and the "Reflection Loop" (q
     - `relatedId`: string (Optional ID of task/void)
 - **UI/UX:**
   - **Trigger:**
-    - Manual "Reflect" button in Mission Control.
+    - Manual "Reflect" button in Career Hub.
     - Automatic prompt when a Void reaches `maxAllowed`.
   - **Modal:**
     - Glassmorphism overlay.
-    - Text area with "cosmic" placeholder prompts (e.g., "What pulled you into the void?", "Course correction needed?").
+    - Text area with "optimal" placeholder prompts (e.g., "What pulled you into the void?", "Course correction needed?").
     - "Log Entry" button (triggers `playSwell` or standard success sound).
 
 ## Store Updates (`useTrackStore`)
