@@ -833,6 +833,11 @@ export const useTrackStore = create<TrackStore>()(
       const { getDb } = await import('../db/client');
       const db = getDb();
 
+      const stringifyIfObject = (val: any) => {
+        if (val === null || val === undefined) return null;
+        return typeof val === 'string' ? val : JSON.stringify(val);
+      };
+
       try {
         await db.transaction(async (tx) => {
           // Clear current
@@ -933,14 +938,20 @@ export const useTrackStore = create<TrackStore>()(
           if (payload.transmissions) {
             for (const t of payload.transmissions) {
               await tx.query(`INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
-                t.id, t.timestamp || null, t.tier, t.title, t.startDate || t.start_date || null, t.endDate || t.end_date || null, t.pdaNarrative || t.pda_narrative || null, t.pdaReflections || t.pda_reflections || null, t.voidAnalysis || t.void_analysis || null, t.skillsReconciliation || t.skills_reconciliation || null, t.missionMetrics || t.mission_metrics || null, t.rawLogs || t.raw_logs || null, t.metadata || null
+                t.id, t.timestamp || null, t.tier, t.title, t.startDate || t.start_date || null, t.endDate || t.end_date || null, t.pdaNarrative || t.pda_narrative || null,
+                stringifyIfObject(t.pdaReflections || t.pda_reflections),
+                stringifyIfObject(t.voidAnalysis || t.void_analysis),
+                stringifyIfObject(t.skillsReconciliation || t.skills_reconciliation),
+                stringifyIfObject(t.missionMetrics || t.mission_metrics),
+                stringifyIfObject(t.rawLogs || t.raw_logs),
+                stringifyIfObject(t.metadata)
               ]);
             }
           }
           if (payload.history) {
             for (const h of payload.history) {
               await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
-                h.id, h.title, h.date, h.type, h.category, h.description || null, h.skills ? JSON.stringify(h.skills) : null
+                h.id, h.title, h.date, h.type, h.category, h.description || null, stringifyIfObject(h.skills)
               ]);
             }
           }
@@ -1039,6 +1050,11 @@ export const useTrackStore = create<TrackStore>()(
     importDemoData: async (data: any) => {
       const { getDb } = await import('../db/client');
       const db = getDb();
+      const stringifyIfObject = (val: any) => {
+        if (val === null || val === undefined) return null;
+        return typeof val === 'string' ? val : JSON.stringify(val);
+      };
+
       try {
         await db.transaction(async (tx) => {
           await tx.query('DELETE FROM tasks');
@@ -1096,13 +1112,19 @@ export const useTrackStore = create<TrackStore>()(
           if (data.transmissions) {
             for (const t of data.transmissions) {
               await tx.query(`INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
-                t.id, t.timestamp || null, t.tier, t.title, t.start_date || t.startDate || null, t.end_date || t.endDate || null, t.pda_narrative || t.pdaNarrative || null, t.pda_reflections || t.pdaReflections || null, t.void_analysis || t.voidAnalysis || null, t.skills_reconciliation || t.skillsReconciliation || null, t.mission_metrics || t.missionMetrics || null, t.raw_logs || t.rawLogs || null, t.metadata || null
+                t.id, t.timestamp || null, t.tier, t.title, t.start_date || t.startDate || null, t.end_date || t.endDate || null, t.pda_narrative || t.pdaNarrative || null,
+                stringifyIfObject(t.pda_reflections || t.pdaReflections),
+                stringifyIfObject(t.void_analysis || t.voidAnalysis),
+                stringifyIfObject(t.skills_reconciliation || t.skillsReconciliation),
+                stringifyIfObject(t.mission_metrics || t.missionMetrics),
+                stringifyIfObject(t.raw_logs || t.rawLogs),
+                stringifyIfObject(t.metadata)
               ]);
             }
           }
           if (data.history) {
             for (const h of data.history) {
-              await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [h.id, h.title, h.date, h.type, h.category, h.description || null, h.skills ? JSON.stringify(h.skills) : null]);
+              await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [h.id, h.title, h.date, h.type, h.category, h.description || null, stringifyIfObject(h.skills)]);
             }
           }
           // SILENCE RECONCILIATION
