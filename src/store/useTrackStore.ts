@@ -145,10 +145,14 @@ interface TrackStore {
   syncStatus: SyncStatus;
   updateAvailable: boolean;
   pendingVersion?: string;
+  dbAppVersion?: string;
+  showUpdateModal: boolean;
   
   // Actions
   performSystemUpgrade: () => Promise<void>;
   dismissUpdate: () => void;
+  setShowUpdateModal: (show: boolean) => void;
+  checkForUpdates: () => Promise<void>;
   addAmbition: (title: string) => Promise<void>;
   updateAmbition: (id: string, title: string) => Promise<void>;
   addTask: (time: string, title: string, ambitionId?: string, extra?: Partial<Task>) => Promise<void>;
@@ -238,6 +242,25 @@ export const useTrackStore = create<TrackStore>()(
     },
     updateAvailable: false,
     pendingVersion: undefined,
+    dbAppVersion: undefined,
+    showUpdateModal: false,
+
+    setShowUpdateModal: (show) => set({ showUpdateModal: show }),
+
+    checkForUpdates: async () => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      const systemRes = await db.query(`SELECT app_version FROM system_info WHERE id = 1`);
+      const dbAppVersion = systemRes.rows[0]?.app_version;
+      
+      set({ dbAppVersion });
+      
+      if (dbAppVersion && dbAppVersion !== CURRENT_APP_VERSION) {
+        set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION, showUpdateModal: true });
+      } else {
+        set({ updateAvailable: false });
+      }
+    },
 
     setSyncStatus: (status) => set((state) => ({
       syncStatus: { ...state.syncStatus, ...status }
@@ -1088,7 +1111,7 @@ export const useTrackStore = create<TrackStore>()(
       await get().initialize();
     },
 
-    dismissUpdate: () => set({ updateAvailable: false }),
+    dismissUpdate: () => set({ showUpdateModal: false }),
 
     performSystemUpgrade: async () => {
       console.log(`[Upgrade] Initiating jump to v${CURRENT_APP_VERSION}...`);
@@ -1110,7 +1133,7 @@ export const useTrackStore = create<TrackStore>()(
         // 4. Refresh State
         await get().initialize();
         
-        set({ updateAvailable: false, pendingVersion: undefined });
+        set({ updateAvailable: false, pendingVersion: undefined, showUpdateModal: false });
         console.log(`[Upgrade] Successfully upgraded to v${CURRENT_APP_VERSION}`);
       } catch (err) {
         console.error('[Upgrade] Critical failure during system jump:', err);
@@ -1161,7 +1184,7 @@ export const useTrackStore = create<TrackStore>()(
 
       if (dbAppVersion && dbAppVersion !== CURRENT_APP_VERSION) {
         console.warn(`[System] Version mismatch: DB(v${dbAppVersion}) vs Code(v${CURRENT_APP_VERSION})`);
-        set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION });
+        set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION, showUpdateModal: true });
       }
 
       if (lastStartup !== today) {
@@ -1251,7 +1274,8 @@ export const useTrackStore = create<TrackStore>()(
         history,
         skills,
         internships,
-        transmissions
+        transmissions,
+        dbAppVersion
       });
     }
   }),

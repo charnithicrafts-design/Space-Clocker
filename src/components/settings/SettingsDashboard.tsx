@@ -374,15 +374,52 @@ const SettingsDashboard = () => {
           </div>
         </section>
 
-        <section className="glass-panel border border-outline-variant p-8 rounded-3xl flex flex-col justify-center items-center text-center space-y-4">
-          <RefreshCcw className="text-on-surface-variant animate-spin-slow" size={48} />
-          <div>
-            <h3 className="font-display font-bold text-xl">System Version {CURRENT_APP_VERSION}</h3>
-            <p className="text-secondary text-[10px] font-black tracking-widest uppercase mt-1">Schema Version 2</p>
-            <p className="text-on-surface-variant text-sm mt-2 max-w-xs">
-              Your trajectory data is protected by Chronos Snapshots. Use the Communication Array to sync across devices.
-            </p>
+        <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
+          <div className="flex items-center gap-3 border-b border-outline-variant pb-4 mb-4">
+            <Cpu className="text-primary" />
+            <h3 className="font-display font-bold text-xl">System Manifest</h3>
           </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-2xl bg-surface-high border border-outline-variant">
+              <h4 className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-1">Current Codebase</h4>
+              <p className="text-xl font-display font-black text-white">v{CURRENT_APP_VERSION}</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-surface-high border border-outline-variant">
+              <h4 className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-1">Database Schema</h4>
+              <p className="text-xl font-display font-black text-secondary">v{store.dbAppVersion || 'Unknown'}</p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <button 
+              onClick={async () => {
+                SoundManager.playPop();
+                await store.checkForUpdates();
+              }}
+              className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-surface-low border border-outline-variant hover:border-primary transition-all font-bold text-xs uppercase tracking-[0.2em]"
+            >
+              <RefreshCcw size={16} className={store.syncStatus.isSyncing ? 'animate-spin' : ''} />
+              Check for Trajectory Updates
+            </button>
+            
+            {store.updateAvailable && (
+              <button 
+                onClick={() => {
+                  SoundManager.playSwell();
+                  store.setShowUpdateModal(true);
+                }}
+                className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-primary text-on-primary font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-primary/20"
+              >
+                <RefreshCcw size={16} />
+                Deploy System Upgrade (v{store.pendingVersion})
+              </button>
+            )}
+          </div>
+          
+          <p className="text-[10px] text-on-surface-variant text-center italic">
+            Neural link established via Chronos Core.
+          </p>
         </section>
       </div>
 

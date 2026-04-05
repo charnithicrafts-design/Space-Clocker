@@ -13,6 +13,7 @@ import SharedTransmission from './components/transmission/SharedTransmission';
 import SyncConflictModal from './components/reflection/SyncConflictModal';
 import OnboardingTour from './components/layout/OnboardingTour';
 import UpdateModal from './components/layout/UpdateModal';
+import CriticalUpdateBanner from './components/layout/CriticalUpdateBanner';
 import { useTrackStore } from './store/useTrackStore';
 
 const App = () => {
@@ -64,7 +65,8 @@ const App = () => {
 
   return (
     <Router>
-      <div className="min-h-screen bg-surface-lowest text-on-surface">
+      <div className={`min-h-screen bg-surface-lowest text-on-surface ${updateAvailable ? 'pt-10' : ''}`}>
+        <CriticalUpdateBanner />
         <Navigation />
 
         {showOnboarding && !updateAvailable && (

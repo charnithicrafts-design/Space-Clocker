@@ -5,12 +5,12 @@ import { Rocket, ShieldCheck, Cpu, RefreshCcw, AlertCircle, Download, CheckCircl
 import { SoundManager } from '../../utils/SoundManager';
 
 const UpdateModal = () => {
-  const { updateAvailable, pendingVersion, performSystemUpgrade, dismissUpdate, exportData } = useTrackStore();
+  const { showUpdateModal, setShowUpdateModal, pendingVersion, performSystemUpgrade, exportData } = useTrackStore();
   const [step, setStep] = useState<'alert' | 'backup' | 'upgrading' | 'success' | 'error'>('alert');
   const [error, setError] = useState<string | null>(null);
   const [hasBackedUp, setHasBackedUp] = useState(false);
 
-  if (!updateAvailable) return null;
+  if (!showUpdateModal) return null;
 
   const handleBackup = async () => {
     try {
@@ -83,10 +83,10 @@ const UpdateModal = () => {
                     Initiate Safety Protocol
                   </button>
                   <button 
-                    onClick={dismissUpdate}
+                    onClick={() => setShowUpdateModal(false)}
                     className="w-full p-4 text-on-surface-variant text-xs font-bold uppercase tracking-widest hover:text-white transition-colors"
                   >
-                    Stay on v1.3.0 for now
+                    Stay on Current Version for now
                   </button>
                 </div>
               </div>
