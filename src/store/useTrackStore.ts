@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { getTodayLocalISO } from '../utils/DateTimeUtils';
+import { CURRENT_APP_VERSION, XP_PER_LEVEL } from '../constants';
 
 export interface Profile {
   name: string;
@@ -212,9 +213,6 @@ interface TrackStore {
   clearAllData: () => Promise<void>;
   initialize: () => Promise<void>;
 }
-
-const XP_PER_LEVEL = 1000;
-export const CURRENT_APP_VERSION = '1.3.1';
 
 export const useTrackStore = create<TrackStore>()(
   (set, get) => ({

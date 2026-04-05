@@ -8,8 +8,12 @@ import { SoundManager } from '../../utils/SoundManager';
 
 // Mock Dependencies
 vi.mock('../../store/useTrackStore', () => ({
-  useTrackStore: vi.fn(),
-  CURRENT_APP_VERSION: '1.3.1'
+  useTrackStore: vi.fn()
+}));
+
+vi.mock('../../constants', () => ({
+  CURRENT_APP_VERSION: '1.3.1',
+  XP_PER_LEVEL: 1000
 }));
 
 vi.mock('../../services/SyncService', () => ({

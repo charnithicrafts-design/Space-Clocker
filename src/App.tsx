@@ -65,15 +65,15 @@ const App = () => {
 
   return (
     <Router>
-      <div className={`min-h-screen bg-surface-lowest text-on-surface ${updateAvailable ? 'pt-10' : ''}`}>
-        <CriticalUpdateBanner />
+      <div className={`min-h-screen bg-surface-lowest text-on-surface ${updateAvailable && !showOnboarding ? 'pt-10' : ''}`}>
+        {!showOnboarding && <CriticalUpdateBanner />}
         <Navigation />
 
-        {showOnboarding && !updateAvailable && (
+        {showOnboarding ? (
           <OnboardingTour onComplete={handleCompleteOnboarding} />
+        ) : (
+          <UpdateModal />
         )}
-
-        <UpdateModal />
 
         <main className="pb-24 lg:pb-0">
           <Routes>

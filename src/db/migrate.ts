@@ -1,4 +1,5 @@
 import { db } from './client';
+import { CURRENT_APP_VERSION } from '../constants';
 
 export interface Migration {
   version: number;
@@ -44,11 +45,11 @@ export const MIGRATIONS: Migration[] = [
       await tx.exec(`
         CREATE TABLE IF NOT EXISTS system_info (
           id INTEGER PRIMARY KEY DEFAULT 1,
-          app_version TEXT DEFAULT '1.3.0',
+          app_version TEXT DEFAULT '${CURRENT_APP_VERSION}',
           last_startup TEXT,
           CONSTRAINT single_system CHECK (id = 1)
         );
-        INSERT INTO system_info (id, app_version) VALUES (1, '1.3.0') ON CONFLICT DO NOTHING;
+        INSERT INTO system_info (id, app_version) VALUES (1, '${CURRENT_APP_VERSION}') ON CONFLICT DO NOTHING;
       `);
     }
   }

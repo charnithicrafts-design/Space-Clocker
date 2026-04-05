@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTrackStore, CURRENT_APP_VERSION } from '../../store/useTrackStore';
+import { useTrackStore } from '../../store/useTrackStore';
+import { CURRENT_APP_VERSION } from '../../constants';
 import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check } from 'lucide-react';
 import { dumpDb, restoreDb } from '../../db/client';
 import { syncService } from '../../services/SyncService';

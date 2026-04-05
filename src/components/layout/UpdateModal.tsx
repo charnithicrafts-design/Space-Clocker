@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTrackStore, CURRENT_APP_VERSION } from '../../store/useTrackStore';
+import { useTrackStore } from '../../store/useTrackStore';
+import { CURRENT_APP_VERSION } from '../../constants';
 import { Rocket, ShieldCheck, Cpu, RefreshCcw, AlertCircle, Download, CheckCircle2 } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 
