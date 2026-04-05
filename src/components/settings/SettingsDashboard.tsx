@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTrackStore, CURRENT_APP_VERSION } from '../../store/useTrackStore';
-import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle } from 'lucide-react';
+import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check } from 'lucide-react';
 import { dumpDb, restoreDb } from '../../db/client';
 import { syncService } from '../../services/SyncService';
 import { SoundManager } from '../../utils/SoundManager';
@@ -17,6 +17,7 @@ const SettingsDashboard = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [isDumping, setIsDumping] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
+  const [showUpToDate, setShowUpToDate] = useState(false);
 
   const handleSave = () => {
     updateProfile(localProfile);
@@ -392,16 +393,40 @@ const SettingsDashboard = () => {
           </div>
 
           <div className="space-y-3">
-            <button 
-              onClick={async () => {
-                SoundManager.playPop();
-                await store.checkForUpdates();
-              }}
-              className="w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-surface-low border border-outline-variant hover:border-primary transition-all font-bold text-xs uppercase tracking-[0.2em]"
-            >
-              <RefreshCcw size={16} className={store.syncStatus.isSyncing ? 'animate-spin' : ''} />
-              Check for Trajectory Updates
-            </button>
+            <AnimatePresence mode="wait">
+              {showUpToDate ? (
+                <motion.div
+                  key="up-to-date"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl bg-success-container/10 border border-success/30 text-success"
+                >
+                  <Check size={18} className="shrink-0" />
+                  <div className="flex flex-col">
+                    <p className="text-[10px] font-black uppercase tracking-widest leading-tight">System Manifest Synchronized</p>
+                    <p className="text-[9px] font-medium opacity-90">Current trajectory is optimal. Proceed with your ambitions, Architect.</p>
+                  </div>
+                </motion.div>
+              ) : (
+                <button 
+                  key="check-btn"
+                  onClick={async () => {
+                    SoundManager.playPop();
+                    await store.checkForUpdates();
+                    if (!store.updateAvailable) {
+                      setShowUpToDate(true);
+                      setTimeout(() => setShowUpToDate(false), 5000);
+                    }
+                  }}
+                  disabled={store.isCheckingUpdates}
+                  className={`w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-surface-low border border-outline-variant hover:border-primary transition-all font-bold text-xs uppercase tracking-[0.2em] ${store.isCheckingUpdates ? 'opacity-70 cursor-wait' : ''}`}
+                >
+                  <RefreshCcw size={16} className={store.isCheckingUpdates ? 'animate-spin' : ''} />
+                  {store.isCheckingUpdates ? 'Syncing Manifest...' : 'Check for Trajectory Updates'}
+                </button>
+              )}
+            </AnimatePresence>
             
             {store.updateAvailable && (
               <button 

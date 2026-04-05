@@ -144,6 +144,7 @@ interface TrackStore {
   preferences: Preferences;
   syncStatus: SyncStatus;
   updateAvailable: boolean;
+  isCheckingUpdates: boolean;
   pendingVersion?: string;
   dbAppVersion?: string;
   showUpdateModal: boolean;
@@ -241,6 +242,7 @@ export const useTrackStore = create<TrackStore>()(
       lastSyncedAt: undefined
     },
     updateAvailable: false,
+    isCheckingUpdates: false,
     pendingVersion: undefined,
     dbAppVersion: undefined,
     showUpdateModal: false,
@@ -248,12 +250,17 @@ export const useTrackStore = create<TrackStore>()(
     setShowUpdateModal: (show) => set({ showUpdateModal: show }),
 
     checkForUpdates: async () => {
+      set({ isCheckingUpdates: true });
+      
+      // Simulate network/processing latency for better UX feedback
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
       const { getDb } = await import('../db/client');
       const db = getDb();
       const systemRes = await db.query(`SELECT app_version FROM system_info WHERE id = 1`);
       const dbAppVersion = systemRes.rows[0]?.app_version;
       
-      set({ dbAppVersion });
+      set({ dbAppVersion, isCheckingUpdates: false });
       
       if (dbAppVersion && dbAppVersion !== CURRENT_APP_VERSION) {
         set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION, showUpdateModal: true });
