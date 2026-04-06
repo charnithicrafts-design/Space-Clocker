@@ -12,7 +12,7 @@ vi.mock('../../store/useTrackStore', () => ({
 }));
 
 vi.mock('../../constants', () => ({
-  CURRENT_APP_VERSION: '1.3.1',
+  CURRENT_APP_VERSION: '1.4.1',
   XP_PER_LEVEL: 1000
 }));
 

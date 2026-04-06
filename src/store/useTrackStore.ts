@@ -804,7 +804,7 @@ export const useTrackStore = create<TrackStore>()(
       const state = get();
       const exportObj = {
         app: 'Space-Clocker',
-        version: '1.3.0',
+        version: CURRENT_APP_VERSION,
         timestamp: new Date().toISOString(),
         payload: {
           profile: state.profile,
@@ -825,11 +825,18 @@ export const useTrackStore = create<TrackStore>()(
     },
 
     importData: async (json: any) => {
-      if (!json || json.app !== 'Space-Clocker') {
-        throw new Error('Invalid trajectory data: Not a Space-Clocker backup.');
+      // Determine if this is a wrapped backup or a direct payload
+      const isWrapped = json && json.app === 'Space-Clocker';
+      const payload = isWrapped ? json.payload : json;
+      
+      if (!payload || (!payload.profile && !payload.ambitions && !payload.tasks)) {
+        throw new Error('Invalid trajectory data: Backup is corrupted, unrecognized, or missing core payload components.');
       }
 
-      const { payload } = json;
+      if (!isWrapped) {
+        console.warn('[Import] Importing direct payload without Space-Clocker wrapper.');
+      }
+
       const { getDb } = await import('../db/client');
       const db = getDb();
 

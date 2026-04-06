@@ -13,6 +13,7 @@ vi.mock('../db/client', async () => {
 // Now we can import the mocked db and the store
 import { db as mockDb } from '../db/client';
 import { useTrackStore } from './useTrackStore';
+import { CURRENT_APP_VERSION } from '../constants';
 import demoData from '../data/demo-data.json';
 
 describe('useTrackStore - Demo Data Integration', () => {
@@ -42,7 +43,7 @@ describe('useTrackStore - Demo Data Integration', () => {
       CREATE TABLE IF NOT EXISTS stats (id INTEGER PRIMARY KEY DEFAULT 1, streak INTEGER, tasks_completed INTEGER, total_focus_hours INTEGER);
       CREATE TABLE IF NOT EXISTS oracle_config (id INTEGER PRIMARY KEY DEFAULT 1, api_key TEXT, model TEXT, provider_url TEXT, client_id TEXT, sync_enabled BOOLEAN);
       CREATE TABLE IF NOT EXISTS sync_metadata (id INTEGER PRIMARY KEY DEFAULT 1, last_synced_at TEXT, device_id TEXT, remote_file_id TEXT);
-      CREATE TABLE IF NOT EXISTS system_info (id INTEGER PRIMARY KEY DEFAULT 1, app_version TEXT DEFAULT '1.3.0', last_startup TEXT, CONSTRAINT single_system CHECK (id = 1));
+      CREATE TABLE IF NOT EXISTS system_info (id INTEGER PRIMARY KEY DEFAULT 1, app_version TEXT DEFAULT '${CURRENT_APP_VERSION}', last_startup TEXT, CONSTRAINT single_system CHECK (id = 1));
       CREATE TABLE IF NOT EXISTS ambitions (id TEXT PRIMARY KEY, title TEXT NOT NULL, progress INTEGER, xp INTEGER, horizon TEXT);
       CREATE TABLE IF NOT EXISTS milestones (id TEXT PRIMARY KEY, ambition_id TEXT REFERENCES ambitions(id) ON DELETE CASCADE, title TEXT NOT NULL, status TEXT);
       CREATE TABLE IF NOT EXISTS tasks (
@@ -71,7 +72,7 @@ describe('useTrackStore - Demo Data Integration', () => {
       INSERT INTO preferences (id) VALUES (1) ON CONFLICT DO NOTHING;
       INSERT INTO stats (id) VALUES (1) ON CONFLICT DO NOTHING;
       INSERT INTO oracle_config (id) VALUES (1) ON CONFLICT DO NOTHING;
-      INSERT INTO system_info (id, app_version) VALUES (1, '1.3.0') ON CONFLICT DO NOTHING;
+      INSERT INTO system_info (id, app_version) VALUES (1, '${CURRENT_APP_VERSION}') ON CONFLICT DO NOTHING;
     `);
   }, 30000);
 
