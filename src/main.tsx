@@ -4,6 +4,7 @@ import App from './App.tsx';
 import './index.css';
 import { initDb } from './db/init';
 import { migrateFromZustand } from './db/migrate';
+import { purgeDatabase } from './db/client';
 
 async function start() {
   const rootElement = document.getElementById('root');
@@ -113,7 +114,7 @@ async function start() {
           </div>
         </div>
 
-        <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem' }}>
+        <div style={{ marginTop: '2.5rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}>
           <button 
             onClick={() => window.location.reload()} 
             style={{ 
@@ -162,6 +163,27 @@ async function start() {
             }}
           >
             Dump Logs
+          </button>
+          <button 
+            onClick={async () => {
+              if (confirm('CRITICAL: This will permanently delete all local trajectory data and reset the Chronos Core. Proceed with Temporal Purge?')) {
+                await purgeDatabase();
+                window.location.reload();
+              }
+            }} 
+            style={{ 
+              padding: '1rem 1.5rem', 
+              backgroundColor: 'rgba(255, 84, 77, 0.1)', 
+              color: '#ffb4ab', 
+              border: '2px solid #ffb4ab', 
+              borderRadius: '12px',
+              fontWeight: '900',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              cursor: 'pointer'
+            }}
+          >
+            Temporal Purge
           </button>
         </div>
       </div>
