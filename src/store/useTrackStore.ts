@@ -830,6 +830,7 @@ export const useTrackStore = create<TrackStore>()(
       const payload = isWrapped ? json.payload : json;
       
       if (!payload || (!payload.profile && !payload.ambitions && !payload.tasks)) {
+        console.error('[Import] Invalid payload structure:', payload);
         throw new Error('Invalid trajectory data: Backup is corrupted, unrecognized, or missing core payload components.');
       }
 
@@ -841,6 +842,7 @@ export const useTrackStore = create<TrackStore>()(
 
       const { getDb } = await import('../db/client');
       const db = getDb();
+      await db.waitReady;
 
       const stringifyIfObject = (val: any) => {
         if (val === null || val === undefined) return null;
@@ -849,8 +851,8 @@ export const useTrackStore = create<TrackStore>()(
 
       try {
         await db.transaction(async (tx) => {
-          // Clear current tables that have foreign keys or can be wiped
-          // Order matters for some FK constraints, though we have ON DELETE CASCADE
+          // Clear current tables - CASCADE should handle dependencies but we'll be explicit
+          console.log('[Import] Clearing current database tables...');
           await tx.query('DELETE FROM tasks');
           await tx.query('DELETE FROM milestones');
           await tx.query('DELETE FROM ambitions');
@@ -860,17 +862,20 @@ export const useTrackStore = create<TrackStore>()(
           await tx.query('DELETE FROM reflections');
           await tx.query('DELETE FROM transmissions');
           await tx.query('DELETE FROM stellar_history');
+          await tx.query('DELETE FROM sync_metadata');
 
-          // 1. Restore Singletons (UPDATE only)
+          // 1. Restore Singletons (Update existing row 1)
+          console.log('[Import] Restoring system singletons...');
           if (payload.profile) {
             await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
               payload.profile.name || null, payload.profile.level || 1, payload.profile.xp || 0, payload.profile.title || null
             ]);
           }
-          if (payload.preferences) {
+          if (payload.preferences || payload.preferences) {
+            const p = payload.preferences;
             await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [
-              payload.preferences.confirmDelete ?? payload.preferences.confirm_delete ?? true, 
-              payload.preferences.uiMode || payload.preferences.ui_mode || 'simple'
+              p.confirmDelete ?? p.confirm_delete ?? true, 
+              p.uiMode || p.ui_mode || 'simple'
             ]);
           }
           if (payload.stats) {
@@ -880,29 +885,30 @@ export const useTrackStore = create<TrackStore>()(
               payload.stats.totalFocusHours ?? payload.stats.total_focus_hours ?? 0
             ]);
           }
-          if (payload.oracleConfig || payload.oracle_config) {
-            const o = payload.oracleConfig || payload.oracle_config;
+          const o = payload.oracleConfig || payload.oracle_config;
+          if (o) {
             await tx.query(`UPDATE oracle_config SET api_key = $1, model = $2, provider_url = $3 WHERE id = 1`, [
               o.apiKey || o.api_key || '', 
               o.model || 'gemini-1.5-pro', 
-              o.providerUrl || o.provider_url || null
+              o.providerUrl || o.provider_url || 'https://generativelanguage.googleapis.com/v1beta/openai'
             ]);
           }
 
           // 2. Restore Ambitions & Milestones
+          console.log('[Import] Restoring ambitions and milestones...');
           if (payload.ambitions) {
             for (const a of payload.ambitions) {
-              await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`, [
+              await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [
                 a.id, a.title, a.progress || 0, a.xp || 0, a.horizon || 'yearly'
               ]);
               if (a.milestones) {
                 for (const m of a.milestones) {
-                  await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`, [
+                  await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [
                     m.id, a.id, m.title, m.status || 'pending'
                   ]);
                   if (m.tasks) {
                     for (const t of m.tasks) {
-                      await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ON CONFLICT (id) DO NOTHING`, [
+                      await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
                         t.id, m.id, a.id, 
                         t.time || null, 
                         t.endTime || t.end_time || null, 
@@ -923,6 +929,7 @@ export const useTrackStore = create<TrackStore>()(
           }
 
           // 3. Restore Standalone Tasks
+          console.log('[Import] Restoring standalone tasks...');
           if (payload.tasks) {
             for (const t of payload.tasks) {
               await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ON CONFLICT (id) DO NOTHING`, [
@@ -944,23 +951,24 @@ export const useTrackStore = create<TrackStore>()(
           }
 
           // 4. Other Collections
+          console.log('[Import] Restoring ancillary collections...');
           if (payload.voids) {
             for (const v of payload.voids) {
-              await tx.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`, [
+              await tx.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [
                 v.id, v.text, v.impact || 'low', v.engagedCount ?? v.engaged_count ?? 0, v.maxAllowed ?? v.max_allowed ?? 3
               ]);
             }
           }
           if (payload.reflections) {
             for (const r of payload.reflections) {
-              await tx.query(`INSERT INTO reflections (id, date, content, type) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`, [
+              await tx.query(`INSERT INTO reflections (id, date, content, type) VALUES ($1, $2, $3, $4)`, [
                 r.id, r.date || null, r.content, r.type || 'daily-summary'
               ]);
             }
           }
           if (payload.skills) {
             for (const s of payload.skills) {
-              await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (id) DO NOTHING`, [
+              await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
                 s.id, s.name, 
                 s.currentProficiency ?? s.current_proficiency ?? 0, 
                 s.targetProficiency ?? s.target_proficiency ?? 100, 
@@ -973,14 +981,14 @@ export const useTrackStore = create<TrackStore>()(
           if (payload.internships) {
             for (const i of payload.internships) {
               const id = i.id || `int-${Date.now()}-${Math.random()}`;
-              await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`, [
+              await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [
                 id, i.organization, i.start_date || i.start, i.end_date || i.end
               ]);
             }
           }
           if (payload.transmissions) {
             for (const t of payload.transmissions) {
-              await tx.query(`INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ON CONFLICT (id) DO NOTHING`, [
+              await tx.query(`INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
                 t.id, t.timestamp || null, t.tier, t.title, 
                 t.startDate || t.start_date || null, 
                 t.endDate || t.end_date || null, 
@@ -996,24 +1004,24 @@ export const useTrackStore = create<TrackStore>()(
           }
           if (payload.history) {
             for (const h of payload.history) {
-              await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (id) DO NOTHING`, [
+              await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
                 h.id, h.title, h.date, h.type, h.category, h.description || null, stringifyIfObject(h.skills || [])
               ]);
             }
           }
 
-          // 5. SILENCE RECONCILIATION
+          // 5. System Info update
           const today = getTodayLocalISO();
-          await tx.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
+          await tx.query(`UPDATE system_info SET last_startup = $1, app_version = $2 WHERE id = 1`, [today, CURRENT_APP_VERSION]);
           
           console.log('[Import] Trajectory core synchronized and reconciled.');
         });
         
         await get().initialize();
         console.log('[Import] State re-initialized. Ready for launch.');
-      } catch (err) {
-        console.error('Trajectory restoration failed:', err);
-        throw err;
+      } catch (err: any) {
+        console.error('[Import] Trajectory restoration failed:', err);
+        throw new Error(`Import failed: ${err.message || 'Check database constraints or file structure.'}`);
       }
     },
     updateOracleConfig: (config) => set((state) => ({ oracleConfig: { ...state.oracleConfig, ...config } })),
