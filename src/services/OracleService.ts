@@ -50,4 +50,17 @@ Based on the above, provide an insightful review and guidance for tomorrow.`;
 
     return this.query(config, prompt, JSON.stringify({ tasks, reflections, stats }));
   },
+
+  async getSkillTrajectoryUpdate(
+    config: OracleConfig,
+    skills: any[],
+    ambitions: any[]
+  ): Promise<string> {
+    const prompt = `Analyze the current skills and ambitions.
+Skills: ${JSON.stringify(skills)}
+Ambitions: ${JSON.stringify(ambitions)}
+Provide a JSON-formatted response with an 'updates' array. Each item should have 'id', 'newRecommendation', and optionally 'suggestedTargetProficiency'. Keep recommendations concise and professional.`;
+
+    return this.query(config, prompt, JSON.stringify({ skills, ambitions }));
+  },
 };
