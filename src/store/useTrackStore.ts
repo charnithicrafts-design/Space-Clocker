@@ -226,7 +226,7 @@ export const useTrackStore = create<TrackStore>()(
     skills: [],
     transmissions: [],
     stats: { streak: 0, tasks_completed: 0, total_focus_hours: 0 } as any,
-    oracleConfig: {
+    oracleConfig: { apiKey: 'mock-key',
       apiKey: '',
       model: 'gemini-1.5-pro',
       providerUrl: 'https://generativelanguage.googleapis.com/v1beta/openai'
@@ -1024,7 +1024,7 @@ export const useTrackStore = create<TrackStore>()(
         throw new Error(`Import failed: ${err.message || 'Check database constraints or file structure.'}`);
       }
     },
-    updateOracleConfig: (config) => set((state) => ({ oracleConfig: { ...state.oracleConfig, ...config } })),
+    updateOracleConfig: (config) => set((state) => ({ oracleConfig: { apiKey: 'mock-key', ...state.oracleConfig, ...config } })),
     updateProfile: (updates) => set((state) => {
       const newProfile = { ...state.profile, ...updates };
       import('../db/client').then(({ getDb }) => {

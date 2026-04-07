@@ -5,29 +5,14 @@ import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 import React from 'react';
 
+const mockSkills = [ { id: "skill-1", name: "React Mastery", currentProficiency: 80, targetProficiency: 100, recommendation: "Study React 19 concurrent features.", type: "personal" }, { id: "skill-2", name: "AWS Cloud Practitioner", currentProficiency: 40, targetProficiency: 90, recommendation: "Complete the SAA-C03 course.", type: "ambition", ambitionId: "ambition-1" } ];
+
+const mockConfig = { apiKey: "mock-key", model: "gemini-1.5-pro", providerUrl: "mock-url" };
+
 // Mock dependencies
 vi.mock('../../store/useTrackStore');
 vi.mock('../../utils/SoundManager');
 
-const mockSkills = [
-  {
-    id: 'skill-1',
-    name: 'React Mastery',
-    currentProficiency: 80,
-    targetProficiency: 100,
-    recommendation: 'Study React 19 concurrent features.',
-    type: 'personal',
-  },
-  {
-    id: 'skill-2',
-    name: 'AWS Cloud Practitioner',
-    currentProficiency: 40,
-    targetProficiency: 90,
-    recommendation: 'Complete the SAA-C03 course.',
-    type: 'ambition',
-    ambitionId: 'ambition-1',
-  },
-];
 
 const mockAmbitions = [
   { id: 'ambition-1', title: 'Cloud Architect Path', progress: 20 },
@@ -43,6 +28,7 @@ describe('SkillsMatrix', () => {
     (useTrackStore as any).mockReturnValue({
       skills: mockSkills,
       ambitions: mockAmbitions,
+      oracleConfig: mockConfig,
       addSkill: mockAddSkill,
       updateSkill: mockUpdateSkill,
       deleteSkill: mockDeleteSkill,

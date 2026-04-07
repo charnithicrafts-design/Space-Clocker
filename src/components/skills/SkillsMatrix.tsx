@@ -366,7 +366,16 @@ const AddSkillForm = ({ categoryId, categoryType, onCancel }: { categoryId?: str
 };
 
 const SkillsMatrix = () => {
-  const { skills, ambitions, oracleConfig, updateSkill } = useTrackStore();
+  
+  
+  const store = useTrackStore() || { skills: [], ambitions: [], oracleConfig: { apiKey: "" }, updateSkill: () => {} };
+  const { skills, ambitions, oracleConfig, updateSkill } = store;
+  const oracleApiKey = oracleConfig?.apiKey;
+  
+  
+  
+  
+  
   const [showTarget, setShowTarget] = useState(true);
   const [selectedCategoryId, setSelectedCategoryId] = useState<'all' | 'personal' | string>('all');
   const [isAdding, setIsAdding] = useState(false);
@@ -378,7 +387,7 @@ const SkillsMatrix = () => {
     SoundManager.playSwell();
     try {
       const { OracleService } = await import('../../services/OracleService');
-      const response = await OracleService.getSkillTrajectoryUpdate(oracleConfig, skills, ambitions);
+      const response = await OracleService.getSkillTrajectoryUpdate(oracleConfig!, skills, ambitions);
       
       const jsonMatch = response.match(/\{[\s\S]*\}/);
       const data = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(response);
@@ -524,7 +533,7 @@ const SkillsMatrix = () => {
       <div className="flex justify-center pt-8">
         <button 
           onClick={generateAITrajectory}
-          disabled={isGenerating || !oracleConfig.apiKey}
+          disabled={isGenerating || !oracleApiKey}
           className={`glass-panel border border-primary/30 p-4 px-8 rounded-2xl flex items-center gap-3 transition-all group ${isGenerating ? 'opacity-50 cursor-wait' : 'hover:bg-primary/10'}`}
         >
             <Brain className={`text-primary ${isGenerating ? 'animate-pulse' : ''}`} />
