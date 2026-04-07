@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.4.2",
+    "date": "2026-04-07",
+    "transmission": "System Jump: Neural Link Recovery & Temporal Purge Protocol.",
+    "details": [
+      "Implemented 'Temporal Purge' protocol to resolve unrecoverable database states (Errno 44).",
+      "Enhanced diagnostic UI for critical boot failures with detailed error mapping.",
+      "Optimized PGlite connection handling for improved stability across browser sessions.",
+      "Added proactive recovery suggestions for ENOTEMPTY storage conflicts."
+    ],
+    "type": "hotfix"
+  },
+  {
     "version": "1.4.1",
     "date": "2026-04-07",
     "transmission": "System Leap Hotfix: JSON Import Stability and Version Alignment.",
