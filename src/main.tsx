@@ -10,14 +10,16 @@ async function start() {
   if (!rootElement) return;
 
   // Check for secure context - critical for ServiceWorker and PGlite/IndexedDB in some environments
-  if (typeof window !== 'undefined' && !window.isSecureContext && window.location.hostname !== 'localhost') {
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const isSecure = window.isSecureContext;
+  
+  if (!isSecure && !isLocal) {
     console.warn('[System] Warning: Not running in a secure context. Neural link might be unstable.');
-    
-    // Optional: show a small warning banner or log it to the DOM if we hit an error later
   }
 
   try {
     console.log('[System] Initiating neural link...');
+    console.log(`[Diagnostics] Host: ${window.location.hostname}, Secure: ${isSecure}, Local: ${isLocal}`);
     
     // Attempt to initialize database
     await initDb();
@@ -47,61 +49,121 @@ async function start() {
         backgroundColor: '#0b0e14',
         color: '#ffb4ab',
         fontFamily: 'sans-serif',
-        textAlign: 'center'
+        textAlign: 'center',
+        overflowY: 'auto'
       }}>
-        <h1 style={{ color: '#00f2ff', marginBottom: '1rem' }}>NEURAL LINK FAILURE</h1>
-        <p style={{ marginBottom: '1.5rem' }}>A critical error occurred while synchronizing your trajectory.</p>
+        <h1 style={{ color: '#00f2ff', marginBottom: '0.5rem', fontSize: '2.5rem', fontWeight: '900', letterSpacing: '-0.05em' }}>NEURAL LINK FAILURE</h1>
+        <p style={{ marginBottom: '2rem', opacity: 0.8, maxWidth: '500px' }}>The Chronos Core encountered a temporal anomaly during synchronization.</p>
         
-        {/* Secure Context Warning */}
-        {!window.isSecureContext && window.location.hostname !== 'localhost' && (
-          <div style={{ 
-            backgroundColor: '#2d0001', 
-            padding: '1rem', 
-            borderRadius: '8px', 
-            fontSize: '0.9rem',
-            marginBottom: '1.5rem',
-            border: '1px solid #ffb4ab',
-            color: '#ffdad6'
-          }}>
-            <b>SECURE CONTEXT ERROR:</b> Your browser has blocked the neural link. 
-            Mobile PWA features and Database storage require <b>HTTPS</b>. 
-            Use <i>localhost</i> or an <b>HTTPS Tunnel</b> to proceed.
-          </div>
-        )}
-
-        <div style={{ 
-          backgroundColor: '#1d2026', 
-          padding: '1rem', 
-          borderRadius: '8px', 
-          fontSize: '0.8rem',
-          maxWidth: '100%',
-          overflow: 'auto',
-          textAlign: 'left',
-          border: '1px solid #3a494b'
-        }}>
-          <code>{error.toString()}</code>
-          {error.stack && (
-            <details style={{ marginTop: '0.5rem', cursor: 'pointer' }}>
-              <summary>Technical Details</summary>
-              <pre style={{ marginTop: '0.5rem', fontSize: '0.7rem' }}>{error.stack}</pre>
-            </details>
+        <div style={{ width: '100%', maxWidth: '600px', spaceY: '1rem' }}>
+          {/* Secure Context Warning */}
+          {!isSecure && !isLocal && (
+            <div style={{ 
+              backgroundColor: 'rgba(255, 84, 77, 0.1)', 
+              padding: '1.25rem', 
+              borderRadius: '16px', 
+              fontSize: '0.9rem',
+              marginBottom: '1rem',
+              border: '1px solid #ffb4ab',
+              color: '#ffdad6',
+              textAlign: 'left'
+            }}>
+              <b style={{ display: 'block', marginBottom: '0.25rem' }}>SECURE CONTEXT ERROR</b>
+              Your browser has blocked the neural link. Local-first storage (PGlite) requires <b>HTTPS</b> or <i>localhost</i>. 
+              If you are on Vercel, ensure you are using the <b>https://</b> protocol.
+            </div>
           )}
+
+          <div style={{ 
+            backgroundColor: '#1d2026', 
+            padding: '1.25rem', 
+            borderRadius: '16px', 
+            fontSize: '0.85rem',
+            textAlign: 'left',
+            border: '1px solid #3a494b',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+          }}>
+            <div style={{ color: '#00f2ff', fontWeight: 'bold', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.7rem' }}>Error Log</div>
+            <code style={{ wordBreak: 'break-word', color: '#ffb4ab' }}>{error.toString()}</code>
+            
+            <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #3a494b' }}>
+              <div style={{ color: '#00f2ff', fontWeight: 'bold', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.7rem' }}>System Diagnostics</div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.75rem', opacity: 0.7 }}>
+                <div>Host: {window.location.hostname}</div>
+                <div>Secure: {isSecure ? 'YES' : 'NO'}</div>
+                <div>Platform: {navigator.platform}</div>
+                <div>User Agent: {navigator.userAgent.split(' ')[0]}</div>
+              </div>
+            </div>
+
+            {error.stack && (
+              <details style={{ marginTop: '1rem', cursor: 'pointer' }}>
+                <summary style={{ fontSize: '0.75rem', opacity: 0.5, outline: 'none' }}>View Trace Stack</summary>
+                <pre style={{ 
+                  marginTop: '0.5rem', 
+                  fontSize: '0.7rem', 
+                  backgroundColor: '#0b0e14', 
+                  padding: '1rem', 
+                  borderRadius: '8px',
+                  overflowX: 'auto',
+                  opacity: 0.6
+                }}>{error.stack}</pre>
+              </details>
+            )}
+          </div>
         </div>
-        <button 
-          onClick={() => window.location.reload()} 
-          style={{ 
-            marginTop: '2rem', 
-            padding: '0.75rem 1.5rem', 
-            backgroundColor: '#00f2ff', 
-            color: '#00373a', 
-            border: 'none', 
-            borderRadius: '4px',
-            fontWeight: 'bold',
-            cursor: 'pointer'
-          }}
-        >
-          RETRY LINK
-        </button>
+
+        <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem' }}>
+          <button 
+            onClick={() => window.location.reload()} 
+            style={{ 
+              padding: '1rem 2rem', 
+              backgroundColor: '#00f2ff', 
+              color: '#00373a', 
+              border: 'none', 
+              borderRadius: '12px',
+              fontWeight: '900',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+          >
+            Retry Neural Link
+          </button>
+          <button 
+            onClick={() => {
+              const data = {
+                error: error.toString(),
+                stack: error.stack,
+                diagnostics: {
+                  host: window.location.hostname,
+                  secure: isSecure,
+                  ua: navigator.userAgent
+                }
+              };
+              const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `neural-link-failure-${Date.now()}.json`;
+              a.click();
+            }} 
+            style={{ 
+              padding: '1rem 1.5rem', 
+              backgroundColor: 'transparent', 
+              color: '#00f2ff', 
+              border: '2px solid #00f2ff', 
+              borderRadius: '12px',
+              fontWeight: '900',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              cursor: 'pointer'
+            }}
+          >
+            Dump Logs
+          </button>
+        </div>
       </div>
     );
   }
