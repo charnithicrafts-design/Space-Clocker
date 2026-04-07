@@ -7,6 +7,7 @@ import OrbitScheduler from './components/orbit/OrbitScheduler';
 import CalendarShell from './components/horizon/CalendarShell';
 import EventHorizon from './components/horizon/EventHorizon';
 import SkillsMatrix from './components/skills/SkillsMatrix';
+import { OracleDashboard } from './components/oracle/OracleDashboard';
 import SettingsDashboard from './components/settings/SettingsDashboard';
 import TransmissionDashboard from './components/transmission/TransmissionDashboard';
 import SharedTransmission from './components/transmission/SharedTransmission';
@@ -83,6 +84,7 @@ const App = () => {
             <Route path="/timeline" element={<CalendarShell />} />
             <Route path="/horizon" element={<EventHorizon />} />
             <Route path="/skills" element={<SkillsMatrix />} />
+            <Route path="/oracle" element={<OracleDashboard onClose={() => window.history.back()} />} />
             <Route path="/transmission" element={<TransmissionDashboard />} />
             <Route path="/transmission/share" element={<SharedTransmission />} />
             <Route path="/settings" element={<SettingsDashboard />} />
