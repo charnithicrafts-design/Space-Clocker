@@ -5,6 +5,15 @@ import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 import { getTodayLocalISO } from '../../utils/DateTimeUtils';
 
+// Mock DateTimeUtils
+vi.mock('../../utils/DateTimeUtils', async () => {
+  const actual = await vi.importActual('../../utils/DateTimeUtils');
+  return {
+    ...actual as any,
+    getLocalTimeHHmm: vi.fn().mockReturnValue('00:00'),
+  };
+});
+
 // Mock SoundManager
 vi.mock('../../utils/SoundManager', () => ({
   SoundManager: {
