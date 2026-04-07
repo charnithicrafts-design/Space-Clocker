@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { CURRENT_APP_VERSION } from '../../constants';
-import { Rocket, ShieldCheck, Cpu, RefreshCcw, AlertCircle, Download, CheckCircle2 } from 'lucide-react';
+import { Rocket, ShieldCheck, Cpu, RefreshCcw, AlertCircle, Download, CheckCircle2, Radio } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
+import releasesData from '../../data/releases.json';
 
 const UpdateModal = () => {
   const { showUpdateModal, setShowUpdateModal, pendingVersion, performSystemUpgrade, exportData } = useTrackStore();
   const [step, setStep] = useState<'alert' | 'backup' | 'upgrading' | 'success' | 'error'>('alert');
   const [error, setError] = useState<string | null>(null);
   const [hasBackedUp, setHasBackedUp] = useState(false);
+
+  const pendingRelease = releasesData.find(r => r.version === pendingVersion) || releasesData[0];
 
   if (!showUpdateModal) return null;
 
@@ -71,23 +74,46 @@ const UpdateModal = () => {
 
           <div className="p-8 space-y-6">
             {step === 'alert' && (
-              <div className="space-y-4">
-                <p className="text-on-surface leading-relaxed">
+              <div className="space-y-6">
+                <p className="text-on-surface leading-relaxed text-sm">
                   A new version of the **Trajectory Engine** is ready for deployment. To ensure your stellar data remains intact during the jump, we recommend a safety backup.
                 </p>
-                <div className="grid grid-cols-1 gap-3 pt-4">
+
+                {/* Stellar Transmission Section */}
+                <div className="relative group">
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-3xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                  <div className="relative p-5 rounded-3xl bg-surface-lowest border border-primary/20 space-y-3">
+                    <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-[10px]">
+                      <Radio size={14} className="animate-pulse" />
+                      Incoming Stellar Transmission
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-sm leading-tight">{pendingRelease.transmission}</h4>
+                      <ul className="mt-3 space-y-2">
+                        {pendingRelease.details.map((detail, idx) => (
+                          <li key={idx} className="flex gap-2 text-xs text-on-surface-variant leading-relaxed">
+                            <span className="text-primary mt-1">•</span>
+                            {detail}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 pt-2">
                   <button 
                     onClick={() => setStep('backup')}
-                    className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl bg-primary text-on-primary font-black uppercase tracking-tighter hover:bg-primary/90 transition-all"
+                    className="w-full flex items-center justify-center gap-3 p-4 rounded-2xl bg-primary text-on-primary font-black uppercase tracking-tighter hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
                   >
                     <ShieldCheck size={20} />
                     Initiate Safety Protocol
                   </button>
                   <button 
                     onClick={() => setShowUpdateModal(false)}
-                    className="w-full p-4 text-on-surface-variant text-xs font-bold uppercase tracking-widest hover:text-white transition-colors"
+                    className="w-full p-4 text-on-surface-variant text-[10px] font-bold uppercase tracking-[0.3em] hover:text-white transition-colors"
                   >
-                    Stay on Current Version for now
+                    Postpone System Jump
                   </button>
                 </div>
               </div>

@@ -1,0 +1,25 @@
+[
+  {
+    "version": "1.4.1",
+    "date": "2026-04-07",
+    "transmission": "System Leap Hotfix: JSON Import Stability and Version Alignment.",
+    "details": [
+      "Fixes JSON import stability issues in Momentum Engine.",
+      "Aligns system version across all core modules.",
+      "Optimized database initialization sequence."
+    ],
+    "type": "hotfix"
+  },
+  {
+    "version": "1.4.0",
+    "date": "2026-04-01",
+    "transmission": "The Nebula Protocol: Distributed Database & UX Overhaul.",
+    "details": [
+      "Migration to PGlite (IndexedDB) for local-first persistence.",
+      "New Nebula Map interface for milestone visualization.",
+      "Enhanced Sound Engine with space-thematic feedback.",
+      "Improved Command Hub with quick-access protocols."
+    ],
+    "type": "minor"
+  }
+]
