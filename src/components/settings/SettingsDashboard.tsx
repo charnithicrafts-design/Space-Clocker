@@ -93,10 +93,14 @@ const SettingsDashboard = () => {
         if (window.confirm('This will overwrite your current trajectories with the imported data. Proceed?')) {
           await importData(data);
           SoundManager.playSyncSuccess();
-          window.location.reload();
+          // Give PGlite a small window to flush to IndexedDB before reload
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
         }
       } catch (err: any) {
-        alert(`Import failed: ${err.message || 'Invalid trajectory file.'}`);
+        console.error('Import failure:', err);
+        alert(`Import failed: ${err.message || 'Invalid trajectory file structure.'}`);
         SoundManager.playThud();
       }
     };
@@ -133,12 +137,21 @@ const SettingsDashboard = () => {
         setIsRestoring(true);
         SoundManager.playSwell();
         await restoreDb(file);
+        // Explicitly wait for store initialization after DB restore
         await initialize();
         SoundManager.playSyncSuccess();
-        window.location.reload();
+        // Give PGlite a small window to flush to IndexedDB before reload
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
       } catch (err: any) {
-        console.error('Restore failed:', err);
-        alert(`Restore failed: ${err.message || 'Ensure it is a valid .pgdump file.'}`);
+        console.error('Restore failure:', err);
+        const errorMsg = err.message || '';
+        if (errorMsg.includes('ENOTEMPTY')) {
+          alert(`Restoration Conflict: Some legacy database fragments blocked the snapshot import. \n\nACTION: Click "Temporal Purge" first to clear all fragments, then try restoring again.`);
+        } else {
+          alert(`Restore failed: ${errorMsg || 'Ensure it is a valid .pgdump file.'}`);
+        }
         SoundManager.playThud();
       } finally {
         setIsRestoring(false);
