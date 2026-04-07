@@ -150,8 +150,7 @@ export async function restoreDb(blob: Blob) {
       loadDataDir: blob,
       relaxedDurability: true,
       options: {
-        shared_buffers: '8MB',
-        work_mem: '1MB'
+        shared_buffers: '4MB'
       }
     });
     
