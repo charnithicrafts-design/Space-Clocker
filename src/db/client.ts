@@ -34,7 +34,7 @@ export const db = {
   },
 
   // Method to manually replace the instance (used in restoreDb)
-  setInstance: (newDb: PGlite) => {
+  setInstance: (newDb: PGlite | null) => {
     _db = newDb;
   }
 };
@@ -47,6 +47,22 @@ export async function dumpDb() {
   await db.waitReady;
   return await db.dumpDataDir();
 }
+
+/**
+ * Common PGlite IndexedDB name variations to target for deletion.
+ * PGlite 0.4.x uses 'pglite-' prefix for idb:// driver.
+ * Older versions or emscripten IDBFS might use other patterns.
+ */
+const DB_NAME_VARIATIONS = [
+  'space-clocker-db', 
+  'pglite-space-clocker-db',
+  '/pglite/space-clocker-db', 
+  'pglite/space-clocker-db',
+  'idb://space-clocker-db',
+  '/pglite/idb://space-clocker-db',
+  'pglite-idb://space-clocker-db',
+  'pglite-idb-space-clocker-db'
+];
 
 export async function purgeDatabase() {
   console.log('Initiating temporal purge of all local database fragments...');
@@ -66,20 +82,10 @@ export async function purgeDatabase() {
     return;
   }
 
-  const dbNames = [
-    'space-clocker-db', 
-    '/pglite/space-clocker-db', 
-    'pglite-space-clocker-db',
-    'pglite/space-clocker-db',
-    'idb://space-clocker-db',
-    '/pglite/idb://space-clocker-db',
-    'pglite-idb://space-clocker-db' // Added more variations
-  ];
-  
-  for (const name of dbNames) {
+  for (const name of DB_NAME_VARIATIONS) {
     try {
       console.log(`Attempting to delete IndexedDB: "${name}"`);
-      await new Promise<void>((resolve, reject) => {
+      await new Promise<void>((resolve) => {
         const request = indexedDB.deleteDatabase(name);
         request.onsuccess = () => {
           console.log(`Successfully deleted database: "${name}"`);
@@ -90,7 +96,7 @@ export async function purgeDatabase() {
           resolve(); // Continue with others even on error
         };
         request.onblocked = () => {
-          console.warn(`Deletion of database "${name}" is blocked.`);
+          console.warn(`Deletion of database "${name}" is blocked. Close other tabs.`);
           resolve(); // Continue with others
         };
       });
@@ -105,56 +111,40 @@ export async function purgeDatabase() {
 export async function restoreDb(blob: Blob) {
   console.log('Initiating database restoration from binary snapshot...');
   
-  // Close the current database connection to release IndexedDB locks.
-  // This is critical for successful deletion.
+  // 1. Close current connection and null it out to prevent use during deletion
   if (_db) {
-    await _db.close();
-    console.log('Current database connection closed.');
-    // Give a small grace period for the connection to be fully released by the browser/PGlite.
-    await new Promise(r => setTimeout(r, 200));
+    try {
+      await _db.close();
+      console.log('Current database connection closed.');
+    } catch (e) {
+      console.warn('Error closing database before restoration:', e);
+    }
+    _db = null;
+    // Give browser time to release locks
+    await new Promise(r => setTimeout(r, 300));
   }
   
-  // Clear the existing IndexedDB database before re-initializing with a tarball
-  // as PGlite fails to load from a tarball if the target already exists.
+  // 2. Clear all IndexedDB variations to avoid ENOTEMPTY during PGlite.create loadDataDir
   if (typeof indexedDB !== 'undefined') {
-    // PGlite uses specific naming conventions for IndexedDB depending on version/config.
-    // We attempt to delete all common variations to ensure a clean slate.
-    const dbNames = [
-      'space-clocker-db', 
-      '/pglite/space-clocker-db', 
-      'pglite-space-clocker-db',
-      'pglite/space-clocker-db',
-      'idb://space-clocker-db',
-      '/pglite/idb://space-clocker-db'
-    ];
-    
-    for (const name of dbNames) {
-      console.log(`Attempting to delete IndexedDB: "${name}"`);
+    for (const name of DB_NAME_VARIATIONS) {
+      console.log(`Clearing DB for restoration: "${name}"`);
       await new Promise<void>((resolve, reject) => {
         const request = indexedDB.deleteDatabase(name);
-        
-        request.onsuccess = () => {
-          console.log(`Successfully deleted database: "${name}"`);
-          resolve();
-        };
-        
+        request.onsuccess = () => resolve();
         request.onerror = () => {
-          console.error(`Error deleting database "${name}":`, request.error);
-          reject(new Error(`Failed to delete database ${name}: ${request.error}`));
+          console.error(`Error deleting database "${name}" during restore:`, request.error);
+          resolve(); // Try to continue anyway
         };
-        
         request.onblocked = () => {
-          console.warn(`Deletion of database "${name}" is blocked by another connection.`);
-          // If blocked, we cannot proceed as creation will fail.
+          console.warn(`Deletion of database "${name}" is blocked. Restoration likely to fail.`);
           reject(new Error(`Database deletion blocked. Please close other tabs of this application and try again.`));
         };
       });
     }
   }
 
-  // Use the static PGlite.create method for re-initialization with loadDataDir.
-  // This is the recommended modern API for loading from a tarball.
-  console.log('Re-initializing database from tarball...');
+  // 3. Re-initialize with loadDataDir
+  console.log('Re-initializing database from tarball snapshot...');
   try {
     const newDb = await PGlite.create('idb://space-clocker-db', { 
       loadDataDir: blob,
@@ -164,11 +154,18 @@ export async function restoreDb(blob: Blob) {
         work_mem: '1MB'
       }
     });
+    
+    // Ensure it is ready before proceeding
+    await newDb.waitReady;
     db.setInstance(newDb);
-    console.log('Database restoration complete and ready.');
+    console.log('Database restoration complete and synchronized.');
   } catch (error: any) {
     console.error('PGlite.create failed during restoration:', error);
-    // If it still fails with "already exists", we might want to try one more thing or just re-throw.
+    // If we get ENOTEMPTY here, it means some directory already existed in the target dir.
+    // This happens if PGlite initializes some files before extracting the tarball.
+    if (error?.errno === 44 || error?.message?.includes('ENOTEMPTY')) {
+      throw new Error(`Restoration failed (ENOTEMPTY). This happens if the database was not fully cleared. Please try "Temporal Purge" first, then restore.`);
+    }
     throw error;
   }
 }

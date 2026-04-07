@@ -94,11 +94,13 @@ describe('DbClient - Orbital Interface', () => {
     // Handle all deletion attempts sequentially
     const dbNames = [
       'space-clocker-db', 
-      '/pglite/space-clocker-db', 
       'pglite-space-clocker-db',
+      '/pglite/space-clocker-db', 
       'pglite/space-clocker-db',
       'idb://space-clocker-db',
-      '/pglite/idb://space-clocker-db'
+      '/pglite/idb://space-clocker-db',
+      'pglite-idb://space-clocker-db',
+      'pglite-idb-space-clocker-db'
     ];
     
     for (let i = 0; i < dbNames.length; i++) {
@@ -123,6 +125,7 @@ describe('DbClient - Orbital Interface', () => {
     
     // Assert: IndexedDB was cleared for all possible names
     expect(deleteSpy).toHaveBeenCalledWith('space-clocker-db');
+    expect(deleteSpy).toHaveBeenCalledWith('pglite-space-clocker-db');
     expect(deleteSpy).toHaveBeenCalledWith('/pglite/space-clocker-db');
     expect(deleteSpy).toHaveBeenCalledWith('idb://space-clocker-db');
     
