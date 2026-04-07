@@ -52,6 +52,15 @@ export const MIGRATIONS: Migration[] = [
         INSERT INTO system_info (id, app_version) VALUES (1, '${CURRENT_APP_VERSION}') ON CONFLICT DO NOTHING;
       `);
     }
+  },
+  {
+    version: 3,
+    name: 'recovery_protocol_stabilization',
+    run: async (tx) => {
+      // Placeholder migration for version tracking in the 1.4.2 system jump
+      console.log('[Migration] Stabilizing recovery protocols...');
+      await tx.exec(`UPDATE system_info SET app_version = '${CURRENT_APP_VERSION}' WHERE id = 1;`);
+    }
   }
 ];
 

@@ -147,7 +147,11 @@ export async function initDb() {
     await runMigrations();
 
     console.log('[System] Stellar database schema synchronized.');
-  } catch (e) {
+  } catch (e: any) {
+    if (e && e.errno === 44) {
+      console.error('[Critical] PGlite ErrnoError 44 (ENOTEMPTY) detected. This usually indicates a corrupted local database state or conflicting fragments from a previous version.');
+      console.error('[Action Required] Please use the "Temporal Purge" button on the error screen to reset your local data.');
+    }
     console.error('[Critical] Database initialization failure:', e);
     throw e;
   }

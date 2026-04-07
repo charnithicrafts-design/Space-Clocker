@@ -48,6 +48,60 @@ export async function dumpDb() {
   return await db.dumpDataDir();
 }
 
+export async function purgeDatabase() {
+  console.log('Initiating temporal purge of all local database fragments...');
+  
+  if (_db) {
+    try {
+      await _db.close();
+      console.log('Current database connection closed.');
+    } catch (e) {
+      console.warn('Error closing database during purge:', e);
+    }
+    _db = null;
+  }
+
+  if (typeof indexedDB === 'undefined') {
+    console.error('IndexedDB not available for purging.');
+    return;
+  }
+
+  const dbNames = [
+    'space-clocker-db', 
+    '/pglite/space-clocker-db', 
+    'pglite-space-clocker-db',
+    'pglite/space-clocker-db',
+    'idb://space-clocker-db',
+    '/pglite/idb://space-clocker-db',
+    'pglite-idb://space-clocker-db' // Added more variations
+  ];
+  
+  for (const name of dbNames) {
+    try {
+      console.log(`Attempting to delete IndexedDB: "${name}"`);
+      await new Promise<void>((resolve, reject) => {
+        const request = indexedDB.deleteDatabase(name);
+        request.onsuccess = () => {
+          console.log(`Successfully deleted database: "${name}"`);
+          resolve();
+        };
+        request.onerror = () => {
+          console.error(`Error deleting database "${name}":`, request.error);
+          resolve(); // Continue with others even on error
+        };
+        request.onblocked = () => {
+          console.warn(`Deletion of database "${name}" is blocked.`);
+          resolve(); // Continue with others
+        };
+      });
+    } catch (e) {
+      console.warn(`Failed to process deletion for "${name}":`, e);
+    }
+  }
+  
+  console.log('Temporal purge complete.');
+}
+
 export async function restoreDb(blob: Blob) {
   console.log('Initiating database restoration from binary snapshot...');
   
