@@ -366,10 +366,41 @@ const AddSkillForm = ({ categoryId, categoryType, onCancel }: { categoryId?: str
 };
 
 const SkillsMatrix = () => {
-  const { skills, ambitions } = useTrackStore();
+  const { skills, ambitions, oracleConfig, updateSkill } = useTrackStore();
   const [showTarget, setShowTarget] = useState(true);
   const [selectedCategoryId, setSelectedCategoryId] = useState<'all' | 'personal' | string>('all');
   const [isAdding, setIsAdding] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const generateAITrajectory = async () => {
+    if (isGenerating) return;
+    setIsGenerating(true);
+    SoundManager.playSwell();
+    try {
+      const { OracleService } = await import('../../services/OracleService');
+      const response = await OracleService.getSkillTrajectoryUpdate(oracleConfig, skills, ambitions);
+      
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      const data = jsonMatch ? JSON.parse(jsonMatch[0]) : JSON.parse(response);
+
+      if (data.updates && Array.isArray(data.updates)) {
+        for (const update of data.updates) {
+          if (update.id && update.newRecommendation) {
+            await updateSkill(update.id, {
+              recommendation: update.newRecommendation,
+              targetProficiency: update.suggestedTargetProficiency || undefined
+            });
+          }
+        }
+        SoundManager.playSyncSuccess();
+      }
+    } catch (err) {
+      console.error('AI Trajectory Generation failed:', err);
+      SoundManager.playThud();
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const categories = useMemo(() => {
     const cats = [
@@ -491,10 +522,16 @@ const SkillsMatrix = () => {
       </AnimatePresence>
       
       <div className="flex justify-center pt-8">
-        <button className="glass-panel border border-primary/30 p-4 px-8 rounded-2xl flex items-center gap-3 hover:bg-primary/10 transition-colors group">
-            <Brain className="text-primary" />
-            <span className="font-bold tracking-tight">Generate AI Trajectory Update</span>
-            <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+        <button 
+          onClick={generateAITrajectory}
+          disabled={isGenerating || !oracleConfig.apiKey}
+          className={`glass-panel border border-primary/30 p-4 px-8 rounded-2xl flex items-center gap-3 transition-all group ${isGenerating ? 'opacity-50 cursor-wait' : 'hover:bg-primary/10'}`}
+        >
+            <Brain className={`text-primary ${isGenerating ? 'animate-pulse' : ''}`} />
+            <span className="font-bold tracking-tight">
+              {isGenerating ? 'Calibrating Trajectory...' : 'Generate AI Trajectory Update'}
+            </span>
+            {!isGenerating && <ChevronRight className="group-hover:translate-x-1 transition-transform" />}
         </button>
       </div>
     </div>
