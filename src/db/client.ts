@@ -9,6 +9,11 @@ const worker = new Worker(new URL('./db.worker.ts', import.meta.url), {
 // Wrap the worker with Comlink
 export const dbProxy = Comlink.wrap<DatabaseWorkerAPI>(worker);
 
+// Expose to window for debugging and E2E testing
+if (typeof window !== 'undefined') {
+  (window as any).dbProxy = dbProxy;
+}
+
 // Export a db object that mimics the old API for backward compatibility where possible
 export const db = {
   get waitReady() {
@@ -30,6 +35,10 @@ export const db = {
     throw new Error('setInstance() is not supported with the Web Worker proxy.');
   }
 };
+
+if (typeof window !== 'undefined') {
+  (window as any).db = db;
+}
 
 export function getDb() {
   return db;
