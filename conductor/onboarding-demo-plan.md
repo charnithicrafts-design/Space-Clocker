@@ -11,7 +11,7 @@ Create a `src/data/demo-data.json` file containing a fully-populated application
   - "AWS Solutions Architect Professional" (75% progress).
   - "India AI Contest - Winner 2026" (30% progress).
 - **Milestones & Tasks:** Multiple deconstructed goals with varying completion statuses.
-- **Skills Matrix (The Void):** Advanced proficiency in "Cloud Architecture", "AI Modeling", and "Data Engineering".
+- **Stellar Matrix (Skills Matrix):** Advanced proficiency in "Cloud Architecture", "AI Modeling", and "Data Engineering".
 - **Future Deadline:** "Principal AI Researcher" application deadline set in late 2027.
 - **Internship Data:** Completed periods at "AWS - Cloud Infrastructure" and "Google - DeepMind AI Lab".
 - **Daily Scheduler:** A balanced mix of daily tasks, including "Void Protocol" items like "Social Media Doomscrolling" (to avoid).
@@ -45,9 +45,9 @@ A multi-step guided tour using a professional-themed modal/overlay.
 - **Content:** "Manage your daily professional tasks here. Use the 'Void Protocol' to identify and avoid distractions that might derail your mission."
 - **Action:** Click "Next Sector".
 
-#### Step 5: The Void (Skills Matrix)
+#### Step 5: Stellar Matrix (Skills Matrix)
 - **Highlight:** Navigation to `/skills`.
-- **Content:** "Visualize your technical proficiency in the Skills Matrix. Your goal is to expand your reach across all critical domains required for the 2027 Principal AI Researcher role."
+- **Content:** "Visualize your technical proficiency in the Stellar Matrix. Your goal is to expand your reach across all critical domains as 'bright stars' to bridge the gap to the 2027 Principal AI Researcher role."
 - **Action:** Click "Complete Onboarding".
 
 ## 3. Implementation Steps

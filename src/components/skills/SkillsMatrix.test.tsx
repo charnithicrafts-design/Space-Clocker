@@ -38,7 +38,7 @@ describe('SkillsMatrix', () => {
 
   it('should render the Skills Matrix with core proficiency headers', () => {
     render(<SkillsMatrix />);
-    expect(screen.getByText('The Skills Matrix')).toBeInTheDocument();
+    expect(screen.getByText('Stellar Matrix')).toBeInTheDocument();
     expect(screen.getByText('Technical Proficiency')).toBeInTheDocument();
   });
 

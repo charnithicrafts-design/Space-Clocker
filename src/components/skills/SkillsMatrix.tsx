@@ -435,7 +435,7 @@ const SkillsMatrix = () => {
     <div className="p-6 lg:pl-80 space-y-8 min-h-screen bg-surface-lowest text-white pb-32">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
-          <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">The Skills Matrix</h2>
+          <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Stellar Matrix</h2>
           <h1 className="text-4xl font-display font-black text-primary">Technical Proficiency</h1>
         </div>
         <div className="flex items-center gap-4 glass-panel p-2 px-4 rounded-full border border-outline-variant">

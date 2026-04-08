@@ -44,8 +44,8 @@ const steps: Step[] = [
     route: "/orbit"
   },
   {
-    title: "The Void",
-    content: "Visualize proficiency in the Skills Matrix. Map your current mastery in SQL, Python, and AWS to identify the gaps you need to bridge to reach the elite tier.",
+    title: "Stellar Matrix",
+    content: "Visualize proficiency in the Stellar Matrix. Map your current mastery in SQL, Python, and AWS as 'bright stars' to identify the gaps you need to bridge to reach the elite tier.",
     icon: Brain,
     target: "skills",
     route: "/skills"

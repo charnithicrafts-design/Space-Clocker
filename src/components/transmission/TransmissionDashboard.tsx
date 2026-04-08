@@ -340,7 +340,7 @@ const TransmissionDashboard = () => {
                         <section className="bg-surface-low/50 p-6 rounded-3xl border border-outline-variant/20">
                           <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-error">
                             <AlertTriangle size={18} />
-                            The Void Analysis
+                            Void Protocol Analysis
                           </h3>
                           <div className="space-y-4">
                             {selectedTx.voidAnalysis.map((v, i) => (

@@ -22,7 +22,7 @@ Create a professional-themed guided tour using `framer-motion`:
 - **Step 2: Momentum Engine** - Dashboard overview.
 - **Step 3: Architect Mode** - Nebula Map overview.
 - **Step 4: Daily Scheduler** - Task management and Void Protocol.
-- **Step 5: The Void** - Skills Matrix visualization.
+- **Step 5: Stellar Matrix** - Skills Matrix visualization.
 - **Step 6: Completion** - Finalize onboarding.
 
 ## 4. App Integration (`src/App.tsx`)

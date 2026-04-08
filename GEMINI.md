@@ -18,7 +18,7 @@ The application features a modular interface with four primary modes:
 - **Dashboard (Momentum Engine):** High-level progress overview, level tracking, and macro ambitions.
 - **Nebula (Architect Mode):** Decomposition of ambitions into stellar milestones and sub-goals.
 - **Orbit (Daily Scheduler):** Daily task management with efficiency tracking and "Void Protocol" (Not-To-Do list).
-- **The Void (Skills Matrix):** A radar chart visualization for technical proficiency and gap analysis.
+- **Stellar Matrix (Skills Matrix):** A radar chart visualization for technical proficiency and gap analysis (formerly 'The Void').
 
 The UI is characterized by a "glassmorphism" aesthetic, rich animations, and integrated audio feedback.
 
@@ -31,6 +31,7 @@ The UI is characterized by a "glassmorphism" aesthetic, rich animations, and int
   - **Lucide React:** Providing the icon set.
 - **Audio:** Web Audio API (custom implementation in `src/utils/SoundManager.ts`).
 - **AI Integration:** `@google/genai` is a core dependency, intended for AI-assisted features (API key configuration present in `vite.config.ts`).
+- **Database:** PGlite (Postgres-in-WASM) for local-first data persistence.
 
 ## Building and Running
 - **Installation:** `npm install`
@@ -41,6 +42,9 @@ The UI is characterized by a "glassmorphism" aesthetic, rich animations, and int
 - **Environment Setup:** Create a `.env.local` file and set `GEMINI_API_KEY` to your Google Gemini API key.
 
 ## Development Conventions
+- **Naming Conventions:** Use PascalCase for components. Feature-based directories should use kebab-case (e.g., `src/components/void-protocol`).
+- **Stellar Matrix:** Use 'bright stars' as a metaphor for high-proficiency skills in the Skills Matrix. Avoid 'Void' terminology here.
+- **Void Protocol:** Reserve 'Void' terminology exclusively for the anti-habit system and distractions.
 - **Theme Constants:** Centralized in `src/index.css` under the `@theme` block. Use CSS variables (e.g., `var(--color-primary-container)`) for consistency.
 - **Interactive Feedback:** User actions (navigation, task completion, errors) should trigger the `soundManager` (imported from `@/src/utils/SoundManager`) to maintain the immersive experience.
 - **Component Architecture:** The current structure in `App.tsx` uses functional components for screens. As the project grows, these should be refactored into a `src/components/screens` directory.
