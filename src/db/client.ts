@@ -51,7 +51,7 @@ const DB_NAME_VARIATIONS = [
   '/pglite/idb://space-clocker-db',
   'pglite-idb://space-clocker-db',
   'pglite-idb-space-clocker-db',
-  'opfs://space-clocker-db'
+  'opfs-ahp://space-clocker-db'
 ];
 
 export async function purgeDatabase() {

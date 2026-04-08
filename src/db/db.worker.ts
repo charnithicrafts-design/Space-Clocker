@@ -13,8 +13,8 @@ const api = {
     
     // 1. Determine Storage Strategy
     const isOpfsSupported = typeof navigator !== 'undefined' && 'storage' in navigator && typeof navigator.storage.getDirectory === 'function';
-    const storagePath = typeof dataDir === 'string' ? dataDir : (isOpfsSupported ? 'opfs://space-clocker-db' : 'idb://space-clocker-db');
-    
+    const storagePath = typeof dataDir === 'string' ? dataDir : 'memory://space-clocker-db';
+
     console.log(`[Worker] Storage strategy: ${storagePath} (OPFS Supported: ${isOpfsSupported})`);
 
     try {
@@ -32,20 +32,20 @@ const api = {
         loadDataDir: dataDir instanceof Blob ? dataDir : dump,
       });
       await db.waitReady;
-      
+
       // Auto-run schema and migrations on init
       await this.setup();
-      
+
       console.log('[Worker] PGlite ready and synchronized.');
     } catch (error: any) {
       console.error('[Worker] PGlite initialization failure:', error);
-      
+
       // Memory Fallback: If IDB failed due to memory, try starting a fresh OPFS instance
       if (error instanceof RangeError || error.message?.includes('allocation failed')) {
         console.warn('[Worker] Memory allocation failed. Attempting emergency fallback to OPFS-only mode...');
         if (isOpfsSupported && storagePath.startsWith('idb://')) {
           try {
-            db = await PGlite.create('opfs://space-clocker-db', { relaxedDurability: true });
+            db = await PGlite.create('opfs-ahp://space-clocker-db', { relaxedDurability: true });
             await db.waitReady;
             await this.setup();
             console.log('[Worker] Emergency fallback successful. Note: IDB data is temporarily inaccessible.');
