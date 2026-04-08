@@ -366,10 +366,11 @@ const AddSkillForm = ({ categoryId, categoryType, onCancel }: { categoryId?: str
 };
 
 const SkillsMatrix = () => {
-  
-  
-  const store = useTrackStore() || { skills: [], ambitions: [], oracleConfig: { apiKey: "" }, updateSkill: () => {} };
-  const { skills, ambitions, oracleConfig, updateSkill } = store;
+  const store = useTrackStore();
+  const skills = store?.skills || [];
+  const ambitions = store?.ambitions || [];
+  const oracleConfig = store?.oracleConfig;
+  const updateSkill = store?.updateSkill || (() => {});
   const oracleApiKey = oracleConfig?.apiKey;
   
   

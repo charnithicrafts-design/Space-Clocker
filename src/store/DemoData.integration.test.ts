@@ -4,9 +4,70 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 vi.mock('../db/client', async () => {
   const { PGlite } = await import('@electric-sql/pglite');
   const mockDb = new PGlite();
+  
+  // Basic domain method mocks for integration tests
+  const dbProxy = {
+    query: (sql: string, params?: any[]) => mockDb.query(sql, params),
+    exec: (sql: string) => mockDb.exec(sql),
+    init: () => mockDb.waitReady,
+    transaction: (callback: any) => mockDb.transaction(callback),
+    getProfile: () => mockDb.query('SELECT name, level, xp, title FROM profile WHERE id = 1'),
+    getTasks: () => mockDb.query('SELECT * FROM tasks'),
+    bulkImport: async (payload: any) => {
+      // Minimal bulkImport implementation for tests
+      await mockDb.transaction(async (tx) => {
+        await tx.query('DELETE FROM tasks');
+        await tx.query('DELETE FROM milestones');
+        await tx.query('DELETE FROM ambitions');
+        await tx.query('DELETE FROM void_tasks');
+        await tx.query('DELETE FROM skills');
+        await tx.query('DELETE FROM internships');
+        await tx.query('DELETE FROM reflections');
+        await tx.query('DELETE FROM transmissions');
+        await tx.query('DELETE FROM stellar_history');
+        
+        if (payload.profile) {
+          await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
+            payload.profile.name || null, payload.profile.level || 1, payload.profile.xp || 0, payload.profile.title || null
+          ]);
+        }
+        if (payload.ambitions) {
+          for (const a of payload.ambitions) {
+            await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [
+              a.id, a.title, a.progress || 0, a.xp || 0, a.horizon || 'yearly'
+            ]);
+          }
+        }
+        if (payload.tasks) {
+          for (const t of payload.tasks) {
+            await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
+              t.id, t.milestoneId || null, t.ambitionId || null, t.time || null, null, null, 10, t.title, t.completed || false, t.horizon || 'daily', t.plannedDate || null, null, t.isVoid || false
+            ]);
+          }
+        }
+        if (payload.skills) {
+          for (const s of payload.skills) {
+            await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
+              s.id, s.name, s.currentProficiency || 0, s.targetProficiency || 100, s.recommendation || '', s.type || 'personal', s.ambitionId || null
+            ]);
+          }
+        }
+        if (payload.history) {
+          for (const h of payload.history) {
+            await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
+              h.id, h.title, h.date, h.type, h.category, h.description || '', JSON.stringify(h.skills || [])
+            ]);
+          }
+        }
+      });
+      return true;
+    }
+  };
+
   return {
     getDb: () => mockDb,
-    db: mockDb
+    db: mockDb,
+    dbProxy
   };
 });
 

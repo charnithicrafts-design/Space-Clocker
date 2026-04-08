@@ -1,41 +1,33 @@
-import { PGlite } from '@electric-sql/pglite';
+import * as Comlink from 'comlink';
+import type { DatabaseWorkerAPI } from './db.worker';
 
-let _db: PGlite | null = null;
+// Instantiate the worker
+const worker = new Worker(new URL('./db.worker.ts', import.meta.url), {
+  type: 'module',
+});
 
+// Wrap the worker with Comlink
+export const dbProxy = Comlink.wrap<DatabaseWorkerAPI>(worker);
+
+// Export a db object that mimics the old API for backward compatibility where possible
 export const db = {
   get waitReady() {
-    return this.getInstance().waitReady;
+    // We can't easily wait for the worker to be ready here without making it an async getter
+    // which JS doesn't support. We'll return the init promise instead.
+    return dbProxy.init();
   },
-  query: (sql: string, params?: any[]) => db.getInstance().query(sql, params) as Promise<any>,
-  exec: (sql: string) => db.getInstance().exec(sql) as Promise<any>,
-  close: () => db.getInstance().close(),
-  dumpDataDir: () => db.getInstance().dumpDataDir(),
-  transaction: (callback: (tx: any) => Promise<any>) => db.getInstance().transaction(callback),
+  query: (sql: string, params?: any[]) => dbProxy.query(sql, params) as Promise<any>,
+  exec: (sql: string) => dbProxy.exec(sql),
+  close: () => dbProxy.close(),
+  dumpDataDir: () => dbProxy.dumpDataDir(),
+  transaction: (callback: (tx: any) => Promise<any>) => dbProxy.transaction(callback),
   
-  getInstance: (): PGlite => {
-    if (!_db) {
-      console.log('[Database] Initializing PGlite (idb)...');
-      
-      if (typeof indexedDB === 'undefined') {
-        console.error('[Database] IndexedDB not found. Trajectory data cannot be stored.');
-        throw new Error('Your browser does not support local database storage (IndexedDB).');
-      }
-
-      try {
-        _db = new PGlite('idb://space-clocker-db', {
-          relaxedDurability: true,
-        });
-      } catch (err) {
-        console.error('[Database] Failed to create PGlite instance:', err);
-        throw err;
-      }
-    }
-    return _db;
+  // These are specific to the old PGlite instance and might need refactoring in the UI
+  getInstance: () => {
+    throw new Error('getInstance() is not supported with the Web Worker proxy. Use dbProxy directly.');
   },
-
-  // Method to manually replace the instance (used in restoreDb)
-  setInstance: (newDb: PGlite | null) => {
-    _db = newDb;
+  setInstance: () => {
+    throw new Error('setInstance() is not supported with the Web Worker proxy.');
   }
 };
 
@@ -44,14 +36,11 @@ export function getDb() {
 }
 
 export async function dumpDb() {
-  await db.waitReady;
-  return await db.dumpDataDir();
+  return await dbProxy.dumpDataDir();
 }
 
 /**
  * Common PGlite IndexedDB name variations to target for deletion.
- * PGlite 0.4.x uses 'pglite-' prefix for idb:// driver.
- * Older versions or emscripten IDBFS might use other patterns.
  */
 const DB_NAME_VARIATIONS = [
   'space-clocker-db', 
@@ -65,16 +54,12 @@ const DB_NAME_VARIATIONS = [
 ];
 
 export async function purgeDatabase() {
-  console.log('Initiating temporal purge of all local database fragments...');
+  console.log('[Client] Initiating temporal purge via worker...');
   
-  if (_db) {
-    try {
-      await _db.close();
-      console.log('Current database connection closed.');
-    } catch (e) {
-      console.warn('Error closing database during purge:', e);
-    }
-    _db = null;
+  try {
+    await dbProxy.close();
+  } catch (e) {
+    console.warn('[Client] Error closing database during purge:', e);
   }
 
   if (typeof indexedDB === 'undefined') {
@@ -84,87 +69,69 @@ export async function purgeDatabase() {
 
   for (const name of DB_NAME_VARIATIONS) {
     try {
-      console.log(`Attempting to delete IndexedDB: "${name}"`);
+      console.log(`[Client] Attempting to delete IndexedDB: "${name}"`);
       await new Promise<void>((resolve) => {
         const request = indexedDB.deleteDatabase(name);
         request.onsuccess = () => {
-          console.log(`Successfully deleted database: "${name}"`);
+          console.log(`[Client] Successfully deleted database: "${name}"`);
           resolve();
         };
         request.onerror = () => {
-          console.error(`Error deleting database "${name}":`, request.error);
-          resolve(); // Continue with others even on error
+          console.error(`[Client] Error deleting database "${name}":`, request.error);
+          resolve();
         };
         request.onblocked = () => {
-          console.warn(`Deletion of database "${name}" is blocked. Close other tabs.`);
-          resolve(); // Continue with others
+          console.warn(`[Client] Deletion of database "${name}" is blocked. Close other tabs.`);
+          resolve();
         };
       });
     } catch (e) {
-      console.warn(`Failed to process deletion for "${name}":`, e);
+      console.warn(`[Client] Failed to process deletion for "${name}":`, e);
     }
   }
   
-  console.log('Temporal purge complete.');
+  console.log('[Client] Temporal purge complete.');
 }
 
 export async function restoreDb(blob: Blob) {
-  console.log('Initiating database restoration from binary snapshot...');
+  console.log('[Client] Initiating database restoration via worker...');
   
-  // 1. Close current connection and null it out to prevent use during deletion
-  if (_db) {
-    try {
-      await _db.close();
-      console.log('Current database connection closed.');
-    } catch (e) {
-      console.warn('Error closing database before restoration:', e);
-    }
-    _db = null;
-    // Give browser time to release locks
-    await new Promise(r => setTimeout(r, 300));
+  // 1. Close current connection via worker
+  try {
+    await dbProxy.close();
+  } catch (e) {
+    console.warn('[Client] Error closing database before restoration:', e);
   }
   
-  // 2. Clear all IndexedDB variations to avoid ENOTEMPTY during PGlite.create loadDataDir
+  // Give browser time to release locks
+  await new Promise(r => setTimeout(r, 300));
+  
+  // 2. Clear all IndexedDB variations
   if (typeof indexedDB !== 'undefined') {
     for (const name of DB_NAME_VARIATIONS) {
-      console.log(`Clearing DB for restoration: "${name}"`);
+      console.log(`[Client] Clearing DB for restoration: "${name}"`);
       await new Promise<void>((resolve, reject) => {
         const request = indexedDB.deleteDatabase(name);
         request.onsuccess = () => resolve();
         request.onerror = () => {
-          console.error(`Error deleting database "${name}" during restore:`, request.error);
-          resolve(); // Try to continue anyway
+          console.error(`[Client] Error deleting database "${name}" during restore:`, request.error);
+          resolve();
         };
         request.onblocked = () => {
-          console.warn(`Deletion of database "${name}" is blocked. Restoration likely to fail.`);
+          console.warn(`[Client] Deletion of database "${name}" is blocked.`);
           reject(new Error(`Database deletion blocked. Please close other tabs of this application and try again.`));
         };
       });
     }
   }
 
-  // 3. Re-initialize with loadDataDir
-  console.log('Re-initializing database from tarball snapshot...');
+  // 3. Re-initialize worker with blob
+  console.log('[Client] Re-initializing database in worker from snapshot...');
   try {
-    const newDb = await PGlite.create('idb://space-clocker-db', { 
-      loadDataDir: blob,
-      relaxedDurability: true,
-      options: {
-        shared_buffers: '4MB'
-      }
-    });
-    
-    // Ensure it is ready before proceeding
-    await newDb.waitReady;
-    db.setInstance(newDb);
-    console.log('Database restoration complete and synchronized.');
+    await dbProxy.init(blob);
+    console.log('[Client] Database restoration complete.');
   } catch (error: any) {
-    console.error('PGlite.create failed during restoration:', error);
-    // If we get ENOTEMPTY here, it means some directory already existed in the target dir.
-    // This happens if PGlite initializes some files before extracting the tarball.
-    if (error?.errno === 44 || error?.message?.includes('ENOTEMPTY')) {
-      throw new Error(`Restoration failed (ENOTEMPTY). This happens if the database was not fully cleared. Please try "Temporal Purge" first, then restore.`);
-    }
+    console.error('[Client] dbProxy.init failed during restoration:', error);
     throw error;
   }
 }

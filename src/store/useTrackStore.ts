@@ -226,7 +226,7 @@ export const useTrackStore = create<TrackStore>()(
     skills: [],
     transmissions: [],
     stats: { streak: 0, tasks_completed: 0, total_focus_hours: 0 } as any,
-    oracleConfig: { apiKey: 'mock-key',
+    oracleConfig: {
       apiKey: '',
       model: 'gemini-1.5-pro',
       providerUrl: 'https://generativelanguage.googleapis.com/v1beta/openai'
@@ -363,36 +363,13 @@ export const useTrackStore = create<TrackStore>()(
     },
 
     toggleTask: async (taskId: string) => {
-      const state = get();
-      const task = state.tasks.find(t => t.id === taskId);
-      if (task) {
-        const newCompleted = !task.completed;
-        const completedAt = newCompleted ? new Date().toISOString() : null;
-        const xpGain = newCompleted ? (task.weightage || 10) : -(task.weightage || 10);
-        
-        let newXp = state.profile.xp + xpGain;
-        let newLevel = state.profile.level;
-        
-        if (newXp >= XP_PER_LEVEL) {
-          newLevel += 1;
-          newXp -= XP_PER_LEVEL;
-        } else if (newXp < 0 && newLevel > 1) {
-          newLevel -= 1;
-          newXp += XP_PER_LEVEL;
-        } else if (newXp < 0) {
-          newXp = 0;
-        }
+      const { dbProxy } = await import('../db/client');
+      const { newCompleted, completedAt, newXp, newLevel } = await dbProxy.toggleTask(taskId, XP_PER_LEVEL);
 
-        const { getDb } = await import('../db/client');
-        const db = getDb();
-        await db.query(`UPDATE tasks SET completed = $1, completed_at = $2 WHERE id = $3`, [newCompleted, completedAt, taskId]);
-        await db.query(`UPDATE profile SET xp = $1, level = $2 WHERE id = 1`, [newXp, newLevel]);
-
-        set((state) => ({
-          tasks: state.tasks.map((t) => t.id === taskId ? { ...t, completed: newCompleted, completedAt: completedAt || undefined } : t),
-          profile: { ...state.profile, xp: newXp, level: newLevel }
-        }));
-      }
+      set((state) => ({
+        tasks: state.tasks.map((t) => t.id === taskId ? { ...t, completed: newCompleted, completedAt: completedAt || undefined } : t),
+        profile: { ...state.profile, xp: newXp, level: newLevel }
+      }));
     },
 
     addReflection: async (content: string, type: Reflection['type']) => {
@@ -840,183 +817,10 @@ export const useTrackStore = create<TrackStore>()(
         collections: Object.keys(payload)
       });
 
-      const { getDb } = await import('../db/client');
-      const db = getDb();
-      await db.waitReady;
-
-      const stringifyIfObject = (val: any) => {
-        if (val === null || val === undefined) return null;
-        return typeof val === 'string' ? val : JSON.stringify(val);
-      };
-
+      const { dbProxy } = await import('../db/client');
+      
       try {
-        await db.transaction(async (tx) => {
-          // Clear current tables - CASCADE should handle dependencies but we'll be explicit
-          console.log('[Import] Clearing current database tables...');
-          await tx.query('DELETE FROM tasks');
-          await tx.query('DELETE FROM milestones');
-          await tx.query('DELETE FROM ambitions');
-          await tx.query('DELETE FROM void_tasks');
-          await tx.query('DELETE FROM skills');
-          await tx.query('DELETE FROM internships');
-          await tx.query('DELETE FROM reflections');
-          await tx.query('DELETE FROM transmissions');
-          await tx.query('DELETE FROM stellar_history');
-          await tx.query('DELETE FROM sync_metadata');
-
-          // 1. Restore Singletons (Update existing row 1)
-          console.log('[Import] Restoring system singletons...');
-          if (payload.profile) {
-            await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
-              payload.profile.name || null, payload.profile.level || 1, payload.profile.xp || 0, payload.profile.title || null
-            ]);
-          }
-          if (payload.preferences || payload.preferences) {
-            const p = payload.preferences;
-            await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [
-              p.confirmDelete ?? p.confirm_delete ?? true, 
-              p.uiMode || p.ui_mode || 'simple'
-            ]);
-          }
-          if (payload.stats) {
-            await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [
-              payload.stats.streak || 0, 
-              payload.stats.tasksCompleted ?? payload.stats.tasks_completed ?? 0, 
-              payload.stats.totalFocusHours ?? payload.stats.total_focus_hours ?? 0
-            ]);
-          }
-          const o = payload.oracleConfig || payload.oracle_config;
-          if (o) {
-            await tx.query(`UPDATE oracle_config SET api_key = $1, model = $2, provider_url = $3 WHERE id = 1`, [
-              o.apiKey || o.api_key || '', 
-              o.model || 'gemini-1.5-pro', 
-              o.providerUrl || o.provider_url || 'https://generativelanguage.googleapis.com/v1beta/openai'
-            ]);
-          }
-
-          // 2. Restore Ambitions & Milestones
-          console.log('[Import] Restoring ambitions and milestones...');
-          if (payload.ambitions) {
-            for (const a of payload.ambitions) {
-              await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [
-                a.id, a.title, a.progress || 0, a.xp || 0, a.horizon || 'yearly'
-              ]);
-              if (a.milestones) {
-                for (const m of a.milestones) {
-                  await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [
-                    m.id, a.id, m.title, m.status || 'pending'
-                  ]);
-                  if (m.tasks) {
-                    for (const t of m.tasks) {
-                      await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
-                        t.id, m.id, a.id, 
-                        t.time || null, 
-                        t.endTime || t.end_time || null, 
-                        t.deadline || null, 
-                        t.weightage ?? 10, 
-                        t.title, 
-                        t.completed ?? false, 
-                        t.horizon || 'daily', 
-                        t.plannedDate || t.planned_date || null, 
-                        t.completedAt || t.completed_at || null, 
-                        t.isVoid || t.is_void || false
-                      ]);
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          // 3. Restore Standalone Tasks
-          console.log('[Import] Restoring standalone tasks...');
-          if (payload.tasks) {
-            for (const t of payload.tasks) {
-              await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ON CONFLICT (id) DO NOTHING`, [
-                t.id, 
-                t.milestoneId || t.milestone_id || null, 
-                t.ambitionId || t.ambition_id || null, 
-                t.time || null, 
-                t.endTime || t.end_time || null, 
-                t.deadline || null, 
-                t.weightage ?? 10, 
-                t.title, 
-                t.completed ?? false, 
-                t.horizon || 'daily', 
-                t.plannedDate || t.planned_date || null, 
-                t.completedAt || t.completed_at || null, 
-                t.isVoid || t.is_void || false
-              ]);
-            }
-          }
-
-          // 4. Other Collections
-          console.log('[Import] Restoring ancillary collections...');
-          if (payload.voids) {
-            for (const v of payload.voids) {
-              await tx.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)`, [
-                v.id, v.text, v.impact || 'low', v.engagedCount ?? v.engaged_count ?? 0, v.maxAllowed ?? v.max_allowed ?? 3
-              ]);
-            }
-          }
-          if (payload.reflections) {
-            for (const r of payload.reflections) {
-              await tx.query(`INSERT INTO reflections (id, date, content, type) VALUES ($1, $2, $3, $4)`, [
-                r.id, r.date || null, r.content, r.type || 'daily-summary'
-              ]);
-            }
-          }
-          if (payload.skills) {
-            for (const s of payload.skills) {
-              await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
-                s.id, s.name, 
-                s.currentProficiency ?? s.current_proficiency ?? 0, 
-                s.targetProficiency ?? s.target_proficiency ?? 100, 
-                s.recommendation || null, 
-                s.type || 'personal', 
-                s.ambitionId || s.ambition_id || null
-              ]);
-            }
-          }
-          if (payload.internships) {
-            for (const i of payload.internships) {
-              const id = i.id || `int-${Date.now()}-${Math.random()}`;
-              await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)`, [
-                id, i.organization, i.start_date || i.start, i.end_date || i.end
-              ]);
-            }
-          }
-          if (payload.transmissions) {
-            for (const t of payload.transmissions) {
-              await tx.query(`INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
-                t.id, t.timestamp || null, t.tier, t.title, 
-                t.startDate || t.start_date || null, 
-                t.endDate || t.end_date || null, 
-                t.pdaNarrative || t.pda_narrative || null,
-                stringifyIfObject(t.pdaReflections ?? t.pda_reflections ?? []),
-                stringifyIfObject(t.voidAnalysis ?? t.void_analysis ?? []),
-                stringifyIfObject(t.skillsReconciliation ?? t.skills_reconciliation ?? []),
-                stringifyIfObject(t.missionMetrics ?? t.mission_metrics ?? { accomplished: [], missed: [], milestones: [] }),
-                stringifyIfObject(t.rawLogs ?? t.raw_logs ?? { tasksCompleted: 0, totalTasks: 0, focusHours: 0 }),
-                stringifyIfObject(t.metadata ?? {})
-              ]);
-            }
-          }
-          if (payload.history) {
-            for (const h of payload.history) {
-              await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
-                h.id, h.title, h.date, h.type, h.category, h.description || null, stringifyIfObject(h.skills || [])
-              ]);
-            }
-          }
-
-          // 5. System Info update
-          const today = getTodayLocalISO();
-          await tx.query(`UPDATE system_info SET last_startup = $1, app_version = $2 WHERE id = 1`, [today, CURRENT_APP_VERSION]);
-          
-          console.log('[Import] Trajectory core synchronized and reconciled.');
-        });
-        
+        await dbProxy.bulkImport(payload);
         await get().initialize();
         console.log('[Import] State re-initialized. Ready for launch.');
       } catch (err: any) {
@@ -1024,7 +828,7 @@ export const useTrackStore = create<TrackStore>()(
         throw new Error(`Import failed: ${err.message || 'Check database constraints or file structure.'}`);
       }
     },
-    updateOracleConfig: (config) => set((state) => ({ oracleConfig: { apiKey: 'mock-key', ...state.oracleConfig, ...config } })),
+    updateOracleConfig: (config) => set((state) => ({ oracleConfig: { ...state.oracleConfig, ...config } })),
     updateProfile: (updates) => set((state) => {
       const newProfile = { ...state.profile, ...updates };
       import('../db/client').then(({ getDb }) => {
@@ -1078,27 +882,9 @@ export const useTrackStore = create<TrackStore>()(
     },
 
     clearAllData: async () => {
-      const { getDb } = await import('../db/client');
-      const db = getDb();
+      const { dbProxy } = await import('../db/client');
       try {
-        await db.transaction(async (tx) => {
-          await tx.query('DELETE FROM tasks');
-          await tx.query('DELETE FROM milestones');
-          await tx.query('DELETE FROM ambitions');
-          await tx.query('DELETE FROM void_tasks');
-          await tx.query('DELETE FROM skills');
-          await tx.query('DELETE FROM internships');
-          await tx.query('DELETE FROM reflections');
-          await tx.query('DELETE FROM transmissions');
-          await tx.query('DELETE FROM stellar_history');
-          await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, ['Valentina', 1, 0, 'Galactic Voyager']);
-          await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [true, 'simple']);
-          await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [0, 0, 0]);
-
-          // SILENCE RECONCILIATION
-          const today = getTodayLocalISO();
-          await tx.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
-        });
+        await dbProxy.clearAllData();
         await get().initialize();
       } catch (err) {
         console.error('Data clear failed:', err);
@@ -1106,148 +892,14 @@ export const useTrackStore = create<TrackStore>()(
       }
     },
     importDemoData: async (data: any) => {
-      const { getDb } = await import('../db/client');
-      const db = getDb();
-      const stringifyIfObject = (val: any) => {
-        if (val === null || val === undefined) return null;
-        return typeof val === 'string' ? val : JSON.stringify(val);
-      };
-
+      const { dbProxy } = await import('../db/client');
       try {
-        await db.transaction(async (tx) => {
-          await tx.query('DELETE FROM tasks');
-          await tx.query('DELETE FROM milestones');
-          await tx.query('DELETE FROM ambitions');
-          await tx.query('DELETE FROM void_tasks');
-          await tx.query('DELETE FROM skills');
-          await tx.query('DELETE FROM internships');
-          await tx.query('DELETE FROM reflections');
-          await tx.query('DELETE FROM transmissions');
-          await tx.query('DELETE FROM stellar_history');
-
-          if (data.profile) await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [data.profile.name || null, data.profile.level || 1, data.profile.xp || 0, data.profile.title || null]);
-          if (data.preferences) {
-            await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [
-              data.preferences.confirmDelete ?? data.preferences.confirm_delete ?? true, 
-              data.preferences.uiMode || data.preferences.ui_mode || 'simple'
-            ]);
-          }
-          if (data.stats) {
-            await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [
-              data.stats.streak || 0, 
-              data.stats.tasksCompleted ?? data.stats.tasks_completed ?? 0, 
-              data.stats.totalFocusHours ?? data.stats.total_focus_hours ?? 0
-            ]);
-          }
-          if (data.ambitions) {
-            for (const a of data.ambitions) {
-              await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`, [a.id, a.title, a.progress || 0, a.xp || 0, a.horizon || 'yearly']);
-              if (a.milestones) {
-                for (const m of a.milestones) {
-                  await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`, [m.id, a.id, m.title, m.status || 'pending']);
-                  if (m.tasks) {
-                    for (const t of m.tasks) {
-                      await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ON CONFLICT (id) DO NOTHING`, [
-                        t.id, m.id, a.id, 
-                        t.time || null, 
-                        t.endTime || t.end_time || null, 
-                        t.deadline || null, 
-                        t.weightage ?? 10, 
-                        t.title, 
-                        t.completed ?? false, 
-                        t.horizon || 'daily', 
-                        t.plannedDate || t.planned_date || null, 
-                        t.completedAt || t.completed_at || null, 
-                        t.isVoid || t.is_void || false
-                      ]);
-                    }
-                  }
-                }
-              }
-            }
-          }
-          if (data.tasks) {
-            for (const t of data.tasks) {
-              await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ON CONFLICT (id) DO NOTHING`, [
-                t.id, 
-                t.milestone_id || t.milestoneId || null, 
-                t.ambition_id || t.ambitionId || null, 
-                t.time || null, 
-                t.end_time || t.endTime || null, 
-                t.deadline || null, 
-                t.weightage ?? 10, 
-                t.title, 
-                t.completed ?? false, 
-                t.horizon || 'daily', 
-                t.planned_date || t.plannedDate || null, 
-                t.completed_at || t.completedAt || null, 
-                t.is_void || t.isVoid || false
-              ]);
-            }
-          }
-          if (data.voids) {
-            for (const v of data.voids) {
-              await tx.query(`INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (id) DO NOTHING`, [
-                v.id, v.text, v.impact || 'low', 
-                v.engagedCount ?? v.engaged_count ?? 0, 
-                v.maxAllowed ?? v.max_allowed ?? 3
-              ]);
-            }
-          }
-          if (data.skills) {
-            for (const s of data.skills) {
-              await tx.query(`INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (id) DO NOTHING`, [
-                s.id, s.name, 
-                s.current_proficiency ?? s.currentProficiency ?? 0, 
-                s.target_proficiency ?? s.targetProficiency ?? 100, 
-                s.recommendation || null, 
-                s.type || 'personal', 
-                s.ambition_id ?? s.ambitionId ?? null
-              ]);
-            }
-          }
-          if (data.internships) {
-            for (const i of data.internships) {
-              const id = i.id || `intern-${Date.now()}-${Math.random()}`;
-              await tx.query(`INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING`, [
-                id, i.organization, 
-                i.start_date || i.start || null, 
-                i.end_date || i.end || null
-              ]);
-            }
-          }
-          if (data.transmissions) {
-            for (const t of data.transmissions) {
-              await tx.query(`INSERT INTO transmissions (id, timestamp, tier, title, start_date, end_date, pda_narrative, pda_reflections, void_analysis, skills_reconciliation, mission_metrics, raw_logs, metadata) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) ON CONFLICT (id) DO NOTHING`, [
-                t.id, t.timestamp || null, t.tier, t.title, 
-                t.start_date ?? t.startDate ?? null, 
-                t.end_date ?? t.endDate ?? null, 
-                t.pda_narrative ?? t.pdaNarrative ?? null,
-                stringifyIfObject(t.pda_reflections ?? t.pdaReflections ?? []),
-                stringifyIfObject(t.void_analysis ?? t.voidAnalysis ?? []),
-                stringifyIfObject(t.skills_reconciliation ?? t.skillsReconciliation ?? []),
-                stringifyIfObject(t.mission_metrics ?? t.missionMetrics ?? { accomplished: [], missed: [], milestones: [] }),
-                stringifyIfObject(t.raw_logs ?? t.rawLogs ?? { tasksCompleted: 0, totalTasks: 0, focusHours: 0 }),
-                stringifyIfObject(t.metadata ?? {})
-              ]);
-            }
-          }
-          if (data.history) {
-            for (const h of data.history) {
-              await tx.query(`INSERT INTO stellar_history (id, title, date, type, category, description, skills) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (id) DO NOTHING`, [
-                h.id, h.title, h.date, h.type, h.category, h.description || null, stringifyIfObject(h.skills || [])
-              ]);
-            }
-          }
-          // SILENCE RECONCILIATION
-          const today = getTodayLocalISO();
-          await tx.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
-        });
+        await dbProxy.bulkImport(data);
+        await get().initialize();
       } catch (err) {
         console.error('Demo data import failed:', err);
         throw err;
       }
-      await get().initialize();
     },
 
     dismissUpdate: () => set({ showUpdateModal: false }),
@@ -1281,11 +933,10 @@ export const useTrackStore = create<TrackStore>()(
     },
 
     initialize: async () => {
-      const { getDb } = await import('../db/client');
-      const db = getDb();
+      const { dbProxy } = await import('../db/client');
       const today = getTodayLocalISO();
       
-      // Fetch core data in parallel for efficiency
+      // Fetch core data using domain methods and generic queries
       const [
         profileRes, 
         prefsRes, 
@@ -1302,20 +953,20 @@ export const useTrackStore = create<TrackStore>()(
         transmissionsRes,
         systemRes
       ] = await Promise.all([
-        db.query(`SELECT name, level, xp, title FROM profile WHERE id = 1`),
-        db.query(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`),
-        db.query(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`),
-        db.query(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`),
-        db.query(`SELECT * FROM ambitions`),
-        db.query(`SELECT * FROM milestones`),
-        db.query(`SELECT * FROM tasks`),
-        db.query(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`),
-        db.query(`SELECT id, date, content, type FROM reflections ORDER BY date DESC LIMIT 100`),
-        db.query(`SELECT * FROM stellar_history ORDER BY date DESC LIMIT 50`),
-        db.query(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`),
-        db.query(`SELECT organization, start_date as "start", end_date as "end" FROM internships`),
-        db.query(`SELECT * FROM transmissions ORDER BY timestamp DESC LIMIT 20`),
-        db.query(`SELECT last_startup, app_version FROM system_info WHERE id = 1`)
+        dbProxy.getProfile(),
+        dbProxy.query(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`),
+        dbProxy.query(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`),
+        dbProxy.query(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`),
+        dbProxy.query(`SELECT * FROM ambitions`),
+        dbProxy.query(`SELECT * FROM milestones`),
+        dbProxy.getTasks(),
+        dbProxy.query(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`),
+        dbProxy.query(`SELECT id, date, content, type FROM reflections ORDER BY date DESC LIMIT 100`),
+        dbProxy.query(`SELECT * FROM stellar_history ORDER BY date DESC LIMIT 50`),
+        dbProxy.query(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`),
+        dbProxy.query(`SELECT organization, start_date as "start", end_date as "end" FROM internships`),
+        dbProxy.query(`SELECT * FROM transmissions ORDER BY timestamp DESC LIMIT 20`),
+        dbProxy.query(`SELECT last_startup, app_version FROM system_info WHERE id = 1`)
       ]);
 
       const lastStartup = systemRes.rows[0]?.last_startup;
@@ -1329,8 +980,8 @@ export const useTrackStore = create<TrackStore>()(
       if (lastStartup !== today) {
         console.log(`[System] New solar cycle detected: ${lastStartup || 'Initialization'} -> ${today}`);
         const { reconcileDailyTasks } = await import('../utils/StellarScheduler');
-        await reconcileDailyTasks(db, today);
-        await db.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
+        await reconcileDailyTasks(dbProxy, today);
+        await dbProxy.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
       }
 
       const profile = profileRes.rows[0];

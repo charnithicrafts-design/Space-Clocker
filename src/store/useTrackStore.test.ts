@@ -8,6 +8,13 @@ const { mockDb, mockSyncService } = vi.hoisted(() => {
       waitReady: Promise.resolve(),
       close: vi.fn().mockResolvedValue(undefined),
       dumpDataDir: vi.fn().mockResolvedValue(new Blob(['void-data-dump'])),
+      // Domain methods
+      getProfile: vi.fn().mockResolvedValue({ rows: [] }),
+      getTasks: vi.fn().mockResolvedValue({ rows: [] }),
+      init: vi.fn().mockResolvedValue(undefined),
+      toggleTask: vi.fn().mockResolvedValue({ newCompleted: true, completedAt: new Date().toISOString(), newXp: 10, newLevel: 1 }),
+      bulkImport: vi.fn().mockResolvedValue(true),
+      clearAllData: vi.fn().mockResolvedValue(true),
     },
     mockSyncService: {
       checkDivergence: vi.fn(),
@@ -21,6 +28,7 @@ const { mockDb, mockSyncService } = vi.hoisted(() => {
 // Mock External Seams BEFORE any imports to ensure store uses controlled mocks
 vi.mock('../db/client', () => ({
   getDb: vi.fn(() => mockDb),
+  dbProxy: mockDb,
   dumpDb: vi.fn(() => Promise.resolve(new Blob(['void-data-dump']))),
   restoreDb: vi.fn(() => Promise.resolve()),
 }));
@@ -58,6 +66,8 @@ describe('useTrackStore - Mission Control Store', () => {
     });
     
     mockDb.query.mockResolvedValue({ rows: [] });
+    mockDb.getProfile.mockResolvedValue({ rows: [] });
+    mockDb.getTasks.mockResolvedValue({ rows: [] });
   });
 
   it('should update telemetry sync status correctly', () => {
@@ -102,10 +112,9 @@ describe('useTrackStore - Mission Control Store', () => {
 
   it('should synchronize local state with stellar database records on initialization', async () => {
     // Arrange: Mock comprehensive database response with space-themed data
+    mockDb.getProfile.mockResolvedValue({ rows: [{ name: 'Commander Shepard', level: 50, xp: 500, title: 'Spectre' }] });
+    
     mockDb.query.mockImplementation(async (query: string) => {
-      if (query.includes('FROM profile')) {
-        return { rows: [{ name: 'Commander Shepard', level: 50, xp: 500, title: 'Spectre' }] };
-      }
       if (query.includes('FROM oracle_config')) {
         return { rows: [{ apiKey: 'normandy-key', model: 'edi-v1', providerUrl: 'citadel-api' }] };
       }

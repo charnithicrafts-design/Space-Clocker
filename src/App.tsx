@@ -16,6 +16,15 @@ import OnboardingTour from './components/layout/OnboardingTour';
 import UpdateModal from './components/layout/UpdateModal';
 import CriticalUpdateBanner from './components/layout/CriticalUpdateBanner';
 import { useTrackStore } from './store/useTrackStore';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    },
+  },
+});
 
 const App = () => {
   const { initialize, checkSync, performPull, oracleConfig, ambitions, updateAvailable } = useTrackStore();
@@ -65,39 +74,41 @@ const App = () => {
   };
 
   return (
-    <Router>
-      <div className={`min-h-screen bg-surface-lowest text-on-surface ${updateAvailable && !showOnboarding ? 'pt-10' : ''}`}>
-        {!showOnboarding && <CriticalUpdateBanner />}
-        <Navigation />
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <div className={`min-h-screen bg-surface-lowest text-on-surface ${updateAvailable && !showOnboarding ? 'pt-10' : ''}`}>
+          {!showOnboarding && <CriticalUpdateBanner />}
+          <Navigation />
 
-        {showOnboarding ? (
-          <OnboardingTour onComplete={handleCompleteOnboarding} />
-        ) : (
-          <UpdateModal />
-        )}
+          {showOnboarding ? (
+            <OnboardingTour onComplete={handleCompleteOnboarding} />
+          ) : (
+            <UpdateModal />
+          )}
 
-        <main className="pb-24 lg:pb-0">
-          <Routes>
-            <Route path="/" element={<MomentumEngine />} />
-            <Route path="/nebula" element={<NebulaMap />} />
-            <Route path="/orbit" element={<OrbitScheduler />} />
-            <Route path="/timeline" element={<CalendarShell />} />
-            <Route path="/horizon" element={<EventHorizon />} />
-            <Route path="/skills" element={<SkillsMatrix />} />
-            <Route path="/oracle" element={<OracleDashboard onClose={() => window.history.back()} />} />
-            <Route path="/transmission" element={<TransmissionDashboard />} />
-            <Route path="/transmission/share" element={<SharedTransmission />} />
-            <Route path="/settings" element={<SettingsDashboard />} />
-          </Routes>
-        </main>
+          <main className="pb-24 lg:pb-0">
+            <Routes>
+              <Route path="/" element={<MomentumEngine />} />
+              <Route path="/nebula" element={<NebulaMap />} />
+              <Route path="/orbit" element={<OrbitScheduler />} />
+              <Route path="/timeline" element={<CalendarShell />} />
+              <Route path="/horizon" element={<EventHorizon />} />
+              <Route path="/skills" element={<SkillsMatrix />} />
+              <Route path="/oracle" element={<OracleDashboard onClose={() => window.history.back()} />} />
+              <Route path="/transmission" element={<TransmissionDashboard />} />
+              <Route path="/transmission/share" element={<SharedTransmission />} />
+              <Route path="/settings" element={<SettingsDashboard />} />
+            </Routes>
+          </main>
 
-        <SyncConflictModal 
-          isOpen={isSyncModalOpen}
-          onClose={() => setIsSyncModalOpen(false)}
-          onResolve={handleResolveConflict}
-        />
-      </div>
-    </Router>
+          <SyncConflictModal 
+            isOpen={isSyncModalOpen}
+            onClose={() => setIsSyncModalOpen(false)}
+            onResolve={handleResolveConflict}
+          />
+        </div>
+      </Router>
+    </QueryClientProvider>
   );
 };
 
