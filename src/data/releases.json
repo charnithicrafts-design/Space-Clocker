@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.5.0",
+    "date": "2026-04-08",
+    "transmission": "System Architecture Shift: Worker-Thread Concurrency & Mobile Optimization.",
+    "details": [
+      "Migrated core database operations to dedicated Web Worker threads for non-blocking UI interactions.",
+      "Achieved seamless, high-performance offline capability optimized for mobile devices.",
+      "Improved reliability and responsiveness via Comlink cross-thread communication.",
+      "Enhanced mobile UX with reduced main-thread load."
+    ],
+    "type": "major"
+  },
+  {
     "version": "1.4.2",
     "date": "2026-04-07",
     "transmission": "System Jump: Neural Link Recovery & Temporal Purge Protocol.",
