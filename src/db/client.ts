@@ -50,7 +50,8 @@ const DB_NAME_VARIATIONS = [
   'idb://space-clocker-db',
   '/pglite/idb://space-clocker-db',
   'pglite-idb://space-clocker-db',
-  'pglite-idb-space-clocker-db'
+  'pglite-idb-space-clocker-db',
+  'opfs://space-clocker-db'
 ];
 
 export async function purgeDatabase() {
@@ -62,6 +63,19 @@ export async function purgeDatabase() {
     console.warn('[Client] Error closing database during purge:', e);
   }
 
+  // 1. Purge OPFS if supported
+  if (typeof navigator !== 'undefined' && 'storage' in navigator && 'getDirectory' in navigator.storage) {
+    try {
+      console.log('[Client] Attempting to purge OPFS directory: "space-clocker-db"');
+      const root = await navigator.storage.getDirectory();
+      await root.removeEntry('space-clocker-db', { recursive: true });
+      console.log('[Client] Successfully purged OPFS directory.');
+    } catch (e) {
+      console.warn('[Client] OPFS purge failed (directory might not exist):', e);
+    }
+  }
+
+  // 2. Purge IndexedDB variations
   if (typeof indexedDB === 'undefined') {
     console.error('IndexedDB not available for purging.');
     return;

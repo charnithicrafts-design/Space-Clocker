@@ -9,17 +9,101 @@ const api = {
   async init(dataDir?: string | Blob): Promise<void> {
     if (db) return;
     
-    console.log('[Worker] Initializing PGlite...');
-    db = await PGlite.create(typeof dataDir === 'string' ? dataDir : 'idb://space-clocker-db', {
-      relaxedDurability: true,
-      loadDataDir: dataDir instanceof Blob ? dataDir : undefined,
-    });
-    await db.waitReady;
+    console.log('[Worker] Initiating neural link initialization...');
     
-    // Auto-run schema and migrations on init
-    await this.setup();
+    // 1. Determine Storage Strategy
+    const isOpfsSupported = typeof navigator !== 'undefined' && 'storage' in navigator && typeof navigator.storage.getDirectory === 'function';
+    const storagePath = typeof dataDir === 'string' ? dataDir : (isOpfsSupported ? 'opfs://space-clocker-db' : 'idb://space-clocker-db');
     
-    console.log('[Worker] PGlite ready.');
+    console.log(`[Worker] Storage strategy: ${storagePath} (OPFS Supported: ${isOpfsSupported})`);
+
+    try {
+      let dump: Blob | undefined = undefined;
+
+      // 2. Check for migration if using OPFS and no data exists yet
+      if (isOpfsSupported && !dataDir) {
+        dump = await this.handleMigrationIfNecessary();
+      }
+
+      // 3. Initialize PGlite
+      console.log(`[Worker] Creating PGlite instance at ${storagePath}...`);
+      db = await PGlite.create(storagePath, {
+        relaxedDurability: true,
+        loadDataDir: dataDir instanceof Blob ? dataDir : dump,
+      });
+      await db.waitReady;
+      
+      // Auto-run schema and migrations on init
+      await this.setup();
+      
+      console.log('[Worker] PGlite ready and synchronized.');
+    } catch (error: any) {
+      console.error('[Worker] PGlite initialization failure:', error);
+      
+      // Memory Fallback: If IDB failed due to memory, try starting a fresh OPFS instance
+      if (error instanceof RangeError || error.message?.includes('allocation failed')) {
+        console.warn('[Worker] Memory allocation failed. Attempting emergency fallback to OPFS-only mode...');
+        if (isOpfsSupported && storagePath.startsWith('idb://')) {
+          try {
+            db = await PGlite.create('opfs://space-clocker-db', { relaxedDurability: true });
+            await db.waitReady;
+            await this.setup();
+            console.log('[Worker] Emergency fallback successful. Note: IDB data is temporarily inaccessible.');
+            return;
+          } catch (fallbackError) {
+            console.error('[Worker] Emergency fallback failed:', fallbackError);
+          }
+        }
+      }
+      throw error;
+    }
+  },
+
+  async handleMigrationIfNecessary(): Promise<Blob | undefined> {
+    // We only migrate if we detect an old IDB database but NO OPFS database yet
+    // This is complex to check perfectly, so we'll look for the IDB database in the global indexedDB object
+    try {
+      const dbName = 'pglite-idb://space-clocker-db';
+      
+      // We check if OPFS already has data by checking if the directory exists
+      // If it exists, we don't migrate
+      const opfsRoot = await navigator.storage.getDirectory();
+      try {
+        await opfsRoot.getDirectoryHandle('space-clocker-db');
+        console.log('[Worker] OPFS already exists. Skipping migration check.');
+        return undefined;
+      } catch (e) {
+        // Directory doesn't exist, proceed to check IDB
+      }
+
+      const idbExists = await new Promise<boolean>((resolve) => {
+        const request = indexedDB.open(dbName);
+        request.onsuccess = (e: any) => {
+          const db = e.target.result;
+          const exists = db.objectStoreNames.length > 0;
+          db.close();
+          resolve(exists);
+        };
+        request.onerror = () => resolve(false);
+      });
+
+      if (!idbExists) return undefined;
+
+      console.log('[Worker] Legacy IndexedDB detected. Attempting atomic migration to OPFS...');
+      
+      // To avoid memory double-up, we open, dump, and close IDB BEFORE opening OPFS
+      const legacyDb = await PGlite.create('idb://space-clocker-db', { relaxedDurability: true });
+      await legacyDb.waitReady;
+      const dump = await legacyDb.dumpDataDir();
+      await legacyDb.close();
+      
+      console.log('[Worker] Migration dump successful. Purging legacy IDB to prevent future collisions.');
+      indexedDB.deleteDatabase(dbName);
+      return dump;
+    } catch (err) {
+      console.warn('[Worker] Migration skipped or failed (likely memory limits):', err);
+      return undefined;
+    }
   },
 
   async setup(): Promise<void> {

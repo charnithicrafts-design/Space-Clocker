@@ -21,7 +21,7 @@ export default defineConfig(({mode}) => {
         },
         includeAssets: ['favicon.svg', 'apple-touch-icon.svg', 'mask-icon.svg'],
         workbox: {
-          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+          maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
         },
         manifest: {
           name: 'Space-Clocker',
