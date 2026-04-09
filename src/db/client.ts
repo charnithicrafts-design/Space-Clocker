@@ -153,6 +153,9 @@ export async function restoreDb(blob: Blob) {
   try {
     await dbProxy.init(blob);
     console.log('[Client] Database restoration complete.');
+    
+    // 4. Close to ensure all data is flushed from memory to IndexedDB/OPFS
+    await dbProxy.close();
   } catch (error: any) {
     console.error('[Client] dbProxy.init failed during restoration:', error);
     throw error;

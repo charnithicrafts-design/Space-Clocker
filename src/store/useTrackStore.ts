@@ -918,8 +918,12 @@ export const useTrackStore = create<TrackStore>()(
         // 2. Run Database Migrations
         await runMigrations();
 
-        // 3. Update version in DB
-        await db.query(`UPDATE system_info SET app_version = $1 WHERE id = 1`, [CURRENT_APP_VERSION]);
+        // 3. Update version in DB (Robust UPSERT)
+        await db.query(`
+          INSERT INTO system_info (id, app_version) 
+          VALUES (1, $1) 
+          ON CONFLICT (id) DO UPDATE SET app_version = $1
+        `, [CURRENT_APP_VERSION]);
 
         // 4. Refresh State
         await get().initialize();

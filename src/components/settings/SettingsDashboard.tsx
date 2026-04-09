@@ -137,8 +137,6 @@ const SettingsDashboard = () => {
         setIsRestoring(true);
         SoundManager.playSwell();
         await restoreDb(file);
-        // Explicitly wait for store initialization after DB restore
-        await initialize();
         SoundManager.playSyncSuccess();
         // Give PGlite a small window to flush to IndexedDB before reload
         setTimeout(() => {
