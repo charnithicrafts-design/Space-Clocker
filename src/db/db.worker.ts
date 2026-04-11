@@ -13,7 +13,15 @@ const api = {
     
     // 1. Determine Storage Strategy
     const isOpfsSupported = typeof navigator !== 'undefined' && 'storage' in navigator && typeof navigator.storage.getDirectory === 'function';
-    const storagePath = typeof dataDir === 'string' ? dataDir : 'memory://space-clocker-db';
+    
+    let storagePath: string;
+    if (typeof dataDir === 'string') {
+      storagePath = dataDir;
+    } else {
+      // Use persistent storage by default if no path is provided
+      // This is critical for restoration (which passes a Blob, not a path)
+      storagePath = isOpfsSupported ? 'opfs-ahp://space-clocker-db' : 'idb://space-clocker-db';
+    }
 
     console.log(`[Worker] Storage strategy: ${storagePath} (OPFS Supported: ${isOpfsSupported})`);
 
@@ -39,6 +47,25 @@ const api = {
       console.log('[Worker] PGlite ready and synchronized.');
     } catch (error: any) {
       console.error('[Worker] PGlite initialization failure:', error);
+
+      const isHandleError = error.message?.includes('No more file handles available in the pool');
+      
+      if (isHandleError && storagePath.startsWith('opfs-ahp://')) {
+        console.warn('[Worker] OPFS Access Handle Pool exhausted. Falling back to standard OPFS...');
+        try {
+          const fallbackPath = storagePath.replace('opfs-ahp://', 'opfs://');
+          db = await PGlite.create(fallbackPath, { 
+            relaxedDurability: true,
+            loadDataDir: dataDir instanceof Blob ? dataDir : dump,
+          });
+          await db.waitReady;
+          await this.setup();
+          console.log('[Worker] Fallback to standard OPFS successful.');
+          return;
+        } catch (fallbackError) {
+          console.error('[Worker] OPFS Fallback failed:', fallbackError);
+        }
+      }
 
       // Memory Fallback: If IDB failed due to memory, try starting a fresh OPFS instance
       if (error instanceof RangeError || error.message?.includes('allocation failed')) {
