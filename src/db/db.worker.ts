@@ -25,9 +25,8 @@ const api = {
 
     console.log(`[Worker] Storage strategy: ${storagePath} (OPFS Supported: ${isOpfsSupported})`);
 
+    let dump: Blob | undefined = undefined;
     try {
-      let dump: Blob | undefined = undefined;
-
       // 2. Check for migration if using OPFS and no data exists yet
       if (isOpfsSupported && !dataDir) {
         dump = await this.handleMigrationIfNecessary();
