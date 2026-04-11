@@ -9,3 +9,7 @@ coverage/
 dev-dist/
 .superpowers/
 .worktrees/
+
+# Test Artifacts
+playwright-report/
+test-results/
