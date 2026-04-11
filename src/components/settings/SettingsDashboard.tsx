@@ -145,8 +145,8 @@ const SettingsDashboard = () => {
       } catch (err: any) {
         console.error('Restore failure:', err);
         const errorMsg = err.message || '';
-        if (errorMsg.includes('ENOTEMPTY')) {
-          alert(`Restoration Conflict: Some legacy database fragments blocked the snapshot import. \n\nACTION: Click "Temporal Purge" first to clear all fragments, then try restoring again.`);
+        if (errorMsg.includes('NoModificationAllowedError') || errorMsg.includes('ENOTEMPTY') || errorMsg.includes('ErrnoError')) {
+          alert(`Storage Collision Detected (Errno ${err.errno || 'N/A'}).\n\nThe system cannot overwrite the existing database link because it is currently locked or corrupted.\n\nACTION: Click "Temporal Purge" to clear all database fragments, then try the restore again.`);
         } else {
           alert(`Restore failed: ${errorMsg || 'Ensure it is a valid .pgdump file.'}`);
         }
