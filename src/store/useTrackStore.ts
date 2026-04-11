@@ -939,29 +939,32 @@ export const useTrackStore = create<TrackStore>()(
     initialize: async () => {
       const { dbProxy } = await import('../db/client');
       const today = getTodayLocalISO();
-      
-      // Fetch core data using domain methods and generic queries
-      const [
-        profileRes, 
-        prefsRes, 
-        statsRes, 
-        oracleRes, 
-        ambitionsRes, 
-        milestonesRes, 
-        tasksRes,
-        voidsRes,
-        reflectionsRes,
-        historyRes,
-        skillsRes,
-        internshipsRes,
-        transmissionsRes,
-        systemRes
-      ] = await Promise.all([
+
+      // Stage 1: Critical Momentum Data
+      const [profileRes, prefsRes, statsRes, oracleRes, ambitionsRes, systemRes] = await Promise.all([
         dbProxy.getProfile(),
         dbProxy.query(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`),
         dbProxy.query(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`),
         dbProxy.query(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`),
         dbProxy.query(`SELECT * FROM ambitions`),
+        dbProxy.query(`SELECT last_startup, app_version FROM system_info WHERE id = 1`)
+      ]);
+
+      // Apply critical state immediately (shallow ambitions)
+      set({
+        profile: profileRes.rows[0] || get().profile,
+        preferences: {
+          confirmDelete: prefsRes.rows[0]?.confirmDelete ?? true,
+          uiMode: prefsRes.rows[0]?.uiMode || 'simple'
+        },
+        stats: statsRes.rows[0] || get().stats,
+        oracleConfig: oracleRes.rows[0] ? { ...get().oracleConfig, ...oracleRes.rows[0] } : get().oracleConfig,
+        ambitions: (ambitionsRes.rows || []).map(a => ({ ...a, xp: a.xp || 0, milestones: [] })),
+        dbAppVersion: systemRes.rows[0]?.app_version
+      });
+
+      // Stage 2: Background Collection Data
+      const [milestonesRes, tasksRes, voidsRes, reflectionsRes, historyRes, skillsRes, internshipsRes, transmissionsRes] = await Promise.all([
         dbProxy.query(`SELECT * FROM milestones`),
         dbProxy.getTasks(),
         dbProxy.query(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`),
@@ -970,33 +973,12 @@ export const useTrackStore = create<TrackStore>()(
         dbProxy.query(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`),
         dbProxy.query(`SELECT organization, start_date as "start", end_date as "end" FROM internships`),
         dbProxy.query(`SELECT * FROM transmissions ORDER BY timestamp DESC LIMIT 20`),
-        dbProxy.query(`SELECT last_startup, app_version FROM system_info WHERE id = 1`)
       ]);
 
-      const lastStartup = systemRes.rows[0]?.last_startup;
-      const dbAppVersion = systemRes.rows[0]?.app_version;
-
-      if (dbAppVersion && dbAppVersion !== CURRENT_APP_VERSION) {
-        console.warn(`[System] Version mismatch: DB(v${dbAppVersion}) vs Code(v${CURRENT_APP_VERSION})`);
-        set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION, showUpdateModal: true });
-      }
-
-      if (lastStartup !== today) {
-        console.log(`[System] New solar cycle detected: ${lastStartup || 'Initialization'} -> ${today}`);
-        const { reconcileDailyTasks } = await import('../utils/StellarScheduler');
-        await reconcileDailyTasks(dbProxy, today);
-        await dbProxy.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
-      }
-
-      const profile = profileRes.rows[0];
-      const preferences = prefsRes.rows[0];
-      const stats = statsRes.rows[0];
-      const oracleConfig = oracleRes.rows[0];
-      const ambitionsRaw = ambitionsRes.rows;
+      // Map and process background data
       const milestonesRaw = milestonesRes.rows;
       const tasksRaw = tasksRes.rows;
 
-      // Optimize mapping: Group milestones by ambition_id and tasks by milestone_id/ambition_id
       const milestonesByAmbition = new Map<string, any[]>();
       milestonesRaw.forEach(m => {
         if (!milestonesByAmbition.has(m.ambition_id)) milestonesByAmbition.set(m.ambition_id, []);
@@ -1025,7 +1007,7 @@ export const useTrackStore = create<TrackStore>()(
         }
       });
 
-      const ambitions: Ambition[] = ambitionsRaw.map(a => ({
+      const deepAmbitions: Ambition[] = (ambitionsRes.rows || []).map(a => ({
         ...a,
         xp: a.xp || 0,
         milestones: (milestonesByAmbition.get(a.id) || []).map(m => ({
@@ -1034,11 +1016,7 @@ export const useTrackStore = create<TrackStore>()(
         }))
       }));
 
-      const voids = voidsRes.rows;
-      const reflections = reflectionsRes.rows;
       const history: HistoricalEvent[] = historyRes.rows.map(h => ({ ...h, skills: JSON.parse(h.skills || '[]') }));
-      const skills = skillsRes.rows;
-      const internships = internshipsRes.rows;
       const transmissions: Transmission[] = transmissionsRes.rows.map(tx => ({
         id: tx.id,
         timestamp: tx.timestamp,
@@ -1056,21 +1034,31 @@ export const useTrackStore = create<TrackStore>()(
         metadata: JSON.parse(tx.metadata || '{}')
       }));
 
+      // Apply the rest of the data
       set({
-        profile: profile || get().profile,
-        preferences: preferences || get().preferences,
-        stats: stats || get().stats,
-        oracleConfig: oracleConfig || get().oracleConfig,
-        ambitions,
+        ambitions: deepAmbitions,
         tasks: standaloneTasks,
-        voids,
-        reflections,
+        voids: voidsRes.rows || [],
+        reflections: reflectionsRes.rows || [],
         history,
-        skills,
-        internships,
+        skills: skillsRes.rows || [],
+        internships: internshipsRes.rows || [],
         transmissions,
-        dbAppVersion
       });
+
+      // System startup logic
+      const lastStartup = systemRes.rows[0]?.last_startup;
+      const dbAppVersion = systemRes.rows[0]?.app_version;
+
+      if (dbAppVersion && dbAppVersion !== CURRENT_APP_VERSION) {
+        set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION, showUpdateModal: true });
+      }
+
+      if (lastStartup !== today) {
+        const { reconcileDailyTasks } = await import('../utils/StellarScheduler');
+        await reconcileDailyTasks(dbProxy, today);
+        await dbProxy.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
+      }
     }
   }),
 );
