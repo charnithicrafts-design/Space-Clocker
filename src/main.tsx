@@ -10,6 +10,39 @@ async function start() {
   const rootElement = document.getElementById('root');
   if (!rootElement) return;
 
+  const root = createRoot(rootElement);
+
+  // 1. Immediate Boot UI (Splash)
+  root.render(
+    <div style={{ 
+      height: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center',
+      background: '#0b0e14',
+      color: '#00f2ff',
+      fontFamily: 'system-ui, sans-serif'
+    }}>
+      <div style={{ fontSize: '1.2rem', fontWeight: 'bold', letterSpacing: '0.2em' }}>ESTABLISHING NEURAL LINK...</div>
+      <div style={{ marginTop: '1rem', width: '200px', height: '2px', background: 'rgba(0,242,255,0.2)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ 
+          position: 'absolute', 
+          width: '50%', 
+          height: '100%', 
+          background: '#00f2ff', 
+          animation: 'shuttle 1.5s infinite linear' 
+        }}></div>
+      </div>
+      <style>{`
+        @keyframes shuttle {
+          0% { left: -50%; }
+          100% { left: 100%; }
+        }
+      `}</style>
+    </div>
+  );
+
   // Check for secure context - critical for ServiceWorker and PGlite/IndexedDB in some environments
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const isSecure = window.isSecureContext;
@@ -30,7 +63,7 @@ async function start() {
     await migrateFromZustand();
     console.log('[System] Neural pathways synchronized.');
     
-    createRoot(rootElement).render(
+    root.render(
       <StrictMode>
         <App />
       </StrictMode>,
@@ -39,7 +72,7 @@ async function start() {
     console.error('[Critical] Neural Link Failure:', error);
     
     // Render a fallback error UI if the main app fails to mount
-    createRoot(rootElement).render(
+    root.render(
       <div style={{ 
         height: '100vh', 
         display: 'flex', 
