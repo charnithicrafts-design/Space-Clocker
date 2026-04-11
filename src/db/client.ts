@@ -119,42 +119,24 @@ export async function purgeDatabase() {
 export async function restoreDb(blob: Blob) {
   console.log('[Client] Initiating database restoration via worker...');
   
-  // 1. Close current connection via worker
+  // 1. Perform a thorough temporal purge to clear all existing database fragments
   try {
-    await dbProxy.close();
+    await purgeDatabase();
   } catch (e) {
-    console.warn('[Client] Error closing database before restoration:', e);
+    console.warn('[Client] Warning: Purge encountered minor issues, proceeding with restoration:', e);
   }
   
-  // Give browser time to release locks
-  await new Promise(r => setTimeout(r, 300));
-  
-  // 2. Clear all IndexedDB variations
-  if (typeof indexedDB !== 'undefined') {
-    for (const name of DB_NAME_VARIATIONS) {
-      console.log(`[Client] Clearing DB for restoration: "${name}"`);
-      await new Promise<void>((resolve, reject) => {
-        const request = indexedDB.deleteDatabase(name);
-        request.onsuccess = () => resolve();
-        request.onerror = () => {
-          console.error(`[Client] Error deleting database "${name}" during restore:`, request.error);
-          resolve();
-        };
-        request.onblocked = () => {
-          console.warn(`[Client] Deletion of database "${name}" is blocked.`);
-          reject(new Error(`Database deletion blocked. Please close other tabs of this application and try again.`));
-        };
-      });
-    }
-  }
+  // Give browser time to release locks and for the file system to settle
+  // Increased from 500 to 1200ms for safety during heavy I/O
+  await new Promise(r => setTimeout(r, 1200));
 
-  // 3. Re-initialize worker with blob
+  // 2. Re-initialize worker with blob
   console.log('[Client] Re-initializing database in worker from snapshot...');
   try {
     await dbProxy.init(blob);
     console.log('[Client] Database restoration complete.');
     
-    // 4. Close to ensure all data is flushed from memory to IndexedDB/OPFS
+    // 3. Close to ensure all data is flushed from memory to persistent storage
     await dbProxy.close();
   } catch (error: any) {
     console.error('[Client] dbProxy.init failed during restoration:', error);
