@@ -47,10 +47,14 @@ const api = {
     } catch (error: any) {
       console.error('[Worker] PGlite initialization failure:', error);
 
-      const isHandleError = error.message?.includes('No more file handles available in the pool');
+      const errorMessage = error.message || '';
+      const isInitializationError = 
+        errorMessage.includes('No more file handles available in the pool') ||
+        errorMessage.includes('failed to initialize properly') ||
+        errorMessage.includes('initialization failure');
       
-      if (isHandleError && storagePath.startsWith('opfs-ahp://')) {
-        console.warn('[Worker] OPFS Access Handle Pool exhausted. Falling back to standard OPFS...');
+      if (isInitializationError && storagePath.startsWith('opfs-ahp://')) {
+        console.warn('[Worker] OPFS-AHP failed. Attempting fallback to standard OPFS...');
         try {
           const fallbackPath = storagePath.replace('opfs-ahp://', 'opfs://');
           db = await PGlite.create(fallbackPath, { 
@@ -61,8 +65,20 @@ const api = {
           await this.setup();
           console.log('[Worker] Fallback to standard OPFS successful.');
           return;
-        } catch (fallbackError) {
-          console.error('[Worker] OPFS Fallback failed:', fallbackError);
+        } catch (fallbackError: any) {
+          console.error('[Worker] Standard OPFS fallback failed, trying IndexedDB...', fallbackError);
+          try {
+            db = await PGlite.create('idb://space-clocker-db', { 
+              relaxedDurability: true,
+              loadDataDir: dataDir instanceof Blob ? dataDir : dump,
+            });
+            await db.waitReady;
+            await this.setup();
+            console.log('[Worker] Fallback to IndexedDB successful.');
+            return;
+          } catch (idbError) {
+            console.error('[Worker] All persistent storage fallbacks failed:', idbError);
+          }
         }
       }
 

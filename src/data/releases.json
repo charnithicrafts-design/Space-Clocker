@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.5.1",
+    "date": "2026-04-11",
+    "transmission": "Neural Link Stabilization & Storage Resilience.",
+    "details": [
+      "Fixed critical PGlite initialization failures on browsers with restricted file handle pools.",
+      "Implemented automatic storage fallback to IndexedDB when OPFS Access Handle Pool is exhausted.",
+      "Added 'Neural Link Establishing' splash screen for smoother initial boot.",
+      "Optimized store synchronization for prioritized interactive state loading."
+    ],
+    "type": "hotfix"
+  },
+  {
     "version": "1.5.0",
     "date": "2026-04-08",
     "transmission": "System Architecture Shift: Worker-Thread Concurrency & Mobile Optimization.",
