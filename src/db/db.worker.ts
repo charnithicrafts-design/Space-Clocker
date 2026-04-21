@@ -12,15 +12,17 @@ const api = {
     if (initializing) return initializing;
 
     initializing = (async () => {
+      let storagePath: string = '';
+      let isOpfsSupported = false;
+      let dump: Blob | undefined = undefined;
+      let forceIdbFallback = false;
+
       try {
         console.log('[Worker] Initiating neural link initialization...');
         
         // 1. Determine Storage Strategy
-        const isOpfsSupported = typeof navigator !== 'undefined' && 'storage' in navigator && typeof navigator.storage.getDirectory === 'function';
+        isOpfsSupported = typeof navigator !== 'undefined' && 'storage' in navigator && typeof navigator.storage.getDirectory === 'function';
         
-        let storagePath: string;
-        let forceIdbFallback = false;
-
         if (typeof dataDir === 'string') {
           storagePath = dataDir;
         } else {
@@ -47,19 +49,88 @@ const api = {
 
         console.log(`[Worker] Storage strategy: ${storagePath} (OPFS Supported: ${isOpfsSupported})`);
 
-        let dump: Blob | undefined = undefined;
         // 2. Check for migration if using OPFS and no data exists yet
         if (isOpfsSupported && !dataDir && !forceIdbFallback) {
           dump = await this.handleMigrationIfNecessary();
         }
 
-        // 3. Initialize PGlite
+        // 3. Initialize PGlite with retry for OPFS locks
         console.log(`[Worker] Creating PGlite instance at ${storagePath}...`);
-        db = await PGlite.create(storagePath, {
-          relaxedDurability: true,
-          loadDataDir: dataDir instanceof Blob ? dataDir : dump,
-        });
-        await db.waitReady;
+        
+        let retryCount = 0;
+        const maxRetries = 3;
+        
+        let existsRetryCount = 0;
+        
+        while (retryCount <= maxRetries) {
+          try {
+            db = await PGlite.create(storagePath, {
+              relaxedDurability: true,
+              loadDataDir: dataDir instanceof Blob ? dataDir : dump,
+            });
+            await db.waitReady;
+            break; // Success
+          } catch (e: any) {
+            const isLockError = e.name === 'NoModificationAllowedError' || e.message?.includes('Access Handles');
+            const isExistsError = e.message?.includes('Database already exists');
+            
+            if (isLockError && retryCount < maxRetries) {
+              retryCount++;
+              const delay = 500 * retryCount;
+              console.warn(`[Worker] OPFS lock detected (attempt ${retryCount}/${maxRetries}). Retrying in ${delay}ms...`);
+              await new Promise(resolve => setTimeout(resolve, delay));
+            } else if (isExistsError && (dataDir instanceof Blob || dump) && existsRetryCount < 2) {
+              // If we're trying to load a dump but the DB already exists, we must purge it first
+              existsRetryCount++;
+              console.warn(`[Worker] Database exists but loadDataDir provided. Purging ${storagePath} for restoration (attempt ${existsRetryCount})...`);
+              try {
+                // Add a small delay to allow any pending locks to clear
+                await new Promise(resolve => setTimeout(resolve, 200));
+                
+                if (storagePath.startsWith('opfs')) {
+                  const root = await navigator.storage.getDirectory();
+                  const folderName = storagePath.includes('://') ? storagePath.split('://')[1] : storagePath;
+                  const potentialNames = [folderName, `pglite-${folderName}`];
+                  
+                  for (const name of potentialNames) {
+                    let purgeRetry = 0;
+                    while (purgeRetry < 3) {
+                      try {
+                        await root.removeEntry(name, { recursive: true });
+                        console.log(`[Worker] Purged OPFS folder: ${name}`);
+                        break;
+                      } catch (pe: any) {
+                        if (pe.name === 'NotFoundError') break;
+                        purgeRetry++;
+                        await new Promise(resolve => setTimeout(resolve, 300 * purgeRetry));
+                      }
+                    }
+                  }
+                } else if (storagePath.startsWith('idb://')) {
+                  const dbName = storagePath.includes('://') ? `pglite-${storagePath.split('://')[1]}` : `pglite-${storagePath}`;
+                  await new Promise<void>((resolve, reject) => {
+                    const req = indexedDB.deleteDatabase(dbName);
+                    req.onsuccess = () => {
+                      console.log(`[Worker] Purged IDB database: ${dbName}`);
+                      resolve();
+                    };
+                    req.onerror = () => reject(req.error);
+                  });
+                }
+                
+                console.log('[Worker] Purge successful, retrying initialization...');
+                continue; 
+              } catch (purgeError) {
+                console.error('[Worker] Failed to purge existing database:', purgeError);
+                throw e; 
+              }
+            } else {
+              throw e; // Rethrow if not a handled error or max retries reached
+            }
+          }
+        }
+
+        if (!db) throw new Error('Failed to create PGlite instance after retries');
 
         // Auto-run schema and migrations on init
         await this.setup();
@@ -67,8 +138,6 @@ const api = {
         console.log('[Worker] PGlite ready and synchronized.');
       } catch (error: any) {
         console.error('[Worker] PGlite initialization failure:', error);
-        // Reset initialization so we can try again if needed
-        initializing = null;
         
         const errorMessage = error.message || '';
         const isInitializationError = 
@@ -78,7 +147,8 @@ const api = {
           errorMessage.includes('ERRORDATA_STACK_SIZE') ||
           errorMessage.includes('Abort error when calling GetDirectory');
 
-        if (isInitializationError && storagePath.startsWith('opfs-ahp://')) {          console.warn('[Worker] OPFS-AHP failed. Attempting fallback to standard OPFS...');
+        if (isInitializationError && storagePath.startsWith('opfs-ahp://')) {
+          console.warn('[Worker] OPFS-AHP failed. Attempting fallback to standard OPFS...');
           try {
             const fallbackPath = storagePath.replace('opfs-ahp://', 'opfs://');
             db = await PGlite.create(fallbackPath, { 
@@ -121,11 +191,10 @@ const api = {
             }
           }
         }
+        
+        // If we reach here, initialization truly failed
+        initializing = null;
         throw error;
-      } finally {
-        // Only keep initializing set if we failed? No, we should probably clear it if we succeeded too
-        // but wait, if we succeeded, db is now set, so the next call will return early.
-        // Actually, let's keep it if we succeeded so future calls await it (though they won't reach here if db is set).
       }
     })();
 
@@ -220,17 +289,20 @@ const api = {
   },
 
   async query(sql: string, params?: any[]): Promise<{ rows: any[] }> {
+    if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
     const res = await db.query(sql, params);
     return { rows: res.rows };
   },
 
   async exec(sql: string): Promise<void> {
+    if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
     await db.exec(sql);
   },
 
   async transaction<T>(callback: (tx: any) => Promise<T>): Promise<T> {
+    if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
     // NOTE: This might still have issues if the callback is passed from main thread.
     // We prefer using domain methods instead.
@@ -250,20 +322,24 @@ const api = {
   },
 
   async dumpDataDir(): Promise<Blob> {
+    if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
     return await db.dumpDataDir();
   },
 
   // Domain Methods
   async getProfile() {
+    if (initializing) await initializing;
     return this.query('SELECT name, level, xp, title FROM profile WHERE id = 1');
   },
 
   async updateProfile(name: string, level: number, xp: number, title: string) {
+    if (initializing) await initializing;
     return this.query('UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1', [name, level, xp, title]);
   },
 
   async getTasks(plannedDate?: string) {
+    if (initializing) await initializing;
     if (plannedDate) {
       return this.query('SELECT * FROM tasks WHERE planned_date = $1', [plannedDate]);
     }
@@ -271,6 +347,7 @@ const api = {
   },
 
   async addTask(task: any) {
+    if (initializing) await initializing;
     const { id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, ambition_id, milestone_id } = task;
     return this.query(
       `INSERT INTO tasks (id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, ambition_id, milestone_id) 
@@ -280,6 +357,7 @@ const api = {
   },
 
   async updateTask(id: string, updates: any) {
+    if (initializing) await initializing;
     const keys = Object.keys(updates);
     const setClause = keys.map((k, i) => `${k} = $${i + 2}`).join(', ');
     const params = [id, ...Object.values(updates)];
@@ -287,10 +365,12 @@ const api = {
   },
 
   async deleteTask(id: string) {
+    if (initializing) await initializing;
     return this.query('DELETE FROM tasks WHERE id = $1', [id]);
   },
 
   async toggleTask(id: string, xpPerLevel: number) {
+    if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
     
     return await db.transaction(async (tx) => {
@@ -326,6 +406,7 @@ const api = {
   },
 
   async bulkImport(payload: any) {
+    if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
     
     const stringifyIfObject = (val: any) => {
@@ -493,6 +574,7 @@ const api = {
   },
 
   async clearAllData() {
+    if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
     
     return await db.transaction(async (tx) => {
