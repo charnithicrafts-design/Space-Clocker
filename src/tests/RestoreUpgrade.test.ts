@@ -54,7 +54,7 @@ describe('System Data Lifecycle: Restore & Upgrade', () => {
     await store.performSystemUpgrade();
     expect(versionQuery).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO system_info'),
-        expect.arrayContaining(['1.5.0'])
+        expect.arrayContaining(['1.5.1'])
     );
   });
 });
