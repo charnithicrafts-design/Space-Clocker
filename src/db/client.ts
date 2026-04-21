@@ -9,6 +9,16 @@ const worker = new Worker(new URL('./db.worker.ts', import.meta.url), {
 // Wrap the worker with Comlink
 export const dbProxy = Comlink.wrap<DatabaseWorkerAPI>(worker);
 
+// Track initialization state
+let readyPromise: Promise<void> | null = null;
+
+function ensureInit() {
+  if (!readyPromise) {
+    readyPromise = dbProxy.init();
+  }
+  return readyPromise;
+}
+
 // Expose to window for debugging and E2E testing
 if (typeof window !== 'undefined') {
   (window as any).dbProxy = dbProxy;
@@ -17,15 +27,28 @@ if (typeof window !== 'undefined') {
 // Export a db object that mimics the old API for backward compatibility where possible
 export const db = {
   get waitReady() {
-    // We can't easily wait for the worker to be ready here without making it an async getter
-    // which JS doesn't support. We'll return the init promise instead.
-    return dbProxy.init();
+    return ensureInit();
   },
-  query: (sql: string, params?: any[]) => dbProxy.query(sql, params) as Promise<any>,
-  exec: (sql: string) => dbProxy.exec(sql),
-  close: () => dbProxy.close(),
-  dumpDataDir: () => dbProxy.dumpDataDir(),
-  transaction: (callback: (tx: any) => Promise<any>) => dbProxy.transaction(callback),
+  query: async (sql: string, params?: any[]) => {
+    await ensureInit();
+    return dbProxy.query(sql, params);
+  },
+  exec: async (sql: string) => {
+    await ensureInit();
+    return dbProxy.exec(sql);
+  },
+  close: async () => {
+    await dbProxy.close();
+    readyPromise = null;
+  },
+  dumpDataDir: async () => {
+    await ensureInit();
+    return dbProxy.dumpDataDir();
+  },
+  transaction: async (callback: (tx: any) => Promise<any>) => {
+    await ensureInit();
+    return dbProxy.transaction(callback);
+  },
   
   // These are specific to the old PGlite instance and might need refactoring in the UI
   getInstance: () => {

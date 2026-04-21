@@ -4,101 +4,132 @@ import { SCHEMA } from './schema';
 import { MIGRATIONS } from './migrations';
 
 let db: PGlite | null = null;
+let initializing: Promise<void> | null = null;
 
 const api = {
   async init(dataDir?: string | Blob): Promise<void> {
     if (db) return;
-    
-    console.log('[Worker] Initiating neural link initialization...');
-    
-    // 1. Determine Storage Strategy
-    const isOpfsSupported = typeof navigator !== 'undefined' && 'storage' in navigator && typeof navigator.storage.getDirectory === 'function';
-    
-    let storagePath: string;
-    if (typeof dataDir === 'string') {
-      storagePath = dataDir;
-    } else {
-      // Use persistent storage by default if no path is provided
-      // This is critical for restoration (which passes a Blob, not a path)
-      storagePath = isOpfsSupported ? 'opfs-ahp://space-clocker-db' : 'idb://space-clocker-db';
-    }
+    if (initializing) return initializing;
 
-    console.log(`[Worker] Storage strategy: ${storagePath} (OPFS Supported: ${isOpfsSupported})`);
+    initializing = (async () => {
+      try {
+        console.log('[Worker] Initiating neural link initialization...');
+        
+        // 1. Determine Storage Strategy
+        const isOpfsSupported = typeof navigator !== 'undefined' && 'storage' in navigator && typeof navigator.storage.getDirectory === 'function';
+        
+        let storagePath: string;
+        let forceIdbFallback = false;
 
-    let dump: Blob | undefined = undefined;
-    try {
-      // 2. Check for migration if using OPFS and no data exists yet
-      if (isOpfsSupported && !dataDir) {
-        dump = await this.handleMigrationIfNecessary();
-      }
+        if (typeof dataDir === 'string') {
+          storagePath = dataDir;
+        } else {
+          // Use persistent storage by default if no path is provided
+          // We check if OPFS actually works by trying to get the directory
+          if (isOpfsSupported) {
+            try {
+              await navigator.storage.getDirectory();
+              storagePath = 'opfs-ahp://space-clocker-db';
+            } catch (e: any) {
+              console.warn('[Worker] OPFS detected but failed to initialize directory access:', e);
+              if (e.name === 'AbortError' || e.message?.includes('Abort')) {
+                console.warn('[Worker] AbortError detected. Forcing IndexedDB fallback.');
+                storagePath = 'idb://space-clocker-db';
+                forceIdbFallback = true;
+              } else {
+                storagePath = 'idb://space-clocker-db';
+              }
+            }
+          } else {
+            storagePath = 'idb://space-clocker-db';
+          }
+        }
 
-      // 3. Initialize PGlite
-      console.log(`[Worker] Creating PGlite instance at ${storagePath}...`);
-      db = await PGlite.create(storagePath, {
-        relaxedDurability: true,
-        loadDataDir: dataDir instanceof Blob ? dataDir : dump,
-      });
-      await db.waitReady;
+        console.log(`[Worker] Storage strategy: ${storagePath} (OPFS Supported: ${isOpfsSupported})`);
 
-      // Auto-run schema and migrations on init
-      await this.setup();
+        let dump: Blob | undefined = undefined;
+        // 2. Check for migration if using OPFS and no data exists yet
+        if (isOpfsSupported && !dataDir && !forceIdbFallback) {
+          dump = await this.handleMigrationIfNecessary();
+        }
 
-      console.log('[Worker] PGlite ready and synchronized.');
-    } catch (error: any) {
-      console.error('[Worker] PGlite initialization failure:', error);
+        // 3. Initialize PGlite
+        console.log(`[Worker] Creating PGlite instance at ${storagePath}...`);
+        db = await PGlite.create(storagePath, {
+          relaxedDurability: true,
+          loadDataDir: dataDir instanceof Blob ? dataDir : dump,
+        });
+        await db.waitReady;
 
-      const errorMessage = error.message || '';
-      const isInitializationError = 
-        errorMessage.includes('No more file handles available in the pool') ||
-        errorMessage.includes('failed to initialize properly') ||
-        errorMessage.includes('initialization failure');
-      
-      if (isInitializationError && storagePath.startsWith('opfs-ahp://')) {
-        console.warn('[Worker] OPFS-AHP failed. Attempting fallback to standard OPFS...');
-        try {
-          const fallbackPath = storagePath.replace('opfs-ahp://', 'opfs://');
-          db = await PGlite.create(fallbackPath, { 
-            relaxedDurability: true,
-            loadDataDir: dataDir instanceof Blob ? dataDir : dump,
-          });
-          await db.waitReady;
-          await this.setup();
-          console.log('[Worker] Fallback to standard OPFS successful.');
-          return;
-        } catch (fallbackError: any) {
-          console.error('[Worker] Standard OPFS fallback failed, trying IndexedDB...', fallbackError);
+        // Auto-run schema and migrations on init
+        await this.setup();
+
+        console.log('[Worker] PGlite ready and synchronized.');
+      } catch (error: any) {
+        console.error('[Worker] PGlite initialization failure:', error);
+        // Reset initialization so we can try again if needed
+        initializing = null;
+        
+        const errorMessage = error.message || '';
+        const isInitializationError = 
+          errorMessage.includes('No more file handles available in the pool') ||
+          errorMessage.includes('failed to initialize properly') ||
+          errorMessage.includes('initialization failure') ||
+          errorMessage.includes('ERRORDATA_STACK_SIZE') ||
+          errorMessage.includes('Abort error when calling GetDirectory');
+
+        if (isInitializationError && storagePath.startsWith('opfs-ahp://')) {          console.warn('[Worker] OPFS-AHP failed. Attempting fallback to standard OPFS...');
           try {
-            db = await PGlite.create('idb://space-clocker-db', { 
+            const fallbackPath = storagePath.replace('opfs-ahp://', 'opfs://');
+            db = await PGlite.create(fallbackPath, { 
               relaxedDurability: true,
               loadDataDir: dataDir instanceof Blob ? dataDir : dump,
             });
             await db.waitReady;
             await this.setup();
-            console.log('[Worker] Fallback to IndexedDB successful.');
+            console.log('[Worker] Fallback to standard OPFS successful.');
             return;
-          } catch (idbError) {
-            console.error('[Worker] All persistent storage fallbacks failed:', idbError);
+          } catch (fallbackError: any) {
+            console.error('[Worker] Standard OPFS fallback failed, trying IndexedDB...', fallbackError);
+            try {
+              db = await PGlite.create('idb://space-clocker-db', { 
+                relaxedDurability: true,
+                loadDataDir: dataDir instanceof Blob ? dataDir : dump,
+              });
+              await db.waitReady;
+              await this.setup();
+              console.log('[Worker] Fallback to IndexedDB successful.');
+              return;
+            } catch (idbError) {
+              console.error('[Worker] All persistent storage fallbacks failed:', idbError);
+            }
           }
         }
-      }
 
-      // Memory Fallback: If IDB failed due to memory, try starting a fresh OPFS instance
-      if (error instanceof RangeError || error.message?.includes('allocation failed')) {
-        console.warn('[Worker] Memory allocation failed. Attempting emergency fallback to OPFS-only mode...');
-        if (isOpfsSupported && storagePath.startsWith('idb://')) {
-          try {
-            db = await PGlite.create('opfs-ahp://space-clocker-db', { relaxedDurability: true });
-            await db.waitReady;
-            await this.setup();
-            console.log('[Worker] Emergency fallback successful. Note: IDB data is temporarily inaccessible.');
-            return;
-          } catch (fallbackError) {
-            console.error('[Worker] Emergency fallback failed:', fallbackError);
+        // Memory Fallback: If IDB failed due to memory, try starting a fresh OPFS instance
+        if (error instanceof RangeError || error.message?.includes('allocation failed')) {
+          console.warn('[Worker] Memory allocation failed. Attempting emergency fallback to OPFS-only mode...');
+          if (isOpfsSupported && storagePath.startsWith('idb://')) {
+            try {
+              db = await PGlite.create('opfs-ahp://space-clocker-db', { relaxedDurability: true });
+              await db.waitReady;
+              await this.setup();
+              console.log('[Worker] Emergency fallback successful. Note: IDB data is temporarily inaccessible.');
+              return;
+            } catch (fallbackError) {
+              console.error('[Worker] Emergency fallback failed:', fallbackError);
+            }
           }
         }
+        throw error;
+      } finally {
+        // Only keep initializing set if we failed? No, we should probably clear it if we succeeded too
+        // but wait, if we succeeded, db is now set, so the next call will return early.
+        // Actually, let's keep it if we succeeded so future calls await it (though they won't reach here if db is set).
       }
-      throw error;
-    }
+    })();
+
+    return initializing;
   },
 
   async handleMigrationIfNecessary(): Promise<Blob | undefined> {
@@ -152,8 +183,11 @@ const api = {
     if (!db) throw new Error('Database not initialized');
 
     await db.transaction(async (tx) => {
-      // 1. Run Baseline Schema
-      await tx.exec(SCHEMA);
+      // 1. Run Baseline Schema - Split to avoid parser stack issues in some environments
+      const statements = SCHEMA.split(';').map(s => s.trim()).filter(s => s.length > 0);
+      for (const statement of statements) {
+        await tx.exec(statement);
+      }
 
       // 2. Ensure singletons
       await tx.query(`INSERT INTO profile (id) VALUES (1) ON CONFLICT (id) DO NOTHING;`);
@@ -205,9 +239,14 @@ const api = {
 
   async close(): Promise<void> {
     if (db) {
-      await db.close();
+      try {
+        await db.close();
+      } catch (e) {
+        console.warn('[Worker] Error during PGlite close:', e);
+      }
       db = null;
     }
+    initializing = null;
   },
 
   async dumpDataDir(): Promise<Blob> {
