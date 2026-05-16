@@ -634,6 +634,14 @@ export const api = {
   }
 };
 
+// Worker cleanup on termination
+if (typeof self !== 'undefined' && 'addEventListener' in self) {
+  self.addEventListener('beforeunload', async () => {
+    console.log('[Worker] Page unloading, closing PGlite...');
+    await api.close();
+  });
+}
+
 export type DatabaseWorkerAPI = typeof api;
 
 Comlink.expose(api);
