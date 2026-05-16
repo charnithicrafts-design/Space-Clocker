@@ -4,9 +4,11 @@ import { PGlite } from '@electric-sql/pglite';
 
 describe('PGlite Database Restoration Reliability', () => {
   it('should restore a database from a blob snapshot correctly', async () => {
+    console.log('[Test] Starting restoration test');
     // 1. Setup Source DB
     const db1 = new PGlite();
     await db1.waitReady;
+    console.log('[Test] Source DB ready');
     await db1.exec(`
       CREATE TABLE test (id SERIAL PRIMARY KEY, val TEXT);
       INSERT INTO test (val) VALUES ('nebula');
@@ -15,6 +17,7 @@ describe('PGlite Database Restoration Reliability', () => {
     // 2. Create Snapshot
     const dump = await db1.dumpDataDir();
     await db1.close();
+    console.log('[Test] Snapshot created');
     
     expect(dump).toBeInstanceOf(Blob);
     expect(dump.size).toBeGreaterThan(0);
@@ -23,13 +26,16 @@ describe('PGlite Database Restoration Reliability', () => {
     const db2 = await PGlite.create({
       loadDataDir: dump
     });
+    console.log('[Test] Target DB creation initiated');
     await db2.waitReady;
+    console.log('[Test] Target DB ready');
     
     const res = await db2.query('SELECT val FROM test');
     expect(res.rows[0].val).toBe('nebula');
     
     await db2.close();
-  });
+    console.log('[Test] Restoration test complete');
+  }, 20000);
 
   it('should handle "Temporal Rift" scenarios (consecutive restoration)', async () => {
     // This simulates rapid restoreDb calls which might cause race conditions

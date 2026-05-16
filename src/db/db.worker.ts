@@ -5,8 +5,9 @@ import { MIGRATIONS } from './migrations';
 
 let db: PGlite | null = null;
 let initializing: Promise<void> | null = null;
+let activeStorageStrategy: string | null = null;
 
-const api = {
+export const api = {
   async init(dataDir?: string | Blob): Promise<void> {
     if (db) return;
     if (initializing) return initializing;
@@ -18,12 +19,30 @@ const api = {
       let forceIdbFallback = false;
 
       try {
-        console.log('[Worker] Initiating neural link initialization...');
+        console.log('[Worker] Initiating neural link initialization...', { 
+          hasDataDir: !!dataDir, 
+          isBlob: dataDir instanceof Blob,
+          isString: typeof dataDir === 'string',
+          activeStorageStrategy
+        });
         
         // 1. Determine Storage Strategy
         isOpfsSupported = typeof navigator !== 'undefined' && 'storage' in navigator && typeof navigator.storage.getDirectory === 'function';
         
-        if (typeof dataDir === 'string') {
+        // Allow environment to force strategy (useful for E2E tests)
+        let forcedStrategy: string | null = activeStorageStrategy;
+        
+        // If dataDir is a string, it might be a forced strategy (e.g. idb://...) or a path
+        if (typeof dataDir === 'string' && (dataDir.includes('://') || dataDir.startsWith('opfs'))) {
+          forcedStrategy = dataDir;
+          activeStorageStrategy = forcedStrategy; // Persist for future re-inits (like after restoration)
+        }
+
+        if (forcedStrategy) {
+          console.log(`[Worker] Forced storage strategy detected: ${forcedStrategy}`);
+          storagePath = forcedStrategy;
+          if (forcedStrategy.startsWith('idb')) forceIdbFallback = true;
+        } else if (typeof dataDir === 'string') {
           storagePath = dataDir;
         } else {
           // Use persistent storage by default if no path is provided
@@ -58,7 +77,8 @@ const api = {
         console.log(`[Worker] Creating PGlite instance at ${storagePath}...`);
         
         let retryCount = 0;
-        const maxRetries = 3;
+        const maxRetries = 6;
+        const baseDelay = 200; // Start small for fast devices
         
         let existsRetryCount = 0;
         
@@ -71,21 +91,21 @@ const api = {
             await db.waitReady;
             break; // Success
           } catch (e: any) {
-            const isLockError = e.name === 'NoModificationAllowedError' || e.message?.includes('Access Handles');
+            const isLockError = e.name === 'NoModificationAllowedError' || e.message?.includes('Access Handles') || e.message?.includes('database is locked');
             const isExistsError = e.message?.includes('Database already exists');
+            const isStructuralError = e.errno === 20 || (e.name === 'ErrnoError' && e.errno === 20) || e.message?.includes('ENOTDIR');
             
             if (isLockError && retryCount < maxRetries) {
               retryCount++;
-              const delay = 500 * retryCount;
-              console.warn(`[Worker] OPFS lock detected (attempt ${retryCount}/${maxRetries}). Retrying in ${delay}ms...`);
+              // Exponential backoff: base * 2^retryCount, capped to prevent excessive waiting
+              const delay = Math.min(baseDelay * Math.pow(2, retryCount), 5000);
+              console.warn(`[Worker] OPFS lock/access error detected (attempt ${retryCount}/${maxRetries}). Retrying in ${delay}ms...`);
               await new Promise(resolve => setTimeout(resolve, delay));
-            } else if (isExistsError && (dataDir instanceof Blob || dump) && existsRetryCount < 2) {
-              // If we're trying to load a dump but the DB already exists, we must purge it first
+            } else if ((isExistsError || isStructuralError) && (dataDir instanceof Blob || dump || isStructuralError) && existsRetryCount < 2) {
               existsRetryCount++;
-              console.warn(`[Worker] Database exists but loadDataDir provided. Purging ${storagePath} for restoration (attempt ${existsRetryCount})...`);
+              console.warn(`[Worker] ${isStructuralError ? 'Structural corruption (Errno 20)' : 'Database exists'} detected. Purging ${storagePath} for recovery (attempt ${existsRetryCount})...`);
               try {
-                // Add a small delay to allow any pending locks to clear
-                await new Promise(resolve => setTimeout(resolve, 200));
+                await new Promise(resolve => setTimeout(resolve, 500));
                 
                 if (storagePath.startsWith('opfs')) {
                   const root = await navigator.storage.getDirectory();
@@ -102,7 +122,7 @@ const api = {
                       } catch (pe: any) {
                         if (pe.name === 'NotFoundError') break;
                         purgeRetry++;
-                        await new Promise(resolve => setTimeout(resolve, 300 * purgeRetry));
+                        await new Promise(resolve => setTimeout(resolve, 500 * purgeRetry));
                       }
                     }
                   }
@@ -125,7 +145,7 @@ const api = {
                 throw e; 
               }
             } else {
-              throw e; // Rethrow if not a handled error or max retries reached
+              throw e;
             }
           }
         }
@@ -291,22 +311,41 @@ const api = {
   async query(sql: string, params?: any[]): Promise<{ rows: any[] }> {
     if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
-    const res = await db.query(sql, params);
-    return { rows: res.rows };
+    await db.waitReady;
+    try {
+      console.log(`[Worker] Executing query: ${sql.substring(0, 100)}...`);
+      const res = await db.query(sql, params);
+      // Small cooling delay to prevent PGlite internal lock contention in rapid successions
+      await new Promise(r => setTimeout(r, 10));
+      return { rows: res.rows };
+    } catch (e) {
+      console.error(`[Worker] Query failure: ${sql.substring(0, 100)}...`, e);
+      throw e;
+    }
   },
 
   async exec(sql: string): Promise<void> {
     if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
-    await db.exec(sql);
+    await db.waitReady;
+    try {
+      console.log(`[Worker] Executing SQL: ${sql.substring(0, 100)}...`);
+      await db.exec(sql);
+      await new Promise(r => setTimeout(r, 10));
+    } catch (e) {
+      console.error(`[Worker] Exec failure: ${sql.substring(0, 100)}...`, e);
+      throw e;
+    }
   },
 
   async transaction<T>(callback: (tx: any) => Promise<T>): Promise<T> {
     if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
-    // NOTE: This might still have issues if the callback is passed from main thread.
-    // We prefer using domain methods instead.
-    return await db.transaction(callback);
+    await db.waitReady;
+    
+    return await db.transaction(async (tx) => {
+      return await callback(tx);
+    });
   },
 
   async close(): Promise<void> {
