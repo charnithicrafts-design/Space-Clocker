@@ -85,26 +85,25 @@ export const reconcileDailyTasks = async (db: any, today: string) => {
 
   console.log(`[Reconciliation] Rolling forward ${overdueTasks.rows.length} incomplete tasks.`);
 
-  await db.transaction(async (tx: any) => {
-    for (const task of overdueTasks.rows) {
-      // 2. Update their planned_date to today
-      await tx.query(`
-        UPDATE tasks 
-        SET planned_date = $1 
-        WHERE id = $2
-      `, [today, task.id]);
+  // Use individual queries because Comlink cannot proxy transaction objects/callbacks easily
+  for (const task of overdueTasks.rows) {
+    // 2. Update their planned_date to today
+    await db.query(`
+      UPDATE tasks 
+      SET planned_date = $1 
+      WHERE id = $2
+    `, [today, task.id]);
 
-      // 3. Create a reflection entry
-      const reflectionId = `drift-${task.id}-${today}`;
-      await tx.query(`
-        INSERT INTO reflections (id, date, content, type)
-        VALUES ($1, $2, $3, 'missed-task')
-        ON CONFLICT (id) DO NOTHING
-      `, [
-        reflectionId, 
-        today, 
-        `Trajectory Drift: "${task.title}" shifted from ${task.planned_date} to ${today} due to orbital decay.`
-      ]);
-    }
-  });
+    // 3. Create a reflection entry
+    const reflectionId = `drift-${task.id}-${today}`;
+    await db.query(`
+      INSERT INTO reflections (id, date, content, type)
+      VALUES ($1, $2, $3, 'missed-task')
+      ON CONFLICT (id) DO NOTHING
+    `, [
+      reflectionId, 
+      today, 
+      `Trajectory Drift: "${task.title}" shifted from ${task.planned_date} to ${today} due to orbital decay.`
+    ]);
+  }
 };

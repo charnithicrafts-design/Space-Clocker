@@ -940,40 +940,39 @@ export const useTrackStore = create<TrackStore>()(
       const { dbProxy } = await import('../db/client');
       const today = getTodayLocalISO();
 
-      // Stage 1: Critical Momentum Data
-      const [profileRes, prefsRes, statsRes, oracleRes, ambitionsRes, systemRes] = await Promise.all([
-        dbProxy.getProfile(),
-        dbProxy.query(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`),
-        dbProxy.query(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`),
-        dbProxy.query(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`),
-        dbProxy.query(`SELECT * FROM ambitions`),
-        dbProxy.query(`SELECT last_startup, app_version FROM system_info WHERE id = 1`)
-      ]);
+      try {
+        console.log('[Store] Initiating momentum synchronization...');
+        
+        // Stage 1: Critical Momentum Data (Sequential to avoid transaction overlap)
+        const profileRes = await dbProxy.getProfile();
+        const prefsRes = await dbProxy.query(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`);
+        const statsRes = await dbProxy.query(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`);
+        const oracleRes = await dbProxy.query(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`);
+        const ambitionsRes = await dbProxy.query(`SELECT * FROM ambitions`);
+        const systemRes = await dbProxy.query(`SELECT last_startup, app_version FROM system_info WHERE id = 1`);
 
-      // Apply critical state immediately (shallow ambitions)
-      set({
-        profile: profileRes.rows[0] || get().profile,
-        preferences: {
-          confirmDelete: prefsRes.rows[0]?.confirmDelete ?? true,
-          uiMode: prefsRes.rows[0]?.uiMode || 'simple'
-        },
-        stats: statsRes.rows[0] || get().stats,
-        oracleConfig: oracleRes.rows[0] ? { ...get().oracleConfig, ...oracleRes.rows[0] } : get().oracleConfig,
-        ambitions: (ambitionsRes.rows || []).map(a => ({ ...a, xp: a.xp || 0, milestones: [] })),
-        dbAppVersion: systemRes.rows[0]?.app_version
-      });
+        // Apply critical state immediately
+        set({
+          profile: profileRes.rows[0] || get().profile,
+          preferences: {
+            confirmDelete: prefsRes.rows[0]?.confirmDelete ?? true,
+            uiMode: prefsRes.rows[0]?.uiMode || 'simple'
+          },
+          stats: statsRes.rows[0] || get().stats,
+          oracleConfig: oracleRes.rows[0] ? { ...get().oracleConfig, ...oracleRes.rows[0] } : get().oracleConfig,
+          ambitions: (ambitionsRes.rows || []).map(a => ({ ...a, xp: a.xp || 0, milestones: [] })),
+          dbAppVersion: systemRes.rows[0]?.app_version
+        });
 
-      // Stage 2: Background Collection Data
-      const [milestonesRes, tasksRes, voidsRes, reflectionsRes, historyRes, skillsRes, internshipsRes, transmissionsRes] = await Promise.all([
-        dbProxy.query(`SELECT * FROM milestones`),
-        dbProxy.getTasks(),
-        dbProxy.query(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`),
-        dbProxy.query(`SELECT id, date, content, type FROM reflections ORDER BY date DESC LIMIT 100`),
-        dbProxy.query(`SELECT * FROM stellar_history ORDER BY date DESC LIMIT 50`),
-        dbProxy.query(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`),
-        dbProxy.query(`SELECT organization, start_date as "start", end_date as "end" FROM internships`),
-        dbProxy.query(`SELECT * FROM transmissions ORDER BY timestamp DESC LIMIT 20`),
-      ]);
+        // Stage 2: Background Collection Data (Sequential)
+        const milestonesRes = await dbProxy.query(`SELECT * FROM milestones`);
+        const tasksRes = await dbProxy.getTasks();
+        const voidsRes = await dbProxy.query(`SELECT id, text, impact, engaged_count as "engagedCount", max_allowed as "maxAllowed" FROM void_tasks`);
+        const reflectionsRes = await dbProxy.query(`SELECT id, date, content, type FROM reflections ORDER BY date DESC LIMIT 100`);
+        const historyRes = await dbProxy.query(`SELECT * FROM stellar_history ORDER BY date DESC LIMIT 50`);
+        const skillsRes = await dbProxy.query(`SELECT id, name, current_proficiency as "currentProficiency", target_proficiency as "targetProficiency", recommendation, type, ambition_id as "ambitionId" FROM skills`);
+        const internshipsRes = await dbProxy.query(`SELECT organization, start_date as "start", end_date as "end" FROM internships`);
+        const transmissionsRes = await dbProxy.query(`SELECT * FROM transmissions ORDER BY timestamp DESC LIMIT 20`);
 
       // Map and process background data
       const milestonesRaw = milestonesRes.rows;
@@ -1059,6 +1058,11 @@ export const useTrackStore = create<TrackStore>()(
         await reconcileDailyTasks(dbProxy, today);
         await dbProxy.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
       }
-    }
-  }),
-);
+      console.log('[Store] Momentum synchronization complete.');
+      } catch (err) {
+      console.error('[Store] Synchronization failed:', err);
+      throw err;
+      }
+      }
+      }),
+      );

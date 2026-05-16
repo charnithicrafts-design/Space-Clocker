@@ -38,22 +38,28 @@ const App = () => {
 
     const startup = async () => {
       try {
+        console.log('[App] Starting Momentum synchronization...');
         await initialize();
+        console.log('[App] Store initialized.');
 
         const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
+        console.log(`[App] Onboarding status: ${hasSeenOnboarding}`);
+        
         // If store is initialized and empty, and onboarding not seen, show it
-        // We check ambitions length to ensure we only show it to truly "new" users or those who cleared data
         if (!hasSeenOnboarding) {
+          console.log('[App] Triggering onboarding sequence.');
           setShowOnboarding(true);
         }
 
         // Check for sync divergence if enabled
         if (oracleConfig.syncEnabled) {
+          console.log('[App] Checking for Stellar Sync divergence...');
           const result = await checkSync();
           if (result === 'remote_newer') {
             setIsSyncModalOpen(true);
           }
         }
+        console.log('[App] Initial sequence complete.');
       } catch (err) {
         console.error('[App] Startup failure:', err);
       }

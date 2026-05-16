@@ -14,7 +14,8 @@ let readyPromise: Promise<void> | null = null;
 
 function ensureInit() {
   if (!readyPromise) {
-    readyPromise = dbProxy.init();
+    const forcedStrategy = typeof localStorage !== 'undefined' ? localStorage.getItem('PGlite_FORCED_STRATEGY') : undefined;
+    readyPromise = dbProxy.init(forcedStrategy);
   }
   return readyPromise;
 }
