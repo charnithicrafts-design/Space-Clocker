@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "subagent": "atdd-e2e-tests",
+  "tests": [
+    {
+      "file": "tests/e2e/restoration-stress.spec.ts",
+      "content": "import { test, expect } from '../support/fixtures';\n\n/**\n * PGlite Restoration Stress & Integrity (ATDD - RED PHASE)\n * \n * AC-3 (User Snapshot Integrity): Restoration of .pgdump even if DB exists.\n * P1-1 (Rapid Restoration): Trigger multiple restore calls with blobs in quick succession (3x in 5s) and verify stability.\n */\ntest.describe('PGlite Restoration Stress & Integrity (ATDD)', () => {\n  \n  test.beforeEach(async ({ page }) => {\n    // Navigate to Settings where restoration UI is located\n    await page.goto('/settings');\n    // Ensure the system is ready\n    await page.waitForFunction(() => (window as any).dbProxy !== undefined);\n  });\n\n  test.skip('[P0] Scenario: User Snapshot Boot - should restore user .pgdump and verify schema integrity', async ({ page, db }) => {\n    // AC-3: User Snapshot Integrity\n    // The user's specific .pgdump file must be restorable even if an existing database is present.\n    \n    const snapshotPath = 'chronos-snapshot-2026-04-11.pgdump';\n    \n    // 1. Trigger the hidden file input via its label\n    const fileChooserPromise = page.waitForEvent('filechooser');\n    await page.getByText('Restore Snapshot').click();\n    const fileChooser = await fileChooserPromise;\n    await fileChooser.setFiles(snapshotPath);\n\n    // 2. Expect success indication\n    // Note: We expect a \"Restore Success\" message or similar visual confirmation\n    await expect(page.getByText(/Restore Success/i)).toBeVisible();\n\n    // 3. Verify data integrity via DB fixture\n    // Assuming the snapshot contains a specific user profile \"Valentina-Prime\"\n    const result = await db.query('SELECT name FROM profile WHERE id = 1');\n    expect(result.rows[0].name).toBe('Valentina-Prime');\n    \n    // 4. Verify UI reflects the restored state\n    await page.goto('/');\n    await expect(page.getByText('Valentina-Prime')).toBeVisible();\n  });\n\n  test.skip('[P1] Scenario: Rapid Restoration Stress - should handle 3x restores in 5s', async ({ page }) => {\n    // P1-1: Rapid Restoration\n    // Trigger multiple restore calls with blobs in quick succession (3x in 5s) and verify stability.\n    \n    const snapshotPath = 'chronos-snapshot-2026-04-11.pgdump';\n    const fileInput = page.locator('input[type=\"file\"][accept=\".pgdump\"]');\n\n    // Trigger 3 restores in quick succession\n    for (let i = 0; i < 3; i++) {\n      await fileInput.setInputFiles(snapshotPath);\n      // We don't wait for completion here to simulate rapid triggers\n    }\n\n    // Expect the system to remain stable and eventually show success\n    await expect(page.getByText(/Restore Success/i)).toBeVisible({ timeout: 10000 });\n    \n    // Verify no \"Storage Collision\" or \"Locked\" errors are visible\n    await expect(page.getByText(/Storage Collision/i)).not.toBeVisible();\n    await expect(page.getByText(/catastrophic error/i)).not.toBeVisible();\n  });\n});",
+      "description": "ATDD E2E tests for PGlite Restoration stress and integrity (RED PHASE)",
+      "expected_to_fail": true,
+      "acceptance_criteria_covered": [
+        "AC-3: User snapshot integrity (.pgdump restorable even if DB present)",
+        "P1-1: Rapid restoration stability (3x in 5s)"
+      ],
+      "priority_coverage": {
+        "P0": 1,
+        "P1": 1,
+        "P2": 0,
+        "P3": 0
+      }
+    }
+  ],
+  "fixture_needs": ["db"],
+  "knowledge_fragments_used": ["fixture-architecture", "selector-resilience"],
+  "test_count": 2,
+  "tdd_phase": "RED",
+  "summary": "Generated 2 FAILING E2E tests for PGlite Restoration"
+}

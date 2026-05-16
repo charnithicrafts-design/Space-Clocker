@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "subagent": "atdd-api-tests",
+  "tests": [
+    {
+      "file": "src/tests/worker-restoration.test.ts",
+      "content": "import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';\nimport { PGlite } from '@electric-sql/pglite';\nimport { api } from '../db/db.worker';\n\n// Mock PGlite\nvi.mock('@electric-sql/pglite', () => ({\n  PGlite: {\n    create: vi.fn(),\n  },\n}));\n\n// Mock Comlink\nvi.mock('comlink', () => ({\n  expose: vi.fn(),\n}));\n\n// Mock browser APIs\nconst mockRemoveEntry = vi.fn();\nconst mockGetDirectory = vi.fn();\n\ndescribe('PGlite Web Worker Restoration Logic', () => {\n  beforeEach(() => {\n    vi.clearAllMocks();\n    vi.useFakeTimers();\n\n    // Ensure we start with a fresh state by closing existing db\n    api.close();\n\n    // Mock navigator.storage\n    global.navigator = {\n      storage: {\n        getDirectory: mockGetDirectory,\n      },\n    } as any;\n\n    mockGetDirectory.mockResolvedValue({\n      getDirectoryHandle: vi.fn().mockRejectedValue(new Error('Not found')),\n      removeEntry: mockRemoveEntry,\n    });\n\n    // Mock indexedDB\n    global.indexedDB = {\n      open: vi.fn().mockReturnValue({\n        onsuccess: (e: any) => {},\n        onerror: (e: any) => {},\n      }),\n      deleteDatabase: vi.fn().mockReturnValue({\n        onsuccess: null,\n        onerror: null,\n      }),\n    } as any;\n    \n    // Mock console to avoid cluttering test output\n    vi.spyOn(console, 'log').mockImplementation(() => {});\n    vi.spyOn(console, 'warn').mockImplementation(() => {});\n    vi.spyOn(console, 'error').mockImplementation(() => {});\n  });\n\n  afterEach(() => {\n    vi.useRealTimers();\n    vi.restoreAllMocks();\n  });\n\n  it.skip('[P0] AC-1: should purge existing storage and retry when \"Database already exists\" error occurs during restoration', async () => {\n    const mockDb = {\n      waitReady: Promise.resolve(),\n      close: vi.fn().mockResolvedValue(undefined),\n      query: vi.fn().mockResolvedValue({ rows: [{ current: 0 }] }),\n      exec: vi.fn().mockResolvedValue(undefined),\n      transaction: vi.fn(async (cb) => {\n        return await cb({\n          exec: vi.fn().mockResolvedValue(undefined),\n          query: vi.fn().mockResolvedValue({ rows: [] }),\n        });\n      }),\n    };\n\n    // First call throws \"Database already exists\", second call succeeds\n    (PGlite.create as any)\n      .mockRejectedValueOnce(new Error('Database already exists'))\n      .mockResolvedValueOnce(mockDb);\n\n    const dump = new Blob(['test-dump'], { type: 'application/octet-stream' });\n    \n    // Trigger initialization with a blob (restoration)\n    await api.init(dump);\n\n    // Verify PGlite.create was called twice\n    expect(PGlite.create).toHaveBeenCalledTimes(2);\n    \n    // Verify purge was attempted (removeEntry is called in OPFS path)\n    expect(mockRemoveEntry).toHaveBeenCalled();\n  });\n\n  it.skip('[P0] AC-2: should retry up to 3 times with backoff when OPFS throws NoModificationAllowedError', async () => {\n    const mockDb = {\n      waitReady: Promise.resolve(),\n      close: vi.fn().mockResolvedValue(undefined),\n      query: vi.fn().mockResolvedValue({ rows: [{ current: 0 }] }),\n      exec: vi.fn().mockResolvedValue(undefined),\n      transaction: vi.fn(async (cb) => {\n        return await cb({\n          exec: vi.fn().mockResolvedValue(undefined),\n          query: vi.fn().mockResolvedValue({ rows: [] }),\n        });\n      }),\n    };\n\n    const lockError = new Error('Lock error');\n    lockError.name = 'NoModificationAllowedError';\n\n    // Throw lock error twice, then succeed on 3rd attempt\n    (PGlite.create as any)\n      .mockRejectedValueOnce(lockError)\n      .mockRejectedValueOnce(lockError)\n      .mockResolvedValueOnce(mockDb);\n\n    const initPromise = api.init();\n\n    // Fast-forward timers for retries\n    // Worker uses 500 * retryCount delay\n    await vi.advanceTimersByTimeAsync(500);\n    await vi.advanceTimersByTimeAsync(1000);\n    \n    await initPromise;\n\n    // Verify PGlite.create was called 3 times total\n    expect(PGlite.create).toHaveBeenCalledTimes(3);\n  });\n});",
+      "description": "ATDD Unit tests for PGlite Web Worker restoration and lock handling (RED PHASE)",
+      "expected_to_fail": true,
+      "acceptance_criteria_covered": [
+        "AC-1 (Auto-Purge Recovery): When PGlite.create throws \"Database already exists\" during a restoration, the worker must successfully purge the existing storage and retry initialization.",
+        "AC-2 (Lock Handling): When OPFS throws NoModificationAllowedError, the worker must retry up to 3 times with backoff."
+      ],
+      "priority_coverage": {
+        "P0": 2,
+        "P1": 0,
+        "P2": 0,
+        "P3": 0
+      }
+    }
+  ],
+  "fixture_needs": [],
+  "knowledge_fragments_used": [
+    "api-testing-patterns"
+  ],
+  "test_count": 2,
+  "tdd_phase": "RED",
+  "provider_scrutiny": "completed",
+  "summary": "Generated 2 FAILING unit tests for PGlite worker recovery and lock handling scenarios"
+}
