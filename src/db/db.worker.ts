@@ -161,11 +161,14 @@ export const api = {
         
         const errorMessage = error.message || '';
         const isInitializationError = 
+          error.name === 'NoModificationAllowedError' ||
           errorMessage.includes('No more file handles available in the pool') ||
           errorMessage.includes('failed to initialize properly') ||
           errorMessage.includes('initialization failure') ||
           errorMessage.includes('ERRORDATA_STACK_SIZE') ||
-          errorMessage.includes('Abort error when calling GetDirectory');
+          errorMessage.includes('Abort error when calling GetDirectory') ||
+          errorMessage.includes('Access Handle') ||
+          errorMessage.includes('ENOTDIR');
 
         if (isInitializationError && storagePath.startsWith('opfs-ahp://')) {
           console.warn('[Worker] OPFS-AHP failed. Attempting fallback to standard OPFS...');
@@ -633,14 +636,6 @@ export const api = {
     });
   }
 };
-
-// Worker cleanup on termination
-if (typeof self !== 'undefined' && 'addEventListener' in self) {
-  self.addEventListener('beforeunload', async () => {
-    console.log('[Worker] Page unloading, closing PGlite...');
-    await api.close();
-  });
-}
 
 export type DatabaseWorkerAPI = typeof api;
 

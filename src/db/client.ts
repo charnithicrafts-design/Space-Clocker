@@ -23,6 +23,11 @@ function ensureInit() {
 // Expose to window for debugging and E2E testing
 if (typeof window !== 'undefined') {
   (window as any).dbProxy = dbProxy;
+  
+  // Graceful shutdown on page unload to release OPFS handles
+  window.addEventListener('beforeunload', () => {
+    dbProxy.close().catch(() => {});
+  });
 }
 
 // Export a db object that mimics the old API for backward compatibility where possible
