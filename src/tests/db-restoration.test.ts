@@ -6,7 +6,7 @@ describe('PGlite Database Restoration Reliability', () => {
   it('should restore a database from a blob snapshot correctly', async () => {
     console.log('[Test] Starting restoration test');
     // 1. Setup Source DB
-    const db1 = new PGlite();
+    const db1 = new PGlite('memory://source-db-' + Math.random());
     await db1.waitReady;
     console.log('[Test] Source DB ready');
     await db1.exec(`
@@ -23,7 +23,7 @@ describe('PGlite Database Restoration Reliability', () => {
     expect(dump.size).toBeGreaterThan(0);
     
     // 3. Setup Target DB from Snapshot
-    const db2 = await PGlite.create({
+    const db2 = await PGlite.create('memory://target-db-' + Math.random(), {
       loadDataDir: dump
     });
     console.log('[Test] Target DB creation initiated');
@@ -35,7 +35,7 @@ describe('PGlite Database Restoration Reliability', () => {
     
     await db2.close();
     console.log('[Test] Restoration test complete');
-  }, 20000);
+  });
 
   it('should handle "Temporal Rift" scenarios (consecutive restoration)', async () => {
     // This simulates rapid restoreDb calls which might cause race conditions
@@ -62,5 +62,5 @@ describe('PGlite Database Restoration Reliability', () => {
     const res2 = await dbR2.query('SELECT code FROM rifts');
     expect(res2.rows[0].code).toBe('BETA');
     await dbR2.close();
-  }, 20000);
+  });
 });

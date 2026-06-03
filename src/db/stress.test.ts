@@ -4,7 +4,7 @@ import { PGlite } from '@electric-sql/pglite';
 
 describe('PGlite Stress Test - Dump and Restore', () => {
   it('should handle large dumps without ERRORDATA_STACK_SIZE exceeded', async () => {
-    const db = new PGlite();
+    const db = new PGlite('memory://stress-1-' + Math.random());
     await db.waitReady;
     
     // Create a lot of data
@@ -31,7 +31,7 @@ describe('PGlite Stress Test - Dump and Restore', () => {
     
     console.log('Restoring database from dump...');
     // This is where the user reports the error
-    const db2 = await PGlite.create({
+    const db2 = await PGlite.create('memory://stress-2-' + Math.random(), {
       loadDataDir: blob
     });
     await db2.waitReady;
@@ -41,5 +41,5 @@ describe('PGlite Stress Test - Dump and Restore', () => {
     
     await db2.close();
     console.log('Stress test complete.');
-  }, 30000); // 30s timeout
+  });
 });
