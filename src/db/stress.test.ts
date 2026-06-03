@@ -36,7 +36,7 @@ describe('PGlite Stress Test - Dump and Restore', () => {
     });
     await db2.waitReady;
     
-    const res = await db2.query('SELECT count(*) as count FROM stress_test');
+    const res = await db2.query<{ count: number }>('SELECT count(*) as count FROM stress_test');
     expect(res.rows[0].count).toBe(5000);
     
     await db2.close();

@@ -30,7 +30,7 @@ describe('PGlite Database Restoration Reliability', () => {
     await db2.waitReady;
     console.log('[Test] Target DB ready');
     
-    const res = await db2.query('SELECT val FROM test');
+    const res = await db2.query<{ val: string }>('SELECT val FROM test');
     expect(res.rows[0].val).toBe('nebula');
     
     await db2.close();
@@ -52,14 +52,14 @@ describe('PGlite Database Restoration Reliability', () => {
     // Restoration 1
     const dbR1 = await PGlite.create('memory://db-r1', { loadDataDir: dumpA });
     await dbR1.waitReady;
-    const res1 = await dbR1.query('SELECT code FROM rifts');
+    const res1 = await dbR1.query<{ code: string }>('SELECT code FROM rifts');
     expect(res1.rows[0].code).toBe('ALPHA');
     await dbR1.close();
 
     // Restoration 2
     const dbR2 = await PGlite.create('memory://db-r2', { loadDataDir: dumpB });
     await dbR2.waitReady;
-    const res2 = await dbR2.query('SELECT code FROM rifts');
+    const res2 = await dbR2.query<{ code: string }>('SELECT code FROM rifts');
     expect(res2.rows[0].code).toBe('BETA');
     await dbR2.close();
   });
