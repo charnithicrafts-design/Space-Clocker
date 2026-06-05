@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.5.4",
+    "date": "2026-06-05",
+    "transmission": "Legacy Device Catalyst: Memory Efficiency & Volatile Fallbacks.",
+    "details": [
+      "Implemented 'Emergency Volatile Mode' (memory://) fallback for devices with strictly locked or memory-starved storage environments.",
+      "Refactored trajectory bulk imports into chunked atomic transactions to prevent 32-bit WASM stack overflows on older hardware.",
+      "Optimized schema initialization with granular execution blocks to resolve Emscripten 'aborted()' errors on legacy mobile browsers.",
+      "Enhanced PWA caching logic for faster cold-starts on high-latency mobile networks."
+    ],
+    "type": "minor"
+  },
+  {
     "version": "1.5.3",
     "date": "2026-06-03",
     "transmission": "OPFS Resilience & Graceful Shutdown Protocol.",
