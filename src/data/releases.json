@@ -1,5 +1,27 @@
 [
   {
+    "version": "1.5.3",
+    "date": "2026-06-03",
+    "transmission": "OPFS Resilience & Graceful Shutdown Protocol.",
+    "details": [
+      "Implemented OPFS lock fallback to IndexedDB when NoModificationAllowedError is detected.",
+      "Added beforeunload listener to release OPFS handles and prevent lock contention.",
+      "Fixed worker thread termination races during rapid navigation."
+    ],
+    "type": "hotfix"
+  },
+  {
+    "version": "1.5.2",
+    "date": "2026-06-03",
+    "transmission": "Test Stabilization & Enhanced Offline Precision.",
+    "details": [
+      "Stabilized flaky Vitest database tests with unique memory path isolation.",
+      "Updated PWA configuration to precache critical .wasm and .data assets for total offline autonomy.",
+      "Increased global test timeouts for heavy structural migrations."
+    ],
+    "type": "hotfix"
+  },
+  {
     "version": "1.5.1",
     "date": "2026-04-11",
     "transmission": "Neural Link Stabilization & Storage Resilience.",

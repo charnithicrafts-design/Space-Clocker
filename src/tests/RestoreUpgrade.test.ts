@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useTrackStore } from '../store/useTrackStore';
 import * as DbClient from '../db/client';
+import { CURRENT_APP_VERSION } from '../constants';
 
 /**
  * PRODUCTION-ROBUST RESTORE-UPGRADE E2E TEST
@@ -54,7 +55,7 @@ describe('System Data Lifecycle: Restore & Upgrade', () => {
     await store.performSystemUpgrade();
     expect(versionQuery).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO system_info'),
-        expect.arrayContaining(['1.5.1'])
+        expect.arrayContaining([CURRENT_APP_VERSION])
     );
   });
 });
