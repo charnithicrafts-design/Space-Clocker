@@ -552,21 +552,13 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
             ) : (
               <div className="flex items-center gap-3 group/title">
                 <h1 className={`${isPriority ? 'text-2xl' : 'text-lg'} font-display font-bold text-white mt-1`}>{ambition.title}</h1>
-                <div className="flex items-center gap-1 opacity-0 group-hover/title:opacity-100 transition-all mt-1">
-                  <button 
-                    onClick={startEditingAmbition}
-                    className="p-1 hover:text-primary transition-all"
-                    title="Edit Trajectory"
-                  >
-                    <Edit2 size={16} />
-                  </button>
-                  <button 
-                    onClick={handleDeleteAmbition}
-                    className="p-1 hover:text-error transition-all"
-                    title="Abort Trajectory"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                <div className="mt-1 lg:opacity-0 lg:group-hover/title:opacity-100 transition-all">
+                  <ActionMenu 
+                    actions={[
+                      { label: 'Edit', icon: Edit2, onClick: startEditingAmbition },
+                      { label: 'Abort', icon: Trash2, onClick: handleDeleteAmbition, variant: 'error' }
+                    ]} 
+                  />
                 </div>
               </div>
             )}
