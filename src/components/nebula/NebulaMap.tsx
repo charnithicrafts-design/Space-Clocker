@@ -21,16 +21,16 @@ const ActionMenu = ({ actions }: ActionMenuProps) => {
   
   useEffect(() => {
     if (!isOpen) return;
-    const handleEvents = (e: any) => {
-      if (e.type === 'click' || (e.type === 'keydown' && e.key === 'Escape')) {
+    const handleEvents = (e: MouseEvent | KeyboardEvent) => {
+      if (e.type === 'click' || (e instanceof KeyboardEvent && e.key === 'Escape')) {
         setIsOpen(false);
       }
     };
-    window.addEventListener('click', handleEvents);
-    window.addEventListener('keydown', handleEvents);
+    window.addEventListener('click', handleEvents as EventListener);
+    window.addEventListener('keydown', handleEvents as EventListener);
     return () => {
-      window.removeEventListener('click', handleEvents);
-      window.removeEventListener('keydown', handleEvents);
+      window.removeEventListener('click', handleEvents as EventListener);
+      window.removeEventListener('keydown', handleEvents as EventListener);
     };
   }, [isOpen]);
 
@@ -55,7 +55,7 @@ const ActionMenu = ({ actions }: ActionMenuProps) => {
             initial={{ opacity: 0, scale: 0.95, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            className="absolute right-0 mt-2 w-36 glass-panel border border-outline-variant rounded-xl shadow-2xl z-50 overflow-hidden"
+            className="absolute right-0 mt-2 w-36 glass-panel border border-outline-variant rounded-xl shadow-2xl z-50 overflow-hidden max-h-60 overflow-y-auto"
           >
             {actions.map((action) => (
               <button
@@ -226,21 +226,13 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
           ) : (
             <div className="flex items-center gap-2 group">
               <span className="font-bold text-white">{milestone.title}</span>
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                <button 
-                  onClick={startEditingMilestone}
-                  className="p-1 hover:text-primary transition-all"
-                  title="Edit Milestone"
-                >
-                  <Edit2 size={14} />
-                </button>
-                <button 
-                  onClick={handleDeleteMilestone}
-                  className="p-1 hover:text-error transition-all"
-                  title="Delete Milestone"
-                >
-                  <Trash2 size={14} />
-                </button>
+              <div className="ml-auto lg:opacity-0 lg:group-hover:opacity-100 transition-all">
+                <ActionMenu 
+                  actions={[
+                    { label: 'Edit', icon: Edit2, onClick: startEditingMilestone },
+                    { label: 'Collapse', icon: Trash2, onClick: handleDeleteMilestone, variant: 'error' }
+                  ]} 
+                />
               </div>
             </div>
           )}
@@ -487,8 +479,7 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
     setIsAddingMilestone(false);
   };
 
-  const startEditingAmbition = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const startEditingAmbition = () => {
     setIsEditingAmbition(true);
     setEditAmbitionTitle(ambition.title);
   };
@@ -502,8 +493,7 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
     setIsEditingAmbition(false);
   };
 
-  const handleDeleteAmbition = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleDeleteAmbition = () => {
     if (preferences.confirmDelete) {
       setIsDeleteModalOpen(true);
       return;
@@ -524,7 +514,7 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
       animate={{ y: 0, opacity: 1 }}
     >
       <div 
-        className={`flex justify-between items-start cursor-pointer ${!isPriority ? 'mb-2' : 'mb-6'}`}
+        className={`flex justify-between items-start ${!isPriority ? 'mb-2 cursor-pointer' : 'mb-6 cursor-default'}`}
         onClick={() => !isPriority && setIsOpen(!isOpen)}
       >
         <div className="flex items-center gap-4 flex-1">
