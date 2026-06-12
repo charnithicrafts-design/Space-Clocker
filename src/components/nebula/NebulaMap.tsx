@@ -331,21 +331,13 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
                   </div>
 
                   {!task.completed && editingTaskId !== task.id && (
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                      <button 
-                        onClick={(e) => startEditingTask(e, task)}
-                        className="p-1 hover:text-primary"
-                        aria-label={`Edit task ${task.title}`}
-                      >
-                        <Edit2 size={12} />
-                      </button>
-                      <button 
-                        onClick={(e) => handleDeleteTask(e, task.id)}
-                        className="p-1 hover:text-error"
-                        aria-label={`Delete task ${task.title}`}
-                      >
-                        <Trash2 size={12} />
-                      </button>
+                    <div className="lg:opacity-0 lg:group-hover:opacity-100 transition-all">
+                      <ActionMenu 
+                        actions={[
+                          { label: 'Edit', icon: Edit2, onClick: (e) => startEditingTask(e, task) },
+                          { label: 'Extract', icon: Trash2, onClick: (e) => handleDeleteTask(e, task.id), variant: 'error' }
+                        ]} 
+                      />
                     </div>
                   )}
                 </div>

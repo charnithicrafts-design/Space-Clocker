@@ -149,14 +149,51 @@ describe('NebulaMap', () => {
     render(<NebulaMap />);
     fireEvent.click(screen.getByText('Atmospheric Scrubber Installation'));
     
-    // Find delete button for the task using aria-label
-    const taskDeleteButton = screen.getByLabelText('Delete task Verify O2 output');
+    // 1. Find and click the Action Menu trigger for the task
+    const taskContainer = screen.getByText('Verify O2 output').closest('div');
+    const menuTrigger = taskContainer?.querySelector('button[title="Actions"]');
+    if (menuTrigger) fireEvent.click(menuTrigger);
 
-    // Act
-    fireEvent.click(taskDeleteButton);
+    // 2. Click "Extract" in the dropdown (wait for it to render)
+    const extractButton = await screen.findByText('Extract');
+    fireEvent.click(extractButton);
 
     // Assert
     expect(mockDeleteMilestoneTask).toHaveBeenCalledWith('ambition-alpha', 'milestone-1', 'task-2');
     expect(SoundManager.playThud).toHaveBeenCalled();
+  });
+
+  it('should open ActionMenu and trigger ambition deletion in AmbitionCard', async () => {
+    // Arrange
+    render(<NebulaMap />);
+    const actionMenus = screen.getAllByTitle('Actions');
+    
+    // Act - Open the first ActionMenu (Martian Colony)
+    fireEvent.click(actionMenus[0]);
+    
+    // Assert - Menu should be visible
+    expect(screen.getByText('Edit')).toBeInTheDocument();
+    expect(screen.getByText('Abort')).toBeInTheDocument();
+    
+    // Act - Click Abort
+    fireEvent.click(screen.getByText('Abort'));
+    
+    // Assert
+    expect(mockDeleteAmbition).toHaveBeenCalledWith('ambition-alpha');
+    expect(SoundManager.playThud).toHaveBeenCalled();
+  });
+
+  it('should enter edit mode when Edit is clicked in ActionMenu', async () => {
+    // Arrange
+    render(<NebulaMap />);
+    const actionMenus = screen.getAllByTitle('Actions');
+    
+    // Act
+    fireEvent.click(actionMenus[0]);
+    fireEvent.click(screen.getByText('Edit'));
+    
+    // Assert - Input should be visible with current title
+    const input = screen.getByDisplayValue('Establish Martian Colony');
+    expect(input).toBeInTheDocument();
   });
 });
