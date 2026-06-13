@@ -139,10 +139,12 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
     setEditTaskDate(task.plannedDate || getTodayLocalISO());
   };
 
-  const saveTaskEdit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const saveTaskEdit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!editingTaskId) return;
+
     if (editingTaskId && editTaskTitle.trim()) {
-      updateMilestoneTask(ambitionId, milestone.id, editingTaskId, {
+      updateMilestoneTask(ambition.id, milestone.id, editingTaskId, {
         title: editTaskTitle,
         time: editTaskTime,
         endTime: editTaskEndTime || undefined,
@@ -194,10 +196,11 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
     setEditMilestoneTitle(milestone.title);
   };
 
-  const saveMilestoneEdit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const saveMilestoneEdit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!isEditingMilestone) return;
     if (editMilestoneTitle.trim()) {
-      updateMilestone(ambitionId, milestone.id, editMilestoneTitle);
+      updateMilestone(ambition.id, milestone.id, editMilestoneTitle);
       SoundManager.playPop();
     }
     setIsEditingMilestone(false);
@@ -219,7 +222,7 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
                 className="w-full bg-surface-high p-1 rounded border border-primary font-bold text-white focus:outline-none"
                 value={editMilestoneTitle}
                 onChange={(e) => setEditMilestoneTitle(e.target.value)}
-                onBlur={() => setIsEditingMilestone(false)}
+                onBlur={() => saveMilestoneEdit()}
                 onKeyDown={(e) => e.key === 'Escape' && setIsEditingMilestone(false)}
               />
             </form>
@@ -269,6 +272,7 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
                           className="w-full bg-transparent border-b border-primary/30 py-1 font-bold text-white focus:outline-none focus:border-primary"
                           value={editTaskTitle}
                           onChange={(e) => setEditTaskTitle(e.target.value)}
+                          onBlur={() => saveTaskEdit()}
                           onKeyDown={(e) => e.key === 'Escape' && setEditingTaskId(null)}
                         />
                         <div className="grid grid-cols-2 gap-3">
@@ -276,14 +280,14 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
                             <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Entry</label>
                             <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
                               <Clock size={12} className="text-primary" />
-                              <input type="time" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskTime} onChange={e => setEditTaskTime(e.target.value)} />
+                              <input type="time" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskTime} onChange={e => setEditTaskTime(e.target.value)} onBlur={() => saveTaskEdit()} />
                             </div>
                           </div>
                           <div className="flex flex-col gap-1">
                             <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Descent</label>
                             <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
                               <Timer size={12} className="text-secondary" />
-                              <input type="time" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskEndTime} onChange={e => setEditTaskEndTime(e.target.value)} />
+                              <input type="time" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskEndTime} onChange={e => setEditTaskEndTime(e.target.value)} onBlur={() => saveTaskEdit()} />
                             </div>
                           </div>
                         </div>
@@ -292,14 +296,14 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
                             <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Mission Date</label>
                             <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
                               <Calendar size={12} className="text-primary-container" />
-                              <input type="date" className="bg-transparent text-[10px] font-mono text-white focus:outline-none uppercase" value={editTaskDate} onChange={e => setEditTaskDate(e.target.value)} />
+                              <input type="date" className="bg-transparent text-[10px] font-mono text-white focus:outline-none uppercase" value={editTaskDate} onChange={e => setEditTaskDate(e.target.value)} onBlur={() => saveTaskEdit()} />
                             </div>
                           </div>
                           <div className="flex flex-col gap-1">
                             <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest text-error">Deadline Lock</label>
                             <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-error/30">
                               <AlertTriangle size={12} className="text-error" />
-                              <input type="datetime-local" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskDeadline} onChange={e => setEditTaskDeadline(e.target.value)} />
+                              <input type="datetime-local" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskDeadline} onChange={e => setEditTaskDeadline(e.target.value)} onBlur={() => saveTaskEdit()} />
                             </div>
                           </div>
                         </div>
@@ -476,8 +480,9 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
     setEditAmbitionTitle(ambition.title);
   };
 
-  const saveAmbitionEdit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const saveAmbitionEdit = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!isEditingAmbition) return;
     if (editAmbitionTitle.trim()) {
       updateAmbition(ambition.id, editAmbitionTitle);
       SoundManager.playPop();
@@ -527,7 +532,7 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
                   className={`w-full bg-surface-high p-2 rounded-xl border border-primary font-display font-bold text-white focus:outline-none ${isPriority ? 'text-2xl' : 'text-lg'}`}
                   value={editAmbitionTitle}
                   onChange={(e) => setEditAmbitionTitle(e.target.value)}
-                  onBlur={() => setIsEditingAmbition(false)}
+                  onBlur={() => saveAmbitionEdit()}
                   onKeyDown={(e) => e.key === 'Escape' && setIsEditingAmbition(false)}
                 />
               </form>

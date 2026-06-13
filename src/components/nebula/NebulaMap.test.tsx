@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import NebulaMap from './NebulaMap';
 import { useTrackStore } from '../../store/useTrackStore';
@@ -141,18 +141,21 @@ describe('NebulaMap', () => {
 
     // Assert
     expect(mockAddMilestone).toHaveBeenCalledWith('ambition-alpha', 'Water Extraction Unit');
-    expect(SoundManager.playPop).toHaveBeenCalled();
   });
 
   it('should handle milestone task deletion (Act/Assert)', async () => {
     // Arrange
     render(<NebulaMap />);
     fireEvent.click(screen.getByText('Atmospheric Scrubber Installation'));
-    
-    // 1. Find and click the Action Menu trigger for the task
-    const taskContainer = screen.getByText('Verify O2 output').closest('div');
-    const menuTrigger = taskContainer?.querySelector('button[title="Actions"]');
-    if (menuTrigger) fireEvent.click(menuTrigger);
+
+    // Ensure task is visible (waits for animation)
+    await screen.findByText('Verify O2 output');
+
+    // 1. Find the task row and click the Action Menu trigger within it
+    const taskTitle = screen.getByText('Verify O2 output');
+    const taskRow = taskTitle.closest('.group'); // The parent div with the task
+    const menuTrigger = within(taskRow!).getByTitle('Actions');
+    fireEvent.click(menuTrigger);
 
     // 2. Click "Extract" in the dropdown (wait for it to render)
     const extractButton = await screen.findByText('Extract');
@@ -195,5 +198,24 @@ describe('NebulaMap', () => {
     // Assert - Input should be visible with current title
     const input = screen.getByDisplayValue('Establish Martian Colony');
     expect(input).toBeInTheDocument();
+  });
+
+  it('should auto-save ambition title on blur', async () => {
+    // Arrange
+    render(<NebulaMap />);
+    const actionMenus = screen.getAllByTitle('Actions');
+    
+    // Act - Open the first ActionMenu (Martian Colony)
+    fireEvent.click(actionMenus[0]);
+    fireEvent.click(screen.getByText('Edit'));
+    const input = screen.getByDisplayValue('Establish Martian Colony');
+    
+    // Act - Change title and blur
+    fireEvent.change(input, { target: { value: 'New Colony Title' } });
+    fireEvent.blur(input);
+
+    // Assert
+    expect(mockUpdateAmbition).toHaveBeenCalledWith('ambition-alpha', 'New Colony Title');
+    expect(SoundManager.playPop).toHaveBeenCalled();
   });
 });
