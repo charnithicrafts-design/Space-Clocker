@@ -7,6 +7,10 @@ let db: PGlite | null = null;
 let initializing: Promise<void> | null = null;
 let activeStorageStrategy: string | null = null;
 
+// Use 32MB instead of PGlite's default 128MB to avoid triggering OOM limits
+// and DevTools "Pause before potential out-of-memory" warnings in Mobile Chrome/Safari
+const INITIAL_MEMORY = 32 * 1024 * 1024;
+
 export const api = {
   async init(dataDir?: string | Blob): Promise<void> {
     if (db) return;
@@ -87,10 +91,21 @@ export const api = {
             db = await PGlite.create(storagePath, {
               relaxedDurability: true,
               loadDataDir: dataDir instanceof Blob ? dataDir : dump,
+              initialMemory: INITIAL_MEMORY,
             });
             await db.waitReady;
             break; // Success
           } catch (e: any) {
+            // Clean up unready or failed database instance to avoid leaking WASM memory/locks
+            if (db) {
+              try {
+                await db.close();
+              } catch (closeErr) {
+                console.warn('[Worker] Failed to close corrupted/unready db instance:', closeErr);
+              }
+              db = null;
+            }
+
             const isLockError = e.name === 'NoModificationAllowedError' || e.message?.includes('Access Handles') || e.message?.includes('database is locked');
             const isExistsError = e.message?.includes('Database already exists');
             const isStructuralError = e.errno === 20 || (e.name === 'ErrnoError' && e.errno === 20) || e.message?.includes('ENOTDIR');
@@ -172,11 +187,16 @@ export const api = {
 
         if (isInitializationError && storagePath.startsWith('opfs-ahp://')) {
           console.warn('[Worker] OPFS-AHP failed. Attempting fallback to standard OPFS...');
+          if (db) {
+            try { await db.close(); } catch {}
+            db = null;
+          }
           try {
             const fallbackPath = storagePath.replace('opfs-ahp://', 'opfs://');
             db = await PGlite.create(fallbackPath, { 
               relaxedDurability: true,
               loadDataDir: dataDir instanceof Blob ? dataDir : dump,
+              initialMemory: INITIAL_MEMORY,
             });
             await db.waitReady;
             await this.setup();
@@ -184,10 +204,15 @@ export const api = {
             return;
           } catch (fallbackError: any) {
             console.error('[Worker] Standard OPFS fallback failed, trying IndexedDB...', fallbackError);
+            if (db) {
+              try { await db.close(); } catch {}
+              db = null;
+            }
             try {
               db = await PGlite.create('idb://space-clocker-db', { 
                 relaxedDurability: true,
                 loadDataDir: dataDir instanceof Blob ? dataDir : dump,
+                initialMemory: INITIAL_MEMORY,
               });
               await db.waitReady;
               await this.setup();
@@ -195,10 +220,15 @@ export const api = {
               return;
             } catch (idbError) {
               console.error('[Worker] All persistent storage fallbacks failed. Activating Emergency Volatile Mode (In-Memory).', idbError);
+              if (db) {
+                try { await db.close(); } catch {}
+                db = null;
+              }
               try {
                 db = await PGlite.create('memory://space-clocker-volatile', { 
                   relaxedDurability: true,
                   loadDataDir: dataDir instanceof Blob ? dataDir : dump,
+                  initialMemory: INITIAL_MEMORY,
                 });
                 await db.waitReady;
                 await this.setup();
@@ -206,6 +236,10 @@ export const api = {
                 return;
               } catch (memError) {
                 console.error('[Worker] Fatal: Even in-memory allocation failed.', memError);
+                if (db) {
+                  try { await db.close(); } catch {}
+                  db = null;
+                }
               }
             }
           }
@@ -215,14 +249,25 @@ export const api = {
         if (error instanceof RangeError || error.message?.includes('allocation failed')) {
           console.warn('[Worker] Memory allocation failed. Attempting emergency fallback to OPFS-only mode...');
           if (isOpfsSupported && storagePath.startsWith('idb://')) {
+            if (db) {
+              try { await db.close(); } catch {}
+              db = null;
+            }
             try {
-              db = await PGlite.create('opfs-ahp://space-clocker-db', { relaxedDurability: true });
+              db = await PGlite.create('opfs-ahp://space-clocker-db', { 
+                relaxedDurability: true,
+                initialMemory: INITIAL_MEMORY,
+              });
               await db.waitReady;
               await this.setup();
               console.log('[Worker] Emergency fallback successful. Note: IDB data is temporarily inaccessible.');
               return;
             } catch (fallbackError) {
               console.error('[Worker] Emergency fallback failed:', fallbackError);
+              if (db) {
+                try { await db.close(); } catch {}
+                db = null;
+              }
             }
           }
         }
@@ -269,7 +314,10 @@ export const api = {
       console.log('[Worker] Legacy IndexedDB detected. Attempting atomic migration to OPFS...');
       
       // To avoid memory double-up, we open, dump, and close IDB BEFORE opening OPFS
-      const legacyDb = await PGlite.create('idb://space-clocker-db', { relaxedDurability: true });
+      const legacyDb = await PGlite.create('idb://space-clocker-db', { 
+        relaxedDurability: true,
+        initialMemory: INITIAL_MEMORY,
+      });
       await legacyDb.waitReady;
       const dump = await legacyDb.dumpDataDir();
       await legacyDb.close();
