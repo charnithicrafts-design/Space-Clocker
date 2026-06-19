@@ -7,10 +7,6 @@ let db: PGlite | null = null;
 let initializing: Promise<void> | null = null;
 let activeStorageStrategy: string | null = null;
 
-// Use 32MB instead of PGlite's default 128MB to avoid triggering OOM limits
-// and DevTools "Pause before potential out-of-memory" warnings in Mobile Chrome/Safari
-const INITIAL_MEMORY = 32 * 1024 * 1024;
-
 export const api = {
   async init(dataDir?: string | Blob): Promise<void> {
     if (db) return;
@@ -91,7 +87,6 @@ export const api = {
             db = await PGlite.create(storagePath, {
               relaxedDurability: true,
               loadDataDir: dataDir instanceof Blob ? dataDir : dump,
-              initialMemory: INITIAL_MEMORY,
             });
             await db.waitReady;
             break; // Success
@@ -183,7 +178,9 @@ export const api = {
           errorMessage.includes('ERRORDATA_STACK_SIZE') ||
           errorMessage.includes('Abort error when calling GetDirectory') ||
           errorMessage.includes('Access Handle') ||
-          errorMessage.includes('ENOTDIR');
+          errorMessage.includes('ENOTDIR') ||
+          errorMessage.includes('Aborted()') ||
+          error instanceof (typeof WebAssembly !== 'undefined' ? WebAssembly.RuntimeError : Error);
 
         if (isInitializationError && storagePath.startsWith('opfs-ahp://')) {
           console.warn('[Worker] OPFS-AHP failed. Attempting fallback to standard OPFS...');
@@ -196,7 +193,6 @@ export const api = {
             db = await PGlite.create(fallbackPath, { 
               relaxedDurability: true,
               loadDataDir: dataDir instanceof Blob ? dataDir : dump,
-              initialMemory: INITIAL_MEMORY,
             });
             await db.waitReady;
             await this.setup();
@@ -212,7 +208,6 @@ export const api = {
               db = await PGlite.create('idb://space-clocker-db', { 
                 relaxedDurability: true,
                 loadDataDir: dataDir instanceof Blob ? dataDir : dump,
-                initialMemory: INITIAL_MEMORY,
               });
               await db.waitReady;
               await this.setup();
@@ -228,7 +223,6 @@ export const api = {
                 db = await PGlite.create('memory://space-clocker-volatile', { 
                   relaxedDurability: true,
                   loadDataDir: dataDir instanceof Blob ? dataDir : dump,
-                  initialMemory: INITIAL_MEMORY,
                 });
                 await db.waitReady;
                 await this.setup();
@@ -256,7 +250,6 @@ export const api = {
             try {
               db = await PGlite.create('opfs-ahp://space-clocker-db', { 
                 relaxedDurability: true,
-                initialMemory: INITIAL_MEMORY,
               });
               await db.waitReady;
               await this.setup();
@@ -316,7 +309,6 @@ export const api = {
       // To avoid memory double-up, we open, dump, and close IDB BEFORE opening OPFS
       const legacyDb = await PGlite.create('idb://space-clocker-db', { 
         relaxedDurability: true,
-        initialMemory: INITIAL_MEMORY,
       });
       await legacyDb.waitReady;
       const dump = await legacyDb.dumpDataDir();
