@@ -144,7 +144,7 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
     if (!editingTaskId) return;
 
     if (editingTaskId && editTaskTitle.trim()) {
-      updateMilestoneTask(ambition.id, milestone.id, editingTaskId, {
+      updateMilestoneTask(ambitionId, milestone.id, editingTaskId, {
         title: editTaskTitle,
         time: editTaskTime,
         endTime: editTaskEndTime || undefined,
@@ -200,7 +200,7 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
     e?.preventDefault();
     if (!isEditingMilestone) return;
     if (editMilestoneTitle.trim()) {
-      updateMilestone(ambition.id, milestone.id, editMilestoneTitle);
+      updateMilestone(ambitionId, milestone.id, editMilestoneTitle);
       SoundManager.playPop();
     }
     setIsEditingMilestone(false);

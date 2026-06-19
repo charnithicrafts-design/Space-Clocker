@@ -73,199 +73,138 @@ export const api = {
           dump = await this.handleMigrationIfNecessary();
         }
 
-        // 3. Initialize PGlite with retry for OPFS locks
-        console.log(`[Worker] Creating PGlite instance at ${storagePath}...`);
-        
-        let retryCount = 0;
-        const maxRetries = 6;
-        const baseDelay = 200; // Start small for fast devices
-        
-        let existsRetryCount = 0;
-        
-        while (retryCount <= maxRetries) {
-          try {
-            db = await PGlite.create(storagePath, {
-              relaxedDurability: true,
-              loadDataDir: dataDir instanceof Blob ? dataDir : dump,
-            });
-            await db.waitReady;
-            break; // Success
-          } catch (e: any) {
-            // Clean up unready or failed database instance to avoid leaking WASM memory/locks
-            if (db) {
-              try {
-                await db.close();
-              } catch (closeErr) {
-                console.warn('[Worker] Failed to close corrupted/unready db instance:', closeErr);
-              }
-              db = null;
-            }
-
-            const isLockError = e.name === 'NoModificationAllowedError' || e.message?.includes('Access Handles') || e.message?.includes('database is locked');
-            const isExistsError = e.message?.includes('Database already exists');
-            const isStructuralError = e.errno === 20 || (e.name === 'ErrnoError' && e.errno === 20) || e.message?.includes('ENOTDIR');
-            
-            if (isLockError && retryCount < maxRetries) {
-              retryCount++;
-              // Exponential backoff: base * 2^retryCount, capped to prevent excessive waiting
-              const delay = Math.min(baseDelay * Math.pow(2, retryCount), 5000);
-              console.warn(`[Worker] OPFS lock/access error detected (attempt ${retryCount}/${maxRetries}). Retrying in ${delay}ms...`);
-              await new Promise(resolve => setTimeout(resolve, delay));
-            } else if ((isExistsError || isStructuralError) && (dataDir instanceof Blob || dump || isStructuralError) && existsRetryCount < 2) {
-              existsRetryCount++;
-              console.warn(`[Worker] ${isStructuralError ? 'Structural corruption (Errno 20)' : 'Database exists'} detected. Purging ${storagePath} for recovery (attempt ${existsRetryCount})...`);
-              try {
-                await new Promise(resolve => setTimeout(resolve, 500));
-                
-                if (storagePath.startsWith('opfs')) {
-                  const root = await navigator.storage.getDirectory();
-                  const folderName = storagePath.includes('://') ? storagePath.split('://')[1] : storagePath;
-                  const potentialNames = [folderName, `pglite-${folderName}`];
-                  
-                  for (const name of potentialNames) {
-                    let purgeRetry = 0;
-                    while (purgeRetry < 3) {
-                      try {
-                        await root.removeEntry(name, { recursive: true });
-                        console.log(`[Worker] Purged OPFS folder: ${name}`);
-                        break;
-                      } catch (pe: any) {
-                        if (pe.name === 'NotFoundError') break;
-                        purgeRetry++;
-                        await new Promise(resolve => setTimeout(resolve, 500 * purgeRetry));
-                      }
-                    }
-                  }
-                } else if (storagePath.startsWith('idb://')) {
-                  const dbName = storagePath.includes('://') ? `pglite-${storagePath.split('://')[1]}` : `pglite-${storagePath}`;
-                  await new Promise<void>((resolve, reject) => {
-                    const req = indexedDB.deleteDatabase(dbName);
-                    req.onsuccess = () => {
-                      console.log(`[Worker] Purged IDB database: ${dbName}`);
-                      resolve();
-                    };
-                    req.onerror = () => reject(req.error);
-                  });
-                }
-                
-                console.log('[Worker] Purge successful, retrying initialization...');
-                continue; 
-              } catch (purgeError) {
-                console.error('[Worker] Failed to purge existing database:', purgeError);
-                throw e; 
-              }
-            } else {
-              throw e;
-            }
+        // 3. Initialize PGlite with fallback candidates
+        const candidates: string[] = [storagePath];
+        if (storagePath.startsWith('opfs-ahp://')) {
+          candidates.push('idb://space-clocker-db');
+          candidates.push('memory://space-clocker-volatile');
+        } else if (storagePath.startsWith('idb://')) {
+          if (isOpfsSupported) {
+            candidates.push('opfs-ahp://space-clocker-db');
+          }
+          candidates.push('memory://space-clocker-volatile');
+        } else if (storagePath.startsWith('memory://')) {
+          // No viable fallbacks for memory-only mode failures
+        } else {
+          if (!candidates.includes('memory://space-clocker-volatile')) {
+            candidates.push('memory://space-clocker-volatile');
           }
         }
 
-        if (!db) throw new Error('Failed to create PGlite instance after retries');
+        let lastError: any = null;
+        let initSuccess = false;
 
-        // Auto-run schema and migrations on init
-        await this.setup();
+        for (const candidatePath of candidates) {
+          console.log(`[Worker] Attempting PGlite initialization at candidate: ${candidatePath}...`);
+          
+          let retryCount = 0;
+          const maxRetries = candidatePath.startsWith('opfs-ahp') ? 6 : 0;
+          const baseDelay = 200;
+          let existsRetryCount = 0;
+          let candidateSuccess = false;
 
-        console.log('[Worker] PGlite ready and synchronized.');
-      } catch (error: any) {
-        console.error('[Worker] PGlite initialization failure:', error);
-        
-        const errorMessage = error.message || '';
-        const isInitializationError = 
-          error.name === 'NoModificationAllowedError' ||
-          errorMessage.includes('No more file handles available in the pool') ||
-          errorMessage.includes('failed to initialize properly') ||
-          errorMessage.includes('initialization failure') ||
-          errorMessage.includes('ERRORDATA_STACK_SIZE') ||
-          errorMessage.includes('Abort error when calling GetDirectory') ||
-          errorMessage.includes('Access Handle') ||
-          errorMessage.includes('ENOTDIR') ||
-          errorMessage.includes('Aborted()') ||
-          error instanceof (typeof WebAssembly !== 'undefined' ? WebAssembly.RuntimeError : Error);
-
-        if (isInitializationError && storagePath.startsWith('opfs-ahp://')) {
-          console.warn('[Worker] OPFS-AHP failed. Attempting fallback to standard OPFS...');
-          if (db) {
-            try { await db.close(); } catch {}
-            db = null;
-          }
-          try {
-            const fallbackPath = storagePath.replace('opfs-ahp://', 'opfs://');
-            db = await PGlite.create(fallbackPath, { 
-              relaxedDurability: true,
-              loadDataDir: dataDir instanceof Blob ? dataDir : dump,
-            });
-            await db.waitReady;
-            await this.setup();
-            console.log('[Worker] Fallback to standard OPFS successful.');
-            return;
-          } catch (fallbackError: any) {
-            console.error('[Worker] Standard OPFS fallback failed, trying IndexedDB...', fallbackError);
-            if (db) {
-              try { await db.close(); } catch {}
-              db = null;
-            }
+          while (retryCount <= maxRetries) {
             try {
-              db = await PGlite.create('idb://space-clocker-db', { 
+              if (db) {
+                try { await db.close(); } catch {}
+                db = null;
+              }
+
+              db = await PGlite.create(candidatePath, {
                 relaxedDurability: true,
                 loadDataDir: dataDir instanceof Blob ? dataDir : dump,
               });
               await db.waitReady;
-              await this.setup();
-              console.log('[Worker] Fallback to IndexedDB successful.');
-              return;
-            } catch (idbError) {
-              console.error('[Worker] All persistent storage fallbacks failed. Activating Emergency Volatile Mode (In-Memory).', idbError);
+              candidateSuccess = true;
+              break; // Success for this candidate
+            } catch (e: any) {
               if (db) {
                 try { await db.close(); } catch {}
                 db = null;
               }
-              try {
-                db = await PGlite.create('memory://space-clocker-volatile', { 
-                  relaxedDurability: true,
-                  loadDataDir: dataDir instanceof Blob ? dataDir : dump,
-                });
-                await db.waitReady;
-                await this.setup();
-                console.log('[Worker] Emergency Volatile Mode active. Warning: Data will not persist across sessions.');
-                return;
-              } catch (memError) {
-                console.error('[Worker] Fatal: Even in-memory allocation failed.', memError);
-                if (db) {
-                  try { await db.close(); } catch {}
-                  db = null;
+
+              lastError = e;
+              const isLockError = e.name === 'NoModificationAllowedError' || e.message?.includes('Access Handles') || e.message?.includes('database is locked');
+              const isExistsError = e.message?.includes('Database already exists');
+              const isStructuralError = e.errno === 20 || (e.name === 'ErrnoError' && e.errno === 20) || e.message?.includes('ENOTDIR');
+
+              if (isLockError && retryCount < maxRetries) {
+                retryCount++;
+                const delay = Math.min(baseDelay * Math.pow(2, retryCount), 5000);
+                console.warn(`[Worker] Lock error at ${candidatePath} (attempt ${retryCount}/${maxRetries}). Retrying in ${delay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+              } else if ((isExistsError || isStructuralError) && (dataDir instanceof Blob || dump || isStructuralError) && existsRetryCount < 2) {
+                existsRetryCount++;
+                console.warn(`[Worker] ${isStructuralError ? 'Structural corruption (Errno 20)' : 'Database exists'} detected at ${candidatePath}. Purging for recovery...`);
+                try {
+                  await new Promise(resolve => setTimeout(resolve, 500));
+                  
+                  if (candidatePath.startsWith('opfs')) {
+                    const root = await navigator.storage.getDirectory();
+                    const folderName = candidatePath.includes('://') ? candidatePath.split('://')[1] : candidatePath;
+                    const potentialNames = [folderName, `pglite-${folderName}`];
+                    for (const name of potentialNames) {
+                      let purgeRetry = 0;
+                      while (purgeRetry < 3) {
+                        try {
+                          await root.removeEntry(name, { recursive: true });
+                          console.log(`[Worker] Purged OPFS folder: ${name}`);
+                          break;
+                        } catch (pe: any) {
+                          if (pe.name === 'NotFoundError') break;
+                          purgeRetry++;
+                          await new Promise(resolve => setTimeout(resolve, 500 * purgeRetry));
+                        }
+                      }
+                    }
+                  } else if (candidatePath.startsWith('idb://')) {
+                    const dbName = candidatePath.includes('://') ? `pglite-${candidatePath.split('://')[1]}` : `pglite-${candidatePath}`;
+                    await new Promise<void>((resolve, reject) => {
+                      const req = indexedDB.deleteDatabase(dbName);
+                      req.onsuccess = () => resolve();
+                      req.onerror = () => reject(req.error);
+                    });
+                    console.log(`[Worker] Purged IDB database: ${dbName}`);
+                  }
+                  
+                  console.log('[Worker] Purge complete, retrying candidate initialization...');
+                  continue; // Retry the current candidate
+                } catch (purgeError) {
+                  console.error('[Worker] Purge failed:', purgeError);
+                  break; // Proceed to next candidate
                 }
+              } else {
+                console.warn(`[Worker] Non-retryable initialization error at ${candidatePath}:`, e);
+                break; // Break the while loop to try next candidate
               }
+            }
+          }
+
+          if (candidateSuccess && db) {
+            try {
+              await this.setup();
+              console.log(`[Worker] PGlite initialization and setup successful at: ${candidatePath}`);
+              storagePath = candidatePath;
+              initSuccess = true;
+              break;
+            } catch (setupError) {
+              console.error(`[Worker] Setup failed on candidate ${candidatePath}:`, setupError);
+              lastError = setupError;
+              if (db) {
+                try { await db.close(); } catch {}
+                db = null;
+              }
+              // Proceed to next candidate
             }
           }
         }
 
-        // Memory Fallback: If IDB failed due to memory, try starting a fresh OPFS instance
-        if (error instanceof RangeError || error.message?.includes('allocation failed')) {
-          console.warn('[Worker] Memory allocation failed. Attempting emergency fallback to OPFS-only mode...');
-          if (isOpfsSupported && storagePath.startsWith('idb://')) {
-            if (db) {
-              try { await db.close(); } catch {}
-              db = null;
-            }
-            try {
-              db = await PGlite.create('opfs-ahp://space-clocker-db', { 
-                relaxedDurability: true,
-              });
-              await db.waitReady;
-              await this.setup();
-              console.log('[Worker] Emergency fallback successful. Note: IDB data is temporarily inaccessible.');
-              return;
-            } catch (fallbackError) {
-              console.error('[Worker] Emergency fallback failed:', fallbackError);
-              if (db) {
-                try { await db.close(); } catch {}
-                db = null;
-              }
-            }
-          }
+        if (!initSuccess || !db) {
+          console.error('[Worker] All database initialization candidates failed.');
+          throw lastError || new Error('All PGlite initialization candidates failed');
         }
-        
-        // If we reach here, initialization truly failed
+      } catch (error: any) {
+        console.error('[Worker] PGlite initialization failure:', error);
         initializing = null;
         throw error;
       }
