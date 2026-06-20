@@ -1,7 +1,70 @@
 import { PGlite } from '@electric-sql/pglite';
+import { OpfsAhpFS } from '@electric-sql/pglite/opfs-ahp';
 import * as Comlink from 'comlink';
 import { SCHEMA } from './schema';
 import { MIGRATIONS } from './migrations';
+
+// Patch recursive mkdir bug in PGlite v0.4.2's OpfsAhpFS VFS
+if (typeof OpfsAhpFS !== 'undefined' && OpfsAhpFS.prototype) {
+  OpfsAhpFS.prototype._mkdirState = function (path: string, options?: { recursive?: boolean; mode?: number; }) {
+    const parts = path.split('/').filter(Boolean);
+    if (parts.length === 0) return;
+
+    const dirName = parts.pop()!;
+    const parentParts: string[] = [];
+    let currentNode = this.state.root;
+
+    for (const part of parts) {
+      parentParts.push(part);
+      if (!Object.prototype.hasOwnProperty.call(currentNode.children, part)) {
+        if (options?.recursive) {
+          this.mkdir('/' + parentParts.join('/'), options);
+        } else {
+          const err = new Error('No such file or directory');
+          err.name = 'ErrnoError';
+          (err as any).code = 'ENOENT';
+          (err as any).errno = 2;
+          throw err;
+        }
+      }
+      
+      const child = currentNode.children[part];
+      if (!child) {
+        const err = new Error('No such file or directory');
+        err.name = 'ErrnoError';
+        (err as any).code = 'ENOENT';
+        (err as any).errno = 2;
+        throw err;
+      }
+      if (child.type !== 'directory') {
+        const err = new Error('Not a directory');
+        err.name = 'ErrnoError';
+        (err as any).code = 'ENOTDIR';
+        (err as any).errno = 20;
+        throw err;
+      }
+      currentNode = child as any;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(currentNode.children, dirName)) {
+      if (options?.recursive && currentNode.children[dirName].type === 'directory') {
+        return; // No-op if recursive and directory already exists
+      }
+      const err = new Error('File exists');
+      err.name = 'ErrnoError';
+      (err as any).code = 'EEXIST';
+      (err as any).errno = 17;
+      throw err;
+    }
+
+    currentNode.children[dirName] = {
+      type: 'directory',
+      lastModified: Date.now(),
+      mode: options?.mode || 16384, // T.DIR is 16384
+      children: {}
+    };
+  };
+}
 
 let db: PGlite | null = null;
 let initializing: Promise<void> | null = null;
@@ -110,11 +173,14 @@ export const api = {
                 db = null;
               }
 
-              db = await PGlite.create(candidatePath, {
+              // Use new PGlite constructor directly so we can assign to db before waitReady,
+              // ensuring we can close and release locks/handles in the catch block if setup fails.
+              const pg = new PGlite(candidatePath, {
                 relaxedDurability: true,
                 loadDataDir: dataDir instanceof Blob ? dataDir : dump,
               });
-              await db.waitReady;
+              db = pg;
+              await pg.waitReady;
               candidateSuccess = true;
               break; // Success for this candidate
             } catch (e: any) {
@@ -126,7 +192,8 @@ export const api = {
               lastError = e;
               const isLockError = e.name === 'NoModificationAllowedError' || e.message?.includes('Access Handles') || e.message?.includes('database is locked');
               const isExistsError = e.message?.includes('Database already exists');
-              const isStructuralError = e.errno === 20 || (e.name === 'ErrnoError' && e.errno === 20) || e.message?.includes('ENOTDIR');
+              const isAbortedError = e.name === 'RuntimeError' && e.message?.includes('Aborted');
+              const isStructuralError = e.errno === 20 || (e.name === 'ErrnoError' && e.errno === 20) || e.message?.includes('ENOTDIR') || isAbortedError;
 
               if (isLockError && retryCount < maxRetries) {
                 retryCount++;
@@ -145,16 +212,25 @@ export const api = {
                     const potentialNames = [folderName, `pglite-${folderName}`];
                     for (const name of potentialNames) {
                       let purgeRetry = 0;
+                      let purgeSuccess = false;
                       while (purgeRetry < 3) {
                         try {
                           await root.removeEntry(name, { recursive: true });
                           console.log(`[Worker] Purged OPFS folder: ${name}`);
+                          purgeSuccess = true;
                           break;
                         } catch (pe: any) {
-                          if (pe.name === 'NotFoundError') break;
+                          if (pe.name === 'NotFoundError') {
+                            purgeSuccess = true;
+                            break;
+                          }
                           purgeRetry++;
+                          console.warn(`[Worker] Purge attempt ${purgeRetry} failed for folder ${name}:`, pe);
                           await new Promise(resolve => setTimeout(resolve, 500 * purgeRetry));
                         }
+                      }
+                      if (!purgeSuccess) {
+                        throw new Error(`Failed to delete OPFS folder: ${name} (possibly locked)`);
                       }
                     }
                   } else if (candidatePath.startsWith('idb://')) {
