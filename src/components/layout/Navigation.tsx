@@ -52,6 +52,8 @@ const Navigation = () => {
   const { pathname } = useLocation();
   const { syncStatus, oracleConfig } = useTrackStore();
   const [isHubOpen, setIsHubOpen] = useState(false);
+
+  if (pathname === '/about') return null;
   
   const tacticalLinks = [
     { to: '/', icon: LayoutDashboard, label: 'Momentum', color: 'text-primary' },
