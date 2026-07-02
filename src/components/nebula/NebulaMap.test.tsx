@@ -154,7 +154,7 @@ describe('NebulaMap', () => {
     // 1. Find the task row and click the Action Menu trigger within it
     const taskTitle = screen.getByText('Verify O2 output');
     const taskRow = taskTitle.closest('.group'); // The parent div with the task
-    const menuTrigger = within(taskRow!).getByTitle('Actions');
+    const menuTrigger = within(taskRow as HTMLElement).getByTitle('Actions');
     fireEvent.click(menuTrigger);
 
     // 2. Click "Extract" in the dropdown (wait for it to render)
