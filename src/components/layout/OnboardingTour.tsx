@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Rocket, ChevronRight, LayoutDashboard, Target, Clock, Brain, CheckCircle2, Database, Eraser } from 'lucide-react';
+import { Rocket, ChevronRight, LayoutDashboard, Target, Clock, Brain, CheckCircle2, Database, Eraser, Signal } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 import demoData from '../../data/demo-data.json';
 import { useNavigate } from 'react-router-dom';
@@ -17,42 +17,49 @@ interface Step {
 const steps: Step[] = [
   {
     title: "Mission Briefing",
-    content: "Welcome, Commander. Your trajectory toward AWS Specialist and India AI Winner has been initialized. Space-Clocker is your command hub for deconstructing massive ambitions into executable stellar milestones.",
+    content: "Welcome, Commander! Space-Clocker is your personal command center. It is designed to improve your clocking sense—your natural feeling of time—and help you lock your mind onto your biggest goals.",
     icon: Rocket,
     target: "mission-briefing",
     route: "/"
   },
   {
-    title: "Momentum Engine",
-    content: "This is your Momentum Engine. Notice how your Rank reflects your expertise in critical fields like Cloud Architecture, Data Analysis, and AI/ML. Every task completed fuels your trajectory.",
+    title: "1. Sync Time & Goals",
+    content: "Keep your daily clocking sense in perfect sync with your goals. The Momentum Engine tracks your focus level and rank in real-time, making sure every tick of the clock brings you closer to your ambitions.",
     icon: LayoutDashboard,
     target: "dashboard",
     route: "/"
   },
   {
-    title: "Architect Mode",
-    content: "In Architect Mode (Nebula), we map your dual-track missions. Deconstruct complex goals like AWS Certification into manageable milestones and track resonance energy for each trajectory.",
+    title: "2. Lock in Ambition",
+    content: "Lock yourself together with your ambitions in your mental space. In Nebula (Architect Mode), you map out your big dreams and break them down into smaller steps, so they are always top-of-mind.",
     icon: Target,
     target: "nebula",
     route: "/nebula"
   },
   {
-    title: "Daily Orbit",
-    content: "Manage daily tasks and use the 'Void Protocol' to lock out distractions. Precision in your daily orbit ensures you stay aligned with your career horizon.",
+    title: "3. Avoid Distractions",
+    content: "Stay far away from distractions and bad habits. Use the Void Protocol anti-habit system in your Orbit to name your weaknesses and keep them completely locked out of your daily schedule.",
     icon: Clock,
     target: "orbit",
     route: "/orbit"
   },
   {
-    title: "Stellar Matrix",
-    content: "Visualize proficiency in the Stellar Matrix. Map your current mastery in SQL, Python, and AWS as 'bright stars' to identify the gaps you need to bridge to reach the elite tier.",
+    title: "4. Mentor Telemetry",
+    content: "Send your progress reports directly to your teacher or mentor with Transmission. Share how you're doing, get feedback, and receive helpful nudges to stay on the right path.",
+    icon: Signal,
+    target: "transmission",
+    route: "/transmission"
+  },
+  {
+    title: "5. Track & Grow Skills",
+    content: "Track the skills you need with a simple visual map. By comparing what you can do today with what your goal requires, you can practice the right things and transform your capability into real ability!",
     icon: Brain,
     target: "skills",
     route: "/skills"
   },
   {
     title: "Launch Sequence",
-    content: "System check complete. Your path to AWS Specialist, India AI Contest, and Google is clear. Chart your course to success, Commander.",
+    content: "Your command center is online and ready. It's time to build your focus, master your time, and reach your goals. Safe travels, Commander!",
     icon: CheckCircle2,
     target: "complete",
     route: "/"

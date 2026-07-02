@@ -384,6 +384,23 @@ const SettingsDashboard = () => {
                 />
               </button>
             </div>
+
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-surface-high border border-outline-variant">
+              <div>
+                <h4 className="font-bold text-sm">Onboarding Tour</h4>
+                <p className="text-xs text-on-surface-variant">Replay the introductory flight manual and sector briefing.</p>
+              </div>
+              <button 
+                onClick={() => {
+                  localStorage.removeItem('hasSeenOnboarding');
+                  SoundManager.playSwell();
+                  window.location.href = '/';
+                }}
+                className="px-4 py-2 bg-secondary text-on-secondary rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-secondary/90 transition-colors"
+              >
+                Replay Tour
+              </button>
+            </div>
           </div>
         </section>
 
