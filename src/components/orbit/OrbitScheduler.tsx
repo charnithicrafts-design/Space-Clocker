@@ -398,7 +398,7 @@ const OrbitScheduler = () => {
                     layout
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`glass-panel border p-5 rounded-3xl flex flex-col gap-4 transition-all group relative ${task.completed ? 'opacity-50 grayscale-[0.8]' : 'hover:border-primary/50'} ${task.isVoid ? 'border-error/30 bg-error/5' : 'border-outline-variant'} ${hasError ? 'border-error/50 ring-1 ring-error/20 shadow-[0_0_15px_rgba(var(--color-error-rgb),0.1)]' : ''} ${isDeadlineCritical ? 'border-error shadow-[0_0_15px_rgba(var(--color-error-rgb),0.2)]' : ''}`}
+                    className={`glass-panel border p-5 rounded-3xl flex flex-col gap-4 transition-all group relative hover:z-30 focus-within:z-30 ${task.completed ? 'opacity-50 grayscale-[0.8]' : 'hover:border-primary/50'} ${task.isVoid ? 'border-error/30 bg-error/5' : 'border-outline-variant'} ${hasError ? 'border-error/50 ring-1 ring-error/20 shadow-[0_0_15px_rgba(var(--color-error-rgb),0.1)]' : ''} ${isDeadlineCritical ? 'border-error shadow-[0_0_15px_rgba(var(--color-error-rgb),0.2)]' : ''}`}
                   >
                     {editingTaskId === task.id ? (
                       <form 

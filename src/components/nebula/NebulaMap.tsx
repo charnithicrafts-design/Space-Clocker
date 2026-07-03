@@ -187,7 +187,7 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
             {milestone.tasks.map((task: any) => (
               <div 
                 key={task.id} 
-                className="flex flex-col py-3 border-b border-surface-high/30 last:border-0 group"
+                className="flex flex-col py-3 border-b border-surface-high/30 last:border-0 group relative hover:z-30 focus-within:z-30"
               >
                 <div className="flex items-center gap-2">
                   <div 
