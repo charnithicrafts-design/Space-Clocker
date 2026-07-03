@@ -77,6 +77,8 @@ describe('OrbitScheduler', () => {
       deleteTask: mockDeleteTask,
       updateTask: mockUpdateTask,
       updateTaskDate: mockUpdateTaskDate,
+      updateMilestoneTask: vi.fn(),
+      deleteMilestoneTask: vi.fn(),
       profile: mockProfile,
       preferences: mockPreferences,
       ambitions: [],
@@ -134,11 +136,16 @@ describe('OrbitScheduler', () => {
   it('ejects a task from orbit after confirmation', async () => {
     // Arrange
     render(<OrbitScheduler />);
-    const deleteButtons = screen.getAllByRole('button', { name: /delete task/i });
+    const actionMenus = screen.getAllByTitle('Actions');
 
     // Act
     await act(async () => {
-      fireEvent.click(deleteButtons[0]);
+      fireEvent.click(actionMenus[0]);
+    });
+
+    const extractButton = screen.getByText('Extract');
+    await act(async () => {
+      fireEvent.click(extractButton);
     });
 
     // Check if modal is open
@@ -158,14 +165,29 @@ describe('OrbitScheduler', () => {
   it('updates task time entry', async () => {
     // Arrange
     render(<OrbitScheduler />);
-    const timeInputs = screen.getAllByDisplayValue('08:00');
+    const actionMenus = screen.getAllByTitle('Actions');
+
+    // Open ActionMenu
+    await act(async () => {
+      fireEvent.click(actionMenus[0]);
+    });
+
+    // Click Edit
+    const editButton = screen.getByText('Edit');
+    await act(async () => {
+      fireEvent.click(editButton);
+    });
+
+    // Find time entry input
+    const timeInput = screen.getByDisplayValue('08:00');
 
     // Act
     await act(async () => {
-      fireEvent.change(timeInputs[0], { target: { value: '09:00' } });
+      fireEvent.change(timeInput, { target: { value: '09:00' } });
+      fireEvent.blur(timeInput);
     });
 
     // Assert
-    expect(mockUpdateTask).toHaveBeenCalledWith('task-1', { time: '09:00' });
+    expect(mockUpdateTask).toHaveBeenCalledWith('task-1', expect.objectContaining({ time: '09:00' }));
   });
 });

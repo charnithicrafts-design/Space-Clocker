@@ -4,11 +4,13 @@ import { useTrackStore, Task } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 import { analyzeSchedule, ScheduleAnomaly } from '../../utils/StellarScheduler';
 import { getTodayLocalISO, getLocalTimeHHmm } from '../../utils/DateTimeUtils';
-import { Plus, Trash2, Clock, AlertTriangle, ShieldCheck, Zap, BrainCircuit, Calendar, Timer, Signal, Share2, Send, Check, ExternalLink, Info } from 'lucide-react';
+import { Plus, Trash2, Edit2, Clock, AlertTriangle, ShieldCheck, Zap, BrainCircuit, Calendar, Timer, Signal, Share2, Send, Check, ExternalLink, Info } from 'lucide-react';
 import ReflectionModal from '../reflection/ReflectionModal';
 import OrbitSubNav, { OrbitHorizon } from './OrbitSubNav';
 import VoidList from '../void-protocol/VoidList';
 import ConfirmModal from '../layout/ConfirmModal';
+import { ActionMenu } from '../layout/ActionMenu';
+
 
 const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
   <div className="fixed bottom-24 right-8 w-24 h-24 group z-40">
@@ -32,7 +34,7 @@ const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
 ));
 
 const OrbitScheduler = () => {
-  const { tasks, toggleTask, toggleMilestoneTask, addTask, updateTask, updateTaskDate, deleteTask, preferences, profile, ambitions } = useTrackStore();
+  const { tasks, toggleTask, toggleMilestoneTask, addTask, updateTask, updateTaskDate, deleteTask, updateMilestoneTask, deleteMilestoneTask, preferences, profile, ambitions } = useTrackStore();
   const [activeHorizon, setActiveHorizon] = useState<OrbitHorizon>('daily');
   const [selectedDate, setSelectedDate] = useState(getTodayLocalISO());
   const [showTransmissionPreview, setShowTransmissionPreview] = useState(false);
@@ -44,6 +46,11 @@ const OrbitScheduler = () => {
   const [newDeadline, setNewDeadline] = useState('');
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
+  const [editTime, setEditTime] = useState('');
+  const [editEndTime, setEditEndTime] = useState('');
+  const [editDate, setEditDate] = useState('');
+  const [editDeadline, setEditDeadline] = useState('');
+
   
   const [isReflectionOpen, setIsReflectionOpen] = useState(false);
   const [reflectionType, setReflectionType] = useState<'daily-summary' | 'missed-task'>('daily-summary');
@@ -138,24 +145,39 @@ const OrbitScheduler = () => {
     }
   };
 
-  const handleTimeChange = (id: string, time: string) => {
-    updateTask(id, { time });
+  const startEditingTask = (task: Task) => {
+    setEditingTaskId(task.id);
+    setEditTitle(task.title);
+    setEditTime(task.time);
+    setEditEndTime(task.endTime || '');
+    setEditDate(task.plannedDate || getTodayLocalISO());
+    setEditDeadline(task.deadline || '');
   };
 
-  const handleEndTimeChange = (id: string, endTime: string) => {
-    updateTask(id, { endTime });
-  };
+  const handleSaveTaskEdit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!editingTaskId) return;
 
-  const handleTitleEdit = (id: string, title: string) => {
-    setEditingTaskId(id);
-    setEditTitle(title);
-  };
+    const titleToSave = editTitle.trim();
+    if (!titleToSave) return;
 
-  const handleTitleSave = (id: string) => {
-    if (editTitle.trim()) {
-      updateTask(id, { title: editTitle });
-      SoundManager.playPop();
+    const updates: Partial<Task> = {
+      title: titleToSave,
+      time: editTime,
+      endTime: editEndTime || undefined,
+      plannedDate: editDate || undefined,
+      deadline: editDeadline || undefined,
+    };
+
+    const milestoneTask = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id })) )).find(t => t.id === editingTaskId);
+
+    if (milestoneTask) {
+      await updateMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId!, editingTaskId, updates);
+    } else {
+      await updateTask(editingTaskId, updates);
     }
+
+    SoundManager.playPop();
     setEditingTaskId(null);
   };
 
@@ -166,16 +188,27 @@ const OrbitScheduler = () => {
       return;
     }
     SoundManager.playThud();
-    deleteTask(id);
-  }, [deleteTask, preferences.confirmDelete]);
+    const milestoneTask = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id })) )).find(t => t.id === id);
+    if (milestoneTask) {
+      deleteMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId!, id);
+    } else {
+      deleteTask(id);
+    }
+  }, [deleteTask, deleteMilestoneTask, ambitions, preferences.confirmDelete]);
 
   const handleDeleteConfirm = async () => {
     if (deleteTaskId) {
       SoundManager.playThud();
-      await deleteTask(deleteTaskId);
+      const milestoneTask = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id })) )).find(t => t.id === deleteTaskId);
+      if (milestoneTask) {
+        await deleteMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId!, deleteTaskId);
+      } else {
+        await deleteTask(deleteTaskId);
+      }
       setDeleteTaskId(null);
     }
   };
+
 
   const completionPercentage = useMemo(() => {
     if (filteredTasks.length === 0) return 0;
@@ -367,73 +400,159 @@ const OrbitScheduler = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className={`glass-panel border p-5 rounded-3xl flex flex-col gap-4 transition-all group relative ${task.completed ? 'opacity-50 grayscale-[0.8]' : 'hover:border-primary/50'} ${task.isVoid ? 'border-error/30 bg-error/5' : 'border-outline-variant'} ${hasError ? 'border-error/50 ring-1 ring-error/20 shadow-[0_0_15px_rgba(var(--color-error-rgb),0.1)]' : ''} ${isDeadlineCritical ? 'border-error shadow-[0_0_15px_rgba(var(--color-error-rgb),0.2)]' : ''}`}
                   >
-                    <div className="flex flex-wrap items-center gap-6">
-                      <div className="flex flex-col items-center gap-1">
-                        <div className="text-[10px] font-black text-on-surface-variant uppercase tracking-tighter">Entry</div>
-                        <input 
-                          className="font-mono bg-surface-high text-primary-container text-xs w-20 focus:outline-none focus:ring-1 focus:ring-primary p-2 rounded-xl border border-transparent text-center"
-                          value={task.time}
-                          onChange={(e) => handleTimeChange(task.id, e.target.value)}
-                        />
-                      </div>
-
-                      {isPro && task.endTime && (
-                        <div className="flex flex-col items-center gap-1">
-                          <div className="text-[10px] font-black text-on-surface-variant uppercase tracking-tighter">Descent</div>
+                    {editingTaskId === task.id ? (
+                      <form 
+                        onSubmit={handleSaveTaskEdit} 
+                        className="w-full flex flex-col gap-3 p-4 bg-surface-high/20 rounded-2xl" 
+                        onClick={e => e.stopPropagation()}
+                      >
+                        <div className="flex flex-col gap-1">
+                          <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Parameter Title</label>
                           <input 
-                            className="font-mono bg-surface-high text-secondary text-xs w-20 focus:outline-none focus:ring-1 focus:ring-secondary p-2 rounded-xl border border-transparent text-center"
-                            value={task.endTime}
-                            onChange={(e) => handleEndTimeChange(task.id, e.target.value)}
+                            autoFocus
+                            className="w-full bg-surface-low px-3 py-2 rounded-xl border border-outline-variant focus:border-primary focus:outline-none text-xs text-white"
+                            value={editTitle}
+                            onChange={(e) => setEditTitle(e.target.value)}
+                            onBlur={() => handleSaveTaskEdit()}
+                            onKeyDown={(e) => e.key === 'Escape' && setEditingTaskId(null)}
                           />
                         </div>
-                      )}
-                      
-                      <div className="flex-1 min-w-[200px]">
-                        {editingTaskId === task.id ? (
-                          <form onSubmit={(e) => { e.preventDefault(); handleTitleSave(task.id); }}>
-                            <input 
-                              autoFocus
-                              className="w-full bg-surface-low p-3 rounded-xl border border-primary text-sm text-white focus:outline-none shadow-inner"
-                              value={editTitle}
-                              onChange={(e) => setEditTitle(e.target.value)}
-                              onBlur={() => handleTitleSave(task.id)}
-                              onKeyDown={(e) => e.key === 'Escape' && setEditingTaskId(null)}
-                            />
-                          </form>
-                        ) : (
+                        
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Entry</label>
+                            <div className="flex items-center gap-2 bg-surface-low px-3 py-2 rounded-xl border border-outline-variant">
+                              <Clock size={12} className="text-primary" />
+                              <input 
+                                type="time" 
+                                className="bg-transparent text-xs font-mono text-white focus:outline-none w-full" 
+                                value={editTime} 
+                                onChange={e => setEditTime(e.target.value)} 
+                                onBlur={() => handleSaveTaskEdit()} 
+                              />
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Descent</label>
+                            <div className="flex items-center gap-2 bg-surface-low px-3 py-2 rounded-xl border border-outline-variant">
+                              <Timer size={12} className="text-secondary" />
+                              <input 
+                                type="time" 
+                                className="bg-transparent text-xs font-mono text-white focus:outline-none w-full" 
+                                value={editEndTime} 
+                                onChange={e => setEditEndTime(e.target.value)} 
+                                onBlur={() => handleSaveTaskEdit()} 
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Mission Date</label>
+                            <div className="flex items-center gap-2 bg-surface-low px-3 py-2 rounded-xl border border-outline-variant">
+                              <Calendar size={12} className="text-primary-container" />
+                              <input 
+                                type="date" 
+                                className="bg-transparent text-xs font-mono text-white focus:outline-none w-full uppercase" 
+                                value={editDate} 
+                                onChange={e => setEditDate(e.target.value)} 
+                                onBlur={() => handleSaveTaskEdit()} 
+                              />
+                            </div>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest text-error">Deadline Lock</label>
+                            <div className="flex items-center gap-2 bg-surface-low px-3 py-2 rounded-xl border border-error/30">
+                              <AlertTriangle size={12} className="text-error" />
+                              <input 
+                                type="datetime-local" 
+                                className="bg-transparent text-xs font-mono text-white focus:outline-none w-full" 
+                                value={editDeadline} 
+                                onChange={e => setEditDeadline(e.target.value)} 
+                                onBlur={() => handleSaveTaskEdit()} 
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-end gap-2 mt-2">
+                          <button 
+                            type="button" 
+                            onClick={() => setEditingTaskId(null)} 
+                            className="p-2 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-white"
+                          >
+                            Cancel
+                          </button>
+                          <button 
+                            type="submit" 
+                            className="p-2 px-4 bg-primary text-on-primary rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2"
+                          >
+                            <Check size={12} />
+                            Save
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <div className="flex flex-wrap items-center gap-6">
+                        <div className="flex flex-col items-center gap-1">
+                          <div className="text-[10px] font-black text-on-surface-variant uppercase tracking-tighter">Entry</div>
+                          <div className="font-mono bg-surface-high text-primary-container text-xs w-20 p-2 rounded-xl text-center border border-outline-variant/30">
+                            {task.time}
+                          </div>
+                        </div>
+
+                        {isPro && task.endTime && (
+                          <div className="flex flex-col items-center gap-1">
+                            <div className="text-[10px] font-black text-on-surface-variant uppercase tracking-tighter">Descent</div>
+                            <div className="font-mono bg-surface-high text-secondary text-xs w-20 p-2 rounded-xl text-center border border-outline-variant/30">
+                              {task.endTime}
+                            </div>
+                          </div>
+                        )}
+                        
+                        <div className="flex-1 min-w-[200px]">
                           <div className="flex items-center gap-3">
                             <div 
-                              className={`text-base font-bold truncate cursor-pointer transition-all flex-1 ${task.completed ? 'line-through text-on-surface-variant italic' : 'text-white hover:text-primary'}`}
+                              className={`text-base font-bold break-words whitespace-normal cursor-pointer transition-all flex-1 ${task.completed ? 'line-through text-on-surface-variant italic' : 'text-white hover:text-primary'}`}
                               onClick={() => handleToggle(task.id)}
-                              onDoubleClick={() => handleTitleEdit(task.id, task.title)}
+                              onDoubleClick={() => startEditingTask(task)}
                             >
                               {task.title}
                             </div>
                             {task.completed && <ShieldCheck className="text-success shrink-0" size={18} />}
                           </div>
-                        )}
-                        
-                        {isPro && task.deadline && (
-                          <div className="flex items-center gap-2 mt-1">
-                            <div className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-1 ${isDeadlineCritical ? 'text-error animate-pulse' : 'text-on-surface-variant'}`}>
-                              <AlertTriangle size={10} />
-                              Deadline: {new Date(task.deadline).toLocaleString([], { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })}
-                              {isDeadlineCritical && " - CRITICAL GRAVITY"}
+                          
+                          {(task.plannedDate || (isPro && task.deadline)) && (
+                            <div className="flex flex-wrap items-center gap-3 mt-1.5">
+                              {task.plannedDate && (
+                                <div className="flex items-center gap-1 text-[9px] font-black text-on-surface-variant uppercase tracking-widest">
+                                  <Calendar size={10} className="text-primary-container" />
+                                  {task.plannedDate}
+                                </div>
+                              )}
+                              {isPro && task.deadline && (
+                                <div className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-1 ${isDeadlineCritical ? 'text-error animate-pulse' : 'text-on-surface-variant'}`}>
+                                  <AlertTriangle size={10} className={isDeadlineCritical ? 'text-error' : 'text-on-surface-variant'} />
+                                  Deadline: {new Date(task.deadline).toLocaleString([], { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })}
+                                  {isDeadlineCritical && " - CRITICAL GRAVITY"}
+                                </div>
+                              )}
                             </div>
-                          </div>
-                        )}
-                      </div>
+                          )}
+                        </div>
 
-                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button 
-                          aria-label="Delete task" 
-                          onClick={() => handleDelete(task.id)} 
-                          className="p-3 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-xl transition-all"
-                        >
-                          <Trash2 size={18} />
-                        </button>
+                        <div className="lg:opacity-0 lg:group-hover:opacity-100 transition-all ml-auto">
+                          <ActionMenu 
+                            actions={[
+                              { label: 'Edit', icon: Edit2, onClick: () => startEditingTask(task) },
+                              { label: 'Extract', icon: Trash2, onClick: () => handleDelete(task.id), variant: 'error' }
+                            ]} 
+                          />
+                        </div>
                       </div>
-                    </div>
+                    )}
+
 
                     <AnimatePresence>
                       {taskAnomalies.length > 0 && !task.completed && (
