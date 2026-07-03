@@ -477,7 +477,7 @@ const SettingsDashboard = () => {
         </section>
       </div>
 
-      <div className="fixed bottom-12 right-12 z-50">
+      <div className="fixed bottom-28 right-6 lg:bottom-12 lg:right-12 z-40">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
