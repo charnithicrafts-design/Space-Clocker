@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { useTrackStore } from '../../store/useTrackStore';
-import { Plus, Zap, Rocket, AlertTriangle, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { Plus, Zap, Rocket, AlertTriangle, ChevronRight, CheckCircle2, Target } from 'lucide-react';
+import { SoundManager } from '../../utils/SoundManager';
 import CommandModal from '../layout/CommandModal';
 import StellarTimeline from './StellarTimeline';
 
@@ -46,6 +48,32 @@ const MomentumEngine = () => {
         </div>
         <p className="text-xs text-on-surface-variant font-mono uppercase">Next Ranking Shift In {1000 - profile.xp} XP</p>
       </div>
+
+      {/* Active Quest: Map your first Milestone */}
+      {totalMilestones === 0 && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-6 rounded-3xl border-2 border-primary-container/40 bg-primary/10 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.2)] mb-8"
+        >
+          <div className="w-16 h-16 rounded-2xl bg-primary-container/20 text-primary flex items-center justify-center border border-primary/20 shrink-0">
+            <Target size={32} className="animate-pulse" />
+          </div>
+          <div className="space-y-1 text-center md:text-left flex-1">
+            <h3 className="text-lg font-black text-white uppercase tracking-wider">Active Quest: Map your first Milestone</h3>
+            <p className="text-xs text-on-surface-variant leading-relaxed">
+              Establish a target in your Nebula Architect mode. Logging your first action towards it triggers an immediate system XP burst!
+            </p>
+          </div>
+          <Link 
+            to="/nebula" 
+            onClick={() => SoundManager.playSwell()}
+            className="bg-primary text-on-primary px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary-container transition-colors shadow-lg hover:shadow-primary/20 flex items-center gap-2 cursor-pointer"
+          >
+            Open Nebula Map <ChevronRight size={16} />
+          </Link>
+        </motion.div>
+      )}
 
       {/* Macro Ambitions */}
       <div className="flex justify-between items-center mb-4">

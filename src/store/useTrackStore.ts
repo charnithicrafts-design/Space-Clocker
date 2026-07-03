@@ -746,7 +746,15 @@ export const useTrackStore = create<TrackStore>()(
               const newCompleted = !t.completed;
               const completedAt = newCompleted ? new Date().toISOString() : null;
               updatedTask = { ...t, completed: newCompleted, completedAt: completedAt || undefined };
+              
               xpGain = newCompleted ? (t.weightage || 25) : -(t.weightage || 25);
+              
+              // Onboarding XP burst on the very first micro-action completed toward a milestone goal
+              if (newCompleted && !localStorage.getItem('firstMilestoneActionLogged')) {
+                localStorage.setItem('firstMilestoneActionLogged', 'true');
+                xpGain += 1000;
+              }
+              
               return updatedTask;
             }
             return t;
@@ -976,7 +984,31 @@ export const useTrackStore = create<TrackStore>()(
 
       // Map and process background data
       const milestonesRaw = milestonesRes.rows;
-      const tasksRaw = tasksRes.rows;
+      let tasksRaw = [...(tasksRes.rows || [])];
+
+      const isDbEmpty = tasksRaw.length === 0 && (ambitionsRes.rows || []).length === 0;
+      if (isDbEmpty) {
+        console.log('[Store] Seeding launch template tasks...');
+        const { getDb } = await import('../db/client');
+        const db = getDb();
+        const t1 = { id: `t-seed-1`, time: '09:00', title: 'Complete daily standup', completed: false, horizon: 'daily', plannedDate: today, weightage: 10 };
+        const t2 = { id: `t-seed-2`, time: '10:00', title: 'Launch Space Clocker', completed: false, horizon: 'daily', plannedDate: today, weightage: 20 };
+        const t3 = { id: `t-seed-3`, time: '11:00', title: 'Create first milestone goal', completed: false, horizon: 'daily', plannedDate: today, weightage: 10 };
+        
+        try {
+          await db.query(`INSERT INTO tasks (id, time, weightage, title, completed, horizon, planned_date) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [t1.id, t1.time, t1.weightage, t1.title, t1.completed, t1.horizon, t1.plannedDate]);
+          await db.query(`INSERT INTO tasks (id, time, weightage, title, completed, horizon, planned_date) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [t2.id, t2.time, t2.weightage, t2.title, t2.completed, t2.horizon, t2.plannedDate]);
+          await db.query(`INSERT INTO tasks (id, time, weightage, title, completed, horizon, planned_date) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [t3.id, t3.time, t3.weightage, t3.title, t3.completed, t3.horizon, t3.plannedDate]);
+        } catch (e) {
+          console.warn('[Store] Failed to write seed tasks to database (probably mock context)', e);
+        }
+
+        tasksRaw = [
+          { id: t1.id, time: t1.time, weightage: t1.weightage, title: t1.title, completed: 0, horizon: t1.horizon, planned_date: t1.plannedDate },
+          { id: t2.id, time: t2.time, weightage: t2.weightage, title: t2.title, completed: 0, horizon: t2.horizon, planned_date: t2.plannedDate },
+          { id: t3.id, time: t3.time, weightage: t3.weightage, title: t3.title, completed: 0, horizon: t3.horizon, planned_date: t3.plannedDate }
+        ];
+      }
 
       const milestonesByAmbition = new Map<string, any[]>();
       milestonesRaw.forEach(m => {

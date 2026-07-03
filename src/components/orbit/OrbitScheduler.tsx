@@ -4,7 +4,7 @@ import { useTrackStore, Task } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 import { analyzeSchedule, ScheduleAnomaly } from '../../utils/StellarScheduler';
 import { getTodayLocalISO, getLocalTimeHHmm } from '../../utils/DateTimeUtils';
-import { Plus, Trash2, Clock, AlertTriangle, ShieldCheck, Zap, BrainCircuit, Calendar, Timer } from 'lucide-react';
+import { Plus, Trash2, Clock, AlertTriangle, ShieldCheck, Zap, BrainCircuit, Calendar, Timer, Signal, Share2, Send, Check, ExternalLink, Info } from 'lucide-react';
 import ReflectionModal from '../reflection/ReflectionModal';
 import OrbitSubNav, { OrbitHorizon } from './OrbitSubNav';
 import VoidList from '../void-protocol/VoidList';
@@ -32,9 +32,11 @@ const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
 ));
 
 const OrbitScheduler = () => {
-  const { tasks, toggleTask, addTask, updateTask, updateTaskDate, deleteTask, preferences, profile, ambitions } = useTrackStore();
+  const { tasks, toggleTask, toggleMilestoneTask, addTask, updateTask, updateTaskDate, deleteTask, preferences, profile, ambitions } = useTrackStore();
   const [activeHorizon, setActiveHorizon] = useState<OrbitHorizon>('daily');
   const [selectedDate, setSelectedDate] = useState(getTodayLocalISO());
+  const [showTransmissionPreview, setShowTransmissionPreview] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   const [newTask, setNewTask] = useState('');
   const [newTime, setNewTime] = useState(getLocalTimeHHmm().split(':')[0] + ':00');
@@ -118,11 +120,21 @@ const OrbitScheduler = () => {
   };
 
   const handleToggle = async (id: string) => {
-    const task = tasks.find(t => t.id === id);
-    await toggleTask(id);
-    if (isPro && task && !task.completed) {
-      setReflectionType('daily-summary');
-      setIsReflectionOpen(true);
+    const milestoneTask = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id })) )).find(t => t.id === id);
+    
+    if (milestoneTask) {
+      await toggleMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId!, id);
+      if (isPro && !milestoneTask.completed) {
+        setReflectionType('daily-summary');
+        setIsReflectionOpen(true);
+      }
+    } else {
+      const task = tasks.find(t => t.id === id);
+      await toggleTask(id);
+      if (isPro && task && !task.completed) {
+        setReflectionType('daily-summary');
+        setIsReflectionOpen(true);
+      }
     }
   };
 
@@ -313,6 +325,33 @@ const OrbitScheduler = () => {
                 </div>
               )}
 
+              {filteredTasks.some(t => t.completed) && !localStorage.getItem('hasSeenTransmissionPreview') && (
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-6 rounded-3xl border border-secondary/40 bg-secondary/5 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_20px_rgba(var(--color-secondary-rgb),0.15)] mb-6"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-secondary/15 text-secondary flex items-center justify-center border border-secondary/20 shrink-0">
+                    <Signal size={24} className="animate-pulse" />
+                  </div>
+                  <div className="space-y-1 text-center md:text-left flex-1">
+                    <h4 className="text-sm font-black text-white uppercase tracking-widest">📡 Mission Telemetry Ready</h4>
+                    <p className="text-xs text-on-surface-variant leading-relaxed">
+                      You completed your first daily parameter! See what a 1-click progress transmission looks like for your mentor.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      SoundManager.playSwell();
+                      setShowTransmissionPreview(true);
+                    }}
+                    className="bg-secondary text-on-secondary px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-secondary/80 transition-colors shadow-lg flex items-center gap-2 cursor-pointer border-none outline-none"
+                  >
+                    Generate Telemetry Preview
+                  </button>
+                </motion.div>
+              )}
+
               {filteredTasks.sort((a,b) => a.time.localeCompare(b.time)).map((task) => {
                 const taskAnomalies = anomalies.filter(a => a.taskId === task.id);
                 const hasError = taskAnomalies.some(a => a.severity === 'error');
@@ -440,6 +479,126 @@ const OrbitScheduler = () => {
         message="This mission parameter will be permanently removed from your current rotation. Proceed with extraction?"
         confirmText="Confirm Extraction"
       />
+
+      {/* Transmission Preview Modal */}
+      <AnimatePresence>
+        {showTransmissionPreview && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[250] flex items-center justify-center p-6 bg-surface-lowest/90 backdrop-blur-2xl overflow-y-auto"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: -20, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="w-full max-w-2xl glass-panel border border-secondary p-8 rounded-[2.5rem] relative overflow-hidden my-8 text-left"
+            >
+              {/* Glowing grids and decorations */}
+              <div className="absolute -top-32 -left-32 w-64 h-64 bg-secondary/10 blur-3xl rounded-full animate-pulse" />
+              <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-primary/10 blur-3xl rounded-full animate-pulse" />
+              
+              <div className="relative z-10 space-y-6">
+                {/* Header */}
+                <div className="flex justify-between items-start border-b border-outline-variant/30 pb-4">
+                  <div>
+                    <span className="text-[10px] px-3.5 py-1 bg-secondary/15 border border-secondary/20 rounded-full text-secondary font-mono tracking-widest uppercase">
+                      Transmission Preview
+                    </span>
+                    <h2 className="text-2xl font-display font-black text-white uppercase tracking-tight mt-3">
+                      Telemetry Session Brief
+                    </h2>
+                  </div>
+                  <div className="text-right font-mono text-[9px] text-on-surface-variant space-y-1">
+                    <div>SECURE LINK STABLE</div>
+                    <div className="text-secondary font-bold">TX-2026-DAILY-INIT</div>
+                  </div>
+                </div>
+
+                {/* Report Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* PDA Narrative */}
+                  <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-2 col-span-1 md:col-span-2">
+                    <div className="text-[9px] font-black uppercase text-secondary tracking-widest">PDA Narrative Summary</div>
+                    <p className="text-xs text-on-surface leading-relaxed font-mono">
+                      "Orbit initialized successfully. Technical workspace synchronized on Chrome desktop. Core trajectories active: AWS Certified Specialist & Data Analyst path. Logging daily parameters with 100% resonance efficiency. Standing by for next rotation cycle."
+                    </p>
+                  </div>
+
+                  {/* Accomplished Parameters */}
+                  <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-3">
+                    <div className="text-[9px] font-black uppercase text-primary-container tracking-widest">Accomplished Parameters</div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-xs text-white">
+                        <ShieldCheck size={14} className="text-success shrink-0" />
+                        <span className="truncate">Complete daily standup</span>
+                        <span className="text-[9px] font-mono text-secondary-container bg-secondary-container/10 px-1.5 py-0.5 rounded ml-auto">10 XP</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-white">
+                        <ShieldCheck size={14} className="text-success shrink-0" />
+                        <span className="truncate">Launch Space Clocker</span>
+                        <span className="text-[9px] font-mono text-secondary-container bg-secondary-container/10 px-1.5 py-0.5 rounded ml-auto">20 XP</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Skills Delta Calibration */}
+                  <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-3">
+                    <div className="text-[9px] font-black uppercase text-secondary tracking-widest">Skills Calibration Delta</div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-white font-mono">AWS Cloud Tech</span>
+                        <span className="text-success font-black font-mono">+1%</span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-white font-mono">Momentum Velocity</span>
+                        <span className="text-success font-black font-mono">+2%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer notes */}
+                <div className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center gap-3">
+                  <Info size={16} className="text-primary shrink-0" />
+                  <p className="text-[10px] text-on-surface-variant uppercase tracking-wide leading-relaxed">
+                    This structured readout is formatted and ready. Sharing this transmission with your mentor ensures continuous feedback and rapid alignment.
+                  </p>
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText("https://space-clocker.net/transmission/share/TX-DEMO-PREVIEW");
+                      setCopiedLink(true);
+                      SoundManager.playPop();
+                      setTimeout(() => setCopiedLink(false), 2000);
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 border border-secondary text-secondary px-6 py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-secondary/15 transition-all cursor-pointer bg-transparent outline-none"
+                  >
+                    {copiedLink ? <Check size={16} className="text-success" /> : <Share2 size={16} />}
+                    <span>{copiedLink ? 'Link Copied!' : 'Copy Mentor Share Link'}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      localStorage.setItem('hasSeenTransmissionPreview', 'true');
+                      setShowTransmissionPreview(false);
+                      SoundManager.playSyncSuccess();
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 bg-secondary text-on-secondary px-6 py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-secondary/80 transition-all cursor-pointer shadow-lg hover:shadow-secondary/20 border-none outline-none"
+                  >
+                    <Send size={16} />
+                    <span>Establish Uplink & Finish</span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

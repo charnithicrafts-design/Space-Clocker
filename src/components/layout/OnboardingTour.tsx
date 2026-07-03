@@ -129,6 +129,19 @@ const OnboardingTour = ({ onComplete }: { onComplete: () => void }) => {
                 <p className="text-on-surface-variant leading-relaxed max-w-md mx-auto">
                   Space-Clocker is a high-fidelity command center designed to bridge the gap between ambitious goals and daily execution.
                 </p>
+                
+                {/* Browser Callout (Pre-Flight Check) */}
+                <div className="w-full max-w-md mx-auto bg-primary/5 border border-primary/20 rounded-2xl p-4 flex items-center gap-3 text-left mt-4">
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0 font-mono text-[10px] font-black">
+                    SYS
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-primary">Pre-Flight System Check</h4>
+                    <p className="text-[11px] text-on-surface-variant leading-normal">
+                      Optimized for Chrome Mission Control. Best experienced on Chrome desktop or Android.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full pt-4 relative z-20">

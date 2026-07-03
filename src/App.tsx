@@ -17,6 +17,8 @@ import OnboardingTour from './components/layout/OnboardingTour';
 import UpdateModal from './components/layout/UpdateModal';
 import CriticalUpdateBanner from './components/layout/CriticalUpdateBanner';
 import { useTrackStore } from './store/useTrackStore';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Award } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { initDb } from './db/init';
 import { migrateFromZustand } from './db/migrate';
@@ -32,10 +34,12 @@ const queryClient = new QueryClient({
 
 const AppContent = () => {
   const { pathname } = useLocation();
-  const { initialize, checkSync, performPull, oracleConfig, ambitions, updateAvailable } = useTrackStore();
+  const { initialize, checkSync, performPull, oracleConfig, ambitions, updateAvailable, profile } = useTrackStore();
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [dbStatus, setDbStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [prevLevel, setPrevLevel] = useState<number | null>(null);
+  const [showLevelUp, setShowLevelUp] = useState(false);
   const [dbError, setDbError] = useState<any>(null);
   const startupInitiated = useRef(false);
 
@@ -73,6 +77,19 @@ const AppContent = () => {
     };
     startup();
   }, [initialize, checkSync, oracleConfig.syncEnabled]);
+
+  useEffect(() => {
+    if (profile?.level !== undefined) {
+      if (prevLevel !== null && profile.level > prevLevel) {
+        setShowLevelUp(true);
+        // Play level up sound
+        import('./utils/SoundManager').then(({ SoundManager }) => {
+          SoundManager.playSyncSuccess();
+        });
+      }
+      setPrevLevel(profile.level);
+    }
+  }, [profile?.level, prevLevel]);
 
   const handleResolveConflict = async (strategy: 'local' | 'remote') => {
     if (strategy === 'remote') {
@@ -315,6 +332,62 @@ const AppContent = () => {
         onClose={() => setIsSyncModalOpen(false)}
         onResolve={handleResolveConflict}
       />
+
+      {/* Level Up Celebration Modal */}
+      <AnimatePresence>
+        {showLevelUp && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[300] flex items-center justify-center p-6 bg-surface-lowest/90 backdrop-blur-2xl"
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: -20, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="w-full max-w-md glass-panel border-2 border-primary p-8 rounded-[2.5rem] text-center space-y-6 relative overflow-hidden"
+            >
+              {/* Decorative radial glows */}
+              <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/20 blur-3xl rounded-full" />
+              <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-secondary/20 blur-3xl rounded-full" />
+              
+              <div className="relative z-10 flex flex-col items-center space-y-6">
+                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary border border-primary/20 shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.3)]">
+                  <Award size={40} className="animate-bounce" />
+                </div>
+
+                <div className="space-y-2">
+                  <h2 className="text-xs font-black uppercase tracking-[0.4em] text-secondary">
+                    Momentum Shift Achieved
+                  </h2>
+                  <h1 className="text-4xl font-display font-black text-white uppercase tracking-tighter">
+                    Rank Ascended!
+                  </h1>
+                  <div className="text-6xl font-black text-primary font-mono tracking-tighter my-4 drop-shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.4)]">
+                    LVL {profile?.level}
+                  </div>
+                  <p className="text-on-surface-variant text-xs leading-relaxed max-w-xs mx-auto">
+                    Your neural trajectory efficiency has unlocked a new rank. The Momentum Engine is now calibrated for high-level operations.
+                  </p>
+                </div>
+
+                <button
+                  onClick={async () => {
+                    const { SoundManager } = await import('./utils/SoundManager');
+                    SoundManager.playPop();
+                    setShowLevelUp(false);
+                  }}
+                  className="w-full py-4 bg-primary text-on-primary rounded-2xl font-black uppercase tracking-widest hover:bg-primary-container transition-colors shadow-lg hover:shadow-primary/20 cursor-pointer border-none outline-none"
+                >
+                  Continue Mission
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
