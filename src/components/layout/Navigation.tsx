@@ -12,7 +12,8 @@ import {
   Signal,
   Menu,
   Zap,
-  Box
+  Box,
+  Info
 } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
@@ -51,6 +52,8 @@ const Navigation = () => {
   const { pathname } = useLocation();
   const { syncStatus, oracleConfig } = useTrackStore();
   const [isHubOpen, setIsHubOpen] = useState(false);
+
+  if (pathname === '/about') return null;
   
   const tacticalLinks = [
     { to: '/', icon: LayoutDashboard, label: 'Momentum', color: 'text-primary' },
@@ -61,6 +64,7 @@ const Navigation = () => {
     { to: '/nebula', icon: Target, label: 'Nebula', color: 'text-magenta' },
     { to: '/timeline', icon: CalendarDays, label: 'Timeline', color: 'text-primary-container' },
     { to: '/skills', icon: Brain, label: 'Skills', color: 'text-success' },
+    { to: '/about', icon: Info, label: 'About', color: 'text-on-surface-variant' },
   ];
 
   const communicationLinks = [
