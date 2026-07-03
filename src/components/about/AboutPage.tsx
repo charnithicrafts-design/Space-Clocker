@@ -18,6 +18,7 @@ import {
   Database,
   Star,
   ChevronDown,
+  Signal,
 } from 'lucide-react';
 
 // ─── Starfield Canvas ───────────────────────────────────────────────
@@ -108,40 +109,50 @@ const cardVariants = {
 const features = [
   {
     icon: Rocket,
-    title: 'Momentum Engine',
-    subtitle: 'Dashboard',
+    title: '1. Sync Time & Goals',
+    subtitle: 'Momentum Engine',
     description:
-      'Your mission control. Track XP, levels, and macro ambitions with a real‑time resonance feed that visualizes every micro‑win.',
+      'Keep your daily clocking sense in perfect sync with your goals. The Momentum Engine tracks your focus level and rank in real-time, making sure every tick of the clock brings you closer to your ambitions.',
     color: 'text-primary',
     bgGlow: 'from-primary/10 to-transparent',
     borderColor: 'border-primary/20',
   },
   {
     icon: Target,
-    title: 'Nebula Architect',
-    subtitle: 'Goal Decomposition',
+    title: '2. Lock in Ambition',
+    subtitle: 'Nebula Constellations',
     description:
-      'Decompose massive ambitions into stellar milestones. Navigate the constellation map to see exactly where you stand on each trajectory.',
+      'Lock yourself together with your ambitions in your mental space. In Nebula (Architect Mode), you map out your big dreams and break them down into smaller steps, so they are always top-of-mind.',
     color: 'text-secondary',
     bgGlow: 'from-secondary/10 to-transparent',
     borderColor: 'border-secondary/20',
   },
   {
     icon: Clock,
-    title: 'Orbit Scheduler',
-    subtitle: 'Daily Engine',
+    title: '3. Shield from Distractions',
+    subtitle: 'Void Protocol',
     description:
-      'Precision daily planning with efficiency tracking and Void Protocol — the anti‑habit system that shields you from distractions.',
+      'Stay far away from distractions and bad habits. Use the Void Protocol anti-habit system in your Orbit to name your weaknesses and keep them completely locked out of your daily schedule.',
     color: 'text-primary-container',
     bgGlow: 'from-primary-container/10 to-transparent',
     borderColor: 'border-primary-container/20',
   },
   {
-    icon: Brain,
-    title: 'Stellar Matrix',
-    subtitle: 'Skills Radar',
+    icon: Signal,
+    title: '4. Mentor Telemetry',
+    subtitle: 'Transmission Briefings',
     description:
-      'A radar‑chart visualization for technical proficiency. Bright stars mark mastery; dim regions reveal gaps to conquer next.',
+      'Send your progress reports directly to your teacher or mentor. Share how you are doing, get feedback, and receive helpful nudges to stay on the right path.',
+    color: 'text-primary',
+    bgGlow: 'from-primary/10 to-transparent',
+    borderColor: 'border-primary/20',
+  },
+  {
+    icon: Brain,
+    title: '5. Track & Grow Skills',
+    subtitle: 'Stellar Matrix',
+    description:
+      'Track the skills you need with a simple visual map. By comparing what you can do today with what your goal requires, you can practice the right things and transform your capability into real ability!',
     color: 'text-success',
     bgGlow: 'from-success/10 to-transparent',
     borderColor: 'border-success/20',
@@ -315,7 +326,7 @@ const AboutPage: React.FC = () => {
             Core Modules
           </h2>
           <p className="font-display text-3xl md:text-5xl font-black text-white uppercase tracking-tighter">
-            Four Engines. One Mission.
+            Five Engines. One Mission.
           </p>
         </div>
 
@@ -324,7 +335,7 @@ const AboutPage: React.FC = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 gap-6"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {features.map((f) => {
             const Icon = f.icon;

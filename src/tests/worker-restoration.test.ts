@@ -2,12 +2,41 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { PGlite } from '@electric-sql/pglite';
 import { api } from '../db/db.worker';
 
-// Mock PGlite
-vi.mock('@electric-sql/pglite', () => ({
-  PGlite: {
-    create: vi.fn(),
-  },
-}));
+vi.mock('@electric-sql/pglite', () => {
+  const mockCreate = vi.fn();
+
+  class MockPGlite {
+    static create = mockCreate;
+    
+    waitReady: Promise<any>;
+    close: any;
+    query: any;
+    exec: any;
+    transaction: any;
+
+    constructor(path: string, options: any) {
+      const resultPromise = mockCreate(path, options);
+      this.waitReady = resultPromise.then((db: any) => {
+        if (db) {
+          this.close = db.close;
+          this.query = db.query;
+          this.exec = db.exec;
+          this.transaction = db.transaction;
+        }
+        return db;
+      });
+
+      this.close = vi.fn().mockResolvedValue(undefined);
+      this.query = vi.fn().mockResolvedValue({ rows: [] });
+      this.exec = vi.fn().mockResolvedValue(undefined);
+      this.transaction = vi.fn();
+    }
+  }
+
+  return {
+    PGlite: MockPGlite,
+  };
+});
 
 // Mock Comlink
 vi.mock('comlink', () => ({
