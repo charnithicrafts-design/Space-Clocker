@@ -9,6 +9,7 @@ import {
   Settings, 
   CalendarDays, 
   Globe, 
+  UserCircle,
   Signal,
   Menu,
   Zap,
@@ -64,6 +65,7 @@ const Navigation = () => {
     { to: '/nebula', icon: Target, label: 'Nebula', color: 'text-magenta' },
     { to: '/timeline', icon: CalendarDays, label: 'Timeline', color: 'text-primary-container' },
     { to: '/skills', icon: Brain, label: 'Skills', color: 'text-success' },
+    { to: '/profile', icon: UserCircle, label: 'Profile', color: 'text-tertiary' },
     { to: '/about', icon: Info, label: 'About', color: 'text-on-surface-variant' },
   ];
 
@@ -96,6 +98,9 @@ const Navigation = () => {
 
           <Link to="/timeline" aria-label="Timeline sector" className={`p-3 rounded-2xl ${pathname === '/timeline' ? 'text-primary-container bg-primary-container/10' : 'text-on-surface-variant'}`}>
             <CalendarDays size={24} aria-hidden="true" />
+          </Link>
+          <Link to="/profile" aria-label="Profile sector" className={`p-3 rounded-2xl ${pathname === '/profile' ? 'text-tertiary bg-tertiary/10' : 'text-on-surface-variant'}`}>
+            <UserCircle size={24} aria-hidden="true" />
           </Link>
           <Link to="/settings" aria-label="System Config" className={`p-3 rounded-2xl ${pathname === '/settings' ? 'text-on-surface-variant bg-surface-high' : 'text-on-surface-variant'}`}>
             <Settings size={24} aria-hidden="true" />

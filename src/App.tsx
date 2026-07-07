@@ -10,6 +10,7 @@ import SkillsMatrix from './components/skills/SkillsMatrix';
 import { OracleDashboard } from './components/oracle/OracleDashboard';
 import SettingsDashboard from './components/settings/SettingsDashboard';
 import AboutPage from './components/about/AboutPage';
+import ProfileDashboard from './components/profile/ProfileDashboard';
 import TransmissionDashboard from './components/transmission/TransmissionDashboard';
 import SharedTransmission from './components/transmission/SharedTransmission';
 import SyncConflictModal from './components/reflection/SyncConflictModal';
@@ -323,6 +324,7 @@ const AppContent = () => {
           <Route path="/transmission" element={<TransmissionDashboard />} />
           <Route path="/transmission/share" element={<SharedTransmission />} />
           <Route path="/settings" element={<SettingsDashboard />} />
+          <Route path="/profile" element={<ProfileDashboard />} />
           <Route path="/about" element={<AboutPage />} />
         </Routes>
       </main>
