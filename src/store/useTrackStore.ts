@@ -152,12 +152,14 @@ interface TrackStore {
   pendingVersion?: string;
   dbAppVersion?: string;
   showUpdateModal: boolean;
+  showSyncModal: boolean;
   
   // Actions
   performSystemUpgrade: () => Promise<void>;
   dismissUpdate: () => void;
   setShowUpdateModal: (show: boolean) => void;
-  checkForUpdates: () => Promise<void>;
+  setShowSyncModal: (show: boolean) => void;
+  checkForUpdates: () => Promise<{ hasAppUpdate: boolean; syncResult: string }>;
   addAmbition: (title: string) => Promise<void>;
   updateAmbition: (id: string, title: string) => Promise<void>;
   addTask: (time: string, title: string, ambitionId?: string, extra?: Partial<Task>) => Promise<void>;
@@ -249,8 +251,10 @@ export const useTrackStore = create<TrackStore>()(
     pendingVersion: undefined,
     dbAppVersion: undefined,
     showUpdateModal: false,
+    showSyncModal: false,
 
     setShowUpdateModal: (show) => set({ showUpdateModal: show }),
+    setShowSyncModal: (show) => set({ showSyncModal: show }),
 
     checkForUpdates: async () => {
       set({ isCheckingUpdates: true });
@@ -263,13 +267,26 @@ export const useTrackStore = create<TrackStore>()(
       const systemRes = await db.query(`SELECT app_version FROM system_info WHERE id = 1`);
       const dbAppVersion = systemRes.rows[0]?.app_version;
       
-      set({ dbAppVersion, isCheckingUpdates: false });
-      
+      let hasAppUpdate = false;
       if (dbAppVersion && dbAppVersion !== CURRENT_APP_VERSION) {
+        hasAppUpdate = true;
         set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION, showUpdateModal: true });
       } else {
         set({ updateAvailable: false });
       }
+
+      let syncResult = 'none';
+      const config = get().oracleConfig;
+      if (config.syncEnabled && config.clientId) {
+        const { syncService } = await import('../services/SyncService');
+        syncResult = await syncService.checkDivergence();
+        if (syncResult === 'remote_newer') {
+          set({ showSyncModal: true });
+        }
+      }
+
+      set({ dbAppVersion, isCheckingUpdates: false });
+      return { hasAppUpdate, syncResult };
     },
 
     setSyncStatus: (status) => set((state) => ({

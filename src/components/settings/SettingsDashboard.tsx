@@ -424,8 +424,8 @@ const SettingsDashboard = () => {
                   key="check-btn"
                   onClick={async () => {
                     SoundManager.playPop();
-                    await store.checkForUpdates();
-                    if (!store.updateAvailable) {
+                    const { hasAppUpdate, syncResult } = await store.checkForUpdates();
+                    if (!hasAppUpdate && syncResult !== 'remote_newer') {
                       setShowUpToDate(true);
                       setTimeout(() => setShowUpToDate(false), 5000);
                     }
@@ -434,7 +434,7 @@ const SettingsDashboard = () => {
                   className={`w-full flex items-center justify-center gap-2 p-4 rounded-2xl bg-surface-low border border-outline-variant hover:border-primary transition-all font-bold text-xs uppercase tracking-[0.2em] ${store.isCheckingUpdates ? 'opacity-70 cursor-wait' : ''}`}
                 >
                   <RefreshCcw size={16} className={store.isCheckingUpdates ? 'animate-spin' : ''} />
-                  {store.isCheckingUpdates ? 'Syncing Manifest...' : 'Check for Trajectory Updates'}
+                  {store.isCheckingUpdates ? 'Scanning...' : 'Check For System & Trajectory Updates'}
                 </button>
               )}
             </AnimatePresence>

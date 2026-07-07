@@ -35,8 +35,7 @@ const queryClient = new QueryClient({
 
 const AppContent = () => {
   const { pathname } = useLocation();
-  const { initialize, checkSync, performPull, oracleConfig, ambitions, updateAvailable, profile } = useTrackStore();
-  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
+  const { initialize, checkSync, performPull, oracleConfig, updateAvailable, profile, showSyncModal, setShowSyncModal } = useTrackStore();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [dbStatus, setDbStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [prevLevel, setPrevLevel] = useState<number | null>(null);
@@ -66,7 +65,7 @@ const AppContent = () => {
         if (oracleConfig.syncEnabled) {
           const result = await checkSync();
           if (result === 'remote_newer') {
-            setIsSyncModalOpen(true);
+            setShowSyncModal(true);
           }
         }
         setDbStatus('ready');
@@ -96,7 +95,7 @@ const AppContent = () => {
     if (strategy === 'remote') {
       await performPull();
     }
-    setIsSyncModalOpen(false);
+    setShowSyncModal(false);
   };
 
   const handleCompleteOnboarding = () => {
@@ -330,8 +329,8 @@ const AppContent = () => {
       </main>
 
       <SyncConflictModal 
-        isOpen={isSyncModalOpen}
-        onClose={() => setIsSyncModalOpen(false)}
+        isOpen={showSyncModal}
+        onClose={() => setShowSyncModal(false)}
         onResolve={handleResolveConflict}
       />
 
