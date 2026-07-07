@@ -5,7 +5,7 @@ import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 
 const CriticalUpdateBanner = () => {
-  const { updateAvailable, pendingVersion, setShowUpdateModal } = useTrackStore();
+  const { updateAvailable, pendingVersion, setShowUpdateModal, updateType } = useTrackStore();
 
   if (!updateAvailable) return null;
 
@@ -25,11 +25,15 @@ const CriticalUpdateBanner = () => {
         <button 
           onClick={() => {
             SoundManager.playSwell();
-            setShowUpdateModal(true);
+            if (updateType === 'network') {
+              window.location.reload();
+            } else {
+              setShowUpdateModal(true);
+            }
           }}
           className="bg-on-primary text-primary px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-white transition-colors flex items-center gap-1"
         >
-          Re-align Systems <ArrowRight size={12} />
+          {updateType === 'network' ? 'Download Updates' : 'Re-align Systems'} <ArrowRight size={12} />
         </button>
       </motion.div>
     </AnimatePresence>

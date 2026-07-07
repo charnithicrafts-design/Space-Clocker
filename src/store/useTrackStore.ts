@@ -152,6 +152,7 @@ interface TrackStore {
   pendingVersion?: string;
   dbAppVersion?: string;
   showUpdateModal: boolean;
+  updateType?: 'network' | 'database';
   showSyncModal: boolean;
   
   // Actions
@@ -251,6 +252,7 @@ export const useTrackStore = create<TrackStore>()(
     pendingVersion: undefined,
     dbAppVersion: undefined,
     showUpdateModal: false,
+    updateType: undefined,
     showSyncModal: false,
 
     setShowUpdateModal: (show) => set({ showUpdateModal: show }),
@@ -264,15 +266,32 @@ export const useTrackStore = create<TrackStore>()(
       
       const { getDb } = await import('../db/client');
       const db = getDb();
-      const systemRes = await db.query(`SELECT app_version FROM system_info WHERE id = 1`);
-      const dbAppVersion = systemRes.rows[0]?.app_version;
-      
       let hasAppUpdate = false;
-      if (dbAppVersion && dbAppVersion !== CURRENT_APP_VERSION) {
-        hasAppUpdate = true;
-        set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION, showUpdateModal: true });
-      } else {
-        set({ updateAvailable: false });
+      
+      try {
+        const response = await fetch('/version.json?t=' + Date.now());
+        if (response.ok) {
+          const data = await response.json();
+          if (data.version && data.version !== CURRENT_APP_VERSION) {
+            hasAppUpdate = true;
+            set({ updateAvailable: true, pendingVersion: data.version, showUpdateModal: false, updateType: 'network' });
+          }
+        }
+      } catch (err) {
+        console.warn('Could not fetch remote version manifest:', err);
+      }
+
+      if (!hasAppUpdate) {
+        const systemRes = await db.query(`SELECT app_version FROM system_info WHERE id = 1`);
+        const dbAppVersion = systemRes.rows[0]?.app_version;
+        set({ dbAppVersion });
+        
+        if (dbAppVersion && dbAppVersion !== CURRENT_APP_VERSION) {
+          hasAppUpdate = true;
+          set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION, showUpdateModal: true, updateType: 'database' });
+        } else {
+          set({ updateAvailable: false, updateType: undefined });
+        }
       }
 
       let syncResult = 'none';
@@ -1110,7 +1129,7 @@ export const useTrackStore = create<TrackStore>()(
       const dbAppVersion = systemRes.rows[0]?.app_version;
 
       if (dbAppVersion && dbAppVersion !== CURRENT_APP_VERSION) {
-        set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION, showUpdateModal: true });
+        set({ updateAvailable: true, pendingVersion: CURRENT_APP_VERSION, showUpdateModal: true, updateType: 'database' });
       }
 
       if (lastStartup !== today) {
