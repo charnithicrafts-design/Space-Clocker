@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Zap, ShieldCheck, CheckCircle2, Clock } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 import { useTrackStore } from '../../store/useTrackStore';
+import { syncService } from '../../services/SyncService';
 
 interface SyncPaywallModalProps {
   isOpen: boolean;
@@ -31,12 +32,19 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
       return;
     }
 
+    // Generate clientId if missing
+    const newClientId = oracleConfig.clientId || `chr-${Math.random().toString(36).substring(2, 10)}${Date.now().toString(36)}`;
+
     // Success!
     SoundManager.playSyncSuccess();
     setSuccess(true);
     
+    // Authorize sync service in memory
+    syncService.authorize(newClientId);
+    
     if (selectedTier === 'one-time') {
       updateOracleConfig({ 
+        clientId: newClientId,
         syncTier: 'one-time', 
         oneTimeSyncsAvailable: (oracleConfig.oneTimeSyncsAvailable || 0) + 1,
         syncEnabled: true 
@@ -45,6 +53,7 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
       const expires = new Date();
       expires.setMonth(expires.getMonth() + 3);
       updateOracleConfig({
+        clientId: newClientId,
         syncTier: 'premium',
         syncExpiresAt: expires.toISOString(),
         syncEnabled: true

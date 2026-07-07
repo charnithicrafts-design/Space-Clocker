@@ -215,15 +215,6 @@ const SettingsDashboard = () => {
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Google Client ID (Sync)</label>
-              <input 
-                className="w-full bg-surface-high p-4 rounded-xl border border-outline-variant focus:border-secondary focus:outline-none transition-colors"
-                placeholder="Neural Link Client ID"
-                value={localOracle.clientId || ''}
-                onChange={(e) => setLocalOracle({ ...localOracle, clientId: e.target.value })}
-              />
-            </div>
-            <div>
               <label className="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Provider URL</label>
               <input 
                 className="w-full bg-surface-high p-4 rounded-xl border border-outline-variant focus:border-secondary focus:outline-none transition-colors"

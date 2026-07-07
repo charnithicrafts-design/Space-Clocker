@@ -977,6 +977,12 @@ export const useTrackStore = create<TrackStore>()(
           dbAppVersion: systemRes.rows[0]?.app_version
         });
 
+        const currentConfig = get().oracleConfig;
+        if (currentConfig.syncEnabled && currentConfig.clientId) {
+          const { syncService } = await import('../services/SyncService');
+          await syncService.authorize(currentConfig.clientId);
+        }
+
         // Stage 2: Background Collection Data (Sequential)
         const milestonesRes = await dbProxy.query(`SELECT * FROM milestones`);
         const tasksRes = await dbProxy.getTasks();

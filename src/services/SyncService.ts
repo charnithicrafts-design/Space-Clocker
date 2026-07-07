@@ -7,74 +7,55 @@ export interface SyncProvider {
   getFileMetadata: (name: string) => Promise<{ id: string, modifiedAt: string } | null>;
 }
 
-class GoogleDriveProvider implements SyncProvider {
-  name = 'Google Drive';
-  private accessToken: string | null = null;
+class VercelBlobProvider implements SyncProvider {
+  name = 'Vercel Blob';
+  private clientId: string | null = null;
 
   setToken(token: string) {
-    this.accessToken = token;
+    this.clientId = token;
   }
 
   async uploadFile(name: string, blob: Blob): Promise<string> {
-    if (!this.accessToken) throw new Error('Not authorized');
+    if (!this.clientId) throw new Error('Not authorized');
 
-    console.log(`[GoogleDrive] Uplinking ${name}...`);
+    console.log(`[VercelBlob] Uplinking sync payload...`);
     
-    // First, check if file exists to update or create
-    const meta = await this.getFileMetadata(name);
-    
-    const metadata = {
-      name: name,
-      mimeType: 'application/octet-stream',
-      parents: ['appDataFolder']
-    };
-
-    const formData = new FormData();
-    formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-    formData.append('file', blob);
-
-    const url = meta 
-      ? `https://www.googleapis.com/upload/drive/v3/files/${meta.id}?uploadType=multipart`
-      : 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
-
-    const response = await fetch(url, {
-      method: meta ? 'PATCH' : 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.accessToken}`
-      },
-      body: formData
+    const response = await fetch(`/api/sync/upload?clientId=${this.clientId}`, {
+      method: 'POST',
+      body: blob
     });
 
+    if (!response.ok) {
+      throw new Error(`Upload failed: ${response.statusText}`);
+    }
+
     const result = await response.json();
-    return result.id;
+    return result.url; // Returns the public vercel blob URL
   }
 
   async downloadFile(fileId: string): Promise<Blob> {
-    if (!this.accessToken) throw new Error('Not authorized');
+    if (!this.clientId) throw new Error('Not authorized');
 
-    const response = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
-      headers: {
-        'Authorization': `Bearer ${this.accessToken}`
-      }
-    });
+    // fileId is the direct blob URL
+    const response = await fetch(fileId);
+    if (!response.ok) {
+      throw new Error(`Download failed: ${response.statusText}`);
+    }
 
     return await response.blob();
   }
 
   async getFileMetadata(name: string): Promise<{ id: string, modifiedAt: string } | null> {
-    if (!this.accessToken) return null;
+    if (!this.clientId) return null;
 
-    const response = await fetch(`https://www.googleapis.com/drive/v3/files?q=name='${name}'&spaces=appDataFolder&fields=files(id,modifiedTime)`, {
-      headers: {
-        'Authorization': `Bearer ${this.accessToken}`
-      }
-    });
+    const response = await fetch(`/api/sync/info?clientId=${this.clientId}`);
+    if (!response.ok) return null;
 
     const result = await response.json();
-    if (result.files && result.files.length > 0) {
+    if (result.found) {
       return {
-        id: result.files[0].id,
-        modifiedAt: result.files[0].modifiedTime
+        id: result.url,
+        modifiedAt: result.modifiedAt
       };
     }
     return null;
@@ -82,44 +63,18 @@ class GoogleDriveProvider implements SyncProvider {
 }
 
 export class SyncService {
-  private provider: GoogleDriveProvider;
+  private provider: VercelBlobProvider;
 
-  constructor(provider: GoogleDriveProvider = new GoogleDriveProvider()) {
+  constructor(provider: VercelBlobProvider = new VercelBlobProvider()) {
     this.provider = provider;
   }
 
   async authorize(clientId: string) {
     if (!clientId) throw new Error('Client ID required');
     
-    const scope = 'https://www.googleapis.com/auth/drive.appdata';
-    const redirectUri = window.location.origin;
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
-    
-    // In a real app, we'd handle the redirect. For this prototype, we'll open a popup.
-    const win = window.open(authUrl, 'google-auth', 'width=500,height=600');
-    
-    return new Promise<string>((resolve, reject) => {
-      const timer = setInterval(() => {
-        try {
-          if (win?.closed) {
-            clearInterval(timer);
-            reject(new Error('Auth window closed'));
-          }
-          if (win?.location.hash) {
-            const params = new URLSearchParams(win.location.hash.substring(1));
-            const token = params.get('access_token');
-            if (token) {
-              this.provider.setToken(token);
-              win.close();
-              clearInterval(timer);
-              resolve(token);
-            }
-          }
-        } catch (e) {
-          // Cross-origin errors expected until redirect happens
-        }
-      }, 500);
-    });
+    // Instead of Google OAuth, we just bind the User's arbitrary Unique ID
+    this.provider.setToken(clientId);
+    return clientId;
   }
 
   async pushUpdate() {
