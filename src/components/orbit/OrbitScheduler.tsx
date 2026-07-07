@@ -320,7 +320,7 @@ const OrbitScheduler = () => {
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                   <h3 className="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em] flex items-center gap-2">
                     <Archive size={14} className="text-tertiary" />
-                    Query Plan (Unresolved Parameters)
+                    Stasis Backlog
                   </h3>
                   <div className="flex items-center gap-2 bg-surface-high border border-outline-variant p-2 px-4 rounded-2xl w-full sm:w-auto">
                     <Search size={14} className="text-on-surface-variant" />
