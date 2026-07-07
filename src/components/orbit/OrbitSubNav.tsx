@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Layers, ShieldAlert } from 'lucide-react';
+import { Clock, Layers, ShieldAlert, Archive } from 'lucide-react';
 
-export type OrbitHorizon = 'daily' | 'weekly' | 'void';
+export type OrbitHorizon = 'daily' | 'weekly' | 'backlog' | 'void';
 
 interface OrbitSubNavProps {
   active: OrbitHorizon;
@@ -13,6 +13,7 @@ const OrbitSubNav: React.FC<OrbitSubNavProps> = ({ active, onChange }) => {
   const tabs: { id: OrbitHorizon; label: string; icon: any; color: string }[] = [
     { id: 'daily', label: 'Daily Mission', icon: Clock, color: 'text-primary' },
     { id: 'weekly', label: 'Weekly Resonance', icon: Layers, color: 'text-secondary' },
+    { id: 'backlog', label: 'Stasis Backlog', icon: Archive, color: 'text-tertiary' },
     { id: 'void', label: 'Void Protocol', icon: ShieldAlert, color: 'text-error' },
   ];
 

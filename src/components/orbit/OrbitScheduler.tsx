@@ -4,7 +4,7 @@ import { useTrackStore, Task } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 import { analyzeSchedule, ScheduleAnomaly } from '../../utils/StellarScheduler';
 import { getTodayLocalISO, getLocalTimeHHmm } from '../../utils/DateTimeUtils';
-import { Plus, Trash2, Edit2, Clock, AlertTriangle, ShieldCheck, Zap, BrainCircuit, Calendar, Timer, Signal, Share2, Send, Check, ExternalLink, Info } from 'lucide-react';
+import { Plus, Trash2, Edit2, Clock, AlertTriangle, ShieldCheck, Zap, BrainCircuit, Calendar, Timer, Signal, Share2, Send, Check, ExternalLink, Info, Archive, Search, ChevronLeft, ChevronRight, ArrowRightCircle } from 'lucide-react';
 import ReflectionModal from '../reflection/ReflectionModal';
 import OrbitSubNav, { OrbitHorizon } from './OrbitSubNav';
 import VoidList from '../void-protocol/VoidList';
@@ -58,6 +58,10 @@ const OrbitScheduler = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null);
 
+  const [backlogSearch, setBacklogSearch] = useState('');
+  const [backlogPage, setBacklogPage] = useState(1);
+  const BACKLOG_ITEMS_PER_PAGE = 5;
+
   const isPro = preferences.uiMode === 'professional';
 
   // Consolidate all tasks (standalone + milestone tasks)
@@ -66,9 +70,26 @@ const OrbitScheduler = () => {
     return [...tasks, ...milestoneTasks];
   }, [tasks, ambitions]);
 
+  // Compute backlog tasks
+  const backlogTasks = useMemo(() => {
+    let bTasks = allTasks.filter(t => !t.completed && t.plannedDate && t.plannedDate < getTodayLocalISO());
+    if (backlogSearch.trim()) {
+      const q = backlogSearch.toLowerCase();
+      bTasks = bTasks.filter(t => t.title.toLowerCase().includes(q));
+    }
+    return bTasks.sort((a, b) => (a.plannedDate! > b.plannedDate! ? 1 : -1));
+  }, [allTasks, backlogSearch]);
+
+  const totalBacklogPages = Math.ceil(backlogTasks.length / BACKLOG_ITEMS_PER_PAGE);
+
   // Filter tasks based on selected date and active horizon
   const filteredTasks = useMemo(() => {
     if (activeHorizon === 'void') return [];
+    
+    if (activeHorizon === 'backlog') {
+      const startIndex = (backlogPage - 1) * BACKLOG_ITEMS_PER_PAGE;
+      return backlogTasks.slice(startIndex, startIndex + BACKLOG_ITEMS_PER_PAGE);
+    }
     
     return allTasks.filter(t => {
       if (!t.plannedDate) return false;
@@ -104,7 +125,7 @@ const OrbitScheduler = () => {
 
       return false;
     });
-  }, [allTasks, activeHorizon, selectedDate]);
+  }, [allTasks, activeHorizon, selectedDate, backlogTasks, backlogPage]);
 
   const anomalies = useMemo(() => analyzeSchedule(filteredTasks), [filteredTasks]);
 
@@ -143,6 +164,18 @@ const OrbitScheduler = () => {
         setIsReflectionOpen(true);
       }
     }
+  };
+
+  const handleCarryForward = async (id: string) => {
+    const today = getTodayLocalISO();
+    const milestoneTask = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id })) )).find(t => t.id === id);
+    
+    if (milestoneTask) {
+      await updateMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId!, id, { plannedDate: today });
+    } else {
+      await updateTask(id, { plannedDate: today });
+    }
+    SoundManager.playPop();
   };
 
   const startEditingTask = (task: Task) => {
@@ -248,9 +281,9 @@ const OrbitScheduler = () => {
       </header>
 
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <OrbitSubNav active={activeHorizon} onChange={setActiveHorizon} />
+        <OrbitSubNav active={activeHorizon} onChange={(h) => { setActiveHorizon(h); setBacklogPage(1); }} />
         
-        {activeHorizon !== 'void' && (
+        {activeHorizon !== 'void' && activeHorizon !== 'backlog' && (
           <div className="flex items-center gap-3 glass-panel p-2 px-4 rounded-2xl border border-outline-variant mb-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <Calendar size={16} className="text-primary" />
             <input 
@@ -282,62 +315,85 @@ const OrbitScheduler = () => {
             exit={{ opacity: 0, y: -20 }}
             className="space-y-8"
           >
-            <section className="glass-panel border border-outline-variant p-6 rounded-3xl space-y-4">
-              <h3 className="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em] flex items-center gap-2">
-                <Plus size={14} className="text-primary" />
-                Initialize New {activeHorizon === 'weekly' ? 'Weekly Milestone' : 'Daily Parameter'}
-              </h3>
-              <form onSubmit={handleSubmit} className="flex flex-wrap gap-3">
-                <input 
-                  className="flex-1 min-w-[300px] bg-surface-high px-6 py-4 rounded-2xl border border-outline-variant focus:border-primary focus:outline-none text-sm transition-all"
-                  placeholder={activeHorizon === 'weekly' ? "Define a weekly resonance milestone..." : "Define the next mission parameter..."}
-                  value={newTask}
-                  onChange={(e) => setNewTask(e.target.value)}
-                />
-                <div className="flex gap-2">
-                  <div className="flex flex-wrap items-center gap-4">
-                    <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
-                      <Clock size={14} className="text-on-surface-variant" />
-                      <input 
-                        type="time"
-                        className="bg-transparent text-xs font-mono focus:outline-none"
-                        value={newTime}
-                        onChange={(e) => setNewTime(e.target.value)}
-                      />
-                    </div>
-                    
-                    <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
-                      <Timer size={14} className="text-on-surface-variant" />
-                      <input 
-                        type="time"
-                        className="bg-transparent text-xs font-mono focus:outline-none"
-                        value={newEndTime}
-                        onChange={(e) => setNewEndTime(e.target.value)}
-                      />
-                    </div>
-                    <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
-                      <AlertTriangle size={14} className="text-error" />
-                      <input 
-                        type="datetime-local"
-                        className="bg-transparent text-[10px] font-mono focus:outline-none w-32"
-                        value={newDeadline}
-                        onChange={(e) => setNewDeadline(e.target.value)}
-                      />
-                    </div>
+            {activeHorizon === 'backlog' ? (
+              <section className="glass-panel border border-outline-variant p-6 rounded-3xl space-y-4">
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                  <h3 className="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em] flex items-center gap-2">
+                    <Archive size={14} className="text-tertiary" />
+                    Query Plan (Unresolved Parameters)
+                  </h3>
+                  <div className="flex items-center gap-2 bg-surface-high border border-outline-variant p-2 px-4 rounded-2xl w-full sm:w-auto">
+                    <Search size={14} className="text-on-surface-variant" />
+                    <input 
+                      placeholder="Search backlog..."
+                      className="bg-transparent text-xs focus:outline-none w-full"
+                      value={backlogSearch}
+                      onChange={(e) => { setBacklogSearch(e.target.value); setBacklogPage(1); }}
+                    />
                   </div>
                 </div>
-                <button type="submit" aria-label="Add task" className="px-8 py-4 bg-primary-container text-on-primary rounded-2xl font-black uppercase tracking-widest hover:shadow-[0_0_25px_rgba(var(--color-primary-container-rgb),0.4)] transition-all flex items-center gap-2">
-                  <Plus size={20} />
-                  Uplink
-                </button>
-              </form>
-            </section>
+              </section>
+            ) : (
+              <section className="glass-panel border border-outline-variant p-6 rounded-3xl space-y-4">
+                <h3 className="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em] flex items-center gap-2">
+                  <Plus size={14} className="text-primary" />
+                  Initialize New {activeHorizon === 'weekly' ? 'Weekly Milestone' : 'Daily Parameter'}
+                </h3>
+                <form onSubmit={handleSubmit} className="flex flex-wrap gap-3">
+                  <input 
+                    className="flex-1 min-w-[300px] bg-surface-high px-6 py-4 rounded-2xl border border-outline-variant focus:border-primary focus:outline-none text-sm transition-all"
+                    placeholder={activeHorizon === 'weekly' ? "Define a weekly resonance milestone..." : "Define the next mission parameter..."}
+                    value={newTask}
+                    onChange={(e) => setNewTask(e.target.value)}
+                  />
+                  <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
+                        <Clock size={14} className="text-on-surface-variant" />
+                        <input 
+                          type="time"
+                          className="bg-transparent text-xs font-mono focus:outline-none"
+                          value={newTime}
+                          onChange={(e) => setNewTime(e.target.value)}
+                        />
+                      </div>
+                      
+                      <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
+                        <Timer size={14} className="text-on-surface-variant" />
+                        <input 
+                          type="time"
+                          className="bg-transparent text-xs font-mono focus:outline-none"
+                          value={newEndTime}
+                          onChange={(e) => setNewEndTime(e.target.value)}
+                        />
+                      </div>
+                      <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
+                        <AlertTriangle size={14} className="text-error" />
+                        <input 
+                          type="datetime-local"
+                          className="bg-transparent text-[10px] font-mono focus:outline-none w-32"
+                          value={newDeadline}
+                          onChange={(e) => setNewDeadline(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <button type="submit" aria-label="Add task" className="px-8 py-4 bg-primary-container text-on-primary rounded-2xl font-black uppercase tracking-widest hover:shadow-[0_0_25px_rgba(var(--color-primary-container-rgb),0.4)] transition-all flex items-center gap-2">
+                    <Plus size={20} />
+                    Uplink
+                  </button>
+                </form>
+              </section>
+            )}
 
             <section className="space-y-4 max-w-4xl">
               <div className="flex items-center justify-between px-2">
                 <h3 className="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em] flex items-center gap-2">
-                  <Clock size={14} className="text-secondary" />
-                  Mission Rotation: {new Date(selectedDate).toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' })}
+                  {activeHorizon === 'backlog' ? (
+                    <><Archive size={14} className="text-tertiary" /> Total Backlogged: {backlogTasks.length}</>
+                  ) : (
+                    <><Clock size={14} className="text-secondary" /> Mission Rotation: {new Date(selectedDate).toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' })}</>
+                  )}
                 </h3>
                 {globalAnomalies.length > 0 && (
                    <div className="flex gap-2">
@@ -542,7 +598,16 @@ const OrbitScheduler = () => {
                           )}
                         </div>
 
-                        <div className="lg:opacity-0 lg:group-hover:opacity-100 transition-all ml-auto">
+                        <div className="lg:opacity-0 lg:group-hover:opacity-100 transition-all ml-auto flex items-center gap-2">
+                          {activeHorizon === 'backlog' && (
+                            <button
+                              title="Carry Forward to Today"
+                              onClick={() => handleCarryForward(task.id)}
+                              className="w-8 h-8 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center hover:bg-tertiary hover:text-on-tertiary transition-colors"
+                            >
+                              <ArrowRightCircle size={16} />
+                            </button>
+                          )}
                           <ActionMenu 
                             actions={[
                               { label: 'Edit', icon: Edit2, onClick: () => startEditingTask(task) },
@@ -576,6 +641,30 @@ const OrbitScheduler = () => {
                   </motion.div>
                 );
               })}
+              
+              {activeHorizon === 'backlog' && totalBacklogPages > 1 && (
+                <div className="flex items-center justify-between glass-panel border border-outline-variant p-4 rounded-3xl mt-4">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant pl-2">
+                    Page {backlogPage} of {totalBacklogPages}
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      disabled={backlogPage === 1}
+                      onClick={() => setBacklogPage(p => Math.max(1, p - 1))}
+                      className="p-3 bg-surface-high rounded-xl disabled:opacity-30 disabled:cursor-not-allowed hover:bg-surface-highest transition-colors"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <button
+                      disabled={backlogPage === totalBacklogPages}
+                      onClick={() => setBacklogPage(p => Math.min(totalBacklogPages, p + 1))}
+                      className="p-3 bg-surface-high rounded-xl disabled:opacity-30 disabled:cursor-not-allowed hover:bg-surface-highest transition-colors"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </div>
+              )}
             </section>
           </motion.div>
         )}
