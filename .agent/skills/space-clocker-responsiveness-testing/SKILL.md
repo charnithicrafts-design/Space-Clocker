@@ -46,50 +46,71 @@ Verify the application layout, glassmorphism UI integrity, text wrapping, and in
 
 ## 3. Adaptable Constraints: CSS3 equivalents of Android ConstraintLayout
 
-Android's `ConstraintLayout` aligns sibling elements relative to each other (e.g., `layout_topToBottomof`, `layout_toLeftOf`). In CSS3, we can achieve identical adaptive constraint mechanisms using three strategies:
+Android's `ConstraintLayout` aligns sibling elements relative to each other (e.g., `layout_topToBottomof`, `layout_toLeftOf`), allowing highly complex flat hierarchies. For a PWA—especially on mobile portrait views where screen real estate is constrained—we can achieve identical adaptive constraint mechanisms using modern CSS3.
 
-### Strategy A: CSS Grid (Constraint Mapping)
-Define a responsive template grid where grid areas are constrained relative to each other, allowing items to grow, shrink, and align relative to parent grid lines.
-
-```css
-.constraint-container {
-  display: grid;
-  grid-template-columns: minmax(100px, 1fr) auto minmax(100px, 2fr);
-  grid-template-rows: auto 1fr auto;
-  grid-template-areas:
-    "header  header  header"
-    "sidebar content status"
-    "footer  footer  footer";
-  align-items: stretch;
-  justify-items: stretch;
-  gap: 1rem;
-}
-```
-
-### Strategy B: CSS Anchor Positioning (CSS Level 4)
-*Highly equivalent to ConstraintLayout sibling constraints.* It anchors a floating element to a target element and aligns the edges.
-
-```css
-/* Define anchor target */
-.anchor-element {
-  anchor-name: --my-anchor;
-}
-
-/* Constrain item to top-of / right-of anchor */
-.constrained-item {
-  position: absolute;
-  position-anchor: --my-anchor;
+### A. Relative Positioning (Aligning to Parents & Siblings)
+In ConstraintLayout, you anchor a view to its parent or siblings. In CSS, we map this as follows:
+- **Parent Anchoring (Centering):** ConstraintLayout uses `topToTop="parent"`, `bottomToBottom="parent"`. In CSS, use Flexbox (`display: flex; align-items: center; justify-content: center;`) or Grid (`display: grid; place-items: center;`). For absolute elements, use `inset: 0; margin: auto;`.
+- **Sibling Anchoring (CSS Anchor Positioning - Level 4):** This is the most direct equivalent to `layout_topToBottomOf`.
+  ```css
+  /* Define anchor target */
+  .anchor-element { anchor-name: --my-anchor; }
   
-  /* Align bottom to anchor's top boundary */
-  bottom: anchor(--my-anchor top);
-  /* Align left to anchor's right boundary */
-  left: anchor(--my-anchor right);
-}
-```
+  /* Constrain item to bottom of anchor */
+  .constrained-item {
+    position: absolute;
+    position-anchor: --my-anchor;
+    top: anchor(--my-anchor bottom); /* Equivalent to topToBottomOf */
+    left: anchor(--my-anchor left);  /* Equivalent to leftToLeftOf */
+  }
+  ```
 
-### Strategy C: CSS variables + calc()
-Use calculations relative to parent elements or sibling widths to enforce mathematical spacing constraints:
+### B. Match Constraints (0dp) & Bias
+ConstraintLayout uses `0dp` to match constraints (fill available space). It also uses bias (e.g., `layout_constraintHorizontal_bias="0.3"`) to position elements unevenly.
+- **Match Constraint (0dp):** Use Flexbox `flex: 1` (or `flex-grow: 1`) to tell an element to fill all available space between other elements. In CSS Grid, use `1fr`.
+- **Bias / Weighted Proportions:** If you want an element positioned 30% from the left and 70% from the right, use CSS Grid tracks.
+  ```css
+  .bias-container {
+    display: grid;
+    /* 30% / Content / 70% */
+    grid-template-columns: 3fr auto 7fr; 
+  }
+  .content { grid-column: 2; }
+  ```
 
+### C. Chains (Horizontal & Vertical)
+ConstraintLayout chains (Spread, Spread Inside, Packed) organize multiple views linearly. This maps perfectly to **CSS Flexbox**.
+- **Spread Chain:** `justify-content: space-evenly;` (or `space-around;`)
+- **Spread Inside Chain:** `justify-content: space-between;`
+- **Packed Chain:** `justify-content: center; gap: 8px;`
+
+### D. Guidelines and Barriers
+ConstraintLayout uses Guidelines (invisible lines to align to) and Barriers (dynamic lines based on the widest/tallest of a group of views).
+- **Guidelines (Percentages/Fixed):** Use **CSS Grid**. Define a grid layout with explicit percentages or fixed sizes.
+  ```css
+  .guideline-container {
+    display: grid;
+    /* Guideline at 25% of the screen width */
+    grid-template-columns: 25% 1fr;
+  }
+  ```
+- **Barriers / Max Content:** Use CSS Grid's `max-content` or `min-content`.
+  ```css
+  .barrier-container {
+    display: grid;
+    /* Column 1 scales to fit the widest element inside it (the barrier). Column 2 takes the rest. */
+    grid-template-columns: max-content 1fr;
+  }
+  ```
+
+### E. Aspect Ratio and Visibility
+- **Aspect Ratio:** ConstraintLayout uses `layout_constraintDimensionRatio`. In CSS3, simply use the `aspect-ratio` property (e.g., `aspect-ratio: 16 / 9;`).
+- **Visibility (Gone vs Invisible):** 
+  - `View.GONE` (Element disappears, layout collapses): `display: none;`
+  - `View.INVISIBLE` (Element is hidden but keeps its space): `visibility: hidden;`
+
+### F. CSS variables + calc()
+Use calculations relative to parent elements or sibling widths to enforce mathematical spacing constraints for highly custom layouts:
 ```css
 .constrained-sibling {
   margin-left: calc(var(--sibling-width, 120px) + 16px);
