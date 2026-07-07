@@ -87,6 +87,9 @@ export interface OracleConfig {
   providerUrl: string;
   clientId?: string;
   syncEnabled?: boolean;
+  syncTier?: 'none' | 'one-time' | 'premium';
+  syncExpiresAt?: string | null;
+  oneTimeSyncsAvailable?: number;
 }
 
 export interface SyncStatus {
@@ -229,7 +232,9 @@ export const useTrackStore = create<TrackStore>()(
     oracleConfig: {
       apiKey: '',
       model: 'gemini-1.5-pro',
-      providerUrl: 'https://generativelanguage.googleapis.com/v1beta/openai'
+      providerUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
+      syncTier: 'none',
+      oneTimeSyncsAvailable: 0
     },
     preferences: {
       confirmDelete: true,

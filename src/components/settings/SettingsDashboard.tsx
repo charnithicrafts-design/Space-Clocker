@@ -7,6 +7,7 @@ import { dumpDb, restoreDb } from '../../db/client';
 import { syncService } from '../../services/SyncService';
 import { SoundManager } from '../../utils/SoundManager';
 import { getTodayLocalISO } from '../../utils/DateTimeUtils';
+import SyncPaywallModal from './SyncPaywallModal';
 
 const SettingsDashboard = () => {
   const store = useTrackStore();
@@ -19,6 +20,7 @@ const SettingsDashboard = () => {
   const [isDumping, setIsDumping] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [showUpToDate, setShowUpToDate] = useState(false);
+  const [isPaywallOpen, setIsPaywallOpen] = useState(false);
 
   const handleSave = () => {
     updateProfile(localProfile);
@@ -42,22 +44,9 @@ const SettingsDashboard = () => {
     }
   };
 
-  const handleEstablishLink = async () => {
-    try {
-      if (!localOracle.clientId) {
-        alert('Please provide a Google Client ID first.');
-        return;
-      }
-      setSyncStatus({ isSyncing: true, error: undefined });
-      await syncService.authorize(localOracle.clientId);
-      updateOracleConfig({ syncEnabled: true });
-      setSyncStatus({ isSyncing: false });
-      SoundManager.playSyncSuccess();
-    } catch (err) {
-      console.error('Auth failed:', err);
-      setSyncStatus({ isSyncing: false, error: 'Neural Link Authorization Failed' });
-      SoundManager.playThud();
-    }
+  const handleEstablishLink = () => {
+    SoundManager.playPop();
+    setIsPaywallOpen(true);
   };
 
   const handleSeverLink = () => {
@@ -171,6 +160,8 @@ const SettingsDashboard = () => {
         <h1 className="text-4xl font-display font-black text-primary">Settings</h1>
         <p className="text-on-surface-variant">Configure your trajectory and neural link.</p>
       </header>
+
+      <SyncPaywallModal isOpen={isPaywallOpen} onClose={() => setIsPaywallOpen(false)} />
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
