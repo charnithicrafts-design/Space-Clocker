@@ -17,9 +17,10 @@ Always bump the version in `package.json` according to strict SemVer rules (`MAJ
 ## 2. Release Steps
 When instructed to manage a release or bump a version:
 1. Identify the scope of the recent changes to determine the correct SemVer bump.
-2. Update the `version` field in `package.json`.
-3. Create an atomic commit specifically for the release using the exact format: `chore(release): vX.Y.Z`.
-4. Push the commit to the `master` branch on GitHub to trigger the automated deployment pipelines.
+2. Update the `version` field in `package.json`, `public/version.json`, and `CURRENT_APP_VERSION` in `src/constants.ts`.
+3. **CRITICAL:** Update `src/data/releases.json` by adding a new entry at the top of the array for the new version. Include a thematic `transmission` title and a list of `details` outlining the exact fixes and features. If this is not done, users will see outdated release notes.
+4. Create an atomic commit specifically for the release using the exact format: `chore(release): vX.Y.Z`.
+5. Push the commit to the `master` branch on GitHub to trigger the automated deployment pipelines.
 
 ## 3. Strict Policies
 - Never bundle a version bump with feature code. Feature code must be committed first.

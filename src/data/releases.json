@@ -1,5 +1,27 @@
 [
   {
+    "version": "1.7.3",
+    "date": "2026-07-08",
+    "transmission": "Stasis Protocol: Backlog Integrity & UX Refinement.",
+    "details": [
+      "Secured the Stasis Backlog: Unresolved tasks now strictly remain in stasis instead of auto-drifting into the daily mission.",
+      "Re-engineered terminology: Simplified 'Query Plan (Unresolved Parameters)' to 'Stasis Backlog' for immediate cognitive clarity.",
+      "Enhanced trajectory drift reflections to accurately record unresolved stasis items."
+    ],
+    "type": "hotfix"
+  },
+  {
+    "version": "1.7.2",
+    "date": "2026-07-07",
+    "transmission": "Cross-Device Synchronization & Premium Gateway.",
+    "details": [
+      "Migrated global synchronization infrastructure from Google Drive to ultra-fast Vercel Blob architecture.",
+      "Implemented seamless remote update lifecycle with real-time network-aware broadcast banners.",
+      "Introduced Secure Paywall Gateway for robust monetization tiers (UPI/UTR support)."
+    ],
+    "type": "minor"
+  },
+  {
     "version": "1.5.4",
     "date": "2026-06-05",
     "transmission": "Legacy Device Catalyst: Memory Efficiency & Volatile Fallbacks.",
