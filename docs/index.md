@@ -25,7 +25,7 @@ Space-Clocker is a high-fidelity, space-themed productivity and skill-tracking a
 - [Source Tree Analysis](./source-tree-analysis.md) - Annotated directory structure
 - [Architecture](./architecture.md) - Detailed technical architecture
 - [Component Inventory](./component-inventory.md) _(To be generated)_
-- [Development Guide](./development-guide.md) _(To be generated)_
+- [Development Guide](./development-guide.md) - Onboarding, coding standards, git workflows, and release cycles
 - [API Contracts](./api-contracts.md) _(To be generated)_
 - [Data Models](./data-models.md) _(To be generated)_
 
