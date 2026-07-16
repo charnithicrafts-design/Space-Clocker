@@ -37,11 +37,40 @@ export const db = {
   },
   query: async (sql: string, params?: any[]) => {
     await ensureInit();
-    return dbProxy.query(sql, params);
+    const result = await dbProxy.query(sql, params);
+    
+    // Auto sync on write queries (INSERT, UPDATE, DELETE, etc.)
+    const isWrite = /^\s*(insert|update|delete|replace|alter|create|drop)/i.test(sql);
+    // Ignore updates to sync_metadata or devices to prevent infinite sync loops
+    const isSyncOrDeviceWrite = /sync_metadata|devices/i.test(sql);
+    
+    if (isWrite && !isSyncOrDeviceWrite && typeof window !== 'undefined') {
+      import('../store/useTrackStore').then(({ useTrackStore }) => {
+        const store = useTrackStore.getState();
+        if (store.triggerBackgroundSync) {
+          store.triggerBackgroundSync();
+        }
+      }).catch(() => {});
+    }
+    return result;
   },
   exec: async (sql: string) => {
     await ensureInit();
-    return dbProxy.exec(sql);
+    const result = await dbProxy.exec(sql);
+    
+    // Auto sync on exec writes
+    const isWrite = /^\s*(insert|update|delete|replace|alter|create|drop)/i.test(sql);
+    const isSyncOrDeviceWrite = /sync_metadata|devices/i.test(sql);
+    
+    if (isWrite && !isSyncOrDeviceWrite && typeof window !== 'undefined') {
+      import('../store/useTrackStore').then(({ useTrackStore }) => {
+        const store = useTrackStore.getState();
+        if (store.triggerBackgroundSync) {
+          store.triggerBackgroundSync();
+        }
+      }).catch(() => {});
+    }
+    return result;
   },
   close: async () => {
     await dbProxy.close();

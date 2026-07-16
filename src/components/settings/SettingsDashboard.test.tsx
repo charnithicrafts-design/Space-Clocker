@@ -70,6 +70,8 @@ describe('SettingsDashboard', () => {
       lastSyncedAt: undefined,
       error: undefined
     },
+    devices: [],
+    disconnectDevice: vi.fn(),
     updateProfile: mockUpdateProfile,
     updateOracleConfig: mockUpdateOracleConfig,
     updatePreferences: mockUpdatePreferences,
@@ -135,14 +137,35 @@ describe('SettingsDashboard', () => {
     render(<SettingsDashboard />);
     const linkButton = screen.getByRole('button', { name: /Establish Link/i });
 
-    // Act
+    // Act - Open paywall modal
     await act(async () => {
       fireEvent.click(linkButton);
     });
 
+    // Choose Premium Tier
+    const premiumTierButton = screen.getByText(/Quantum Uplink/i);
+    await act(async () => {
+      fireEvent.click(premiumTierButton);
+    });
+
+    // Enter UTR
+    const utrInput = screen.getByPlaceholderText(/Enter 12-digit UTR/i);
+    await act(async () => {
+      fireEvent.change(utrInput, { target: { value: '123456789012' } });
+    });
+
+    // Click Verify
+    const verifyButton = screen.getByRole('button', { name: /Verify Payment/i });
+    await act(async () => {
+      fireEvent.click(verifyButton);
+    });
+
     // Assert
-    expect(syncService.authorize).toHaveBeenCalledWith('google-client-id-456');
-    expect(mockUpdateOracleConfig).toHaveBeenCalledWith({ syncEnabled: true });
+    expect(syncService.authorize).toHaveBeenCalledWith(expect.stringContaining('google-client-id-456'));
+    expect(mockUpdateOracleConfig).toHaveBeenCalledWith(expect.objectContaining({ 
+      syncEnabled: true,
+      syncTier: 'premium'
+    }));
     expect(SoundManager.playSyncSuccess).toHaveBeenCalled();
   });
 
@@ -181,5 +204,26 @@ describe('SettingsDashboard', () => {
     expect(SoundManager.playPop).toHaveBeenCalled();
     // We can also verify that the button gets the active class if we want to be thorough
     expect(proButton).toHaveClass('bg-secondary');
+  });
+
+  it('renders linked devices array when sync is enabled', async () => {
+    // Arrange
+    const mockDevices = [
+      { id: 'dev-1', name: 'My MacBook', type: 'desktop', lastActive: '2026-07-17T04:41:00Z' },
+      { id: 'dev-2', name: 'My Samsung Phone', type: 'mobile', lastActive: '2026-07-17T04:42:00Z' }
+    ];
+    
+    (useTrackStore as any).mockReturnValue({
+      ...mockInitialState,
+      oracleConfig: { ...mockInitialState.oracleConfig, syncEnabled: true },
+      devices: mockDevices
+    });
+
+    render(<SettingsDashboard />);
+
+    // Assert
+    expect(screen.getByText('Linked Devices Array')).toBeInTheDocument();
+    expect(screen.getByText('My MacBook')).toBeInTheDocument();
+    expect(screen.getByText('My Samsung Phone')).toBeInTheDocument();
   });
 });

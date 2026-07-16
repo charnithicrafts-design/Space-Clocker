@@ -31,6 +31,9 @@ CREATE TABLE IF NOT EXISTS oracle_config (
   provider_url TEXT DEFAULT 'https://generativelanguage.googleapis.com/v1beta/openai',
   client_id TEXT DEFAULT '',
   sync_enabled BOOLEAN DEFAULT false,
+  sync_tier TEXT DEFAULT 'none',
+  sync_expires_at TEXT DEFAULT NULL,
+  one_time_syncs_available INTEGER DEFAULT 0,
   CONSTRAINT single_oracle CHECK (id = 1)
 );
 
@@ -133,4 +136,12 @@ CREATE TABLE IF NOT EXISTS stellar_history (
   description TEXT,
   skills TEXT
 );
+
+CREATE TABLE IF NOT EXISTS devices (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  last_active TEXT NOT NULL
+);
 `;
+

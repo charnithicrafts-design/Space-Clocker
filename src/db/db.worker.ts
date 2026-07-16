@@ -700,6 +700,7 @@ export const api = {
       await tx.query('DELETE FROM reflections');
       await tx.query('DELETE FROM transmissions');
       await tx.query('DELETE FROM stellar_history');
+      await tx.query('DELETE FROM devices');
       await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, ['Valentina', 1, 0, 'Galactic Voyager']);
       await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [true, 'simple']);
       await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [0, 0, 0]);

@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { CURRENT_APP_VERSION } from '../../constants';
-import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check } from 'lucide-react';
+import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor } from 'lucide-react';
 import { dumpDb, restoreDb } from '../../db/client';
 import { syncService } from '../../services/SyncService';
 import { SoundManager } from '../../utils/SoundManager';
 import { getTodayLocalISO } from '../../utils/DateTimeUtils';
 import SyncPaywallModal from './SyncPaywallModal';
+import { getOrCreateDeviceId } from '../../utils/DeviceUtils';
 
 const SettingsDashboard = () => {
   const store = useTrackStore();
-  const { profile, oracleConfig, preferences, syncStatus, updateProfile, updateOracleConfig, updatePreferences, importData, initialize, setSyncStatus } = store;
+  const { profile, oracleConfig, preferences, syncStatus, devices, updateProfile, updateOracleConfig, updatePreferences, importData, initialize, setSyncStatus, disconnectDevice } = store;
 
   const [localProfile, setLocalProfile] = useState(profile);
   const [localOracle, setLocalOracle] = useState(oracleConfig);
@@ -272,6 +273,65 @@ const SettingsDashboard = () => {
               )}
             </div>
           </div>
+          
+          {oracleConfig.syncEnabled && (
+            <div className="space-y-4 pt-4 border-t border-outline-variant">
+              <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
+                <Laptop size={14} className="text-primary" />
+                Linked Devices Array
+              </h4>
+              <div className="space-y-3">
+                {devices.map((device) => {
+                  const isCurrent = device.id === getOrCreateDeviceId();
+                  let Icon = Laptop;
+                  if (device.type === 'mobile') Icon = Smartphone;
+                  if (device.type === 'tablet') Icon = Tablet;
+                  if (device.type === 'desktop') Icon = Laptop;
+
+                  return (
+                    <div 
+                      key={device.id} 
+                      className={`flex items-center justify-between p-4 rounded-2xl bg-surface-high border transition-all ${isCurrent ? 'border-primary/45 shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.15)]' : 'border-outline-variant'}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-xl ${isCurrent ? 'bg-primary/20 text-primary' : 'bg-surface-low text-on-surface-variant'}`}>
+                          <Icon size={18} />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-white">{device.name}</span>
+                            {isCurrent && (
+                              <span className="bg-primary/20 text-primary text-[8px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider border border-primary/30">
+                                Current
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-[10px] text-on-surface-variant uppercase tracking-tighter block">
+                            Active: {new Date(device.lastActive).toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          if (window.confirm(`Are you sure you want to disconnect ${device.name}?`)) {
+                            disconnectDevice(device.id);
+                          }
+                        }}
+                        className="p-2 text-on-surface-variant hover:text-error hover:bg-error/10 rounded-xl transition-colors"
+                        title="Disconnect Device"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  );
+                })}
+                {devices.length === 0 && (
+                  <p className="text-xs text-on-surface-variant italic text-center py-2">No linked devices registered in this array.</p>
+                )}
+              </div>
+            </div>
+          )}
+
           <div className="space-y-4 pt-4 border-t border-outline-variant">
             <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
               <Database size={14} className="text-primary" />

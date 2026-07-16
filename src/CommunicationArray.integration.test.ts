@@ -84,8 +84,7 @@ describe('Communication Array - High-Fidelity Integration Cycle', () => {
     vi.spyOn(store, 'initialize').mockResolvedValue(undefined);
 
     // 2. Mock Remote: No cloud backup exists yet.
-    fetchMock.mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ files: [] }) }); // getMetadata check
-    fetchMock.mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ id: 'remote-id-virmire-01' }) }); // upload response
+    fetchMock.mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ url: 'remote-id-virmire-01' }) }); // upload response
 
     // --- ACT (Phase 1: Uplink Transmission) ---
     // Push the current mission state to the cloud.
@@ -94,7 +93,7 @@ describe('Communication Array - High-Fidelity Integration Cycle', () => {
     // --- ASSERT (Phase 1) ---
     expect(pushResult.fileId).toBe('remote-id-virmire-01');
     expect(mockDbState.sync_metadata.remote_file_id).toBe('remote-id-virmire-01');
-    expect(fetchMock).toHaveBeenCalledTimes(2); // 1 check + 1 upload
+    expect(fetchMock).toHaveBeenCalledTimes(1); // 1 upload
 
     // --- ACT (Phase 2: Detect Temporal Rift) ---
     // Simulate a "Temporal Rift": A newer transmission exists on the remote terminal (e.g., from the Citadel).
@@ -102,10 +101,9 @@ describe('Communication Array - High-Fidelity Integration Cycle', () => {
     fetchMock.mockResolvedValueOnce({ 
       ok: true, 
       json: () => Promise.resolve({ 
-        files: [{ 
-          id: 'remote-id-virmire-01', 
-          modifiedTime: '2183-11-07T00:00:00Z' // A date far in the future
-        }] 
+        found: true,
+        url: 'remote-id-virmire-01', 
+        modifiedAt: '2183-11-07T00:00:00Z' // A date far in the future
       }) 
     });
 
@@ -126,10 +124,7 @@ describe('Communication Array - High-Fidelity Integration Cycle', () => {
     // --- ASSERT (Phase 3) ---
     // Verify high-fidelity resolution steps:
     // 1. Remote data was fetched.
-    expect(fetchMock).toHaveBeenCalledWith(
-        expect.stringContaining('remote-id-virmire-01'), 
-        expect.objectContaining({ headers: { Authorization: expect.stringContaining('ALPHA-NEBULA') } })
-    );
+    expect(fetchMock).toHaveBeenCalledWith('remote-id-virmire-01');
     // 2. Local Database was re-initialized from the remote blob.
     expect(DbClient.restoreDb).toHaveBeenCalled();
     // 3. Store was refreshed from the new DB state.
@@ -148,10 +143,9 @@ describe('Communication Array - High-Fidelity Integration Cycle', () => {
     fetchMock.mockResolvedValueOnce({ 
       ok: true, 
       json: () => Promise.resolve({ 
-        files: [{ 
-          id: 'remote-id-omega-4', 
-          modifiedTime: '2024-05-20T11:59:59Z' // 1 second older
-        }] 
+        found: true,
+        url: 'remote-id-omega-4', 
+        modifiedAt: '2024-05-20T11:59:59Z' // 1 second older
       }) 
     });
 

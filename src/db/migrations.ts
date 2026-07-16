@@ -57,5 +57,25 @@ export const MIGRATIONS: Migration[] = [
     run: async (tx) => {
       await tx.exec(`UPDATE system_info SET app_version = '${CURRENT_APP_VERSION}' WHERE id = 1;`);
     }
+  },
+  {
+    version: 4,
+    name: 'add_devices_registry_table',
+    run: async (tx) => {
+      await tx.exec(`
+        CREATE TABLE IF NOT EXISTS devices (
+          id TEXT PRIMARY KEY,
+          name TEXT NOT NULL,
+          type TEXT NOT NULL,
+          last_active TEXT NOT NULL
+        );
+        ALTER TABLE oracle_config ADD COLUMN IF NOT EXISTS client_id TEXT DEFAULT '';
+        ALTER TABLE oracle_config ADD COLUMN IF NOT EXISTS sync_enabled BOOLEAN DEFAULT false;
+        ALTER TABLE oracle_config ADD COLUMN IF NOT EXISTS sync_tier TEXT DEFAULT 'none';
+        ALTER TABLE oracle_config ADD COLUMN IF NOT EXISTS sync_expires_at TEXT DEFAULT NULL;
+        ALTER TABLE oracle_config ADD COLUMN IF NOT EXISTS one_time_syncs_available INTEGER DEFAULT 0;
+      `);
+    }
   }
 ];
+

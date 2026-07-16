@@ -33,13 +33,11 @@ describe('SyncService: Stellar Uplink Protocol', () => {
   });
 
   describe('pushUpdate (Uplink)', () => {
-    it('should uplink local database to Google Drive appDataFolder', async () => {
+    it('should uplink local database to Vercel Blob storage', async () => {
       // Arrange
       fetchMock.mockResolvedValueOnce({
-        json: () => Promise.resolve({ files: [] }) // getFileMetadata -> not found in this sector
-      });
-      fetchMock.mockResolvedValueOnce({
-        json: () => Promise.resolve({ id: 'stellar-file-id-001' }) // uploadFile -> success
+        ok: true,
+        json: () => Promise.resolve({ url: 'stellar-file-id-001' }) // uploadFile -> success
       });
 
       // Act
@@ -47,7 +45,7 @@ describe('SyncService: Stellar Uplink Protocol', () => {
 
       // Assert
       expect(DbClient.dumpDb).toHaveBeenCalled();
-      expect(fetchMock).toHaveBeenCalledTimes(2); // Metadata check + Upload
+      expect(fetchMock).toHaveBeenCalledTimes(1); // Only Upload
       expect(result.fileId).toBe('stellar-file-id-001');
       
       const db = DbClient.getDb();
@@ -71,6 +69,7 @@ describe('SyncService: Stellar Uplink Protocol', () => {
       // Arrange
       const mockBlob = new Blob(['remote-nebula-data']);
       fetchMock.mockResolvedValueOnce({
+        ok: true,
         blob: () => Promise.resolve(mockBlob) // downloadFile -> success
       });
 
@@ -79,8 +78,7 @@ describe('SyncService: Stellar Uplink Protocol', () => {
 
       // Assert
       expect(fetchMock).toHaveBeenCalledWith(
-        expect.stringContaining('andromeda-file-id-999'), 
-        expect.any(Object)
+        expect.stringContaining('andromeda-file-id-999')
       );
       expect(DbClient.restoreDb).toHaveBeenCalledWith(mockBlob);
       
@@ -93,8 +91,11 @@ describe('SyncService: Stellar Uplink Protocol', () => {
     it('should detect when remote signal is newer than local logs', async () => {
       // Arrange
       fetchMock.mockResolvedValueOnce({
+        ok: true,
         json: () => Promise.resolve({ 
-          files: [{ id: 'f1', modifiedTime: '2026-04-01T00:00:00Z' }] // Newer than 2026-03-30
+          found: true,
+          url: 'f1',
+          modifiedAt: '2026-04-01T00:00:00Z' // Newer than 2026-03-30
         })
       });
 
@@ -108,8 +109,11 @@ describe('SyncService: Stellar Uplink Protocol', () => {
     it('should detect when local logs are aligned with stellar backup', async () => {
       // Arrange
       fetchMock.mockResolvedValueOnce({
+        ok: true,
         json: () => Promise.resolve({ 
-          files: [{ id: 'f1', modifiedTime: '2026-01-01T00:00:00Z' }] // Older or same
+          found: true,
+          url: 'f1',
+          modifiedAt: '2026-01-01T00:00:00Z' // Older or same
         })
       });
 
@@ -123,7 +127,8 @@ describe('SyncService: Stellar Uplink Protocol', () => {
     it('should return "none" if no stellar backup is found', async () => {
       // Arrange
       fetchMock.mockResolvedValueOnce({
-        json: () => Promise.resolve({ files: [] })
+        ok: true,
+        json: () => Promise.resolve({ found: false })
       });
 
       // Act

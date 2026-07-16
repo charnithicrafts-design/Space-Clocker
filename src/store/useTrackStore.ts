@@ -98,6 +98,13 @@ export interface SyncStatus {
   error?: string;
 }
 
+export interface Device {
+  id: string;
+  name: string;
+  type: 'mobile' | 'desktop' | 'tablet' | 'unknown';
+  lastActive: string;
+}
+
 export interface Preferences {
   confirmDelete: boolean;
   uiMode: 'simple' | 'professional';
@@ -147,6 +154,7 @@ interface TrackStore {
   oracleConfig: OracleConfig;
   preferences: Preferences;
   syncStatus: SyncStatus;
+  devices: Device[];
   updateAvailable: boolean;
   isCheckingUpdates: boolean;
   pendingVersion?: string;
@@ -199,12 +207,15 @@ interface TrackStore {
   toggleMilestoneTask: (ambitionId: string, milestoneId: string, taskId: string) => Promise<void>;
   deleteAmbition: (id: string) => Promise<void>;
 
-  // Data Portability Actions
   exportData: () => Promise<string>;
   importData: (json: any) => Promise<void>;
   setSyncStatus: (status: Partial<SyncStatus>) => void;
   checkSync: () => Promise<'none' | 'remote_newer' | 'synced'>;
   performPull: () => Promise<void>;
+  registerDevice: () => Promise<void>;
+  fetchDevices: () => Promise<void>;
+  disconnectDevice: (deviceId: string) => Promise<void>;
+  triggerBackgroundSync: () => void;
 
   // Oracle & Misc Actions
   updateOracleConfig: (config: Partial<OracleConfig>) => void;
@@ -247,6 +258,7 @@ export const useTrackStore = create<TrackStore>()(
       isSyncing: false,
       lastSyncedAt: undefined
     },
+    devices: [],
     updateAvailable: false,
     isCheckingUpdates: false,
     pendingVersion: undefined,
@@ -326,6 +338,72 @@ export const useTrackStore = create<TrackStore>()(
         await syncService.pullUpdate(meta.remote_file_id);
         await get().initialize();
       }
+    },
+
+    registerDevice: async () => {
+      const { getDeviceInfo } = await import('../utils/DeviceUtils');
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      const info = getDeviceInfo();
+      const now = new Date().toISOString();
+      
+      await db.query(`
+        INSERT INTO devices (id, name, type, last_active)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (id) DO UPDATE SET
+          name = $2,
+          type = $3,
+          last_active = $4
+      `, [info.id, info.name, info.type, now]);
+      
+      await get().fetchDevices();
+    },
+
+    fetchDevices: async () => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      const res = await db.query(`SELECT id, name, type, last_active as "lastActive" FROM devices ORDER BY last_active DESC`);
+      set({ devices: res.rows || [] });
+    },
+
+    disconnectDevice: async (deviceId) => {
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      await db.query(`DELETE FROM devices WHERE id = $1`, [deviceId]);
+      await get().fetchDevices();
+      
+      const { getOrCreateDeviceId } = await import('../utils/DeviceUtils');
+      if (deviceId === getOrCreateDeviceId()) {
+        get().updateOracleConfig({ syncEnabled: false });
+      } else {
+        get().triggerBackgroundSync();
+      }
+    },
+
+    triggerBackgroundSync: () => {
+      const config = get().oracleConfig;
+      if (!config.syncEnabled || config.syncTier !== 'premium' || !config.clientId) {
+        return;
+      }
+      
+      const existingTimeout = (window as any)._syncDebounceTimeout;
+      if (existingTimeout) clearTimeout(existingTimeout);
+      
+      (window as any)._syncDebounceTimeout = setTimeout(async () => {
+        try {
+          console.log('[Sync] Triggering background auto-sync...');
+          set({ syncStatus: { isSyncing: true, lastSyncedAt: get().syncStatus.lastSyncedAt, error: undefined } });
+          const { syncService } = await import('../services/SyncService');
+          
+          await get().registerDevice();
+          const { syncedAt } = await syncService.pushUpdate();
+          set({ syncStatus: { isSyncing: false, lastSyncedAt: syncedAt } });
+          console.log('[Sync] Background auto-sync complete.');
+        } catch (err: any) {
+          console.error('[Sync] Background auto-sync failed:', err);
+          set({ syncStatus: { isSyncing: false, lastSyncedAt: get().syncStatus.lastSyncedAt, error: 'Background Sync Failed' } });
+        }
+      }, 5000);
     },
 
     addAmbition: async (title: string) => {
@@ -877,7 +955,34 @@ export const useTrackStore = create<TrackStore>()(
         throw new Error(`Import failed: ${err.message || 'Check database constraints or file structure.'}`);
       }
     },
-    updateOracleConfig: (config) => set((state) => ({ oracleConfig: { ...state.oracleConfig, ...config } })),
+    updateOracleConfig: (config) => set((state) => {
+      const newConfig = { ...state.oracleConfig, ...config };
+      import('../db/client').then(({ getDb }) => {
+        const db = getDb();
+        db.query(`
+          UPDATE oracle_config 
+          SET api_key = $1, 
+              model = $2, 
+              provider_url = $3,
+              client_id = $4,
+              sync_enabled = $5,
+              sync_tier = $6,
+              sync_expires_at = $7,
+              one_time_syncs_available = $8
+          WHERE id = 1
+        `, [
+          newConfig.apiKey,
+          newConfig.model,
+          newConfig.providerUrl,
+          newConfig.clientId || '',
+          newConfig.syncEnabled ? 1 : 0,
+          newConfig.syncTier || 'none',
+          newConfig.syncExpiresAt || null,
+          newConfig.oneTimeSyncsAvailable || 0
+        ]);
+      });
+      return { oracleConfig: newConfig };
+    }),
     updateProfile: (updates) => set((state) => {
       const newProfile = { ...state.profile, ...updates };
       import('../db/client').then(({ getDb }) => {
@@ -996,9 +1101,10 @@ export const useTrackStore = create<TrackStore>()(
         const profileRes = await dbProxy.getProfile();
         const prefsRes = await dbProxy.query(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`);
         const statsRes = await dbProxy.query(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`);
-        const oracleRes = await dbProxy.query(`SELECT api_key as "apiKey", model, provider_url as "providerUrl" FROM oracle_config WHERE id = 1`);
+        const oracleRes = await dbProxy.query(`SELECT api_key as "apiKey", model, provider_url as "providerUrl", client_id as "clientId", sync_enabled as "syncEnabled", sync_tier as "syncTier", sync_expires_at as "syncExpiresAt", one_time_syncs_available as "oneTimeSyncsAvailable" FROM oracle_config WHERE id = 1`);
         const ambitionsRes = await dbProxy.query(`SELECT * FROM ambitions`);
         const systemRes = await dbProxy.query(`SELECT last_startup, app_version FROM system_info WHERE id = 1`);
+        const devicesRes = await dbProxy.query(`SELECT id, name, type, last_active as "lastActive" FROM devices ORDER BY last_active DESC`);
 
         // Apply critical state immediately
         set({
@@ -1008,15 +1114,31 @@ export const useTrackStore = create<TrackStore>()(
             uiMode: prefsRes.rows[0]?.uiMode || 'simple'
           },
           stats: statsRes.rows[0] || get().stats,
-          oracleConfig: oracleRes.rows[0] ? { ...get().oracleConfig, ...oracleRes.rows[0] } : get().oracleConfig,
+          oracleConfig: oracleRes.rows[0] ? { 
+            ...get().oracleConfig, 
+            apiKey: oracleRes.rows[0].apiKey || '',
+            model: oracleRes.rows[0].model || 'gemini-1.5-pro',
+            providerUrl: oracleRes.rows[0].providerUrl || 'https://generativelanguage.googleapis.com/v1beta/openai',
+            clientId: oracleRes.rows[0].clientId || '',
+            syncEnabled: oracleRes.rows[0].syncEnabled === 1 || oracleRes.rows[0].syncEnabled === true,
+            syncTier: oracleRes.rows[0].syncTier || 'none',
+            syncExpiresAt: oracleRes.rows[0].syncExpiresAt || null,
+            oneTimeSyncsAvailable: oracleRes.rows[0].oneTimeSyncsAvailable || 0
+          } : get().oracleConfig,
           ambitions: (ambitionsRes.rows || []).map(a => ({ ...a, xp: a.xp || 0, milestones: [] })),
-          dbAppVersion: systemRes.rows[0]?.app_version
+          dbAppVersion: systemRes.rows[0]?.app_version,
+          devices: devicesRes.rows || []
         });
 
         const currentConfig = get().oracleConfig;
         if (currentConfig.syncEnabled && currentConfig.clientId) {
           const { syncService } = await import('../services/SyncService');
           await syncService.authorize(currentConfig.clientId);
+          try {
+            await get().registerDevice();
+          } catch (e) {
+            console.warn('[Store] Failed to auto-register current device on startup:', e);
+          }
         }
 
         // Stage 2: Background Collection Data (Sequential)

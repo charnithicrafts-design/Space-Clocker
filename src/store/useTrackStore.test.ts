@@ -204,4 +204,35 @@ describe('useTrackStore - Mission Control Store', () => {
     expect(state.transmissions[0].skillsReconciliation[0].delta).toBeGreaterThan(0);
     expect(state.transmissions[0].missionMetrics.accomplished.length).toBe(1);
   });
+
+  it('should register, fetch, and disconnect devices in the array', async () => {
+    // Arrange
+    const mockDevices = [
+      { id: 'dev-1', name: 'MacBook Pro', type: 'desktop', lastActive: '2026-07-17T04:41:00Z' }
+    ];
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // INSERT INTO devices
+    mockDb.query.mockResolvedValueOnce({ rows: mockDevices }); // SELECT devices
+
+    // Act - Register Device
+    await useTrackStore.getState().registerDevice();
+
+    // Assert
+    expect(mockDb.query).toHaveBeenCalledWith(
+      expect.stringContaining('INSERT INTO devices'),
+      expect.any(Array)
+    );
+    expect(useTrackStore.getState().devices).toEqual(mockDevices);
+
+    // Act - Disconnect Device
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // DELETE FROM devices
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT devices (empty)
+    await useTrackStore.getState().disconnectDevice('dev-1');
+
+    // Assert
+    expect(mockDb.query).toHaveBeenCalledWith(
+      expect.stringContaining('DELETE FROM devices WHERE id = $1'),
+      ['dev-1']
+    );
+    expect(useTrackStore.getState().devices).toEqual([]);
+  });
 });
