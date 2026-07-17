@@ -132,8 +132,50 @@ describe('SettingsDashboard', () => {
     expect(SoundManager.playSyncSuccess).toHaveBeenCalled();
   });
 
-  it('handles neural link authorization (Establish Link)', async () => {
+  it('handles neural link authorization (Establish Link) via Razorpay', async () => {
     // Arrange
+    const mockOrder = { order_id: 'order_test_123', amount: 10000, currency: 'INR' };
+    const mockVerify = { success: true };
+
+    const fetchSpy = vi.fn().mockImplementation((url) => {
+      if (url === '/api/create-order') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockOrder)
+        });
+      }
+      if (url === '/api/verify-payment') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(mockVerify)
+        });
+      }
+      return Promise.reject(new Error('Unknown URL: ' + url));
+    });
+    vi.stubGlobal('fetch', fetchSpy);
+
+    const mockRazorpayInstance = {
+      open: vi.fn(),
+      on: vi.fn(),
+    };
+    const mockRazorpayConstructor = vi.fn().mockImplementation(function (options) {
+      console.log('[TEST DEBUG] mockRazorpayConstructor called with options:', options);
+      if (options && typeof options.handler === 'function') {
+        options.handler({
+          razorpay_order_id: 'order_test_123',
+          razorpay_payment_id: 'pay_test_123',
+          razorpay_signature: 'sig_test_123'
+        });
+      } else {
+        console.log('[TEST DEBUG] options.handler is NOT a function!', options);
+      }
+      return mockRazorpayInstance;
+    });
+    vi.stubGlobal('Razorpay', mockRazorpayConstructor);
+    if (typeof window !== 'undefined') {
+      (window as any).Razorpay = mockRazorpayConstructor;
+    }
+
     render(<SettingsDashboard />);
     const linkButton = screen.getByRole('button', { name: /Establish Link/i });
 
@@ -148,25 +190,32 @@ describe('SettingsDashboard', () => {
       fireEvent.click(premiumTierButton);
     });
 
-    // Enter UTR
-    const utrInput = screen.getByPlaceholderText(/Enter 12-digit UTR/i);
+    // Click "Pay with Razorpay"
+    const payButton = screen.getByRole('button', { name: /Pay with Razorpay/i });
     await act(async () => {
-      fireEvent.change(utrInput, { target: { value: '123456789012' } });
-    });
-
-    // Click Verify
-    const verifyButton = screen.getByRole('button', { name: /Verify Payment/i });
-    await act(async () => {
-      fireEvent.click(verifyButton);
+      fireEvent.click(payButton);
     });
 
     // Assert
-    expect(syncService.authorize).toHaveBeenCalledWith(expect.stringContaining('google-client-id-456'));
-    expect(mockUpdateOracleConfig).toHaveBeenCalledWith(expect.objectContaining({ 
-      syncEnabled: true,
-      syncTier: 'premium'
-    }));
-    expect(SoundManager.playSyncSuccess).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(fetchSpy).toHaveBeenCalledWith('/api/create-order', expect.any(Object));
+    });
+    
+    await waitFor(() => {
+      expect(fetchSpy).toHaveBeenCalledWith('/api/verify-payment', expect.any(Object));
+    });
+    
+    await waitFor(() => {
+      expect(syncService.authorize).toHaveBeenCalledWith(expect.stringContaining('google-client-id-456'));
+      expect(mockUpdateOracleConfig).toHaveBeenCalledWith(expect.objectContaining({ 
+        syncEnabled: true,
+        syncTier: 'premium'
+      }));
+      expect(SoundManager.playSyncSuccess).toHaveBeenCalled();
+    });
+
+    // Clean up stubs
+    vi.unstubAllGlobals();
   });
 
   it('creates a chronos backup snapshot', async () => {
