@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Zap, ShieldCheck, CheckCircle2, Clock, CreditCard } from 'lucide-react';
+import { X, Zap, ShieldCheck, CheckCircle2, Clock, CreditCard, Link } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 import { useTrackStore } from '../../store/useTrackStore';
 import { syncService } from '../../services/SyncService';
@@ -11,11 +11,13 @@ interface SyncPaywallModalProps {
 }
 
 const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) => {
-  const { oracleConfig, updateOracleConfig, profile } = useTrackStore();
+  const { oracleConfig, updateOracleConfig, profile, linkExistingConnection } = useTrackStore();
   const [selectedTier, setSelectedTier] = useState<'one-time' | 'premium' | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [linkKeyInput, setLinkKeyInput] = useState('');
+  const [linkError, setLinkError] = useState('');
 
   const [isSdkLoaded, setIsSdkLoaded] = useState(false);
 
@@ -177,6 +179,32 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
     }, 2000);
   };
 
+  const handleLinkExisting = async () => {
+    if (!linkKeyInput.trim()) return;
+    setIsProcessing(true);
+    setLinkError('');
+    try {
+      const targetKey = linkKeyInput.trim();
+      if (!targetKey.startsWith('chr-')) {
+        throw new Error('Invalid Sync Key format. Key must start with "chr-"');
+      }
+
+      await linkExistingConnection(targetKey);
+      
+      SoundManager.playSyncSuccess();
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        setLinkKeyInput('');
+        onClose();
+      }, 2000);
+    } catch (err: any) {
+      setLinkError(err.message || 'Failed to establish link. Please check the key.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -255,6 +283,36 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
                     <li className="flex gap-2 items-center"><CheckCircle2 size={12} className="text-primary" /> Multi-device real-time</li>
                   </ul>
                 </button>
+              </div>
+
+              <div className="border-t border-outline-variant/60 pt-6 mt-2 space-y-4">
+                <div className="text-center">
+                  <h4 className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Already have a Sync Key?</h4>
+                  <p className="text-[10px] text-on-surface-variant/80 mt-1">Paste your key from another device to establish a direct neural link.</p>
+                </div>
+                <div className="flex gap-2 max-w-md mx-auto">
+                  <input
+                    type="text"
+                    placeholder="chr-xxxxxxx..."
+                    value={linkKeyInput}
+                    onChange={(e) => setLinkKeyInput(e.target.value)}
+                    disabled={isProcessing}
+                    className="flex-1 bg-surface-high p-3 text-xs rounded-xl border border-outline-variant font-mono text-center text-primary focus:border-primary focus:outline-none transition-colors"
+                  />
+                  <button
+                    onClick={handleLinkExisting}
+                    disabled={isProcessing || !linkKeyInput.trim()}
+                    className="bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary hover:text-white transition-all font-black text-[10px] uppercase tracking-widest px-4 rounded-xl disabled:opacity-30 flex items-center justify-center gap-1"
+                  >
+                    <Link size={12} />
+                    Link
+                  </button>
+                </div>
+                {linkError && (
+                  <p className="text-[9px] text-error font-bold uppercase tracking-wider text-center bg-error/5 p-2 rounded-lg border border-error/10 max-w-md mx-auto">
+                    {linkError}
+                  </p>
+                )}
               </div>
 
               <AnimatePresence mode="wait">

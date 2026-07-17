@@ -275,4 +275,36 @@ describe('SettingsDashboard', () => {
     expect(screen.getByText('My MacBook')).toBeInTheDocument();
     expect(screen.getByText('My Samsung Phone')).toBeInTheDocument();
   });
+
+  it('allows establishing connection via an existing client ID key', async () => {
+    const linkExistingSpy = vi.fn().mockResolvedValue(undefined);
+    (useTrackStore as any).mockReturnValue({
+      ...mockInitialState,
+      linkExistingConnection: linkExistingSpy
+    });
+
+    render(<SettingsDashboard />);
+    const establishButton = screen.getByRole('button', { name: /Establish Link/i });
+    await act(async () => {
+      fireEvent.click(establishButton);
+    });
+
+    // Paywall modal opens
+    expect(screen.getByText('Already have a Sync Key?')).toBeInTheDocument();
+    
+    // Find input and button
+    const keyInput = screen.getByPlaceholderText('chr-xxxxxxx...');
+    const linkBtn = screen.getByRole('button', { name: /^Link$/i });
+
+    // Act - type key and click Link
+    await act(async () => {
+      fireEvent.change(keyInput, { target: { value: 'chr-myexistingclientkey123' } });
+    });
+    
+    await act(async () => {
+      fireEvent.click(linkBtn);
+    });
+
+    expect(linkExistingSpy).toHaveBeenCalledWith('chr-myexistingclientkey123');
+  });
 });

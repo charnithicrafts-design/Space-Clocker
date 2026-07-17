@@ -212,6 +212,7 @@ interface TrackStore {
   setSyncStatus: (status: Partial<SyncStatus>) => void;
   checkSync: () => Promise<'none' | 'remote_newer' | 'synced'>;
   performPull: () => Promise<void>;
+  linkExistingConnection: (clientId: string) => Promise<void>;
   registerDevice: () => Promise<void>;
   fetchDevices: () => Promise<void>;
   disconnectDevice: (deviceId: string) => Promise<void>;
@@ -338,6 +339,37 @@ export const useTrackStore = create<TrackStore>()(
         await syncService.pullUpdate(meta.remote_file_id);
         await get().initialize();
       }
+    },
+
+    linkExistingConnection: async (clientId: string) => {
+      const { syncService } = await import('../services/SyncService');
+      
+      // Authorize
+      await syncService.authorize(clientId);
+      
+      // Try to check if there is an existing database backup in the cloud
+      const meta = await syncService.getFileMetadata('space-clocker-sync.pgdump');
+      if (meta && meta.id) {
+        // Download and restore
+        await syncService.pullUpdate(meta.id);
+      }
+      
+      // Update config locally
+      const { getDb } = await import('../db/client');
+      const db = getDb();
+      await db.query(`
+        UPDATE oracle_config 
+        SET client_id = $1,
+            sync_enabled = 1,
+            sync_tier = 'premium'
+        WHERE id = 1
+      `, [clientId]);
+      
+      // Register current device
+      await get().registerDevice();
+      
+      // Reload
+      await get().initialize();
     },
 
     registerDevice: async () => {

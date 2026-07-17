@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { CURRENT_APP_VERSION } from '../../constants';
-import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor } from 'lucide-react';
+import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor, Copy } from 'lucide-react';
 import { dumpDb, restoreDb } from '../../db/client';
 import { syncService } from '../../services/SyncService';
 import { SoundManager } from '../../utils/SoundManager';
@@ -248,6 +248,25 @@ const SettingsDashboard = () => {
                   {oracleConfig.syncEnabled ? 'Active' : 'Offline'}
                 </div>
               </div>
+
+              {oracleConfig.syncEnabled && oracleConfig.clientId && (
+                <div className="flex items-center justify-between p-3 rounded-xl bg-surface-lowest border border-outline-variant">
+                  <div className="space-y-1">
+                    <span className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest block">Client Sync Key</span>
+                    <p className="text-xs font-mono font-bold text-primary select-all break-all">{oracleConfig.clientId}</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(oracleConfig.clientId || '');
+                      SoundManager.playBeep();
+                    }}
+                    className="p-2 text-on-surface-variant hover:text-white rounded-lg hover:bg-surface-low transition-colors"
+                    title="Copy Key"
+                  >
+                    <Copy size={14} />
+                  </button>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-3">
                 <button 
                   onClick={oracleConfig.syncEnabled ? handleSeverLink : handleEstablishLink}
