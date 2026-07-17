@@ -17,12 +17,26 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
   const [success, setSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const [isSdkLoaded, setIsSdkLoaded] = useState(false);
+
   // Dynamically load Razorpay Standard Checkout SDK
   useEffect(() => {
     if (!isOpen) return;
+
+    if (typeof (window as any).Razorpay === 'function') {
+      setIsSdkLoaded(true);
+      return;
+    }
+
     const script = document.createElement('script');
     script.src = 'https://checkout.razorpay.com/v1/checkout.js';
     script.async = true;
+    script.onload = () => {
+      setIsSdkLoaded(typeof (window as any).Razorpay === 'function');
+    };
+    script.onerror = () => {
+      setIsSdkLoaded(false);
+    };
     document.body.appendChild(script);
     return () => {
       document.body.removeChild(script);
@@ -33,6 +47,12 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
     if (!selectedTier) return;
     setIsProcessing(true);
     setError('');
+
+    if (typeof (window as any).Razorpay !== 'function') {
+      setError('Razorpay SDK could not be loaded. Please disable your ad-blocker or Brave Shield and try again.');
+      setIsProcessing(false);
+      return;
+    }
 
     // Determine amount in paise (₹10 = 1000 paise, ₹100 = 10000 paise)
     const amountInPaise = selectedTier === 'one-time' ? 1000 : 10000;
