@@ -1,19 +1,16 @@
 import { list } from '@vercel/blob';
 
-export const config = {
-  runtime: 'edge',
-};
-
-export default async function handler(request: Request) {
-  if (request.method !== 'GET') {
-    return new Response('Method Not Allowed', { status: 405 });
+export default async function handler(req: any, res: any) {
+  if (req.method !== 'GET') {
+    res.status(405).send('Method Not Allowed');
+    return;
   }
 
-  const { searchParams } = new URL(request.url);
-  const clientId = searchParams.get('clientId');
+  const { clientId } = req.query;
   
   if (!clientId || clientId.length < 5) {
-    return new Response('Invalid or missing clientId', { status: 400 });
+    res.status(400).send('Invalid or missing clientId');
+    return;
   }
 
   try {
@@ -23,21 +20,16 @@ export default async function handler(request: Request) {
     const { blobs } = await list({ prefix, limit: 1 });
     
     if (blobs.length === 0) {
-      return new Response(JSON.stringify({ found: false }), { 
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      res.status(200).json({ found: false });
+      return;
     }
 
-    return new Response(JSON.stringify({ 
+    res.status(200).json({ 
       found: true,
       url: blobs[0].url,
       modifiedAt: blobs[0].uploadedAt
-    }), { 
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
     });
   } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    res.status(500).json({ error: error.message });
   }
 }

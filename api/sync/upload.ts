@@ -1,34 +1,35 @@
 import { put } from '@vercel/blob';
 
 export const config = {
-  runtime: 'edge',
+  api: {
+    bodyParser: false,
+  },
 };
 
-export default async function handler(request: Request) {
-  if (request.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
+export default async function handler(req: any, res: any) {
+  if (req.method !== 'POST') {
+    res.status(405).send('Method Not Allowed');
+    return;
   }
 
-  const { searchParams } = new URL(request.url);
-  const clientId = searchParams.get('clientId');
+  const { clientId } = req.query;
   
   if (!clientId || clientId.length < 5) {
-    return new Response('Invalid or missing clientId', { status: 400 });
+    res.status(400).send('Invalid or missing clientId');
+    return;
   }
 
   try {
     const filename = `space-clocker-${clientId}.pgdump`;
     
-    const blob = await put(filename, request.body!, { 
+    // Pass the raw request stream directly as the body (bodyParser is disabled)
+    const blob = await put(filename, req, { 
       access: 'public',
       addRandomSuffix: false // Overwrite the same sync file to save space
     });
 
-    return new Response(JSON.stringify(blob), { 
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    res.status(200).json(blob);
   } catch (error: any) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    res.status(500).json({ error: error.message });
   }
 }
