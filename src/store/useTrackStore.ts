@@ -979,7 +979,11 @@ export const useTrackStore = create<TrackStore>()(
           newConfig.syncTier || 'none',
           newConfig.syncExpiresAt || null,
           newConfig.oneTimeSyncsAvailable || 0
-        ]);
+        ]).then(() => {
+          if (config.syncEnabled && newConfig.clientId) {
+            get().registerDevice();
+          }
+        });
       });
       return { oracleConfig: newConfig };
     }),
