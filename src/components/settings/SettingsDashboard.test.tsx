@@ -4,11 +4,18 @@ import SettingsDashboard from './SettingsDashboard';
 import { useTrackStore } from '../../store/useTrackStore';
 import { syncService } from '../../services/SyncService';
 import { dumpDb, restoreDb } from '../../db/client';
+import { signIn } from '../../lib/auth-client';
 import { SoundManager } from '../../utils/SoundManager';
 
 // Mock Dependencies
 vi.mock('../../store/useTrackStore', () => ({
   useTrackStore: vi.fn()
+}));
+
+vi.mock('../../lib/auth-client', () => ({
+  signIn: {
+    social: vi.fn()
+  }
 }));
 
 vi.mock('../../constants', () => ({
@@ -276,11 +283,9 @@ describe('SettingsDashboard', () => {
     expect(screen.getByText('My Samsung Phone')).toBeInTheDocument();
   });
 
-  it('allows establishing connection via an existing client ID key', async () => {
-    const linkExistingSpy = vi.fn().mockResolvedValue(undefined);
+  it('allows establishing connection via Google Sign In', async () => {
     (useTrackStore as any).mockReturnValue({
-      ...mockInitialState,
-      linkExistingConnection: linkExistingSpy
+      ...mockInitialState
     });
 
     render(<SettingsDashboard />);
@@ -290,21 +295,18 @@ describe('SettingsDashboard', () => {
     });
 
     // Paywall modal opens
-    expect(screen.getByText('Already have a Sync Key?')).toBeInTheDocument();
+    expect(screen.getByText('Already have an Account?')).toBeInTheDocument();
     
-    // Find input and button
-    const keyInput = screen.getByPlaceholderText('chr-xxxxxxx...');
-    const linkBtn = screen.getByRole('button', { name: /^Link$/i });
+    // Find Google button
+    const googleBtn = screen.getByRole('button', { name: /Continue with Google/i });
 
-    // Act - type key and click Link
     await act(async () => {
-      fireEvent.change(keyInput, { target: { value: 'chr-myexistingclientkey123' } });
-    });
-    
-    await act(async () => {
-      fireEvent.click(linkBtn);
+      fireEvent.click(googleBtn);
     });
 
-    expect(linkExistingSpy).toHaveBeenCalledWith('chr-myexistingclientkey123');
+    expect(signIn.social).toHaveBeenCalledWith({
+      provider: 'google',
+      callbackURL: expect.any(String)
+    });
   });
 });
