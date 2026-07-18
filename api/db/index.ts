@@ -2,8 +2,11 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
 // We use the non-pooling URL for migrations, but pooling is fine for the app.
-const connectionString = process.env.DATABASE_URL!;
+const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL!;
 
 // Disable prefetch as it is not supported for "Transaction" pool mode 
-export const client = postgres(connectionString, { prepare: false });
+export const client = postgres(connectionString, { 
+  prepare: false,
+  ssl: 'require' 
+});
 export const db = drizzle(client);
