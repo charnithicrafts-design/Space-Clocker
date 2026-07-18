@@ -178,6 +178,7 @@ export const api = {
               const pg = new PGlite(candidatePath, {
                 relaxedDurability: true,
                 loadDataDir: dataDir instanceof Blob ? dataDir : dump,
+                initialMemory: 32 * 1024 * 1024,
               });
               db = pg;
               await pg.waitReady;
