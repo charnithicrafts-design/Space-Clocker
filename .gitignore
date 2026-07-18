@@ -13,3 +13,4 @@ dev-dist/
 # Test Artifacts
 playwright-report/
 test-results/
+.vercel
