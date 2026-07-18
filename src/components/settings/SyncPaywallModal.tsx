@@ -4,7 +4,7 @@ import { X, Zap, ShieldCheck, CheckCircle2, Clock, CreditCard, Link } from 'luci
 import { SoundManager } from '../../utils/SoundManager';
 import { useTrackStore } from '../../store/useTrackStore';
 import { syncService } from '../../services/SyncService';
-import { signIn } from '../../lib/auth-client';
+import { signIn, useSession } from '../../lib/auth-client';
 
 interface SyncPaywallModalProps {
   isOpen: boolean;
@@ -13,6 +13,7 @@ interface SyncPaywallModalProps {
 
 const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) => {
   const { oracleConfig, updateOracleConfig, profile, linkExistingConnection } = useTrackStore();
+  const { data: session } = useSession();
   const [selectedTier, setSelectedTier] = useState<'one-time' | 'premium' | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -144,8 +145,8 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
   };
 
   const handlePaymentSuccess = () => {
-    // Generate clientId if missing
-    const newClientId = oracleConfig.clientId || `chr-${Math.random().toString(36).substring(2, 10)}${Date.now().toString(36)}`;
+    // Generate clientId if missing. If logged in, use the session user id.
+    const newClientId = session?.user?.id || oracleConfig.clientId || `chr-${Math.random().toString(36).substring(2, 10)}${Date.now().toString(36)}`;
 
     // Success!
     SoundManager.playSyncSuccess();

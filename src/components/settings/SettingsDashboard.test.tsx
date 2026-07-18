@@ -15,7 +15,8 @@ vi.mock('../../store/useTrackStore', () => ({
 vi.mock('../../lib/auth-client', () => ({
   signIn: {
     social: vi.fn()
-  }
+  },
+  useSession: vi.fn().mockReturnValue({ data: null, isPending: false })
 }));
 
 vi.mock('../../constants', () => ({

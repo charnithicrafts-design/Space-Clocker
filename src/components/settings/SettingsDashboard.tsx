@@ -9,6 +9,7 @@ import { SoundManager } from '../../utils/SoundManager';
 import { getTodayLocalISO } from '../../utils/DateTimeUtils';
 import SyncPaywallModal from './SyncPaywallModal';
 import { getOrCreateDeviceId } from '../../utils/DeviceUtils';
+import { useSession } from '../../lib/auth-client';
 
 const SettingsDashboard = () => {
   const store = useTrackStore();
@@ -22,6 +23,24 @@ const SettingsDashboard = () => {
   const [isRestoring, setIsRestoring] = useState(false);
   const [showUpToDate, setShowUpToDate] = useState(false);
   const [isPaywallOpen, setIsPaywallOpen] = useState(false);
+
+  const { data: session } = useSession();
+
+  React.useEffect(() => {
+    if (session?.user?.id) {
+      // Auto-activate sync if they are a premium user and not currently linked to this ID
+      const isPremium = (session.user as any).premiumTier || oracleConfig.syncTier === 'premium';
+      if (isPremium && (!oracleConfig.syncEnabled || oracleConfig.clientId !== session.user.id)) {
+        updateOracleConfig({
+          syncEnabled: true,
+          clientId: session.user.id,
+          syncTier: 'premium',
+        });
+        syncService.authorize(session.user.id);
+        setIsPaywallOpen(false);
+      }
+    }
+  }, [session, oracleConfig.syncEnabled, oracleConfig.clientId, oracleConfig.syncTier, updateOracleConfig]);
 
   const handleSave = () => {
     updateProfile(localProfile);
