@@ -360,7 +360,7 @@ export const useTrackStore = create<TrackStore>()(
       await db.query(`
         UPDATE oracle_config 
         SET client_id = $1,
-            sync_enabled = 1,
+            sync_enabled = true,
             sync_tier = 'premium'
         WHERE id = 1
       `, [clientId]);
@@ -1007,7 +1007,7 @@ export const useTrackStore = create<TrackStore>()(
           newConfig.model,
           newConfig.providerUrl,
           newConfig.clientId || '',
-          newConfig.syncEnabled ? 1 : 0,
+          newConfig.syncEnabled ?? false,
           newConfig.syncTier || 'none',
           newConfig.syncExpiresAt || null,
           newConfig.oneTimeSyncsAvailable || 0
