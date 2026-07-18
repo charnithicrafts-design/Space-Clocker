@@ -22,9 +22,21 @@ const SettingsDashboard = () => {
   const [isDumping, setIsDumping] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [showUpToDate, setShowUpToDate] = useState(false);
-  const [isPaywallOpen, setIsPaywallOpen] = useState(false);
+  const [isPaywallOpen, setIsPaywallOpen] = useState(() => {
+    return new URLSearchParams(window.location.search).get('sync_auth_success') === '1';
+  });
 
   const { data: session } = useSession();
+
+  React.useEffect(() => {
+    if (isPaywallOpen) {
+      const currentUrl = new URL(window.location.href);
+      if (currentUrl.searchParams.has('sync_auth_success')) {
+        currentUrl.searchParams.delete('sync_auth_success');
+        window.history.replaceState({}, document.title, currentUrl.toString());
+      }
+    }
+  }, [isPaywallOpen]);
 
   React.useEffect(() => {
     if (session?.user?.id) {

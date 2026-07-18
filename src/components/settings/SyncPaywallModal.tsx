@@ -199,9 +199,11 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
     setIsProcessing(true);
     setLinkError('');
     try {
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set('sync_auth_success', '1');
       await signIn.social({
         provider: "google",
-        callbackURL: window.location.origin
+        callbackURL: currentUrl.toString()
       });
       // The redirect will happen automatically to Google.
     } catch (err: any) {
