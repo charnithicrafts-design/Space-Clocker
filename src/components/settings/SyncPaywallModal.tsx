@@ -73,12 +73,20 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
         })
       });
 
-      if (!orderResponse.ok) {
-        const errData = await orderResponse.json();
-        throw new Error(errData.error || 'Failed to create payment order');
+      const text = await orderResponse.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error("Invalid response from /api/create-order:", text);
+        throw new Error(`Backend API unavailable (Status ${orderResponse.status}). Are you running 'vercel dev'?`);
       }
 
-      const orderData = await orderResponse.json();
+      if (!orderResponse.ok) {
+        throw new Error(data.error || 'Failed to create payment order');
+      }
+
+      const orderData = data;
 
       // 2. Configure Razorpay Standard Checkout Options
       const options = {
@@ -102,7 +110,13 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
               })
             });
 
-            const verifyData = await verifyResponse.json();
+            const vText = await verifyResponse.text();
+            let verifyData;
+            try {
+              verifyData = JSON.parse(vText);
+            } catch (e) {
+              throw new Error(`Invalid verify response (Status ${verifyResponse.status}). Backend API might be down.`);
+            }
 
             if (verifyResponse.ok && verifyData.success) {
               handlePaymentSuccess();

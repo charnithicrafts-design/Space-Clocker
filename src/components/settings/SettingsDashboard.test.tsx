@@ -145,17 +145,19 @@ describe('SettingsDashboard', () => {
     const mockOrder = { order_id: 'order_test_123', amount: 10000, currency: 'INR' };
     const mockVerify = { success: true };
 
-    const fetchSpy = vi.fn().mockImplementation((url) => {
+    const fetchSpy = vi.fn().mockImplementation((url: string) => {
       if (url === '/api/create-order') {
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve(mockOrder)
+          json: () => Promise.resolve(mockOrder),
+          text: () => Promise.resolve(JSON.stringify(mockOrder))
         });
       }
       if (url === '/api/verify-payment') {
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve(mockVerify)
+          json: () => Promise.resolve(mockVerify),
+          text: () => Promise.resolve(JSON.stringify(mockVerify))
         });
       }
       return Promise.reject(new Error('Unknown URL: ' + url));
