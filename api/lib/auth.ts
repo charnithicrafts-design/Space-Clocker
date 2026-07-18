@@ -19,8 +19,8 @@ export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET || "dev-secret-key-that-is-at-least-32-chars-long!",
   baseURL: getBaseURL(),
   trustedOrigins: [
-    "https://spaceclocker.com",
     "https://www.spaceclocker.com",
+    "https://spaceclocker.com",
     "http://localhost:3000"
   ],
   socialProviders: {
