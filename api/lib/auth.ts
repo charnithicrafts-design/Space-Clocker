@@ -32,7 +32,7 @@ export const auth = betterAuth({
   advanced: {
     // Allows preview deployments to work out of the box in Vercel
     crossSubDomainCookies: {
-      enabled: true,
+      enabled: false,
     },
   },
 });
