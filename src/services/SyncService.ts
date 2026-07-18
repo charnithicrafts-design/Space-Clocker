@@ -116,6 +116,10 @@ export class SyncService {
 
     return 'synced';
   }
+
+  async getFileMetadata(name: string) {
+    return this.provider.getFileMetadata(name);
+  }
 }
 
 export const syncService = new SyncService();

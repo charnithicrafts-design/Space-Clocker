@@ -317,7 +317,7 @@ export const useTrackStore = create<TrackStore>()(
         }
       }
 
-      set({ dbAppVersion, isCheckingUpdates: false });
+      set({ isCheckingUpdates: false });
       return { hasAppUpdate, syncResult };
     },
 

@@ -277,7 +277,7 @@ const SettingsDashboard = () => {
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(oracleConfig.clientId || '');
-                      SoundManager.playBeep();
+                      SoundManager.playPop();
                     }}
                     className="p-2 text-on-surface-variant hover:text-white rounded-lg hover:bg-surface-low transition-colors"
                     title="Copy Key"

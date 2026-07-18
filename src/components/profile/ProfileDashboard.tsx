@@ -19,7 +19,7 @@ const ProfileDashboard = () => {
     const totalCompletedTasks = tasks.filter(t => t.completed).length + allMilestoneTasks.filter(t => t.completed).length;
     
     // Total focus hours (can fallback to total tasks * 0.5 if not tracked accurately)
-    const focusHours = stats.total_focus_hours || Math.round(totalCompletedTasks * 0.75);
+    const focusHours = stats.totalFocusHours || Math.round(totalCompletedTasks * 0.75);
 
     // Join date (fallback to first task or history event)
     let earliestDateStr = new Date().toISOString();
