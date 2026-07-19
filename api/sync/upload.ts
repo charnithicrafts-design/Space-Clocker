@@ -1,10 +1,5 @@
 import { handleUpload } from '@vercel/blob/client';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
