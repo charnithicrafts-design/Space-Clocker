@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { CURRENT_APP_VERSION } from '../../constants';
 import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor, Copy } from 'lucide-react';
-import { dumpDb, restoreDb } from '../../db/client';
+import { dbProxy } from '../../db/client';
 import { syncService } from '../../services/SyncService';
 import { SoundManager } from '../../utils/SoundManager';
 import { getTodayLocalISO } from '../../utils/DateTimeUtils';
@@ -132,11 +132,12 @@ const SettingsDashboard = () => {
     try {
       setIsDumping(true);
       SoundManager.playPop();
-      const blob = await dumpDb();
+      const uint8Array = await dbProxy.exportToJson();
+      const blob = new Blob([uint8Array], { type: 'application/gzip' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `chronos-snapshot-${getTodayLocalISO()}.pgdump`;
+      a.download = `chronos-snapshot-${getTodayLocalISO()}.json.gz`;
       a.click();
       URL.revokeObjectURL(url);
       SoundManager.playSyncSuccess();
@@ -157,9 +158,10 @@ const SettingsDashboard = () => {
       try {
         setIsRestoring(true);
         SoundManager.playSwell();
-        await restoreDb(file);
+        const arrayBuffer = await file.arrayBuffer();
+        await dbProxy.importFromJson(new Uint8Array(arrayBuffer));
         SoundManager.playSyncSuccess();
-        // Give PGlite a small window to flush to IndexedDB before reload
+        alert('Database restored successfully from snapshot!');
         setTimeout(() => {
           window.location.reload();
         }, 800);
