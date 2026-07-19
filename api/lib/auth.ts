@@ -27,6 +27,9 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID || 'mock-client-id-needs-setup',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'mock-client-secret-needs-setup',
+      redirectURI: process.env.NODE_ENV === "production" 
+        ? "https://www.spaceclocker.com/api/auth/callback/google"
+        : "http://localhost:3000/api/auth/callback/google",
     },
   },
   advanced: {
