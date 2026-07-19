@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/auth/(.*)",
-      "destination": "/api/auth"
+      "destination": "/api/auth?bauth=$1"
     },
     {
       "source": "/((?!api/|assets/).*)",
