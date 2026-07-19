@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import SettingsDashboard from './SettingsDashboard';
 import { useTrackStore } from '../../store/useTrackStore';
 import { syncService } from '../../services/SyncService';
-import { dumpDb, restoreDb } from '../../db/client';
+import { dbProxy } from '../../db/client';
 import { signIn } from '../../lib/auth-client';
 import { SoundManager } from '../../utils/SoundManager';
 
@@ -32,8 +32,10 @@ vi.mock('../../services/SyncService', () => ({
 }));
 
 vi.mock('../../db/client', () => ({
-  dumpDb: vi.fn(),
-  restoreDb: vi.fn()
+  dbProxy: {
+    exportToJson: vi.fn(),
+    importFromJson: vi.fn()
+  }
 }));
 
 vi.mock('../../utils/SoundManager', () => ({
@@ -231,7 +233,7 @@ describe('SettingsDashboard', () => {
   it('creates a chronos backup snapshot', async () => {
     // Arrange
     const mockBlob = new Blob(['mock-data'], { type: 'application/octet-stream' });
-    (dumpDb as any).mockResolvedValue(mockBlob);
+    (dbProxy.exportToJson as any).mockResolvedValue(new Uint8Array([1, 2, 3]));
     render(<SettingsDashboard />);
     const snapshotButton = screen.getByText(/Create Snapshot/i);
 
@@ -242,7 +244,7 @@ describe('SettingsDashboard', () => {
 
     // Assert
     await waitFor(() => {
-      expect(dumpDb).toHaveBeenCalled();
+      expect(dbProxy.exportToJson).toHaveBeenCalled();
       expect(SoundManager.playPop).toHaveBeenCalled();
       expect(SoundManager.playSyncSuccess).toHaveBeenCalled();
     });

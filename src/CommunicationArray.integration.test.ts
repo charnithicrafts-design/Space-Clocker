@@ -12,6 +12,11 @@ import * as DbClient from './db/client';
  * Specifically focuses on "Temporal Rift" (Sync Divergence) detection and resolution.
  */
 
+// Mock Vercel Blob Client to prevent internal fetch clashes
+vi.mock('@vercel/blob/client', () => ({
+  upload: vi.fn().mockResolvedValue({ url: 'stellar-file-id-001' }),
+}));
+
 // Mock Fetch for Remote Command Simulation
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
@@ -56,14 +61,16 @@ const mockDb = {
 
 vi.mock('./db/client', () => ({
   getDb: () => mockDb,
-  dumpDb: () => mockDb.dumpDataDir(),
-  restoreDb: vi.fn().mockImplementation(async (blob) => {
-    // Simulate restoring state from a remote snapshot
-    mockDbState.sync_metadata = {
-      last_synced_at: new Date().toISOString(),
-      remote_file_id: 'remote-id-nebula-9'
-    };
-  }),
+  dbProxy: {
+    exportToJson: () => Promise.resolve(new Uint8Array([1,2,3])),
+    importFromJson: vi.fn().mockImplementation(async (data) => {
+      // Simulate restoring state from a remote snapshot
+      mockDbState.sync_metadata = {
+        last_synced_at: new Date().toISOString(),
+        remote_file_id: 'remote-id-nebula-9'
+      };
+    })
+  },
 }));
 
 describe('Communication Array - High-Fidelity Integration Cycle', () => {
@@ -83,17 +90,13 @@ describe('Communication Array - High-Fidelity Integration Cycle', () => {
     const store = useTrackStore.getState();
     vi.spyOn(store, 'initialize').mockResolvedValue(undefined);
 
-    // 2. Mock Remote: No cloud backup exists yet.
-    fetchMock.mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ url: 'remote-id-virmire-01' }) }); // upload response
-
     // --- ACT (Phase 1: Uplink Transmission) ---
     // Push the current mission state to the cloud.
     const pushResult = await syncService.pushUpdate();
 
     // --- ASSERT (Phase 1) ---
-    expect(pushResult.fileId).toBe('remote-id-virmire-01');
-    expect(mockDbState.sync_metadata.remote_file_id).toBe('remote-id-virmire-01');
-    expect(fetchMock).toHaveBeenCalledTimes(1); // 1 upload
+    expect(pushResult.fileId).toBe('stellar-file-id-001');
+    expect(mockDbState.sync_metadata.remote_file_id).toBe('stellar-file-id-001');
 
     // --- ACT (Phase 2: Detect Temporal Rift) ---
     // Simulate a "Temporal Rift": A newer transmission exists on the remote terminal (e.g., from the Citadel).
@@ -124,9 +127,9 @@ describe('Communication Array - High-Fidelity Integration Cycle', () => {
     // --- ASSERT (Phase 3) ---
     // Verify high-fidelity resolution steps:
     // 1. Remote data was fetched.
-    expect(fetchMock).toHaveBeenCalledWith('remote-id-virmire-01');
+    expect(fetchMock).toHaveBeenCalledWith('stellar-file-id-001');
     // 2. Local Database was re-initialized from the remote blob.
-    expect(DbClient.restoreDb).toHaveBeenCalled();
+    expect(DbClient.dbProxy.importFromJson).toHaveBeenCalled();
     // 3. Store was refreshed from the new DB state.
     expect(store.initialize).toHaveBeenCalled();
   });

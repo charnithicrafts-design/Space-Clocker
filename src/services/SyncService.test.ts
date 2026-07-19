@@ -7,7 +7,11 @@ import * as DbClient from '../db/client';
  * Aligning with Space-Clocker Engineering Standards (AAA, Isolated State, Space-Themed)
  */
 
-// Mock fetch
+vi.mock('@vercel/blob/client', () => ({
+  upload: vi.fn().mockResolvedValue({ url: 'stellar-file-id-001' }),
+}));
+
+// Mock fetch for getFileMetadata
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
 
@@ -18,8 +22,10 @@ vi.mock('../db/client', () => ({
       rows: [{ last_synced_at: '2026-03-30T10:00:00Z' }] 
     })
   }),
-  dumpDb: vi.fn().mockResolvedValue(new Blob(['nebula-database-dump'], { type: 'application/octet-stream' })),
-  restoreDb: vi.fn().mockResolvedValue(undefined),
+  dbProxy: {
+    exportToJson: vi.fn().mockResolvedValue(new Uint8Array([1, 2, 3])),
+    importFromJson: vi.fn().mockResolvedValue(undefined),
+  },
 }));
 
 describe('SyncService: Stellar Uplink Protocol', () => {
@@ -35,17 +41,11 @@ describe('SyncService: Stellar Uplink Protocol', () => {
   describe('pushUpdate (Uplink)', () => {
     it('should uplink local database to Vercel Blob storage', async () => {
       // Arrange
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ url: 'stellar-file-id-001' }) // uploadFile -> success
-      });
-
       // Act
       const result = await syncService.pushUpdate();
 
       // Assert
-      expect(DbClient.dumpDb).toHaveBeenCalled();
-      expect(fetchMock).toHaveBeenCalledTimes(1); // Only Upload
+      expect(DbClient.dbProxy.exportToJson).toHaveBeenCalled();
       expect(result.fileId).toBe('stellar-file-id-001');
       
       const db = DbClient.getDb();
@@ -68,6 +68,7 @@ describe('SyncService: Stellar Uplink Protocol', () => {
     it('should downlink remote backup and restore local database', async () => {
       // Arrange
       const mockBlob = new Blob(['remote-nebula-data']);
+      mockBlob.arrayBuffer = vi.fn().mockResolvedValue(new Uint8Array([1, 2, 3]).buffer);
       fetchMock.mockResolvedValueOnce({
         ok: true,
         blob: () => Promise.resolve(mockBlob) // downloadFile -> success
@@ -80,7 +81,7 @@ describe('SyncService: Stellar Uplink Protocol', () => {
       expect(fetchMock).toHaveBeenCalledWith(
         expect.stringContaining('andromeda-file-id-999')
       );
-      expect(DbClient.restoreDb).toHaveBeenCalledWith(mockBlob);
+      expect(DbClient.dbProxy.importFromJson).toHaveBeenCalledWith(expect.any(Uint8Array));
       
       const db = DbClient.getDb();
       expect(db.query).toHaveBeenCalledWith(expect.stringContaining('UPDATE sync_metadata'));
