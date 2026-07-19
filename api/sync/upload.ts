@@ -21,7 +21,7 @@ export default async function handler(req: any, res: any) {
   try {
     // We stream the request directly to Vercel Blob
     const blob = await put(`space-clocker-${clientId}.bin`, req, {
-      access: 'public',
+      access: 'private',
       contentType: 'application/octet-stream',
       addRandomSuffix: false, // Overwrite the same file to save space
     });

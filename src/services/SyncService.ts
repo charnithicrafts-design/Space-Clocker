@@ -57,12 +57,15 @@ class VercelBlobProvider implements SyncProvider {
   async downloadFile(fileId: string): Promise<Blob> {
     if (!this.clientId) throw new Error('Not authorized');
 
-    // fileId is the direct blob URL
-    const response = await fetch(fileId);
+    // fileId is the direct blob URL, but since the store is private, we must proxy it through our server
+    const proxyUrl = `/api/sync/download?url=${encodeURIComponent(fileId)}`;
+    const response = await fetch(proxyUrl);
+    
     if (!response.ok) {
-      throw new Error(`Download failed: ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`Download failed (${response.status}): ${errorText}`);
     }
-
+    
     return await response.blob();
   }
 
