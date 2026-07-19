@@ -280,6 +280,24 @@ const SettingsDashboard = () => {
                 </div>
               </div>
 
+              {session?.user && (
+                <div className="flex items-center justify-between p-3 rounded-xl bg-primary/10 border border-primary/20">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-lowest border border-primary/30 flex items-center justify-center">
+                      {session.user.image ? (
+                        <img src={session.user.image} alt={session.user.name || 'Pilot'} className="w-full h-full object-cover" />
+                      ) : (
+                        <User size={16} className="text-primary" />
+                      )}
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-black text-primary uppercase tracking-widest block">Verified Pilot Link</span>
+                      <p className="text-xs font-bold text-white">{session.user.email}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {oracleConfig.syncEnabled && oracleConfig.clientId && (
                 <div className="flex items-center justify-between p-3 rounded-xl bg-surface-lowest border border-outline-variant">
                   <div className="space-y-1">

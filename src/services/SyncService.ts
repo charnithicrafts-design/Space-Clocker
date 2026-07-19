@@ -1,4 +1,5 @@
 import { getDb, dumpDb, restoreDb } from '../db/client';
+import { upload } from '@vercel/blob/client';
 
 export interface SyncProvider {
   name: string;
@@ -20,17 +21,15 @@ class VercelBlobProvider implements SyncProvider {
 
     console.log(`[VercelBlob] Uplinking sync payload...`);
     
-    const response = await fetch(`/api/sync/upload?clientId=${this.clientId}`, {
-      method: 'POST',
-      body: blob
-    });
-
-    if (!response.ok) {
-      throw new Error(`Upload failed: ${response.statusText}`);
+    try {
+      const newBlob = await upload(`space-clocker-${this.clientId}.pgdump`, blob, {
+        access: 'public',
+        handleUploadUrl: `/api/sync/upload?clientId=${this.clientId}`,
+      });
+      return newBlob.url;
+    } catch (error: any) {
+      throw new Error(`Upload failed: ${error.message}`);
     }
-
-    const result = await response.json();
-    return result.url; // Returns the public vercel blob URL
   }
 
   async downloadFile(fileId: string): Promise<Blob> {

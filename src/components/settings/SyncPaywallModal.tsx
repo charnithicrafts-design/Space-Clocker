@@ -13,7 +13,7 @@ interface SyncPaywallModalProps {
 
 const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) => {
   const { oracleConfig, updateOracleConfig, profile, linkExistingConnection } = useTrackStore();
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const [selectedTier, setSelectedTier] = useState<'one-time' | 'premium' | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -293,7 +293,14 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
               </div>
 
               <div className="border-t border-outline-variant/60 pt-6 mt-2 space-y-4">
-                {!session ? (
+                {isPending ? (
+                  <div className="flex justify-center p-4">
+                    <div className="animate-pulse flex items-center gap-3">
+                      <Zap size={16} className="text-primary" />
+                      <span className="text-xs text-primary font-black uppercase tracking-widest">Verifying Neural Signature...</span>
+                    </div>
+                  </div>
+                ) : !session ? (
                   <>
                     <div className="text-center">
                       <h4 className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Already have an Account?</h4>
