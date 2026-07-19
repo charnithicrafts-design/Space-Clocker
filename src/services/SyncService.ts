@@ -78,7 +78,7 @@ export class SyncService {
 
   async pushUpdate() {
     const uint8Array = await dbProxy.exportToJson();
-    const blob = new Blob([uint8Array], { type: 'application/gzip' });
+    const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
     const fileId = await this.provider.uploadFile('space-clocker-sync.json.gz', blob);
     
     const db = getDb();
