@@ -1,4 +1,4 @@
-import { auth } from "../lib/auth.js";
+import { auth } from "./lib/auth.js";
 import { toNodeHandler } from "better-auth/node";
 
 export const config = {
@@ -10,11 +10,12 @@ const handler = toNodeHandler(auth);
 
 export default async function (req: any, res: any) {
   try {
-    // In some Vercel configurations, req.url might be stripped of the /api/auth prefix.
-    // Ensure it has the full path so Better Auth can route it correctly.
     if (req.url && !req.url.startsWith("/api/auth")) {
       req.url = "/api/auth" + (req.url.startsWith("/") ? "" : "/") + req.url;
     }
+    
+    // Force HTTPS protocol for trustedOrigins matching
+    req.headers["x-forwarded-proto"] = "https";
     
     // Pass the request to Better Auth
     await handler(req, res);
