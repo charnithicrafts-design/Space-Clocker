@@ -30,6 +30,7 @@ export default async function handler(req: any, res: any) {
       access: 'private',
       contentType: 'application/octet-stream',
       addRandomSuffix: false,
+      allowOverwrite: true,
     });
 
     res.status(200).json(blob);
