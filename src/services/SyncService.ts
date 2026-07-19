@@ -21,13 +21,22 @@ class VercelBlobProvider implements SyncProvider {
 
     console.log(`[VercelBlob] Uplinking sync payload...`);
     
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), 10000); // 10s cutoff
+    
     try {
       const newBlob = await upload(`space-clocker-${this.clientId}.json.gz`, blob, {
         access: 'public',
         handleUploadUrl: `/api/sync/upload?clientId=${this.clientId}`,
+        abortSignal: abortController.signal,
       });
+      clearTimeout(timeoutId);
       return newBlob.url;
     } catch (error: any) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError' || error.message.includes('abort')) {
+        throw new Error('Upload timed out after 10 seconds. Network or CORS blocked.');
+      }
       throw new Error(`Upload failed: ${error.message}`);
     }
   }

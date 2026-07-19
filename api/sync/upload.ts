@@ -24,7 +24,6 @@ export default async function handler(req: any, res: any) {
       request: req,
       onBeforeGenerateToken: async (pathname) => {
         return {
-          allowedContentTypes: ['application/gzip', 'application/octet-stream', 'application/x-sqlite3', 'application/json', 'application/x-postgresql-dump', 'application/sql', ''],
           tokenPayload: JSON.stringify({ clientId }),
         };
       },
