@@ -7,7 +7,7 @@ import { PGlite } from '@electric-sql/pglite';
 export async function exportToJson(db: PGlite): Promise<Uint8Array> {
   const tables = [
     'profile', 'preferences', 'stats', 'oracle_config', 'sync_metadata',
-    'ambitions', 'milestones', 'tasks', 'void_tasks', 'reflections', 'skills'
+    'ambitions', 'milestones', 'tasks', 'void_tasks', 'reflections', 'skills', 'devices'
   ];
   
   const payload: Record<string, any[]> = {};
@@ -47,7 +47,7 @@ export async function importFromJson(db: PGlite, compressedData: Uint8Array): Pr
   
   const importOrder = [
     'profile', 'preferences', 'stats', 'oracle_config', 'sync_metadata',
-    'ambitions', 'milestones', 'tasks', 'void_tasks', 'reflections', 'skills'
+    'ambitions', 'milestones', 'tasks', 'void_tasks', 'reflections', 'skills', 'devices'
   ];
   
   await db.query('BEGIN');

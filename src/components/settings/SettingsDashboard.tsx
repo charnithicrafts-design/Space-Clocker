@@ -66,6 +66,14 @@ const SettingsDashboard = () => {
     try {
       setSyncStatus({ isSyncing: true, error: undefined });
       SoundManager.playUplink();
+      
+      const divergence = await syncService.checkDivergence();
+      if (divergence === 'remote_newer') {
+        store.setShowSyncModal(true);
+        setSyncStatus({ isSyncing: false });
+        return;
+      }
+      
       const { syncedAt } = await syncService.pushUpdate();
       setSyncStatus({ isSyncing: false, lastSyncedAt: syncedAt });
       SoundManager.playSyncSuccess();
