@@ -69,7 +69,7 @@ class VercelBlobProvider implements SyncProvider {
     return await response.blob();
   }
 
-  async getFileMetadata(name: string): Promise<{ id: string, modifiedAt: string } | null> {
+  async getFileMetadata(): Promise<{ id: string, modifiedAt: string } | null> {
     if (!this.clientId) return null;
 
     const response = await fetch(`/api/sync/info?clientId=${this.clientId}`);
@@ -130,7 +130,7 @@ export class SyncService {
   }
 
   async checkDivergence() {
-    const meta = await this.provider.getFileMetadata('space-clocker-sync.json.gz');
+    const meta = await this.provider.getFileMetadata();
     if (!meta) return 'none';
 
     const db = getDb();
@@ -143,8 +143,8 @@ export class SyncService {
     return 'synced';
   }
 
-  async getFileMetadata(name: string) {
-    return this.provider.getFileMetadata(name);
+  async getFileMetadata() {
+    return this.provider.getFileMetadata();
   }
 }
 

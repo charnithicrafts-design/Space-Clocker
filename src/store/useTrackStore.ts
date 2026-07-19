@@ -348,7 +348,7 @@ export const useTrackStore = create<TrackStore>()(
       await syncService.authorize(clientId);
       
       // Try to check if there is an existing database backup in the cloud
-      const meta = await syncService.getFileMetadata('space-clocker-sync.pgdump');
+      const meta = await syncService.getFileMetadata();
       if (meta && meta.id) {
         // Download and restore
         await syncService.pullUpdate(meta.id);

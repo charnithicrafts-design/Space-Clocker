@@ -14,7 +14,7 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const prefix = `space-clocker-${clientId}.json.gz`;
+    const prefix = `space-clocker-${clientId}.bin`;
     
     // list only matching blobs
     const { blobs } = await list({ prefix, limit: 1 });
