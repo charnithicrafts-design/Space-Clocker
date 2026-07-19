@@ -1,4 +1,4 @@
-import { getDb, dumpDb, restoreDb } from '../db/client';
+import { getDb, dbProxy } from '../db/client';
 import { upload } from '@vercel/blob/client';
 
 export interface SyncProvider {
@@ -22,7 +22,7 @@ class VercelBlobProvider implements SyncProvider {
     console.log(`[VercelBlob] Uplinking sync payload...`);
     
     try {
-      const newBlob = await upload(`space-clocker-${this.clientId}.pgdump`, blob, {
+      const newBlob = await upload(`space-clocker-${this.clientId}.json.gz`, blob, {
         access: 'public',
         handleUploadUrl: `/api/sync/upload?clientId=${this.clientId}`,
       });
@@ -77,8 +77,9 @@ export class SyncService {
   }
 
   async pushUpdate() {
-    const blob = await dumpDb();
-    const fileId = await this.provider.uploadFile('space-clocker-sync.pgdump', blob);
+    const uint8Array = await dbProxy.exportToJson();
+    const blob = new Blob([uint8Array], { type: 'application/gzip' });
+    const fileId = await this.provider.uploadFile('space-clocker-sync.json.gz', blob);
     
     const db = getDb();
     await db.query(`
@@ -94,7 +95,8 @@ export class SyncService {
 
   async pullUpdate(fileId: string) {
     const blob = await this.provider.downloadFile(fileId);
-    await restoreDb(blob);
+    const arrayBuffer = await blob.arrayBuffer();
+    await dbProxy.importFromJson(new Uint8Array(arrayBuffer));
     
     const db = getDb();
     await db.query(`
@@ -103,7 +105,7 @@ export class SyncService {
   }
 
   async checkDivergence() {
-    const meta = await this.provider.getFileMetadata('space-clocker-sync.pgdump');
+    const meta = await this.provider.getFileMetadata('space-clocker-sync.json.gz');
     if (!meta) return 'none';
 
     const db = getDb();
