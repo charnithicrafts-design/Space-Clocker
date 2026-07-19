@@ -3,6 +3,7 @@ import { OpfsAhpFS } from '@electric-sql/pglite/opfs-ahp';
 import * as Comlink from 'comlink';
 import { SCHEMA } from './schema';
 import { MIGRATIONS } from './migrations';
+import { exportToJson, importFromJson } from './sync-engine';
 
 // Patch recursive mkdir bug in PGlite v0.4.2's OpfsAhpFS VFS
 if (typeof OpfsAhpFS !== 'undefined' && OpfsAhpFS.prototype) {
@@ -431,11 +432,7 @@ export const api = {
     initializing = null;
   },
 
-  async dumpDataDir(): Promise<Blob> {
-    if (initializing) await initializing;
-    if (!db) throw new Error('Database not initialized');
-    return await db.dumpDataDir();
-  },
+
 
   // Domain Methods
   async getProfile() {
@@ -707,6 +704,18 @@ export const api = {
       await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [0, 0, 0]);
       return true;
     });
+  },
+
+  async exportToJson(): Promise<Uint8Array> {
+    if (initializing) await initializing;
+    if (!db) throw new Error('Database not initialized');
+    return await exportToJson(db);
+  },
+
+  async importFromJson(compressedData: Uint8Array): Promise<void> {
+    if (initializing) await initializing;
+    if (!db) throw new Error('Database not initialized');
+    await importFromJson(db, compressedData);
   }
 };
 
