@@ -19,12 +19,33 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    // We stream the request directly to Vercel Blob
-    const blob = await put(`space-clocker-${clientId}.bin`, req, {
-      access: 'private',
-      contentType: 'application/octet-stream',
-      addRandomSuffix: false, // Overwrite the same file to save space
-    });
+    // Read the raw stream into a Buffer so we can retry if the access level mismatches
+    const chunks: Buffer[] = [];
+    for await (const chunk of req) {
+      chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+    }
+    const fileBuffer = Buffer.concat(chunks);
+
+    let blob;
+    try {
+      // First attempt: Private Store (since we explicitly set it earlier)
+      blob = await put(`space-clocker-${clientId}.bin`, fileBuffer, {
+        access: 'private',
+        contentType: 'application/octet-stream',
+        addRandomSuffix: false,
+      });
+    } catch (err: any) {
+      if (err.message && err.message.includes('access must be "public"')) {
+        // Fallback attempt: Public Store (user might have recreated their store as public)
+        blob = await put(`space-clocker-${clientId}.bin`, fileBuffer, {
+          access: 'public',
+          contentType: 'application/octet-stream',
+          addRandomSuffix: false,
+        });
+      } else {
+        throw err;
+      }
+    }
 
     res.status(200).json(blob);
   } catch (error: any) {
