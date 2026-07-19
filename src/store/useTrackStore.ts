@@ -332,11 +332,9 @@ export const useTrackStore = create<TrackStore>()(
 
     performPull: async () => {
       const { syncService } = await import('../services/SyncService');
-      const { getDb } = await import('../db/client');
-      const db = getDb();
-      const meta = (await db.query('SELECT remote_file_id FROM sync_metadata WHERE id = 1')).rows[0];
-      if (meta?.remote_file_id) {
-        await syncService.pullUpdate(meta.remote_file_id);
+      const meta = await syncService.getFileMetadata();
+      if (meta && meta.id) {
+        await syncService.pullUpdate(meta.id);
         await get().initialize();
       }
     },
@@ -1141,6 +1139,7 @@ export const useTrackStore = create<TrackStore>()(
         const ambitionsRes = await dbProxy.query(`SELECT * FROM ambitions`);
         const systemRes = await dbProxy.query(`SELECT last_startup, app_version FROM system_info WHERE id = 1`);
         const devicesRes = await dbProxy.query(`SELECT id, name, type, last_active as "lastActive" FROM devices ORDER BY last_active DESC`);
+        const syncMetaRes = await dbProxy.query(`SELECT last_synced_at as "lastSyncedAt" FROM sync_metadata WHERE id = 1`);
 
         // Apply critical state immediately
         set({
@@ -1163,7 +1162,11 @@ export const useTrackStore = create<TrackStore>()(
           } : get().oracleConfig,
           ambitions: (ambitionsRes.rows || []).map(a => ({ ...a, xp: a.xp || 0, milestones: [] })),
           dbAppVersion: systemRes.rows[0]?.app_version,
-          devices: devicesRes.rows || []
+          devices: devicesRes.rows || [],
+          syncStatus: {
+            ...get().syncStatus,
+            lastSyncedAt: syncMetaRes.rows[0]?.lastSyncedAt || undefined
+          }
         });
 
         const currentConfig = get().oracleConfig;
