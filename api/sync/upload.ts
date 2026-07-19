@@ -14,8 +14,20 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
+    let parsedBody = req.body;
+    if (typeof req.body === 'string') {
+      parsedBody = JSON.parse(req.body);
+    } else if (Buffer.isBuffer(req.body)) {
+      parsedBody = JSON.parse(req.body.toString('utf-8'));
+    }
+
+    if (!parsedBody || typeof parsedBody !== 'object') {
+      res.status(400).send('Invalid request body. Expected JSON object.');
+      return;
+    }
+
     const jsonResponse = await handleUpload({
-      body: req.body,
+      body: parsedBody,
       request: req,
       onBeforeGenerateToken: async (pathname) => {
         return {
@@ -29,6 +41,7 @@ export default async function handler(req: any, res: any) {
 
     res.status(200).json(jsonResponse);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error('Vercel Blob Sync Error:', error);
+    res.status(500).send(`Vercel Blob Sync Error: ${error.message}`);
   }
 }
