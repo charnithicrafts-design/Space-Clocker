@@ -1,5 +1,5 @@
 import { getDb, dbProxy } from '../db/client';
-import { upload } from '@vercel/blob/client';
+
 
 export interface SyncProvider {
   name: string;
@@ -28,12 +28,21 @@ class VercelBlobProvider implements SyncProvider {
     const timeoutId = setTimeout(() => abortController.abort(), 10000); // 10s cutoff
     
     try {
-      const newBlob = await upload(`space-clocker-${this.clientId}.bin`, blob, {
-        access: 'public',
-        contentType: 'application/octet-stream',
-        handleUploadUrl: `/api/sync/upload?clientId=${this.clientId}`,
-        abortSignal: abortController.signal,
+      const response = await fetch(`/api/sync/upload?clientId=${this.clientId}`, {
+        method: 'POST',
+        body: blob,
+        headers: {
+          'Content-Type': 'application/octet-stream',
+        },
+        signal: abortController.signal,
       });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Server returned ${response.status}: ${errorText}`);
+      }
+
+      const newBlob = await response.json();
       clearTimeout(timeoutId);
       return newBlob.url;
     } catch (error: any) {
