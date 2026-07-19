@@ -19,7 +19,10 @@ class VercelBlobProvider implements SyncProvider {
   async uploadFile(name: string, blob: Blob): Promise<string> {
     if (!this.clientId) throw new Error('Not authorized');
 
-    console.log(`[VercelBlob] Uplinking sync payload...`);
+    console.log(`[VercelBlob] Uplinking sync payload... Size: ${blob.size} bytes (${(blob.size / 1024).toFixed(2)} KB)`);
+    if (blob.size > 5 * 1024 * 1024) {
+      console.warn('[VercelBlob] Payload exceeds default 5MB limit!');
+    }
     
     const abortController = new AbortController();
     const timeoutId = setTimeout(() => abortController.abort(), 10000); // 10s cutoff

@@ -26,11 +26,16 @@ export default async function handler(req: any, res: any) {
       return;
     }
 
+    console.log('[Upload Diagnostic] req.url:', req.url);
+    console.log('[Upload Diagnostic] req.headers.host:', req.headers.host);
+    console.log('[Upload Diagnostic] req.headers.x-forwarded-proto:', req.headers['x-forwarded-proto']);
+
     const jsonResponse = await handleUpload({
       body: parsedBody,
       request: req,
       onBeforeGenerateToken: async (pathname) => {
         return {
+          allowedContentTypes: ['application/octet-stream'],
           tokenPayload: JSON.stringify({ clientId }),
         };
       },
