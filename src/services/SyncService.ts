@@ -25,8 +25,9 @@ class VercelBlobProvider implements SyncProvider {
     const timeoutId = setTimeout(() => abortController.abort(), 10000); // 10s cutoff
     
     try {
-      const newBlob = await upload(`space-clocker-${this.clientId}.json.gz`, blob, {
+      const newBlob = await upload(`space-clocker-${this.clientId}.bin`, blob, {
         access: 'public',
+        contentType: 'application/octet-stream',
         handleUploadUrl: `/api/sync/upload?clientId=${this.clientId}`,
         abortSignal: abortController.signal,
       });
