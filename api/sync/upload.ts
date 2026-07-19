@@ -26,26 +26,11 @@ export default async function handler(req: any, res: any) {
     }
     const fileBuffer = Buffer.concat(chunks);
 
-    let blob;
-    try {
-      // First attempt: Private Store (since we explicitly set it earlier)
-      blob = await put(`space-clocker-${clientId}.bin`, fileBuffer, {
-        access: 'private',
-        contentType: 'application/octet-stream',
-        addRandomSuffix: false,
-      });
-    } catch (err: any) {
-      if (err.message && err.message.includes('access must be "public"')) {
-        // Fallback attempt: Public Store (user might have recreated their store as public)
-        blob = await put(`space-clocker-${clientId}.bin`, fileBuffer, {
-          access: 'public',
-          contentType: 'application/octet-stream',
-          addRandomSuffix: false,
-        });
-      } else {
-        throw err;
-      }
-    }
+    const blob = await put(`space-clocker-${clientId}.bin`, fileBuffer, {
+      access: 'private',
+      contentType: 'application/octet-stream',
+      addRandomSuffix: false,
+    });
 
     res.status(200).json(blob);
   } catch (error: any) {
