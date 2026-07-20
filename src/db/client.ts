@@ -50,6 +50,9 @@ export const db = {
         if (store.triggerBackgroundSync) {
           store.triggerBackgroundSync();
         }
+        if (store.recalculateCognitiveSync) {
+          store.recalculateCognitiveSync();
+        }
       }).catch(() => {});
     }
     return result;
@@ -67,6 +70,9 @@ export const db = {
         const store = useTrackStore.getState();
         if (store.triggerBackgroundSync) {
           store.triggerBackgroundSync();
+        }
+        if (store.recalculateCognitiveSync) {
+          store.recalculateCognitiveSync();
         }
       }).catch(() => {});
     }

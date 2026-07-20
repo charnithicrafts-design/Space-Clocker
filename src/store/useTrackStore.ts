@@ -155,6 +155,7 @@ interface TrackStore {
   preferences: Preferences;
   syncStatus: SyncStatus;
   devices: Device[];
+  cognitiveState: import('../utils/CognitiveSyncEngine').CognitiveSyncResult | null;
   updateAvailable: boolean;
   isCheckingUpdates: boolean;
   pendingVersion?: string;
@@ -230,10 +231,12 @@ interface TrackStore {
   importDemoData: (data: any) => Promise<void>;
   clearAllData: () => Promise<void>;
   initialize: () => Promise<void>;
+  recalculateCognitiveSync: () => Promise<void>;
 }
 
 export const useTrackStore = create<TrackStore>()(
   (set, get) => ({
+    cognitiveState: null,
     profile: { name: 'Valentina', level: 1, xp: 0, title: 'Galactic Voyager' },
     ambitions: [],
     tasks: [],
@@ -1124,6 +1127,12 @@ export const useTrackStore = create<TrackStore>()(
       }
     },
 
+    recalculateCognitiveSync: async () => {
+      const { calculateCognitiveSync } = await import('../utils/CognitiveSyncEngine');
+      const cognitiveState = await calculateCognitiveSync();
+      set({ cognitiveState });
+    },
+
     initialize: async () => {
       const { dbProxy } = await import('../db/client');
       const today = getTodayLocalISO();
@@ -1299,6 +1308,7 @@ export const useTrackStore = create<TrackStore>()(
         await dbProxy.query(`UPDATE system_info SET last_startup = $1 WHERE id = 1`, [today]);
       }
       console.log('[Store] Momentum synchronization complete.');
+      await get().recalculateCognitiveSync();
       } catch (err) {
       console.error('[Store] Synchronization failed:', err);
       throw err;
