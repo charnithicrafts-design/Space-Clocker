@@ -13,46 +13,61 @@ export const curatedArchetypes: Archetype[] = [
   {
     id: "mca-student",
     icon: "🚀",
-    title: "The Galactic Voyager",
-    subtitle: "Construct your trajectory to ISRO/NASA.",
+    title: "The Systems Architect (MCA)",
+    subtitle: "Construct your trajectory to a Tier-1 Tech Company.",
     vibe: "Unbridled curiosity and raw potential.",
     data: {
       profile: {
         name: "Valentina",
-        level: 1,
-        xp: 0,
-        title: "Galactic Voyager"
+        level: 12,
+        xp: 15400,
+        title: "Systems Architect"
       },
       preferences: {
         confirmDelete: true,
         uiMode: 'nebula'
       },
       stats: {
-        streak: 0,
-        tasksCompleted: 0,
-        totalFocusHours: 0
+        streak: 14,
+        tasksCompleted: 342,
+        totalFocusHours: 420
       },
       ambitions: [
         {
           id: "amb-mca-1",
-          title: "Lead Scientist at ISRO/NASA by 2027",
-          progress: 5,
-          xp: 250,
+          title: "Master Cloud Architecture & AWS Specialization (1 Year Horizon)",
+          progress: 65,
+          xp: 4500,
           horizon: "yearly",
           linkedSkills: [],
           milestones: [
-            { id: "ms-mca-1", title: "Complete MCA with Distinction", status: "pending", tasks: [] },
-            { id: "ms-mca-2", title: "Publish research on Orbital Mechanics", status: "pending", tasks: [] }
+            { id: "ms-mca-1", title: "Attain AWS Solutions Architect Associate", status: "completed", tasks: [] },
+            { id: "ms-mca-2", title: "Deploy high-availability MERN stack to Kubernetes", status: "completed", tasks: [] },
+            { id: "ms-mca-3", title: "Construct Multi-Region Disaster Recovery Demo", status: "pending", tasks: [] },
+            { id: "ms-mca-4", title: "Attain AWS Solutions Architect Professional", status: "pending", tasks: [] }
+          ]
+        },
+        {
+          id: "amb-mca-2",
+          title: "Crack Tier-1 Tech Product Company (2 Year Horizon)",
+          progress: 30,
+          xp: 2500,
+          horizon: "yearly",
+          linkedSkills: [],
+          milestones: [
+            { id: "ms-mca-5", title: "Complete 300 LeetCode Medium/Hard Patterns", status: "completed", tasks: [] },
+            { id: "ms-mca-6", title: "Lead Open Source Microservices Project", status: "pending", tasks: [] }
           ]
         }
       ],
       tasks: [
-        { id: "task-mca-1", title: "Implement 3 Quantum Gates", completed: false, horizon: "daily", plannedDate: getToday(), time: "09:00", ambitionId: "amb-mca-1" },
-        { id: "task-mca-2", title: "Read 10 pages of Astrodynamics", completed: false, horizon: "daily", plannedDate: getToday(), time: "11:00", ambitionId: "amb-mca-1" }
+        { id: "task-mca-1", title: "System Design Mock Interview with Mentor", completed: false, horizon: "daily", plannedDate: getToday(), time: "09:00", ambitionId: "amb-mca-2" },
+        { id: "task-mca-2", title: "Implement Rate Limiting using Redis for Side-Project", completed: false, horizon: "daily", plannedDate: getToday(), time: "11:00", ambitionId: "amb-mca-1" },
+        { id: "task-mca-3", title: "Solve 3 Dynamic Programming problems (Stasis Backlog)", completed: false, horizon: "daily", plannedDate: getToday(), time: "18:00", ambitionId: "amb-mca-2" }
       ],
       voids: [
-        { id: "void-mca-1", text: "Doomscrolling Space News", impact: "high", engagedCount: 0, maxAllowed: 2 },
-        { id: "void-mca-2", text: "Endless Tutorial Hell", impact: "medium", engagedCount: 0, maxAllowed: 1 }
+        { id: "void-mca-1", text: "Mindless YouTube 'Day in the Life' binge", impact: "high", engagedCount: 0, maxAllowed: 0 },
+        { id: "void-mca-2", text: "Tutorial Hell (Watching without building)", impact: "high", engagedCount: 0, maxAllowed: 0 }
       ]
     }
   },
@@ -65,8 +80,8 @@ export const curatedArchetypes: Archetype[] = [
     data: {
       profile: {
         name: "Carl",
-        level: 4,
-        xp: 3200,
+        level: 24,
+        xp: 42000,
         title: "Architect of Solitude"
       },
       preferences: {
@@ -74,27 +89,41 @@ export const curatedArchetypes: Archetype[] = [
         uiMode: 'void'
       },
       stats: {
-        streak: 12,
-        tasksCompleted: 45,
-        totalFocusHours: 120
+        streak: 112,
+        tasksCompleted: 1045,
+        totalFocusHours: 1820
       },
       ambitions: [
         {
           id: "amb-phil-1",
-          title: "Construct The Bollingen Tower",
-          progress: 15,
-          xp: 1500,
+          title: "Construct The Bollingen Tower (3 Year Magnum Opus)",
+          progress: 80,
+          xp: 15000,
           horizon: "yearly",
           linkedSkills: [],
           milestones: [
-            { id: "ms-phil-1", title: "Distill Core Archetypal Thesis", status: "pending", tasks: [] },
-            { id: "ms-phil-2", title: "Establish 4-hour daily deep work ritual", status: "completed", tasks: [] }
+            { id: "ms-phil-1", title: "Distill Core Archetypal Thesis", status: "completed", tasks: [] },
+            { id: "ms-phil-2", title: "Complete 5-year hermeneutic literature review", status: "completed", tasks: [] },
+            { id: "ms-phil-3", title: "Draft Volume 1: The Descent", status: "completed", tasks: [] },
+            { id: "ms-phil-4", title: "Draft Volume 2: The Synthesis", status: "pending", tasks: [] }
+          ]
+        },
+        {
+          id: "amb-phil-2",
+          title: "Establish Absolute Mental Synchronization (6 Month Horizon)",
+          progress: 50,
+          xp: 3000,
+          horizon: "yearly",
+          linkedSkills: [],
+          milestones: [
+            { id: "ms-phil-5", title: "Eliminate all algorithmic dopamine sources", status: "completed", tasks: [] },
+            { id: "ms-phil-6", title: "Maintain 4-hour daily deep work ritual for 90 days", status: "pending", tasks: [] }
           ]
         }
       ],
       tasks: [
-        { id: "task-phil-1", title: "3 Hours Uninterrupted Contemplation", completed: false, horizon: "daily", plannedDate: getToday(), time: "05:00", ambitionId: "amb-phil-1" },
-        { id: "task-phil-2", title: "Manuscript Drafting: Chapter 4", completed: false, horizon: "daily", plannedDate: getToday(), time: "09:00", ambitionId: "amb-phil-1" }
+        { id: "task-phil-1", title: "4 Hours Uninterrupted Contemplation (No WiFi)", completed: false, horizon: "daily", plannedDate: getToday(), time: "05:00", ambitionId: "amb-phil-2" },
+        { id: "task-phil-2", title: "Drafting Chapter 12: The Shadow Integration", completed: false, horizon: "daily", plannedDate: getToday(), time: "09:00", ambitionId: "amb-phil-1" }
       ],
       voids: [
         { id: "void-phil-1", text: "Superficial Social Engagements", impact: "high", engagedCount: 0, maxAllowed: 0 },
@@ -111,8 +140,8 @@ export const curatedArchetypes: Archetype[] = [
     data: {
       profile: {
         name: "Commander",
-        level: 10,
-        xp: 8500,
+        level: 35,
+        xp: 85000,
         title: "Apex Pilot"
       },
       preferences: {
@@ -120,31 +149,34 @@ export const curatedArchetypes: Archetype[] = [
         uiMode: 'nebula'
       },
       stats: {
-        streak: 42,
-        tasksCompleted: 210,
-        totalFocusHours: 350
+        streak: 242,
+        tasksCompleted: 3210,
+        totalFocusHours: 4350
       },
       ambitions: [
         {
           id: "amb-astro-1",
-          title: "Selection for Artemis Lunar Mission",
-          progress: 60,
-          xp: 5000,
+          title: "Selection for Artemis Lunar Mission (2 Year Horizon)",
+          progress: 90,
+          xp: 25000,
           horizon: "yearly",
           linkedSkills: [],
           milestones: [
-            { id: "ms-astro-1", title: "Pass High-G Centrifuge Qualification", status: "pending", tasks: [] },
-            { id: "ms-astro-2", title: "Master Orbital Rendezvous Simulation", status: "completed", tasks: [] }
+            { id: "ms-astro-1", title: "Master Orbital Rendezvous Simulation", status: "completed", tasks: [] },
+            { id: "ms-astro-2", title: "Pass High-G Centrifuge Qualification", status: "completed", tasks: [] },
+            { id: "ms-astro-3", title: "Complete Neutral Buoyancy EVA Training", status: "pending", tasks: [] },
+            { id: "ms-astro-4", title: "Final Command Module Systems Exam", status: "pending", tasks: [] }
           ]
         }
       ],
       tasks: [
-        { id: "task-astro-1", title: "2hr Cardiovascular Capacity Training", completed: false, horizon: "daily", plannedDate: getToday(), time: "06:00", ambitionId: "amb-astro-1" },
-        { id: "task-astro-2", title: "Review Command Module Diagnostics", completed: false, horizon: "daily", plannedDate: getToday(), time: "14:00", ambitionId: "amb-astro-1" }
+        { id: "task-astro-1", title: "4-Hour Neutral Buoyancy Lab Simulation", completed: false, horizon: "daily", plannedDate: getToday(), time: "06:00", ambitionId: "amb-astro-1" },
+        { id: "task-astro-2", title: "Review Command Module Diagnostics Telemetry", completed: false, horizon: "daily", plannedDate: getToday(), time: "14:00", ambitionId: "amb-astro-1" },
+        { id: "task-astro-3", title: "2hr Cardiovascular Capacity Training", completed: false, horizon: "daily", plannedDate: getToday(), time: "16:00", ambitionId: "amb-astro-1" }
       ],
       voids: [
-        { id: "void-astro-1", text: "Neglecting Bio-Rhythms", impact: "high", engagedCount: 0, maxAllowed: 0 },
-        { id: "void-astro-2", text: "Compromising Sleep Architecture", impact: "high", engagedCount: 0, maxAllowed: 0 }
+        { id: "void-astro-1", text: "Neglecting Bio-Rhythms / Sleep Architecture", impact: "high", engagedCount: 0, maxAllowed: 0 },
+        { id: "void-astro-2", text: "Micro-managing ground control engineers", impact: "medium", engagedCount: 0, maxAllowed: 0 }
       ]
     }
   },
@@ -157,8 +189,8 @@ export const curatedArchetypes: Archetype[] = [
     data: {
       profile: {
         name: "Dr. Aris",
-        level: 7,
-        xp: 5200,
+        level: 21,
+        xp: 35200,
         title: "Cosmic Decoder"
       },
       preferences: {
@@ -166,30 +198,33 @@ export const curatedArchetypes: Archetype[] = [
         uiMode: 'nebula'
       },
       stats: {
-        streak: 18,
-        tasksCompleted: 85,
-        totalFocusHours: 190
+        streak: 58,
+        tasksCompleted: 885,
+        totalFocusHours: 1190
       },
       ambitions: [
         {
           id: "amb-sci-1",
-          title: "Publish Exoplanet Findings in Nature",
-          progress: 30,
-          xp: 2200,
+          title: "Publish Exoplanet Findings in Nature (1 Year Horizon)",
+          progress: 60,
+          xp: 12200,
           horizon: "yearly",
           linkedSkills: [],
           milestones: [
-            { id: "ms-sci-1", title: "Draft NSF Grant Proposal", status: "pending", tasks: [] },
-            { id: "ms-sci-2", title: "Analyze JWST Spectroscopic Data", status: "pending", tasks: [] }
+            { id: "ms-sci-1", title: "Secure JWST Observation Time", status: "completed", tasks: [] },
+            { id: "ms-sci-2", title: "Collect and clean raw spectroscopic data", status: "completed", tasks: [] },
+            { id: "ms-sci-3", title: "Analyze atmospheric bio-signatures", status: "pending", tasks: [] },
+            { id: "ms-sci-4", title: "Draft NSF Grant Proposal for Phase 2", status: "pending", tasks: [] }
           ]
         }
       ],
       tasks: [
-        { id: "task-sci-1", title: "Run Python Spectral Analysis", completed: false, horizon: "daily", plannedDate: getToday(), time: "09:30", ambitionId: "amb-sci-1" },
-        { id: "task-sci-2", title: "Literature Review: Atmospheric Signatures", completed: false, horizon: "daily", plannedDate: getToday(), time: "15:00", ambitionId: "amb-sci-1" }
+        { id: "task-sci-1", title: "Run Python Spectral Analysis pipeline on Sector 4 data", completed: false, horizon: "daily", plannedDate: getToday(), time: "09:30", ambitionId: "amb-sci-1" },
+        { id: "task-sci-2", title: "Literature Review: Atmospheric Signatures of K2-18b", completed: false, horizon: "daily", plannedDate: getToday(), time: "13:00", ambitionId: "amb-sci-1" },
+        { id: "task-sci-3", title: "Meeting with co-authors to finalize methodology", completed: false, horizon: "daily", plannedDate: getToday(), time: "15:00", ambitionId: "amb-sci-1" }
       ],
       voids: [
-        { id: "void-sci-1", text: "Over-optimizing scripts instead of writing", impact: "medium", engagedCount: 0, maxAllowed: 1 },
+        { id: "void-sci-1", text: "Over-optimizing Python scripts instead of writing", impact: "medium", engagedCount: 0, maxAllowed: 1 },
         { id: "void-sci-2", text: "Failing to back up raw data", impact: "high", engagedCount: 0, maxAllowed: 0 }
       ]
     }
@@ -203,8 +238,8 @@ export const curatedArchetypes: Archetype[] = [
     data: {
       profile: {
         name: "Prof. Aldrin",
-        level: 8,
-        xp: 6100,
+        level: 28,
+        xp: 56100,
         title: "Stellar Mentor"
       },
       preferences: {
@@ -212,30 +247,33 @@ export const curatedArchetypes: Archetype[] = [
         uiMode: 'nebula'
       },
       stats: {
-        streak: 5,
-        tasksCompleted: 140,
-        totalFocusHours: 85
+        streak: 95,
+        tasksCompleted: 2140,
+        totalFocusHours: 2585
       },
       ambitions: [
         {
           id: "amb-prof-1",
-          title: "Achieve Tenure & Cultivate Post-Docs",
-          progress: 75,
-          xp: 4000,
+          title: "Achieve Tenure & Cultivate Post-Docs (3 Year Horizon)",
+          progress: 85,
+          xp: 24000,
           horizon: "yearly",
           linkedSkills: [],
           milestones: [
-            { id: "ms-prof-1", title: "Design Advanced Cosmology Curriculum", status: "pending", tasks: [] },
-            { id: "ms-prof-2", title: "Secure Department Funding", status: "completed", tasks: [] }
+            { id: "ms-prof-1", title: "Secure $2M Department Funding Grant", status: "completed", tasks: [] },
+            { id: "ms-prof-2", title: "Design Advanced Cosmology Curriculum", status: "completed", tasks: [] },
+            { id: "ms-prof-3", title: "Chair the International Astrophysics Symposium", status: "pending", tasks: [] },
+            { id: "ms-prof-4", title: "Lead 3 PhD Candidates to successful defenses", status: "pending", tasks: [] }
           ]
         }
       ],
       tasks: [
-        { id: "task-prof-1", title: "Peer Review Nature Submission", completed: false, horizon: "daily", plannedDate: getToday(), time: "10:00", ambitionId: "amb-prof-1" },
-        { id: "task-prof-2", title: "Mentor Meeting with PhD Candidates", completed: false, horizon: "daily", plannedDate: getToday(), time: "13:30", ambitionId: "amb-prof-1" }
+        { id: "task-prof-1", title: "Peer Review Nature Submission (Dr. Aris's paper)", completed: false, horizon: "daily", plannedDate: getToday(), time: "10:00", ambitionId: "amb-prof-1" },
+        { id: "task-prof-2", title: "Mentor Meeting with PhD Candidates (Thesis Defense Prep)", completed: false, horizon: "daily", plannedDate: getToday(), time: "13:30", ambitionId: "amb-prof-1" },
+        { id: "task-prof-3", title: "Drafting the Keynote for the Astrophysics Symposium", completed: false, horizon: "daily", plannedDate: getToday(), time: "16:00", ambitionId: "amb-prof-1" }
       ],
       voids: [
-        { id: "void-prof-1", text: "Engaging in Departmental Politics", impact: "high", engagedCount: 0, maxAllowed: 1 },
+        { id: "void-prof-1", text: "Engaging in Departmental Politics", impact: "high", engagedCount: 0, maxAllowed: 0 },
         { id: "void-prof-2", text: "Endless Administrative Email Chains", impact: "medium", engagedCount: 0, maxAllowed: 2 }
       ]
     }

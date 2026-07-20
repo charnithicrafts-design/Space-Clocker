@@ -159,7 +159,7 @@ const LandingPage: React.FC = () => {
             onClick={launchApp}
             className="px-6 py-2.5 rounded-full bg-primary/10 border border-primary/30 text-primary font-bold text-xs uppercase tracking-widest hover:bg-primary hover:text-[#06080F] hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] transition-all duration-300"
           >
-            Enter Mission Control
+            System Initialization
           </button>
         </div>
       </nav>
@@ -190,7 +190,7 @@ const LandingPage: React.FC = () => {
               >
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                 <span className="relative flex items-center justify-center gap-2">
-                  Construct Trajectory <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  System Initialization <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </span>
               </button>
             </div>
