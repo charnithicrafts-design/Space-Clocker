@@ -136,7 +136,7 @@ const LandingPage: React.FC = () => {
               </span>
             </h1>
             <p className="text-xl text-white/60 max-w-lg leading-relaxed font-light">
-              The first productivity OS built to track your psychological momentum, protect your deep work, and align your daily actions with your lifelong trajectory.
+              A productivity OS that synchronizes your mind with your internal clock. Turn your gut feeling into tangible momentum for ambitious projects, life goals, and relationships.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button 
@@ -164,7 +164,7 @@ const LandingPage: React.FC = () => {
               
               <div className="flex justify-between items-start relative z-10">
                 <div className="space-y-2">
-                  <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest">Cognitive Sync</h3>
+                  <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest">Mental Sync</h3>
                   <div className="text-7xl font-display font-black text-primary">95<span className="text-2xl text-primary/50">%</span></div>
                 </div>
                 <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary border border-primary/30">
@@ -195,32 +195,38 @@ const LandingPage: React.FC = () => {
       <section className="py-32 px-6 relative z-10 border-t border-white/5 bg-gradient-to-b from-[#06080F] to-[#0A0D16]">
         <div className="max-w-7xl mx-auto space-y-24">
           <div className="text-center space-y-6 max-w-3xl mx-auto">
-            <h2 className="text-4xl lg:text-5xl font-display font-black">Not a to-do list. <br/><span className="text-secondary">A neuro-engine.</span></h2>
+            <h2 className="text-4xl lg:text-5xl font-display font-black">Synchronize your mind. <br/><span className="text-secondary">Trust your internal clock.</span></h2>
             <p className="text-lg text-white/60 leading-relaxed font-light">
-              Traditional productivity tools track what you do. Space-Clocker tracks how you operate, managing your mental state to prevent burnout and ensure deep alignment.
+              Space-Clocker clocks you into your mental space. It bridges the gap between your gut feeling and your daily actions, ensuring you stay aligned with your life goals, romantic relationships, and financial independence.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: <Brain />, title: "Bio-Feedback Monitor", desc: "Real-time calculation of your Cognitive Sync Score based on ambition alignment and daily momentum." },
-              { icon: <Rocket />, title: "The Momentum Engine", desc: "Gamify your trajectory. Gain XP, level up your rank, and map your macroscopic ambitions to daily Orbit tasks." },
-              { icon: <Shield />, title: "The Void Protocol", desc: "Aggressively defend your deep work. Map your distractions into the Void and track their impact on your mental state." }
+              { icon: <Brain />, title: "Mental Space Sync", desc: "Synchronize your mind with your internal clock. Turn your gut feeling into tangible momentum." },
+              { icon: <Rocket />, title: "Momentum Engine", desc: "Gain XP, level up your rank, and map your macroscopic ambitions to your daily Orbit." },
+              { icon: <Shield />, title: "The Void Protocol", desc: "Aggressively defend your deep work. Map distractions and lock them out of your daily schedule." },
+              { icon: <Star />, title: "Mission Briefings", desc: "Mentorship directly from Charnithi, plus AI-driven reflection in the upcoming Horizon module.", comingSoon: true }
             ].map((feature, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
+                transition={{ delay: i * 0.15 }}
                 whileHover={{ y: -10 }}
-                className="glass-panel border border-white/5 rounded-[2rem] p-8 space-y-6 hover:border-primary/30 transition-colors group cursor-pointer"
+                className="glass-panel border border-white/5 rounded-[2rem] p-8 space-y-6 hover:border-primary/30 transition-colors group cursor-pointer relative overflow-hidden"
               >
+                {feature.comingSoon && (
+                  <div className="absolute top-4 right-4 text-[10px] uppercase tracking-widest font-bold text-secondary bg-secondary/10 px-2 py-1 rounded border border-secondary/20">
+                    In Dev
+                  </div>
+                )}
                 <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 group-hover:bg-primary/20 group-hover:text-primary group-hover:border-primary/30 transition-all">
                   {React.cloneElement(feature.icon as React.ReactElement, { size: 28 })}
                 </div>
                 <h3 className="text-2xl font-display font-bold">{feature.title}</h3>
-                <p className="text-white/60 leading-relaxed font-light">{feature.desc}</p>
+                <p className="text-white/60 leading-relaxed font-light text-sm">{feature.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -229,12 +235,14 @@ const LandingPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="py-12 border-t border-white/5 bg-[#06080F] relative z-10 text-center">
-        <div className="flex items-center justify-center gap-2 text-white/40 text-sm font-bold uppercase tracking-widest mb-4">
-          <Star size={14} className="text-primary" />
-          <span>Mastermind Team Engineered</span>
-          <Star size={14} className="text-primary" />
+        <div className="flex flex-col items-center justify-center gap-4 text-white/40 text-sm font-bold tracking-widest mb-4">
+          <div className="flex items-center gap-2 uppercase">
+            <Star size={14} className="text-primary" />
+            <span>A heartful product from <a href="https://www.charnithi.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline hover:text-primary/80 transition-colors">Charnithi</a></span>
+            <Star size={14} className="text-primary" />
+          </div>
+          <p className="text-white/30 text-xs font-normal normal-case">Space-Clocker © {new Date().getFullYear()}. Synchronize your mind.</p>
         </div>
-        <p className="text-white/30 text-xs">Space-Clocker © {new Date().getFullYear()}. All systems nominal.</p>
       </footer>
     </div>
   );
