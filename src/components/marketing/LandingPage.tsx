@@ -66,6 +66,51 @@ const ParticleBackground: React.FC = () => {
   return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 mix-blend-screen opacity-60" />;
 };
 
+// --- Mental Sync Orb Visualizer ---
+const MentalSyncVisualizer: React.FC = () => {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      {/* Ambient background glow */}
+      <motion.div 
+        animate={{ opacity: [0.3, 0.6, 0.3], scale: [0.8, 1.2, 0.8] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute w-40 h-40 bg-primary/20 blur-[40px] rounded-full" 
+      />
+
+      {/* Orbit Rings */}
+      <div className="absolute w-48 h-48 rounded-full border border-white/5" />
+      <div className="absolute w-64 h-64 rounded-full border border-white/5 border-dashed" />
+      
+      {/* Synchronizing Particle on Inner Ring */}
+      <motion.div 
+        animate={{ rotate: 360 }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+        className="absolute w-48 h-48"
+      >
+        <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-secondary rounded-full shadow-[0_0_15px_rgba(255,84,77,0.8)]" />
+      </motion.div>
+
+      {/* Synchronizing Particle on Outer Ring */}
+      <motion.div 
+        animate={{ rotate: -360 }}
+        transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+        className="absolute w-64 h-64"
+      >
+        <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full shadow-[0_0_15px_rgba(0,242,255,0.8)]" />
+      </motion.div>
+
+      {/* Central Core */}
+      <motion.div 
+        animate={{ scale: [1, 1.1, 1], boxShadow: ['0 0 20px rgba(0,242,255,0.2)', '0 0 40px rgba(0,242,255,0.6)', '0 0 20px rgba(0,242,255,0.2)'] }}
+        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center shadow-2xl relative z-10 border border-primary/30"
+      >
+        <Brain className="text-[#06080F]" size={28} />
+      </motion.div>
+    </div>
+  );
+};
+
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { scrollY } = useScroll();
@@ -171,6 +216,9 @@ const LandingPage: React.FC = () => {
                   <Activity size={32} />
                 </div>
               </div>
+
+              {/* The Visualizer fills the empty space in the center */}
+              <MentalSyncVisualizer />
 
               <div className="space-y-4 relative z-10">
                 <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
