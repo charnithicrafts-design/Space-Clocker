@@ -7,6 +7,8 @@ export type Archetype = {
   data: any;
 };
 
+const getToday = () => new Date().toISOString().split('T')[0];
+
 export const curatedArchetypes: Archetype[] = [
   {
     id: "mca-student",
@@ -39,14 +41,14 @@ export const curatedArchetypes: Archetype[] = [
           horizon: "yearly",
           linkedSkills: [],
           milestones: [
-            { id: "ms-mca-1", title: "Complete MCA with Distinction", completed: false },
-            { id: "ms-mca-2", title: "Publish research on Orbital Mechanics", completed: false }
+            { id: "ms-mca-1", title: "Complete MCA with Distinction", status: "pending", tasks: [] },
+            { id: "ms-mca-2", title: "Publish research on Orbital Mechanics", status: "pending", tasks: [] }
           ]
         }
       ],
       tasks: [
-        { id: "task-mca-1", text: "Implement 3 Quantum Gates", completed: false, category: "orbit", ambitionId: "amb-mca-1", date: new Date().toISOString() },
-        { id: "task-mca-2", text: "Read 10 pages of Astrodynamics", completed: false, category: "orbit", ambitionId: "amb-mca-1", date: new Date().toISOString() }
+        { id: "task-mca-1", title: "Implement 3 Quantum Gates", completed: false, horizon: "daily", plannedDate: getToday(), time: "09:00", ambitionId: "amb-mca-1" },
+        { id: "task-mca-2", title: "Read 10 pages of Astrodynamics", completed: false, horizon: "daily", plannedDate: getToday(), time: "11:00", ambitionId: "amb-mca-1" }
       ],
       voids: [
         { id: "void-mca-1", text: "Doomscrolling Space News", impact: "high", engagedCount: 0, maxAllowed: 2 },
@@ -82,21 +84,21 @@ export const curatedArchetypes: Archetype[] = [
           title: "Construct The Bollingen Tower",
           progress: 15,
           xp: 1500,
-          horizon: "lifetime",
+          horizon: "yearly",
           linkedSkills: [],
           milestones: [
-            { id: "ms-phil-1", title: "Distill Core Archetypal Thesis", completed: false },
-            { id: "ms-phil-2", title: "Establish 4-hour daily deep work ritual", completed: true }
+            { id: "ms-phil-1", title: "Distill Core Archetypal Thesis", status: "pending", tasks: [] },
+            { id: "ms-phil-2", title: "Establish 4-hour daily deep work ritual", status: "completed", tasks: [] }
           ]
         }
       ],
       tasks: [
-        { id: "task-phil-1", text: "3 Hours Uninterrupted Contemplation", completed: false, category: "orbit", ambitionId: "amb-phil-1", date: new Date().toISOString() },
-        { id: "task-phil-2", text: "Manuscript Drafting: Chapter 4", completed: false, category: "orbit", ambitionId: "amb-phil-1", date: new Date().toISOString() }
+        { id: "task-phil-1", title: "3 Hours Uninterrupted Contemplation", completed: false, horizon: "daily", plannedDate: getToday(), time: "05:00", ambitionId: "amb-phil-1" },
+        { id: "task-phil-2", title: "Manuscript Drafting: Chapter 4", completed: false, horizon: "daily", plannedDate: getToday(), time: "09:00", ambitionId: "amb-phil-1" }
       ],
       voids: [
         { id: "void-phil-1", text: "Superficial Social Engagements", impact: "high", engagedCount: 0, maxAllowed: 0 },
-        { id: "void-phil-2", text: "Reacting to the 24-hour News Cycle", impact: "critical", engagedCount: 0, maxAllowed: 0 }
+        { id: "void-phil-2", text: "Reacting to the 24-hour News Cycle", impact: "high", engagedCount: 0, maxAllowed: 0 }
       ]
     }
   },
@@ -128,21 +130,21 @@ export const curatedArchetypes: Archetype[] = [
           title: "Selection for Artemis Lunar Mission",
           progress: 60,
           xp: 5000,
-          horizon: "quarterly",
+          horizon: "yearly",
           linkedSkills: [],
           milestones: [
-            { id: "ms-astro-1", title: "Pass High-G Centrifuge Qualification", completed: false },
-            { id: "ms-astro-2", title: "Master Orbital Rendezvous Simulation", completed: true }
+            { id: "ms-astro-1", title: "Pass High-G Centrifuge Qualification", status: "pending", tasks: [] },
+            { id: "ms-astro-2", title: "Master Orbital Rendezvous Simulation", status: "completed", tasks: [] }
           ]
         }
       ],
       tasks: [
-        { id: "task-astro-1", text: "2hr Cardiovascular Capacity Training", completed: false, category: "orbit", ambitionId: "amb-astro-1", date: new Date().toISOString() },
-        { id: "task-astro-2", text: "Review Command Module Diagnostics", completed: false, category: "orbit", ambitionId: "amb-astro-1", date: new Date().toISOString() }
+        { id: "task-astro-1", title: "2hr Cardiovascular Capacity Training", completed: false, horizon: "daily", plannedDate: getToday(), time: "06:00", ambitionId: "amb-astro-1" },
+        { id: "task-astro-2", title: "Review Command Module Diagnostics", completed: false, horizon: "daily", plannedDate: getToday(), time: "14:00", ambitionId: "amb-astro-1" }
       ],
       voids: [
-        { id: "void-astro-1", text: "Neglecting Bio-Rhythms", impact: "critical", engagedCount: 0, maxAllowed: 0 },
-        { id: "void-astro-2", text: "Compromising Sleep Architecture", impact: "critical", engagedCount: 0, maxAllowed: 0 }
+        { id: "void-astro-1", text: "Neglecting Bio-Rhythms", impact: "high", engagedCount: 0, maxAllowed: 0 },
+        { id: "void-astro-2", text: "Compromising Sleep Architecture", impact: "high", engagedCount: 0, maxAllowed: 0 }
       ]
     }
   },
@@ -177,18 +179,18 @@ export const curatedArchetypes: Archetype[] = [
           horizon: "yearly",
           linkedSkills: [],
           milestones: [
-            { id: "ms-sci-1", title: "Draft NSF Grant Proposal", completed: false },
-            { id: "ms-sci-2", title: "Analyze JWST Spectroscopic Data", completed: false }
+            { id: "ms-sci-1", title: "Draft NSF Grant Proposal", status: "pending", tasks: [] },
+            { id: "ms-sci-2", title: "Analyze JWST Spectroscopic Data", status: "pending", tasks: [] }
           ]
         }
       ],
       tasks: [
-        { id: "task-sci-1", text: "Run Python Spectral Analysis", completed: false, category: "orbit", ambitionId: "amb-sci-1", date: new Date().toISOString() },
-        { id: "task-sci-2", text: "Literature Review: Atmospheric Signatures", completed: false, category: "orbit", ambitionId: "amb-sci-1", date: new Date().toISOString() }
+        { id: "task-sci-1", title: "Run Python Spectral Analysis", completed: false, horizon: "daily", plannedDate: getToday(), time: "09:30", ambitionId: "amb-sci-1" },
+        { id: "task-sci-2", title: "Literature Review: Atmospheric Signatures", completed: false, horizon: "daily", plannedDate: getToday(), time: "15:00", ambitionId: "amb-sci-1" }
       ],
       voids: [
         { id: "void-sci-1", text: "Over-optimizing scripts instead of writing", impact: "medium", engagedCount: 0, maxAllowed: 1 },
-        { id: "void-sci-2", text: "Failing to back up raw data", impact: "critical", engagedCount: 0, maxAllowed: 0 }
+        { id: "void-sci-2", text: "Failing to back up raw data", impact: "high", engagedCount: 0, maxAllowed: 0 }
       ]
     }
   },
@@ -220,17 +222,17 @@ export const curatedArchetypes: Archetype[] = [
           title: "Achieve Tenure & Cultivate Post-Docs",
           progress: 75,
           xp: 4000,
-          horizon: "lifetime",
+          horizon: "yearly",
           linkedSkills: [],
           milestones: [
-            { id: "ms-prof-1", title: "Design Advanced Cosmology Curriculum", completed: false },
-            { id: "ms-prof-2", title: "Secure Department Funding", completed: true }
+            { id: "ms-prof-1", title: "Design Advanced Cosmology Curriculum", status: "pending", tasks: [] },
+            { id: "ms-prof-2", title: "Secure Department Funding", status: "completed", tasks: [] }
           ]
         }
       ],
       tasks: [
-        { id: "task-prof-1", text: "Peer Review Nature Submission", completed: false, category: "orbit", ambitionId: "amb-prof-1", date: new Date().toISOString() },
-        { id: "task-prof-2", text: "Mentor Meeting with PhD Candidates", completed: false, category: "orbit", ambitionId: "amb-prof-1", date: new Date().toISOString() }
+        { id: "task-prof-1", title: "Peer Review Nature Submission", completed: false, horizon: "daily", plannedDate: getToday(), time: "10:00", ambitionId: "amb-prof-1" },
+        { id: "task-prof-2", title: "Mentor Meeting with PhD Candidates", completed: false, horizon: "daily", plannedDate: getToday(), time: "13:30", ambitionId: "amb-prof-1" }
       ],
       voids: [
         { id: "void-prof-1", text: "Engaging in Departmental Politics", impact: "high", engagedCount: 0, maxAllowed: 1 },
