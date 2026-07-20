@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { Award, Zap, ShieldCheck, Target, Clock, CalendarDays, Brain, Star } from 'lucide-react';
@@ -6,6 +6,7 @@ import { XP_PER_LEVEL } from '../../constants';
 
 const ProfileDashboard = () => {
   const { profile, tasks, ambitions, stats, history, cognitiveState } = useTrackStore();
+  const [isScoreVisible, setIsScoreVisible] = useState(false);
 
   // Handle ambient audio lifecycle
   useEffect(() => {
@@ -109,12 +110,15 @@ const ProfileDashboard = () => {
             className="absolute w-64 h-64 rounded-full border border-primary-container/30 bg-primary-container/5"
           />
           
-          <div className="relative w-40 h-40 rounded-full bg-surface-high border-4 border-primary/30 flex items-center justify-center shadow-[0_0_50px_rgba(var(--color-primary-rgb),0.2)] overflow-hidden z-10 transition-colors duration-1000">
+          <div 
+            className="group relative w-40 h-40 rounded-full bg-surface-high border-4 border-primary/30 flex items-center justify-center shadow-[0_0_50px_rgba(var(--color-primary-rgb),0.2)] overflow-hidden z-10 transition-colors duration-1000 cursor-pointer"
+            onClick={() => setIsScoreVisible(!isScoreVisible)}
+          >
             <Award size={64} className="text-primary transition-colors duration-1000" />
             
             {/* Sync Score Overlay */}
             {cognitiveState && (
-              <div className="absolute inset-0 bg-surface-highest/80 backdrop-blur-sm flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+              <div className={`absolute inset-0 bg-surface-highest/80 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-300 ${isScoreVisible ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100'}`}>
                 <span className="text-3xl font-black text-primary font-display">{cognitiveState.syncScore}</span>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Sync Score</span>
               </div>
