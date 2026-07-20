@@ -15,6 +15,7 @@ import TransmissionDashboard from './components/transmission/TransmissionDashboa
 import SharedTransmission from './components/transmission/SharedTransmission';
 import SyncConflictModal from './components/reflection/SyncConflictModal';
 import OnboardingTour from './components/layout/OnboardingTour';
+import IdentitySelectionMatrix from './components/onboarding/IdentitySelectionMatrix';
 import UpdateModal from './components/layout/UpdateModal';
 import CriticalUpdateBanner from './components/layout/CriticalUpdateBanner';
 import { useTrackStore } from './store/useTrackStore';
@@ -336,6 +337,7 @@ const AppContent = () => {
           <Route path="/transmission/share" element={<SharedTransmission />} />
           <Route path="/settings" element={<SettingsDashboard />} />
           <Route path="/profile" element={<ProfileDashboard />} />
+          <Route path="/identity" element={<IdentitySelectionMatrix />} />
           <Route path="/about" element={<AboutPage />} />
         </Routes>
       </main>

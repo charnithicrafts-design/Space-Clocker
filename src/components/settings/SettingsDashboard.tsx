@@ -10,8 +10,10 @@ import { getTodayLocalISO } from '../../utils/DateTimeUtils';
 import SyncPaywallModal from './SyncPaywallModal';
 import { getOrCreateDeviceId } from '../../utils/DeviceUtils';
 import { useSession } from '../../lib/auth-client';
+import { useNavigate } from 'react-router-dom';
 
 const SettingsDashboard = () => {
+  const navigate = useNavigate();
   const store = useTrackStore();
   const { profile, oracleConfig, preferences, syncStatus, devices, updateProfile, updateOracleConfig, updatePreferences, importData, initialize, setSyncStatus, disconnectDevice } = store;
 
@@ -237,6 +239,14 @@ const SettingsDashboard = () => {
                 onChange={(e) => setLocalProfile({ ...localProfile, level: parseInt(e.target.value) || 0 })}
               />
             </div>
+            
+            <button
+              onClick={() => navigate('/identity')}
+              className="w-full mt-2 flex items-center justify-center gap-2 p-4 rounded-xl border border-primary/30 bg-primary/10 text-primary hover:bg-primary/20 transition-all font-bold text-[10px] uppercase tracking-widest"
+            >
+              <User size={14} />
+              Assume Curated Identity Matrix
+            </button>
           </div>
         </section>
 
@@ -361,7 +371,16 @@ const SettingsDashboard = () => {
                 </h4>
                 <button
                   onClick={async () => {
-                    await store.performPull();
+                    try {
+                      setSyncStatus({ isSyncing: true, error: null });
+                      await store.performPull();
+                      SoundManager.playSyncSuccess();
+                    } catch (err: any) {
+                      setSyncStatus({ error: err.message || 'Array refresh failed' });
+                      SoundManager.playThud();
+                    } finally {
+                      setSyncStatus({ isSyncing: false, lastSync: new Date().toISOString() });
+                    }
                   }}
                   disabled={syncStatus.isSyncing}
                   className="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors disabled:opacity-50"

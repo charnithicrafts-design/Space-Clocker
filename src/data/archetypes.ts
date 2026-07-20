@@ -1,0 +1,241 @@
+export type Archetype = {
+  id: string;
+  icon: string;
+  title: string;
+  subtitle: string;
+  vibe: string;
+  data: any;
+};
+
+export const curatedArchetypes: Archetype[] = [
+  {
+    id: "mca-student",
+    icon: "🚀",
+    title: "The Galactic Voyager",
+    subtitle: "Construct your trajectory to ISRO/NASA.",
+    vibe: "Unbridled curiosity and raw potential.",
+    data: {
+      profile: {
+        name: "Valentina",
+        level: 1,
+        xp: 0,
+        title: "Galactic Voyager"
+      },
+      preferences: {
+        confirmDelete: true,
+        uiMode: 'nebula'
+      },
+      stats: {
+        streak: 0,
+        tasksCompleted: 0,
+        totalFocusHours: 0
+      },
+      ambitions: [
+        {
+          id: "amb-mca-1",
+          title: "Lead Scientist at ISRO/NASA by 2027",
+          progress: 5,
+          xp: 250,
+          horizon: "yearly",
+          linkedSkills: [],
+          milestones: [
+            { id: "ms-mca-1", title: "Complete MCA with Distinction", completed: false },
+            { id: "ms-mca-2", title: "Publish research on Orbital Mechanics", completed: false }
+          ]
+        }
+      ],
+      tasks: [
+        { id: "task-mca-1", text: "Implement 3 Quantum Gates", completed: false, category: "orbit", ambitionId: "amb-mca-1", date: new Date().toISOString() },
+        { id: "task-mca-2", text: "Read 10 pages of Astrodynamics", completed: false, category: "orbit", ambitionId: "amb-mca-1", date: new Date().toISOString() }
+      ],
+      voids: [
+        { id: "void-mca-1", text: "Doomscrolling Space News", impact: "high", engagedCount: 0, maxAllowed: 2 },
+        { id: "void-mca-2", text: "Endless Tutorial Hell", impact: "medium", engagedCount: 0, maxAllowed: 1 }
+      ]
+    }
+  },
+  {
+    id: "philosopher",
+    icon: "🏛️",
+    title: "The Architect of Solitude",
+    subtitle: "Construct your Bollingen Tower.",
+    vibe: "Deep, uncompromising focus.",
+    data: {
+      profile: {
+        name: "Carl",
+        level: 4,
+        xp: 3200,
+        title: "Architect of Solitude"
+      },
+      preferences: {
+        confirmDelete: true,
+        uiMode: 'void'
+      },
+      stats: {
+        streak: 12,
+        tasksCompleted: 45,
+        totalFocusHours: 120
+      },
+      ambitions: [
+        {
+          id: "amb-phil-1",
+          title: "Construct The Bollingen Tower",
+          progress: 15,
+          xp: 1500,
+          horizon: "lifetime",
+          linkedSkills: [],
+          milestones: [
+            { id: "ms-phil-1", title: "Distill Core Archetypal Thesis", completed: false },
+            { id: "ms-phil-2", title: "Establish 4-hour daily deep work ritual", completed: true }
+          ]
+        }
+      ],
+      tasks: [
+        { id: "task-phil-1", text: "3 Hours Uninterrupted Contemplation", completed: false, category: "orbit", ambitionId: "amb-phil-1", date: new Date().toISOString() },
+        { id: "task-phil-2", text: "Manuscript Drafting: Chapter 4", completed: false, category: "orbit", ambitionId: "amb-phil-1", date: new Date().toISOString() }
+      ],
+      voids: [
+        { id: "void-phil-1", text: "Superficial Social Engagements", impact: "high", engagedCount: 0, maxAllowed: 0 },
+        { id: "void-phil-2", text: "Reacting to the 24-hour News Cycle", impact: "critical", engagedCount: 0, maxAllowed: 0 }
+      ]
+    }
+  },
+  {
+    id: "astronaut",
+    icon: "👨‍🚀",
+    title: "The Apex Pilot",
+    subtitle: "Prepare for the Artemis Lunar Mission.",
+    vibe: "Extreme discipline and synergy of mind/body.",
+    data: {
+      profile: {
+        name: "Commander",
+        level: 10,
+        xp: 8500,
+        title: "Apex Pilot"
+      },
+      preferences: {
+        confirmDelete: true,
+        uiMode: 'nebula'
+      },
+      stats: {
+        streak: 42,
+        tasksCompleted: 210,
+        totalFocusHours: 350
+      },
+      ambitions: [
+        {
+          id: "amb-astro-1",
+          title: "Selection for Artemis Lunar Mission",
+          progress: 60,
+          xp: 5000,
+          horizon: "quarterly",
+          linkedSkills: [],
+          milestones: [
+            { id: "ms-astro-1", title: "Pass High-G Centrifuge Qualification", completed: false },
+            { id: "ms-astro-2", title: "Master Orbital Rendezvous Simulation", completed: true }
+          ]
+        }
+      ],
+      tasks: [
+        { id: "task-astro-1", text: "2hr Cardiovascular Capacity Training", completed: false, category: "orbit", ambitionId: "amb-astro-1", date: new Date().toISOString() },
+        { id: "task-astro-2", text: "Review Command Module Diagnostics", completed: false, category: "orbit", ambitionId: "amb-astro-1", date: new Date().toISOString() }
+      ],
+      voids: [
+        { id: "void-astro-1", text: "Neglecting Bio-Rhythms", impact: "critical", engagedCount: 0, maxAllowed: 0 },
+        { id: "void-astro-2", text: "Compromising Sleep Architecture", impact: "critical", engagedCount: 0, maxAllowed: 0 }
+      ]
+    }
+  },
+  {
+    id: "space-scientist",
+    icon: "🔭",
+    title: "The Cosmic Decoder",
+    subtitle: "Secure JWST Observation Time.",
+    vibe: "Analytical, patient, methodical.",
+    data: {
+      profile: {
+        name: "Dr. Aris",
+        level: 7,
+        xp: 5200,
+        title: "Cosmic Decoder"
+      },
+      preferences: {
+        confirmDelete: true,
+        uiMode: 'nebula'
+      },
+      stats: {
+        streak: 18,
+        tasksCompleted: 85,
+        totalFocusHours: 190
+      },
+      ambitions: [
+        {
+          id: "amb-sci-1",
+          title: "Publish Exoplanet Findings in Nature",
+          progress: 30,
+          xp: 2200,
+          horizon: "yearly",
+          linkedSkills: [],
+          milestones: [
+            { id: "ms-sci-1", title: "Draft NSF Grant Proposal", completed: false },
+            { id: "ms-sci-2", title: "Analyze JWST Spectroscopic Data", completed: false }
+          ]
+        }
+      ],
+      tasks: [
+        { id: "task-sci-1", text: "Run Python Spectral Analysis", completed: false, category: "orbit", ambitionId: "amb-sci-1", date: new Date().toISOString() },
+        { id: "task-sci-2", text: "Literature Review: Atmospheric Signatures", completed: false, category: "orbit", ambitionId: "amb-sci-1", date: new Date().toISOString() }
+      ],
+      voids: [
+        { id: "void-sci-1", text: "Over-optimizing scripts instead of writing", impact: "medium", engagedCount: 0, maxAllowed: 1 },
+        { id: "void-sci-2", text: "Failing to back up raw data", impact: "critical", engagedCount: 0, maxAllowed: 0 }
+      ]
+    }
+  },
+  {
+    id: "professor",
+    icon: "🎓",
+    title: "The Stellar Mentor",
+    subtitle: "Cultivate the next generation.",
+    vibe: "Wisdom, legacy, and balancing heavy workloads.",
+    data: {
+      profile: {
+        name: "Prof. Aldrin",
+        level: 8,
+        xp: 6100,
+        title: "Stellar Mentor"
+      },
+      preferences: {
+        confirmDelete: true,
+        uiMode: 'nebula'
+      },
+      stats: {
+        streak: 5,
+        tasksCompleted: 140,
+        totalFocusHours: 85
+      },
+      ambitions: [
+        {
+          id: "amb-prof-1",
+          title: "Achieve Tenure & Cultivate Post-Docs",
+          progress: 75,
+          xp: 4000,
+          horizon: "lifetime",
+          linkedSkills: [],
+          milestones: [
+            { id: "ms-prof-1", title: "Design Advanced Cosmology Curriculum", completed: false },
+            { id: "ms-prof-2", title: "Secure Department Funding", completed: true }
+          ]
+        }
+      ],
+      tasks: [
+        { id: "task-prof-1", text: "Peer Review Nature Submission", completed: false, category: "orbit", ambitionId: "amb-prof-1", date: new Date().toISOString() },
+        { id: "task-prof-2", text: "Mentor Meeting with PhD Candidates", completed: false, category: "orbit", ambitionId: "amb-prof-1", date: new Date().toISOString() }
+      ],
+      voids: [
+        { id: "void-prof-1", text: "Engaging in Departmental Politics", impact: "high", engagedCount: 0, maxAllowed: 1 },
+        { id: "void-prof-2", text: "Endless Administrative Email Chains", impact: "medium", engagedCount: 0, maxAllowed: 2 }
+      ]
+    }
+  }
+];
