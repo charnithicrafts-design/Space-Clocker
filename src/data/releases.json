@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.9.0",
+    "date": "2026-07-20",
+    "transmission": "The Bio-Feedback Monitor: Psychological Momentum Unlocked.",
+    "details": [
+      "Engineered the Psychological Momentum Engine to dynamically calculate your Cognitive Sync Score.",
+      "Introduced Dynamic Aura Styling that visually shifts the app's aesthetic between 'Flow' and 'Clouded' based on your momentum.",
+      "Redesigned the Commander Profile with pulsing telemetry, hover micro-copy, and exact Resonance tracking.",
+      "Integrated Web Audio API for seamless, ambient bio-feedback loops reflecting your current cognitive state."
+    ],
+    "type": "minor"
+  },
+  {
     "version": "1.8.0",
     "date": "2026-07-20",
     "transmission": "Stellar Sync: Multi-Device Matrix Unlocked.",
