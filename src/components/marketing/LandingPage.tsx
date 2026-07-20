@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Rocket, Brain, Shield, ArrowRight, Zap, Orbit, Star, Activity } from 'lucide-react';
+import { Rocket, Brain, Shield, ArrowRight, Zap, Orbit, Star, Activity, Target, Calendar } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 
 // --- Particle Background ---
@@ -203,17 +203,21 @@ const LandingPage: React.FC = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: <Brain />, title: "Mental Space Sync", desc: "Synchronize your mind with your internal clock. Turn your gut feeling into tangible momentum." },
-              { icon: <Rocket />, title: "Momentum Engine", desc: "Gain XP, level up your rank, and map your macroscopic ambitions to your daily Orbit." },
-              { icon: <Shield />, title: "The Void Protocol", desc: "Aggressively defend your deep work. Map distractions and lock them out of your daily schedule." },
-              { icon: <Star />, title: "Mission Briefings", desc: "Mentorship directly from Charnithi, plus AI-driven reflection in the upcoming Horizon module.", comingSoon: true }
+              { icon: <Target />, title: "The Nebula Map", desc: "Like a GPS for your ambitions. Guides you to your goal with a precise trajectory, breaking massive dreams into actionable milestones." },
+              { icon: <Orbit />, title: "Orbit & Stasis Backlog", desc: "Manage daily tasks without the anxiety of missing them. Unfinished tasks carry forward automatically into your Stasis Backlog." },
+              { icon: <Brain />, title: "Bio-Feedback System", desc: "Self-reflection and accountability. Psychologically motivates you to improve and maintain your absolute best trajectory." },
+              { icon: <Star />, title: "Skill Matrix", desc: "Visualize and track the exact technical and soft skills required for every ambition and project you pursue." },
+              { icon: <Calendar />, title: "Timeline View", desc: "Track your progress from a panoramic calendar view, visualizing past victories and upcoming horizons." },
+              { icon: <Rocket />, title: "Momentum Engine", desc: "Gain XP, level up your rank, and map your macroscopic ambitions to your daily actions." },
+              { icon: <Shield />, title: "The Void Protocol", desc: "Aggressively defend your deep work. Map distractions and lock bad habits out of your daily schedule." },
+              { icon: <Zap />, title: "Mission Briefings", desc: "Mentorship directly from Charnithi, plus AI-driven reflection in the upcoming Horizon module.", comingSoon: true }
             ].map((feature, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.15 }}
+                transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -10 }}
                 className="glass-panel border border-white/5 rounded-[2rem] p-8 space-y-6 hover:border-primary/30 transition-colors group cursor-pointer relative overflow-hidden"
               >
@@ -225,7 +229,7 @@ const LandingPage: React.FC = () => {
                 <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50 group-hover:bg-primary/20 group-hover:text-primary group-hover:border-primary/30 transition-all">
                   {React.cloneElement(feature.icon as React.ReactElement, { size: 28 })}
                 </div>
-                <h3 className="text-2xl font-display font-bold">{feature.title}</h3>
+                <h3 className="text-xl font-display font-bold leading-tight">{feature.title}</h3>
                 <p className="text-white/60 leading-relaxed font-light text-sm">{feature.desc}</p>
               </motion.div>
             ))}
