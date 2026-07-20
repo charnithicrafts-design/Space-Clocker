@@ -35,7 +35,7 @@ const queryClient = new QueryClient({
 
 const AppContent = () => {
   const { pathname } = useLocation();
-  const { initialize, checkSync, performPull, oracleConfig, updateAvailable, profile, showSyncModal, setShowSyncModal } = useTrackStore();
+  const { initialize, checkSync, performPull, oracleConfig, updateAvailable, profile, showSyncModal, setShowSyncModal, cognitiveState } = useTrackStore();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [dbStatus, setDbStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [prevLevel, setPrevLevel] = useState<number | null>(null);
@@ -93,6 +93,15 @@ const AppContent = () => {
       setPrevLevel(profile.level);
     }
   }, [profile?.level, prevLevel, dbStatus]);
+
+  // Sync Aura State to CSS Theme
+  useEffect(() => {
+    if (cognitiveState?.auraState) {
+      document.body.dataset.aura = cognitiveState.auraState;
+    } else {
+      delete document.body.dataset.aura;
+    }
+  }, [cognitiveState?.auraState]);
 
   const handleResolveConflict = async (strategy: 'local' | 'remote') => {
     if (strategy === 'remote') {

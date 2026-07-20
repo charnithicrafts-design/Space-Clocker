@@ -40,6 +40,28 @@
   --color-on-success-container: #00210e;
 }
 
+:root {
+  /* Aura State Transitions */
+  --transition-aura: background-color 2s ease, color 2s ease, box-shadow 2s ease, border-color 2s ease;
+}
+
+body {
+  transition: var(--transition-aura);
+}
+
+/* Aura States */
+body[data-aura="Flow"] {
+  --color-primary-container: #43f3de; /* Teal / Flow State */
+  --color-primary: #e1fffc;
+  --color-secondary: #00f2ff;
+}
+
+body[data-aura="Clouded"] {
+  --color-primary-container: #ff8e8b; /* Desaturated Red / Clouded */
+  --color-primary: #ffe8e7;
+  --color-secondary: #ffb4ab;
+}
+
 @layer utilities {
   .nebula-shadow {
     box-shadow: 0px 24px 48px rgba(0, 242, 255, 0.06);
