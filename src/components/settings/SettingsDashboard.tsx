@@ -354,10 +354,22 @@ const SettingsDashboard = () => {
           
           {oracleConfig.syncEnabled && (
             <div className="space-y-4 pt-4 border-t border-outline-variant">
-              <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
-                <Laptop size={14} className="text-primary" />
-                Linked Devices Array
-              </h4>
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
+                  <Laptop size={14} className="text-primary" />
+                  Linked Devices Array
+                </h4>
+                <button
+                  onClick={async () => {
+                    await store.performPull();
+                  }}
+                  disabled={syncStatus.isSyncing}
+                  className="p-1.5 text-primary hover:bg-primary/10 rounded-lg transition-colors disabled:opacity-50"
+                  title="Force Array Sync"
+                >
+                  <RefreshCcw size={14} className={syncStatus.isSyncing ? 'animate-spin' : ''} />
+                </button>
+              </div>
               <div className="space-y-3">
                 {devices.map((device) => {
                   const isCurrent = device.id === getOrCreateDeviceId();
