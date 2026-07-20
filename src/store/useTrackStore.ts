@@ -369,6 +369,9 @@ export const useTrackStore = create<TrackStore>()(
       // Register current device
       await get().registerDevice();
       
+      // Push the initial handshake so the cloud array sees this new device
+      await syncService.pushUpdate();
+      
       // Reload
       await get().initialize();
     },
