@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.8.0",
+    "date": "2026-07-20",
+    "transmission": "Stellar Sync: Multi-Device Matrix Unlocked.",
+    "details": [
+      "Secured Google Account authorization integration for robust user identity verification.",
+      "Engineered the Stellar Sync Engine via Vercel Blob with binary payload compression for cross-device telemetry.",
+      "Introduced Temporal Divergence resolution (CRDT-style UI) to flawlessly merge data between devices.",
+      "Upgraded Linked Devices Array UI for real-time monitoring of all active devices in the current session."
+    ],
+    "type": "minor"
+  },
+  {
     "version": "1.7.3",
     "date": "2026-07-08",
     "transmission": "Stasis Protocol: Backlog Integrity & UX Refinement.",
