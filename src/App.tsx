@@ -119,7 +119,7 @@ const AppContent = () => {
 
   const isMarketingDomain = window.location.hostname === 'spaceclocker.com' || window.location.hostname === 'www.spaceclocker.com';
 
-  if (isMarketingDomain) {
+  if (isMarketingDomain && (pathname === '/' || pathname === '/about')) {
     return (
       <main className="min-h-screen bg-surface-lowest text-on-surface">
         <LandingPage />

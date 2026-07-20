@@ -379,7 +379,7 @@ const SettingsDashboard = () => {
                       setSyncStatus({ error: err.message || 'Array refresh failed' });
                       SoundManager.playThud();
                     } finally {
-                      setSyncStatus({ isSyncing: false, lastSync: new Date().toISOString() });
+                      setSyncStatus({ isSyncing: false, lastSyncedAt: new Date().toISOString() });
                     }
                   }}
                   disabled={syncStatus.isSyncing}

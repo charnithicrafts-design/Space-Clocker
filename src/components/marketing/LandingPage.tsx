@@ -88,7 +88,11 @@ const LandingPage: React.FC = () => {
 
   const launchApp = () => {
     SoundManager.playSwell();
-    navigate('/identity');
+    if (window.location.hostname === 'spaceclocker.com' || window.location.hostname === 'www.spaceclocker.com') {
+      window.location.href = 'https://app.spaceclocker.com/identity';
+    } else {
+      navigate('/identity');
+    }
   };
 
   return (
