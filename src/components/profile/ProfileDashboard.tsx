@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { Award, Zap, ShieldCheck, Target, Clock, CalendarDays, Brain, Star } from 'lucide-react';
@@ -6,6 +6,22 @@ import { XP_PER_LEVEL } from '../../constants';
 
 const ProfileDashboard = () => {
   const { profile, tasks, ambitions, stats, history, cognitiveState } = useTrackStore();
+
+  // Handle ambient audio lifecycle
+  useEffect(() => {
+    if (cognitiveState?.auraState) {
+      import('../../utils/SoundManager').then(({ SoundManager }) => {
+        SoundManager.setAuraAmbient(cognitiveState.auraState);
+      });
+    }
+
+    // Cleanup when leaving the profile page
+    return () => {
+      import('../../utils/SoundManager').then(({ SoundManager }) => {
+        SoundManager.setAuraAmbient(null);
+      });
+    };
+  }, [cognitiveState?.auraState]);
 
   // Calculate deep stats
   const statsData = useMemo(() => {

@@ -114,4 +114,59 @@ export class SoundManager {
     oscillator.start();
     oscillator.stop(this.context.currentTime + duration);
   }
+
+  private static activeAmbientLoop: OscillatorNode | null = null;
+  private static ambientGain: GainNode | null = null;
+  private static currentAuraState: string | null = null;
+
+  static async setAuraAmbient(state: 'Flow' | 'Standard' | 'Clouded' | null) {
+    if (this.currentAuraState === state) return;
+    this.currentAuraState = state;
+    
+    await this.ensureContext();
+    if (!this.context) return;
+    
+    // Fade out and stop existing loop
+    const oldLoop = this.activeAmbientLoop;
+    const oldGain = this.ambientGain;
+
+    if (oldLoop && oldGain) {
+      oldGain.gain.cancelScheduledValues(this.context.currentTime);
+      oldGain.gain.setValueAtTime(oldGain.gain.value, this.context.currentTime);
+      oldGain.gain.linearRampToValueAtTime(0.001, this.context.currentTime + 1.5);
+      setTimeout(() => {
+        try {
+          oldLoop.stop();
+          oldLoop.disconnect();
+        } catch(e) {}
+      }, 1600);
+    }
+
+    this.activeAmbientLoop = null;
+    this.ambientGain = null;
+
+    if (!state || state === 'Standard') return; // Silence for standard
+
+    this.activeAmbientLoop = this.context.createOscillator();
+    this.ambientGain = this.context.createGain();
+    
+    this.activeAmbientLoop.connect(this.ambientGain);
+    this.ambientGain.connect(this.context.destination);
+
+    this.ambientGain.gain.setValueAtTime(0.001, this.context.currentTime);
+
+    if (state === 'Flow') {
+      // Clear Hum
+      this.activeAmbientLoop.type = 'sine';
+      this.activeAmbientLoop.frequency.value = 432; // Healing frequency
+      this.ambientGain.gain.exponentialRampToValueAtTime(0.03, this.context.currentTime + 2);
+    } else if (state === 'Clouded') {
+      // Low Drone
+      this.activeAmbientLoop.type = 'triangle';
+      this.activeAmbientLoop.frequency.value = 55; // Low bass drone
+      this.ambientGain.gain.exponentialRampToValueAtTime(0.05, this.context.currentTime + 2);
+    }
+
+    this.activeAmbientLoop.start();
+  }
 }
