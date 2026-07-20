@@ -16,6 +16,7 @@ import SharedTransmission from './components/transmission/SharedTransmission';
 import SyncConflictModal from './components/reflection/SyncConflictModal';
 import OnboardingTour from './components/layout/OnboardingTour';
 import IdentitySelectionMatrix from './components/onboarding/IdentitySelectionMatrix';
+import LandingPage from './components/marketing/LandingPage';
 import UpdateModal from './components/layout/UpdateModal';
 import CriticalUpdateBanner from './components/layout/CriticalUpdateBanner';
 import { useTrackStore } from './store/useTrackStore';
@@ -116,12 +117,22 @@ const AppContent = () => {
     setShowOnboarding(false);
   };
 
+  const isMarketingDomain = window.location.hostname === 'spaceclocker.com' || window.location.hostname === 'www.spaceclocker.com';
+
+  if (isMarketingDomain) {
+    return (
+      <main className="min-h-screen bg-surface-lowest text-on-surface">
+        <LandingPage />
+      </main>
+    );
+  }
+
   // If the path is exactly /about, load the About page immediately with no delays or sidebar
   if (pathname === '/about') {
     return (
       <main className="min-h-screen bg-surface-lowest text-on-surface">
         <Routes>
-          <Route path="/about" element={<AboutPage />} />
+          <Route path="/about" element={<LandingPage />} />
         </Routes>
       </main>
     );
@@ -338,7 +349,8 @@ const AppContent = () => {
           <Route path="/settings" element={<SettingsDashboard />} />
           <Route path="/profile" element={<ProfileDashboard />} />
           <Route path="/identity" element={<IdentitySelectionMatrix />} />
-          <Route path="/about" element={<AboutPage />} />
+          <Route path="/about" element={<LandingPage />} />
+          <Route path="/landing" element={<LandingPage />} />
         </Routes>
       </main>
 
