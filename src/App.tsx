@@ -79,17 +79,20 @@ const AppContent = () => {
   }, [initialize, checkSync, oracleConfig.syncEnabled]);
 
   useEffect(() => {
-    if (profile?.level !== undefined) {
-      if (prevLevel !== null && profile.level > prevLevel) {
-        setShowLevelUp(true);
-        // Play level up sound
-        import('./utils/SoundManager').then(({ SoundManager }) => {
-          SoundManager.playSyncSuccess();
-        });
-      }
+    if (dbStatus !== 'ready' || profile?.level === undefined) return;
+
+    if (prevLevel === null) {
+      setPrevLevel(profile.level);
+    } else if (profile.level > prevLevel) {
+      setShowLevelUp(true);
+      import('./utils/SoundManager').then(({ SoundManager }) => {
+        SoundManager.playSyncSuccess();
+      });
+      setPrevLevel(profile.level);
+    } else if (profile.level < prevLevel) {
       setPrevLevel(profile.level);
     }
-  }, [profile?.level, prevLevel]);
+  }, [profile?.level, prevLevel, dbStatus]);
 
   const handleResolveConflict = async (strategy: 'local' | 'remote') => {
     if (strategy === 'remote') {
