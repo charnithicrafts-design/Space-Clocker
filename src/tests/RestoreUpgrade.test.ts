@@ -15,7 +15,12 @@ vi.mock('../db/client', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...(actual as any),
-    restoreDb: vi.fn(),
+    dbProxy: {
+      importFromJson: vi.fn(),
+      init: vi.fn(),
+      query: vi.fn(),
+      close: vi.fn()
+    },
   };
 });
 
@@ -26,15 +31,15 @@ describe('System Data Lifecycle: Restore & Upgrade', () => {
 
   it('should ensure database closure and version alignment during a production snapshot restore', async () => {
     // --- ARRANGE ---
-    const restoreDbMock = vi.mocked(DbClient.restoreDb);
-    const mockBlob = new Blob(['stellar-snapshot-data']);
+    const importFromJsonMock = vi.mocked(DbClient.dbProxy.importFromJson);
+    const mockData = new Uint8Array([1, 2, 3]);
     const store = useTrackStore.getState();
 
     // --- ACT ---
     // Simulate user triggering a snapshot restore via SettingsDashboard
     // 1. Initiate restore flow
     vi.spyOn(store, 'initialize').mockResolvedValue(undefined);
-    await restoreDbMock(mockBlob);
+    await importFromJsonMock(mockData as any);
     
     // 2. Simulate System Upgrade (Post-restore)
     // The system now executes 'performSystemUpgrade'
@@ -42,7 +47,7 @@ describe('System Data Lifecycle: Restore & Upgrade', () => {
 
     // --- ASSERT ---
     // 1. Verify restore operation was called
-    expect(restoreDbMock).toHaveBeenCalledOnce();
+    expect(importFromJsonMock).toHaveBeenCalledOnce();
     
     // 2. Verify Database closure/flush orchestration
     // In our implementation, restoreDb handles the close. 
@@ -51,7 +56,7 @@ describe('System Data Lifecycle: Restore & Upgrade', () => {
 
     // 3. Verify Version Alignment (System Info Update)
     // Ensure that the upgrade logic correctly inserted/updated the current version
-    const versionQuery = vi.spyOn(DbClient.db, 'query');
+    const versionQuery = vi.spyOn(DbClient.dbProxy, 'query');
     await store.performSystemUpgrade();
     expect(versionQuery).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO system_info'),
