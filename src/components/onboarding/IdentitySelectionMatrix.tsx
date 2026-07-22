@@ -49,7 +49,7 @@ import { useNavigate } from 'react-router-dom';
 
 const IdentitySelectionMatrix: React.FC = () => {
   const [showAll, setShowAll] = useState(false);
-  const { importDemoData } = useTrackStore();
+  const { importDemoData, profile } = useTrackStore();
   const [isInjecting, setIsInjecting] = useState(false);
   const navigate = useNavigate();
 
@@ -80,6 +80,20 @@ const IdentitySelectionMatrix: React.FC = () => {
       <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
       <div className="absolute -top-32 -right-32 w-96 h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute top-40 -left-32 w-96 h-96 bg-secondary/10 blur-[120px] rounded-full pointer-events-none" />
+
+      {/* Navigation Return */}
+      {profile?.name && (
+        <button 
+          onClick={() => {
+            SoundManager.playPop();
+            navigate('/');
+          }}
+          className="absolute top-6 left-6 z-50 flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-high border border-outline-variant text-on-surface hover:text-primary hover:border-primary/50 transition-colors"
+        >
+          <ChevronRight size={16} className="rotate-180" />
+          <span className="text-xs font-bold uppercase tracking-widest">Return to Command Center</span>
+        </button>
+      )}
 
       {isInjecting && (
         <div className="absolute inset-0 z-50 bg-surface-lowest/90 backdrop-blur-xl flex flex-col items-center justify-center">
