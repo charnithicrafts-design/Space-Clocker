@@ -114,11 +114,11 @@ describe('JSON Compression Sync Engine', () => {
       // Assert
       const profileResult = await db.query('SELECT * FROM profile');
       expect(profileResult.rows).toHaveLength(1);
-      expect(profileResult.rows[0].name).toBe('New Name'); // Updated
+      expect((profileResult.rows[0] as any).name).toBe('New Name'); // Updated
 
       const tasksResult = await db.query('SELECT * FROM tasks');
       expect(tasksResult.rows).toHaveLength(1);
-      expect(tasksResult.rows[0].title).toBe('New Task'); // Inserted
+      expect((tasksResult.rows[0] as any).title).toBe('New Task'); // Inserted
     });
 
     it('should roll back if an error occurs during import', async () => {
@@ -150,7 +150,7 @@ describe('JSON Compression Sync Engine', () => {
       // Ensure the 'profile' update was rolled back
       const profileResult = await db.query('SELECT * FROM profile');
       expect(profileResult.rows).toHaveLength(1);
-      expect(profileResult.rows[0].id).toBe('1');
+      expect((profileResult.rows[0] as any).id).toBe('1');
     });
   });
 });
