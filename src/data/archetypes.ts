@@ -46,15 +46,15 @@ export const curatedArchetypes: Archetype[] = [
   {
     id: "mca-student",
     icon: "🚀",
-    title: "The Systems Architect (MCA)",
+    title: "The Data Artisan (MCA)",
     subtitle: "Construct your trajectory to a Tier-1 Tech Company.",
-    vibe: "Unbridled curiosity and raw potential.",
+    vibe: "Aspiring AWS Specialist and Data Analyst. Driven by a genuine ambition to break into the industry.",
     data: {
       profile: {
-        name: "Valentina",
+        name: "Nithya Dharshini",
         level: 12,
         xp: 15400,
-        title: "Systems Architect"
+        title: "Data Artisan"
       },
       preferences: {
         confirmDelete: true,
@@ -119,15 +119,15 @@ export const curatedArchetypes: Archetype[] = [
   {
     id: "philosopher",
     icon: "🏛️",
-    title: "The Architect of Solitude",
+    title: "The Scholar of Solitude",
     subtitle: "Construct your Bollingen Tower.",
-    vibe: "Deep, uncompromising focus.",
+    vibe: "Deep, uncompromising focus. Pursuing a post-doctoral fellowship in Phenomenology.",
     data: {
       profile: {
-        name: "Carl",
+        name: "Dr. Arthur",
         level: 24,
         xp: 42000,
-        title: "Architect of Solitude"
+        title: "Scholar of Solitude"
       },
       preferences: {
         confirmDelete: true,
@@ -191,10 +191,10 @@ export const curatedArchetypes: Archetype[] = [
     icon: "👨‍🚀",
     title: "The Apex Pilot",
     subtitle: "Prepare for the Artemis Lunar Mission.",
-    vibe: "Extreme discipline and synergy of mind/body.",
+    vibe: "Extreme discipline and synergy of mind/body. Aerospace engineer and astronaut candidate.",
     data: {
       profile: {
-        name: "Commander",
+        name: "Capt. Sarah",
         level: 35,
         xp: 85000,
         title: "Apex Pilot"
@@ -250,7 +250,7 @@ export const curatedArchetypes: Archetype[] = [
     icon: "🔭",
     title: "The Cosmic Decoder",
     subtitle: "Secure JWST Observation Time.",
-    vibe: "Analytical, patient, methodical.",
+    vibe: "Analytical, patient, methodical. Post-doc astrophysicist hunting for exoplanetary bio-signatures.",
     data: {
       profile: {
         name: "Dr. Aris",
@@ -309,10 +309,10 @@ export const curatedArchetypes: Archetype[] = [
     icon: "🎓",
     title: "The Stellar Mentor",
     subtitle: "Cultivate the next generation.",
-    vibe: "Wisdom, legacy, and balancing heavy workloads.",
+    vibe: "Wisdom, legacy, and balancing heavy workloads. Tenured academic researcher managing a busy lab.",
     data: {
       profile: {
-        name: "Prof. Aldrin",
+        name: "Prof. Elena",
         level: 28,
         xp: 56100,
         title: "Stellar Mentor"
