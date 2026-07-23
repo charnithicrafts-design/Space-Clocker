@@ -45,7 +45,6 @@ const generateHistoricalTasks = (
 import { mastermindArchetypes } from './archetypes/index';
 
 export const curatedArchetypes: Archetype[] = [
-  ...mastermindArchetypes,
   {
     id: "mca-student",
     icon: "🚀",
@@ -365,5 +364,6 @@ export const curatedArchetypes: Archetype[] = [
         { id: "void-prof-2", text: "Endless Administrative Email Chains", impact: "medium", engagedCount: 0, maxAllowed: 2 }
       ]
     }
-  }
+  },
+  ...mastermindArchetypes
 ];
