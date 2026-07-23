@@ -30,9 +30,9 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Survive & Thrive Peak Wedding Season",
           description: "Deliver all galleries on time while maintaining creative sanity.",
           milestones: [
-            { id: "m1", title: "Cull 5000 images from Smith wedding", completed: true },
-            { id: "m2", title: "Complete initial color grade for Jones wedding", completed: false },
-            { id: "m3", title: "Deliver final gallery to Williams family", completed: false }
+            { id: "ms-73cf3142", title: "Cull 5000 images from Smith wedding", completed: true },
+            { id: "ms-c5c63af0", title: "Complete initial color grade for Jones wedding", completed: false },
+            { id: "ms-b22aff4b", title: "Deliver final gallery to Williams family", completed: false }
           ]
         },
         {
@@ -40,8 +40,8 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Revamp 2026 Portfolio",
           description: "Curate the absolute best shots for the new website launch.",
           milestones: [
-            { id: "m1", title: "Select top 50 portrait shots", completed: true },
-            { id: "m2", title: "Write new service descriptions", completed: false }
+            { id: "ms-4a38fbc8", title: "Select top 50 portrait shots", completed: true },
+            { id: "ms-53b7acbe", title: "Write new service descriptions", completed: false }
           ]
         }
       ],
@@ -145,10 +145,10 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Apex Corp Annual Report Shoot",
           description: "Capture hero images of the new manufacturing facility.",
           milestones: [
-            { id: "m1", title: "Site walk-through and safety briefing", completed: true },
-            { id: "m2", title: "Shoot executive headshots", completed: true },
-            { id: "m3", title: "Capture assembly line action shots", completed: false },
-            { id: "m4", title: "Deliver final retouched images", completed: false }
+            { id: "ms-9ca44cf2", title: "Site walk-through and safety briefing", completed: true },
+            { id: "ms-942ff961", title: "Shoot executive headshots", completed: true },
+            { id: "ms-04694088", title: "Capture assembly line action shots", completed: false },
+            { id: "ms-cd7422be", title: "Deliver final retouched images", completed: false }
           ]
         }
       ],
@@ -252,9 +252,9 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Nova Tech Brand Identity",
           description: "Complete overhaul of Nova's visual language and logo.",
           milestones: [
-            { id: "m1", title: "Brand discovery workshop", completed: true },
-            { id: "m2", title: "Present 3 logo concepts", completed: true },
-            { id: "m3", title: "Finalize brand guidelines document", completed: false }
+            { id: "ms-270f7871", title: "Brand discovery workshop", completed: true },
+            { id: "ms-33581b05", title: "Present 3 logo concepts", completed: true },
+            { id: "ms-d4a05d84", title: "Finalize brand guidelines document", completed: false }
           ]
         },
         {
@@ -262,8 +262,8 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Advanced Typography Course",
           description: "Level up my type game to command higher rates.",
           milestones: [
-            { id: "m1", title: "Complete module 1: History", completed: true },
-            { id: "m2", title: "Complete final project", completed: false }
+            { id: "ms-f0ab4c93", title: "Complete module 1: History", completed: true },
+            { id: "ms-6eff110d", title: "Complete final project", completed: false }
           ]
         }
       ],
@@ -378,10 +378,10 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "v2.0 API Documentation Rewrite",
           description: "Migrate and update all endpoint docs to the new OpenAPI spec.",
           milestones: [
-            { id: "m1", title: "Audit existing v1.0 docs", completed: true },
-            { id: "m2", title: "Write authentication guide", completed: true },
-            { id: "m3", title: "Document core endpoints", completed: false },
-            { id: "m4", title: "Publish to developer portal", completed: false }
+            { id: "ms-c49101fe", title: "Audit existing v1.0 docs", completed: true },
+            { id: "ms-8533eee8", title: "Write authentication guide", completed: true },
+            { id: "ms-223d6ba1", title: "Document core endpoints", completed: false },
+            { id: "ms-66c962f1", title: "Publish to developer portal", completed: false }
           ]
         }
       ],
@@ -485,10 +485,10 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Complete Vertical Slice Demo",
           description: "Finish the core gameplay loop for publisher pitches.",
           milestones: [
-            { id: "m1", title: "Implement player controller", completed: true },
-            { id: "m2", title: "Finish first level blockout", completed: true },
-            { id: "m3", title: "Implement basic enemy AI", completed: false },
-            { id: "m4", title: "Polish UI and add sound effects", completed: false }
+            { id: "ms-9f6212fc", title: "Implement player controller", completed: true },
+            { id: "ms-b339ff19", title: "Finish first level blockout", completed: true },
+            { id: "ms-3a69b046", title: "Implement basic enemy AI", completed: false },
+            { id: "ms-3b2de235", title: "Polish UI and add sound effects", completed: false }
           ]
         }
       ],

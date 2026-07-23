@@ -23,9 +23,9 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Launch Platform V2",
           type: "professional",
           milestones: [
-            { id: "m1", title: "Finalize PRD", status: "completed" },
-            { id: "m2", title: "Beta Testing", status: "active" },
-            { id: "m3", title: "General Availability", status: "pending" }
+            { id: "ms-6e37a551", title: "Finalize PRD", status: "completed" },
+            { id: "ms-f6a85447", title: "Beta Testing", status: "active" },
+            { id: "ms-5b833b87", title: "General Availability", status: "pending" }
           ]
         },
         {
@@ -33,8 +33,8 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Establish PM Guild",
           type: "community",
           milestones: [
-            { id: "m1", title: "Define Curriculum", status: "active" },
-            { id: "m2", title: "Host First Cohort", status: "pending" }
+            { id: "ms-15e840a0", title: "Define Curriculum", status: "active" },
+            { id: "ms-a5c9ece6", title: "Host First Cohort", status: "pending" }
           ]
         }
       ],
@@ -84,8 +84,8 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Obtain OSCP Certification",
           type: "personal",
           milestones: [
-            { id: "m1", title: "Complete Lab Machines", status: "completed" },
-            { id: "m2", title: "Pass 24hr Exam", status: "active" }
+            { id: "ms-183be0f5", title: "Complete Lab Machines", status: "completed" },
+            { id: "ms-a56fe2fd", title: "Pass 24hr Exam", status: "active" }
           ]
         },
         {
@@ -93,9 +93,9 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Enterprise Security Audit",
           type: "professional",
           milestones: [
-            { id: "m1", title: "External Network Pentest", status: "completed" },
-            { id: "m2", title: "Social Engineering Campaign", status: "active" },
-            { id: "m3", title: "Final Report Delivery", status: "pending" }
+            { id: "ms-1f4d91c7", title: "External Network Pentest", status: "completed" },
+            { id: "ms-c19bf669", title: "Social Engineering Campaign", status: "active" },
+            { id: "ms-c3fec0ed", title: "Final Report Delivery", status: "pending" }
           ]
         }
       ],
@@ -145,9 +145,9 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Complete Kubernetes Migration",
           type: "professional",
           milestones: [
-            { id: "m1", title: "Containerize Monolith", status: "completed" },
-            { id: "m2", title: "Setup CI/CD Pipelines", status: "completed" },
-            { id: "m3", title: "Production Cutover", status: "active" }
+            { id: "ms-ac8d8429", title: "Containerize Monolith", status: "completed" },
+            { id: "ms-626537b4", title: "Setup CI/CD Pipelines", status: "completed" },
+            { id: "ms-4a0bc2cd", title: "Production Cutover", status: "active" }
           ]
         },
         {
@@ -155,8 +155,8 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "100% Infrastructure as Code",
           type: "professional",
           milestones: [
-            { id: "m1", title: "Terraform Network Layer", status: "completed" },
-            { id: "m2", title: "Terraform Data Layer", status: "active" }
+            { id: "ms-c8c42905", title: "Terraform Network Layer", status: "completed" },
+            { id: "ms-a21fce54", title: "Terraform Data Layer", status: "active" }
           ]
         }
       ],
@@ -206,9 +206,9 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Close Project Titan Acquisition",
           type: "professional",
           milestones: [
-            { id: "m1", title: "Due Diligence Complete", status: "completed" },
-            { id: "m2", title: "Definitive Agreement Drafted", status: "active" },
-            { id: "m3", title: "Regulatory Approval", status: "pending" }
+            { id: "ms-ed5ce5be", title: "Due Diligence Complete", status: "completed" },
+            { id: "ms-ba636335", title: "Definitive Agreement Drafted", status: "active" },
+            { id: "ms-a09f6aae", title: "Regulatory Approval", status: "pending" }
           ]
         },
         {
@@ -216,8 +216,8 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Expand Practice Group",
           type: "professional",
           milestones: [
-            { id: "m1", title: "Hire 2 Associates", status: "completed" },
-            { id: "m2", title: "Publish M&A Article in Journal", status: "active" }
+            { id: "ms-fe5694ca", title: "Hire 2 Associates", status: "completed" },
+            { id: "ms-e0a64f78", title: "Publish M&A Article in Journal", status: "active" }
           ]
         }
       ],
@@ -267,9 +267,9 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Prepare Athletes for Trials",
           type: "professional",
           milestones: [
-            { id: "m1", title: "Base Conditioning Phase", status: "completed" },
-            { id: "m2", title: "Strength & Power Phase", status: "active" },
-            { id: "m3", title: "Tapering Phase", status: "pending" }
+            { id: "ms-d487b998", title: "Base Conditioning Phase", status: "completed" },
+            { id: "ms-620170ed", title: "Strength & Power Phase", status: "active" },
+            { id: "ms-54672de3", title: "Tapering Phase", status: "pending" }
           ]
         },
         {
@@ -277,8 +277,8 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Master Advanced Biomechanics",
           type: "personal",
           milestones: [
-            { id: "m1", title: "Complete Kinematics Module", status: "completed" },
-            { id: "m2", title: "Pass Final Assessment", status: "active" }
+            { id: "ms-822eff1f", title: "Complete Kinematics Module", status: "completed" },
+            { id: "ms-b5f35096", title: "Pass Final Assessment", status: "active" }
           ]
         }
       ],
@@ -328,9 +328,9 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Increase Regional Corn Yield by 15%",
           type: "professional",
           milestones: [
-            { id: "m1", title: "Soil Sampling & Analysis", status: "completed" },
-            { id: "m2", title: "Implement Precision Fertilizer Plan", status: "active" },
-            { id: "m3", title: "Harvest Yield Analysis", status: "pending" }
+            { id: "ms-2367d545", title: "Soil Sampling & Analysis", status: "completed" },
+            { id: "ms-2da3dae4", title: "Implement Precision Fertilizer Plan", status: "active" },
+            { id: "ms-be08456c", title: "Harvest Yield Analysis", status: "pending" }
           ]
         },
         {
@@ -338,8 +338,8 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Pilot Regenerative Ag Program",
           type: "professional",
           milestones: [
-            { id: "m1", title: "Select Test Plots", status: "completed" },
-            { id: "m2", title: "Plant Cover Crops", status: "active" }
+            { id: "ms-ad71ec08", title: "Select Test Plots", status: "completed" },
+            { id: "ms-044f3b5e", title: "Plant Cover Crops", status: "active" }
           ]
         }
       ],
@@ -389,9 +389,9 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Mixed-Use Downtown Project",
           type: "professional",
           milestones: [
-            { id: "m1", title: "Land Acquisition", status: "completed" },
-            { id: "m2", title: "Zoning & Entitlements", status: "active" },
-            { id: "m3", title: "Secure Anchor Tenant", status: "pending" }
+            { id: "ms-c04f88df", title: "Land Acquisition", status: "completed" },
+            { id: "ms-f65b5806", title: "Zoning & Entitlements", status: "active" },
+            { id: "ms-611f18e7", title: "Secure Anchor Tenant", status: "pending" }
           ]
         },
         {
@@ -399,8 +399,8 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "LEED Platinum Portfolio",
           type: "professional",
           milestones: [
-            { id: "m1", title: "Retrofit HVAC Systems", status: "completed" },
-            { id: "m2", title: "Install Solar Arrays", status: "active" }
+            { id: "ms-8f6ba5e9", title: "Retrofit HVAC Systems", status: "completed" },
+            { id: "ms-4588ba4e", title: "Install Solar Arrays", status: "active" }
           ]
         }
       ],

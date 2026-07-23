@@ -31,9 +31,9 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Design and implement the foundation and utilities network for the new metropolitan district.",
           status: "in-progress",
           milestones: [
-            { id: "ms-1", title: "Finalize subgrade blueprints", completed: true },
-            { id: "ms-2", title: "Approve deep foundation piling plan", completed: false },
-            { id: "ms-3", title: "Sign off on municipal drainage integration", completed: false }
+            { id: "ms-4cdd7782", title: "Finalize subgrade blueprints", completed: true },
+            { id: "ms-da4e2b8e", title: "Approve deep foundation piling plan", completed: false },
+            { id: "ms-076fed79", title: "Sign off on municipal drainage integration", completed: false }
           ]
         },
         {
@@ -42,8 +42,8 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Upgrade the old suspension bridge to withstand high magnitude seismic activity.",
           status: "in-progress",
           milestones: [
-            { id: "ms-4", title: "Structural integrity assessment", completed: true },
-            { id: "ms-5", title: "Design damper installations", completed: false }
+            { id: "ms-05a2210e", title: "Structural integrity assessment", completed: true },
+            { id: "ms-21869cf1", title: "Design damper installations", completed: false }
           ]
         }
       ],
@@ -144,9 +144,9 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Oversee the end-to-end construction of a 50-story mixed-use commercial tower.",
           status: "in-progress",
           milestones: [
-            { id: "ms-1", title: "Pour 10,000 yards of foundation concrete", completed: true },
-            { id: "ms-2", title: "Complete steel framing up to floor 25", completed: true },
-            { id: "ms-3", title: "Top out roof structure", completed: false }
+            { id: "ms-657a525e", title: "Pour 10,000 yards of foundation concrete", completed: true },
+            { id: "ms-9bc3fb77", title: "Complete steel framing up to floor 25", completed: true },
+            { id: "ms-7508a687", title: "Top out roof structure", completed: false }
           ]
         }
       ],
@@ -246,9 +246,9 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Optimize production workflow to reduce defect rate to below 3.4 per million.",
           status: "in-progress",
           milestones: [
-            { id: "ms-1", title: "Map current value stream", completed: true },
-            { id: "ms-2", title: "Implement statistical process control", completed: false },
-            { id: "ms-3", title: "Train shift supervisors on lean principles", completed: false }
+            { id: "ms-dfd3baa8", title: "Map current value stream", completed: true },
+            { id: "ms-7bb0fef6", title: "Implement statistical process control", completed: false },
+            { id: "ms-a376deb1", title: "Train shift supervisors on lean principles", completed: false }
           ]
         }
       ],
@@ -347,9 +347,9 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Integrate a fleet of AGVs (Automated Guided Vehicles) for warehouse logistics.",
           status: "in-progress",
           milestones: [
-            { id: "ms-1", title: "Map facility for LiDAR navigation", completed: true },
-            { id: "ms-2", title: "Program traffic control algorithms", completed: false },
-            { id: "ms-3", title: "Conduct full fleet dry run", completed: false }
+            { id: "ms-cde68f7f", title: "Map facility for LiDAR navigation", completed: true },
+            { id: "ms-6e5c340c", title: "Program traffic control algorithms", completed: false },
+            { id: "ms-10b66cd4", title: "Conduct full fleet dry run", completed: false }
           ]
         }
       ],
@@ -448,9 +448,9 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Install and commission the high-voltage distribution network for a Tier 4 data center.",
           status: "in-progress",
           milestones: [
-            { id: "ms-1", title: "Complete main switchgear installation", completed: true },
-            { id: "ms-2", title: "Pull primary feeder cables", completed: false },
-            { id: "ms-3", title: "Commission backup generator arrays", completed: false }
+            { id: "ms-47c7dac2", title: "Complete main switchgear installation", completed: true },
+            { id: "ms-95dfa44d", title: "Pull primary feeder cables", completed: false },
+            { id: "ms-855deb3b", title: "Commission backup generator arrays", completed: false }
           ]
         }
       ],

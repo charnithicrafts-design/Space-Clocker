@@ -32,9 +32,9 @@ export const operationalProfiles: Archetype[] = [
           status: "in-progress",
           progress: 65,
           milestones: [
-            { id: "m1", title: "Site A Pre-Assessment", status: "completed" },
-            { id: "m2", title: "Remediation Follow-ups", status: "in-progress" },
-            { id: "m3", title: "Final Board Report Submission", status: "pending" }
+            { id: "ms-5b91c4b2", title: "Site A Pre-Assessment", status: "completed" },
+            { id: "ms-42fbecfd", title: "Remediation Follow-ups", status: "in-progress" },
+            { id: "ms-cb032225", title: "Final Board Report Submission", status: "pending" }
           ]
         }
       ],
@@ -139,9 +139,9 @@ export const operationalProfiles: Archetype[] = [
           status: "in-progress",
           progress: 55,
           milestones: [
-            { id: "m1", title: "Vendor Renegotiations", status: "completed" },
-            { id: "m2", title: "Route Algorithm Update", status: "in-progress" },
-            { id: "m3", title: "Carbon Offset Integration", status: "pending" }
+            { id: "ms-e6b92aec", title: "Vendor Renegotiations", status: "completed" },
+            { id: "ms-86f0e011", title: "Route Algorithm Update", status: "in-progress" },
+            { id: "ms-6bd0d3c3", title: "Carbon Offset Integration", status: "pending" }
           ]
         }
       ],
@@ -245,9 +245,9 @@ export const operationalProfiles: Archetype[] = [
           status: "in-progress",
           progress: 40,
           milestones: [
-            { id: "m1", title: "Current Structure Assessment", status: "completed" },
-            { id: "m2", title: "Transfer Pricing Policy Update", status: "in-progress" },
-            { id: "m3", title: "Implementation of New Holding Structure", status: "pending" }
+            { id: "ms-36a42859", title: "Current Structure Assessment", status: "completed" },
+            { id: "ms-5eb964cd", title: "Transfer Pricing Policy Update", status: "in-progress" },
+            { id: "ms-b63246e9", title: "Implementation of New Holding Structure", status: "pending" }
           ]
         }
       ],
@@ -362,9 +362,9 @@ export const operationalProfiles: Archetype[] = [
           status: "in-progress",
           progress: 80,
           milestones: [
-            { id: "m1", title: "Historical Data Ingestion", status: "completed" },
-            { id: "m2", title: "Stochastic Model Calibration", status: "completed" },
-            { id: "m3", title: "Peer Review and Validation", status: "in-progress" }
+            { id: "ms-3e7062a7", title: "Historical Data Ingestion", status: "completed" },
+            { id: "ms-9829f99f", title: "Stochastic Model Calibration", status: "completed" },
+            { id: "ms-85f55fb1", title: "Peer Review and Validation", status: "in-progress" }
           ]
         }
       ],
@@ -469,9 +469,9 @@ export const operationalProfiles: Archetype[] = [
           status: "in-progress",
           progress: 45,
           milestones: [
-            { id: "m1", title: "Pilot Plant Trials", status: "completed" },
-            { id: "m2", title: "Thermodynamic Modeling", status: "in-progress" },
-            { id: "m3", title: "Full Scale Implementation", status: "pending" }
+            { id: "ms-839e893e", title: "Pilot Plant Trials", status: "completed" },
+            { id: "ms-45e1c24a", title: "Thermodynamic Modeling", status: "in-progress" },
+            { id: "ms-eb205bb4", title: "Full Scale Implementation", status: "pending" }
           ]
         }
       ],

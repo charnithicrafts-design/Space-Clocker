@@ -30,9 +30,9 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Open a Second Luxury Location",
           description: "Expand the brand to a prime downtown spot.",
           milestones: [
-            { id: "m1", title: "Secure commercial lease", completed: true },
-            { id: "m2", title: "Finalize interior design plans", completed: false },
-            { id: "m3", title: "Hire flagship manager", completed: false }
+            { id: "ms-0156d8cf", title: "Secure commercial lease", completed: true },
+            { id: "ms-9fea25c9", title: "Finalize interior design plans", completed: false },
+            { id: "ms-715fcbab", title: "Hire flagship manager", completed: false }
           ]
         },
         {
@@ -40,9 +40,9 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Launch Proprietary Skincare Line",
           description: "Develop and market an organic, in-house product line.",
           milestones: [
-            { id: "m4", title: "Finalize formulations with lab", completed: true },
-            { id: "m5", title: "Design packaging and branding", completed: false },
-            { id: "m6", title: "Host launch party", completed: false }
+            { id: "ms-bb920a56", title: "Finalize formulations with lab", completed: true },
+            { id: "ms-ac658b55", title: "Design packaging and branding", completed: false },
+            { id: "ms-f0f7ecf8", title: "Host launch party", completed: false }
           ]
         }
       ],
@@ -144,9 +144,9 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Achieve a Michelin Star",
           description: "Elevate the dining experience to earn the ultimate culinary accolade.",
           milestones: [
-            { id: "m1", title: "Refine seasonal tasting menu", completed: true },
-            { id: "m2", title: "Upgrade wine pairing program", completed: false },
-            { id: "m3", title: "Perfect front-of-house service standards", completed: false }
+            { id: "ms-23b1882b", title: "Refine seasonal tasting menu", completed: true },
+            { id: "ms-55002f83", title: "Upgrade wine pairing program", completed: false },
+            { id: "ms-73bf4d22", title: "Perfect front-of-house service standards", completed: false }
           ]
         },
         {
@@ -154,9 +154,9 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Expand to a Second Concept",
           description: "Open a casual, high-volume sister restaurant.",
           milestones: [
-            { id: "m4", title: "Secure financing", completed: true },
-            { id: "m5", title: "Sign lease for new space", completed: true },
-            { id: "m6", title: "Menu development for new concept", completed: false }
+            { id: "ms-b2fcd11b", title: "Secure financing", completed: true },
+            { id: "ms-59db271d", title: "Sign lease for new space", completed: true },
+            { id: "ms-db79c339", title: "Menu development for new concept", completed: false }
           ]
         }
       ],
@@ -258,9 +258,9 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Hit $1M in Annual Revenue",
           description: "Scale both e-commerce and physical storefront sales.",
           milestones: [
-            { id: "m1", title: "Optimize online conversion rate", completed: true },
-            { id: "m2", title: "Launch influencer affiliate program", completed: false },
-            { id: "m3", title: "Expand wholesale partnerships", completed: false }
+            { id: "ms-b9c11bbc", title: "Optimize online conversion rate", completed: true },
+            { id: "ms-e1040ed8", title: "Launch influencer affiliate program", completed: false },
+            { id: "ms-b1e111eb", title: "Expand wholesale partnerships", completed: false }
           ]
         },
         {
@@ -268,9 +268,9 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Launch International Shipping",
           description: "Expand customer base beyond domestic borders.",
           milestones: [
-            { id: "m4", title: "Negotiate international carrier rates", completed: true },
-            { id: "m5", title: "Implement customs and duties calculator at checkout", completed: false },
-            { id: "m6", title: "Run targeted ad campaigns in UK & Australia", completed: false }
+            { id: "ms-f7fc874a", title: "Negotiate international carrier rates", completed: true },
+            { id: "ms-08daa3fe", title: "Implement customs and duties calculator at checkout", completed: false },
+            { id: "ms-e9bdf96d", title: "Run targeted ad campaigns in UK & Australia", completed: false }
           ]
         }
       ],
@@ -372,9 +372,9 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Win City Green Space Initiative",
           description: "Secure the massive multi-million dollar city contract for park revitalization.",
           milestones: [
-            { id: "m1", title: "Submit initial design proposal", completed: true },
-            { id: "m2", title: "Pass environmental impact review", completed: false },
-            { id: "m3", title: "Present final pitch to city council", completed: false }
+            { id: "ms-84e1617e", title: "Submit initial design proposal", completed: true },
+            { id: "ms-3a48e68d", title: "Pass environmental impact review", completed: false },
+            { id: "ms-97fc8ca1", title: "Present final pitch to city council", completed: false }
           ]
         },
         {
@@ -382,9 +382,9 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Publish Sustainable Landscaping Book",
           description: "Author a coffee-table book on drought-resistant urban gardens.",
           milestones: [
-            { id: "m4", title: "Secure publishing deal", completed: true },
-            { id: "m5", title: "Finish writing manuscript", completed: false },
-            { id: "m6", title: "Complete photography for all featured gardens", completed: false }
+            { id: "ms-c62c016b", title: "Secure publishing deal", completed: true },
+            { id: "ms-82c4b0dd", title: "Finish writing manuscript", completed: false },
+            { id: "ms-34109e0a", title: "Complete photography for all featured gardens", completed: false }
           ]
         }
       ],
@@ -486,9 +486,9 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Feature in Vogue Weddings",
           description: "Plan a high-profile wedding that gets a full editorial feature in Vogue.",
           milestones: [
-            { id: "m1", title: "Sign a celebrity or high-society client", completed: true },
-            { id: "m2", title: "Secure exclusive design and floral partnerships", completed: false },
-            { id: "m3", title: "Coordinate with Vogue editorial team for exclusive coverage", completed: false }
+            { id: "ms-06c9cb84", title: "Sign a celebrity or high-society client", completed: true },
+            { id: "ms-6783605f", title: "Secure exclusive design and floral partnerships", completed: false },
+            { id: "ms-ed3ba7fa", title: "Coordinate with Vogue editorial team for exclusive coverage", completed: false }
           ]
         },
         {
@@ -496,9 +496,9 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Exclusive Destination Weddings",
           description: "Transition the agency to only handle luxury destination weddings.",
           milestones: [
-            { id: "m4", title: "Establish partnerships with 5-star European resorts", completed: true },
-            { id: "m5", title: "Rebrand the agency website for international luxury", completed: false },
-            { id: "m6", title: "Hire a dedicated travel concierge for the team", completed: false }
+            { id: "ms-4bf54c69", title: "Establish partnerships with 5-star European resorts", completed: true },
+            { id: "ms-85fbdd0b", title: "Rebrand the agency website for international luxury", completed: false },
+            { id: "ms-42eaac7b", title: "Hire a dedicated travel concierge for the team", completed: false }
           ]
         }
       ],
