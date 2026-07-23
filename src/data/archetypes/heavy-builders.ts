@@ -4,7 +4,7 @@ import { generateHistoricalTasks, getToday } from './utils';
 export const heavyBuilderProfiles: Archetype[] = [
   {
     id: "heavy-blueprint-orchestrator",
-    icon: "lucide:compass",
+    icon: "🏗️",
     title: "The Blueprint Orchestrator",
     subtitle: "Marcus | Senior Civil Engineer",
     vibe: "Precise, structured, large-scale vision, foundational.",
@@ -117,7 +117,7 @@ export const heavyBuilderProfiles: Archetype[] = [
   },
   {
     id: "heavy-structural-titan",
-    icon: "lucide:hard-hat",
+    icon: "👷",
     title: "The Structural Titan",
     subtitle: "Tariq | Heavy Construction PM",
     vibe: "Commanding, deadline-driven, logistics master, unyielding.",
@@ -219,7 +219,7 @@ export const heavyBuilderProfiles: Archetype[] = [
   },
   {
     id: "heavy-plant-maestro",
-    icon: "lucide:factory",
+    icon: "🏭",
     title: "The Plant Maestro",
     subtitle: "David | Factory Operations Manager",
     vibe: "Systematic, efficiency-obsessed, process-oriented, steadfast.",
@@ -320,7 +320,7 @@ export const heavyBuilderProfiles: Archetype[] = [
   },
   {
     id: "heavy-machine-whisperer",
-    icon: "lucide:cpu",
+    icon: "🦾",
     title: "The Machine Whisperer",
     subtitle: "Elena | Robotics & Automation Engineer",
     vibe: "Innovative, highly technical, futuristic, meticulous.",
@@ -421,7 +421,7 @@ export const heavyBuilderProfiles: Archetype[] = [
   },
   {
     id: "heavy-voltage-vanguard",
-    icon: "lucide:zap",
+    icon: "⚡",
     title: "The Voltage Vanguard",
     subtitle: "Sam | Master Electrician & Foreman",
     vibe: "Energetic, safety-first, pragmatic, highly skilled.",

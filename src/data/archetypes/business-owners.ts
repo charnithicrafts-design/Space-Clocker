@@ -4,7 +4,7 @@ import { generateHistoricalTasks, getToday } from './utils';
 export const businessOwnerProfiles: Archetype[] = [
   {
     id: "wellness-visionary",
-    icon: "Flower2",
+    icon: "🌸",
     title: "The Wellness Visionary",
     subtitle: "Chloe | Luxury Spa & Salon Owner",
     vibe: "Serene, opulent, and rejuvenating.",
@@ -118,7 +118,7 @@ export const businessOwnerProfiles: Archetype[] = [
   },
   {
     id: "culinary-maestro",
-    icon: "ChefHat",
+    icon: "🍳",
     title: "The Culinary Maestro",
     subtitle: "Chef Diego | Restaurant Owner & Head Chef",
     vibe: "Passionate, fast-paced, and exquisite.",
@@ -232,7 +232,7 @@ export const businessOwnerProfiles: Archetype[] = [
   },
   {
     id: "retail-trailblazer",
-    icon: "Store",
+    icon: "🏪",
     title: "The Retail Trailblazer",
     subtitle: "Zoe | Boutique E-Commerce & Storefront Owner",
     vibe: "Trendy, data-driven, and chic.",
@@ -346,7 +346,7 @@ export const businessOwnerProfiles: Archetype[] = [
   },
   {
     id: "urban-botanist",
-    icon: "Leaf",
+    icon: "🌿",
     title: "The Urban Botanist",
     subtitle: "Maya | Landscape Architecture Firm Owner",
     vibe: "Earthy, structural, and sustainable.",
@@ -460,7 +460,7 @@ export const businessOwnerProfiles: Archetype[] = [
   },
   {
     id: "event-orchestrator",
-    icon: "PartyPopper",
+    icon: "🎉",
     title: "The Event Orchestrator",
     subtitle: "Sofia | Wedding Planning Agency Owner",
     vibe: "Detail-oriented, glamorous, and flawless.",

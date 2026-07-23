@@ -4,7 +4,7 @@ import { generateHistoricalTasks, getToday } from './utils';
 export const operationalProfiles: Archetype[] = [
   {
     id: "compliance-sentinel",
-    icon: "ShieldCheck",
+    icon: "🛡️",
     title: "The Compliance Sentinel",
     subtitle: "Lead Operational Auditor",
     vibe: "Meticulous, authoritative, process-driven",
@@ -111,7 +111,7 @@ export const operationalProfiles: Archetype[] = [
   },
   {
     id: "supply-chain-overlord",
-    icon: "Globe",
+    icon: "🌍",
     title: "The Supply Chain Overlord",
     subtitle: "Global Logistics Director",
     vibe: "Strategic, adaptive, efficiency-focused",
@@ -217,7 +217,7 @@ export const operationalProfiles: Archetype[] = [
   },
   {
     id: "financial-navigator",
-    icon: "Calculator",
+    icon: "🧮",
     title: "The Financial Navigator",
     subtitle: "Corporate Tax Auditor",
     vibe: "Analytical, precise, detail-oriented",
@@ -334,7 +334,7 @@ export const operationalProfiles: Archetype[] = [
   },
   {
     id: "numeric-oracle",
-    icon: "ChartLine",
+    icon: "📈",
     title: "The Numeric Oracle",
     subtitle: "Actuarial Modeler",
     vibe: "Calculated, prescient, data-driven",
@@ -441,7 +441,7 @@ export const operationalProfiles: Archetype[] = [
   },
   {
     id: "yield-maximizer",
-    icon: "FlaskConical",
+    icon: "🧪",
     title: "The Yield Maximizer",
     subtitle: "Process Chemical Engineer",
     vibe: "Innovative, systemic, safety-conscious",

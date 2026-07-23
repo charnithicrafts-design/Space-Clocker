@@ -4,7 +4,7 @@ import { generateHistoricalTasks, getToday } from './utils';
 export const medicalProfiles: Archetype[] = [
   {
     id: 'medical-neuro',
-    icon: 'Brain',
+    icon: "🧠",
     title: 'The Neural Artisan',
     subtitle: 'Precision under pressure',
     vibe: 'calm, focused, meticulous',
@@ -115,7 +115,7 @@ export const medicalProfiles: Archetype[] = [
   },
   {
     id: 'medical-diagnostician',
-    icon: 'Stethoscope',
+    icon: "🩺",
     title: 'The Clinical Anchor',
     subtitle: 'Connecting the dots',
     vibe: 'analytical, empathetic, thorough',
@@ -226,7 +226,7 @@ export const medicalProfiles: Archetype[] = [
   },
   {
     id: 'medical-research',
-    icon: 'Microscope',
+    icon: "🔬",
     title: 'The Scientific Vanguard',
     subtitle: 'Driving medical breakthroughs',
     vibe: 'innovative, rigorous, visionary',

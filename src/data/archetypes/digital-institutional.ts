@@ -4,7 +4,7 @@ import { generateHistoricalTasks, getToday } from './utils';
 export const digitalInstitutionalProfiles: Archetype[] = [
   {
     id: "product-visionary",
-    icon: "Rocket",
+    icon: "🚀",
     title: "The Product Visionary",
     subtitle: "Priya | Product Manager",
     vibe: "Strategic, user-obsessed, and ruthlessly prioritizing.",
@@ -65,7 +65,7 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   },
   {
     id: "cyber-sentinel",
-    icon: "Shield",
+    icon: "🛡️",
     title: "The Cyber Sentinel",
     subtitle: "Omar | Penetration Tester",
     vibe: "Analytical, methodical, and always thinking like the adversary.",
@@ -126,7 +126,7 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   },
   {
     id: "silent-guardian",
-    icon: "Cloud",
+    icon: "☁️",
     title: "The Silent Guardian",
     subtitle: "David | Cloud DevOps Engineer",
     vibe: "Automated, resilient, and architecting for scale.",
@@ -187,7 +187,7 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   },
   {
     id: "legal-eagle",
-    icon: "Scale",
+    icon: "⚖️",
     title: "The Legal Eagle",
     subtitle: "Elena | Corporate Mergers Lawyer",
     vibe: "Precise, formidable, and navigating complex negotiations.",
@@ -248,7 +248,7 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   },
   {
     id: "athletic-ascendant",
-    icon: "Activity",
+    icon: "📊",
     title: "The Athletic Ascendant",
     subtitle: "Kofi | High-Performance Coach",
     vibe: "Motivating, data-driven, and unlocking human potential.",
@@ -309,7 +309,7 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   },
   {
     id: "soil-whisperer",
-    icon: "Leaf",
+    icon: "🍃",
     title: "The Soil Whisperer",
     subtitle: "Jack | Commercial Agronomist",
     vibe: "Grounded, scientific, and optimizing natural yields.",
@@ -370,7 +370,7 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   },
   {
     id: "real-estate-maven",
-    icon: "Building",
+    icon: "🏛️",
     title: "The Real Estate Maven",
     subtitle: "James | Commercial Developer",
     vibe: "Visionary, calculated, and transforming skylines.",

@@ -4,7 +4,7 @@ import { generateHistoricalTasks, getToday } from './utils';
 export const creativeArtisanProfiles: Archetype[] = [
   {
     id: "frame-chaser",
-    icon: "lucide:camera",
+    icon: "📷",
     title: "The Frame Chaser",
     subtitle: "Lucas | Wedding & Portrait Photographer",
     vibe: "Warm, energetic, constantly chasing the perfect golden hour light.",
@@ -119,7 +119,7 @@ export const creativeArtisanProfiles: Archetype[] = [
   },
   {
     id: "industrial-lens",
-    icon: "lucide:aperture",
+    icon: "📸",
     title: "The Industrial Lens",
     subtitle: "Sarah | Commercial & Industrial Photographer",
     vibe: "Precise, structured, navigating hard hats and heavy machinery with a camera.",
@@ -226,7 +226,7 @@ export const creativeArtisanProfiles: Archetype[] = [
   },
   {
     id: "aesthetic-architect",
-    icon: "lucide:pen-tool",
+    icon: "🖋️",
     title: "The Aesthetic Architect",
     subtitle: "Liam | Freelance Graphic Designer",
     vibe: "Minimalist, caffeinated, obsessed with typography and grid systems.",
@@ -352,7 +352,7 @@ export const creativeArtisanProfiles: Archetype[] = [
   },
   {
     id: "word-weaver",
-    icon: "lucide:file-text",
+    icon: "📝",
     title: "The Word Weaver",
     subtitle: "Sarah | Technical Writer",
     vibe: "Methodical, clear-headed, translating complex engineering into plain English.",
@@ -459,7 +459,7 @@ export const creativeArtisanProfiles: Archetype[] = [
   },
   {
     id: "code-artisan",
-    icon: "lucide:gamepad-2",
+    icon: "🎮",
     title: "The Code Artisan",
     subtitle: "Alex | Indie Game Developer",
     vibe: "Creative, technically ambitious, fueled by energy drinks and synthwave.",
