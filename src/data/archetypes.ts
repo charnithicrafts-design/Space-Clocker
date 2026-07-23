@@ -42,7 +42,10 @@ const generateHistoricalTasks = (
   return tasks.sort((a, b) => new Date(a.plannedDate).getTime() - new Date(b.plannedDate).getTime());
 };
 
+import { mastermindArchetypes } from './archetypes/index';
+
 export const curatedArchetypes: Archetype[] = [
+  ...mastermindArchetypes,
   {
     id: "mca-student",
     icon: "🚀",
