@@ -541,8 +541,17 @@ export const api = {
       // 2. Singletons Phase
       await db.transaction(async (tx) => {
         if (payload.profile) {
+          let finalLevel = payload.profile.level || 1;
+          let finalXp = payload.profile.xp || 0;
+          
+          // Fix for AI generated demo data that dumped raw XP without converting to levels
+          if (finalXp >= 1000) {
+            finalLevel += Math.floor(finalXp / 1000);
+            finalXp = finalXp % 1000;
+          }
+
           await tx.query(`UPDATE profile SET name = $1, level = $2, xp = $3, title = $4 WHERE id = 1`, [
-            payload.profile.name || null, payload.profile.level || 1, payload.profile.xp || 0, payload.profile.title || null
+            payload.profile.name || null, finalLevel, finalXp, payload.profile.title || null
           ]);
         }
         const p = payload.preferences;
@@ -576,13 +585,26 @@ export const api = {
       if (payload.ambitions) {
         for (const a of payload.ambitions) {
           await db.transaction(async (tx) => {
+            let finalAmbitionXp = a.xp || 0;
+            if (finalAmbitionXp > 500) finalAmbitionXp = 500; // Cap to max
+            
+            let finalProgress = a.progress || 0;
+            if (payload.is_simulation && a.milestones?.length > 0) {
+               finalProgress = Math.floor(Math.random() * 80) + 10; // 10% to 90%
+            }
+            
             await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [
-              a.id, a.title, a.progress || 0, a.xp || 0, a.horizon || 'yearly'
+              a.id, a.title, finalProgress, finalAmbitionXp, a.horizon || 'yearly'
             ]);
             if (a.milestones) {
-              for (const m of a.milestones) {
-                await tx.query(`INSERT INTO milestones (id, ambition_id, title, status) VALUES ($1, $2, $3, $4)`, [
-                  m.id, a.id, m.title, m.status || 'pending'
+              for (let i = 0; i < a.milestones.length; i++) {
+                const m = a.milestones[i];
+                let finalStatus = m.status || 'pending';
+                if (payload.is_simulation && i < Math.ceil(a.milestones.length * 0.8)) {
+                  finalStatus = 'completed';
+                }
+                await tx.query(`INSERT INTO milestones (id, title, status, ambition_id) VALUES ($1, $2, $3, $4)`, [
+                  m.id, m.title, finalStatus, a.id
                 ]);
                 if (m.tasks) {
                   for (const t of m.tasks) {
@@ -722,7 +744,11 @@ export const api = {
       await tx.query(`UPDATE profile SET level = 1, xp = 0 WHERE id = 1`);
       await tx.query(`UPDATE stats SET streak = 0, tasks_completed = 0, total_focus_hours = 0 WHERE id = 1`);
       
-      // 3. Turn off simulation flag
+      // 3. Reset ambitions and milestones for a clean slate
+      await tx.query(`UPDATE ambitions SET progress = 0, xp = 0`);
+      await tx.query(`UPDATE milestones SET status = 'pending'`);
+      
+      // 4. Turn off simulation flag
       await tx.query(`UPDATE preferences SET is_simulation = false WHERE id = 1`);
     });
     return true;
