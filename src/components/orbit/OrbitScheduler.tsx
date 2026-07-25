@@ -34,7 +34,7 @@ const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
 ));
 
 const OrbitScheduler = () => {
-  const { tasks, toggleTask, toggleMilestoneTask, addTask, updateTask, updateTaskDate, deleteTask, updateMilestoneTask, deleteMilestoneTask, preferences, profile, ambitions } = useTrackStore();
+  const { tasks, toggleTask, toggleMilestoneTask, addTask, updateTask, updateTaskDate, deleteTask, updateMilestoneTask, deleteMilestoneTask, preferences, profile, ambitions, skills } = useTrackStore();
   const [activeHorizon, setActiveHorizon] = useState<OrbitHorizon>('daily');
   const [selectedDate, setSelectedDate] = useState(getTodayLocalISO());
   const [showTransmissionPreview, setShowTransmissionPreview] = useState(false);
@@ -731,7 +731,7 @@ const OrbitScheduler = () => {
                   <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-2 col-span-1 md:col-span-2">
                     <div className="text-[9px] font-black uppercase text-secondary tracking-widest">PDA Narrative Summary</div>
                     <p className="text-xs text-on-surface leading-relaxed font-mono">
-                      "Orbit initialized successfully. Technical workspace synchronized on Chrome desktop. Core trajectories active: AWS Certified Specialist & Data Analyst path. Logging daily parameters with 100% resonance efficiency. Standing by for next rotation cycle."
+                      {`"Orbit initialized successfully. Technical workspace synchronized on Chrome desktop. Core trajectories active: ${ambitions.filter(a => a.progress < 100).slice(0, 2).map(a => a.title).join(' & ') || 'General Path'}. Logging daily parameters with ${allTasks.filter(t => t.completed && t.plannedDate === getTodayLocalISO()).length > 0 ? 'optimal' : 'baseline'} resonance efficiency. Standing by for next rotation cycle."`}
                     </p>
                   </div>
 
@@ -739,31 +739,45 @@ const OrbitScheduler = () => {
                   <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-3">
                     <div className="text-[9px] font-black uppercase text-primary-container tracking-widest">Accomplished Parameters</div>
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-xs text-white">
-                        <ShieldCheck size={14} className="text-success shrink-0" />
-                        <span className="truncate">Complete daily standup</span>
-                        <span className="text-[9px] font-mono text-secondary-container bg-secondary-container/10 px-1.5 py-0.5 rounded ml-auto">10 XP</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-white">
-                        <ShieldCheck size={14} className="text-success shrink-0" />
-                        <span className="truncate">Launch Space Clocker</span>
-                        <span className="text-[9px] font-mono text-secondary-container bg-secondary-container/10 px-1.5 py-0.5 rounded ml-auto">20 XP</span>
-                      </div>
+                      {(() => {
+                        const completedToday = allTasks.filter(t => t.completed && t.plannedDate === getTodayLocalISO());
+                        if (completedToday.length === 0) {
+                          return <div className="text-xs text-on-surface-variant font-mono">No parameters executed today.</div>;
+                        }
+                        return completedToday.map(task => (
+                          <div key={task.id} className="flex items-center gap-2 text-xs text-white">
+                            <ShieldCheck size={14} className="text-success shrink-0" />
+                            <span className="truncate">{task.title}</span>
+                            <span className="text-[9px] font-mono text-secondary-container bg-secondary-container/10 px-1.5 py-0.5 rounded ml-auto">{(task as any).weightage || 10} XP</span>
+                          </div>
+                        ));
+                      })()}
                     </div>
                   </div>
 
-                  {/* Skills Delta Calibration */}
+                  {/* Skills Calibration Delta */}
                   <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-3">
                     <div className="text-[9px] font-black uppercase text-secondary tracking-widest">Skills Calibration Delta</div>
                     <div className="space-y-2">
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-white font-mono">AWS Cloud Tech</span>
-                        <span className="text-success font-black font-mono">+1%</span>
-                      </div>
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-white font-mono">Momentum Velocity</span>
-                        <span className="text-success font-black font-mono">+2%</span>
-                      </div>
+                      {(() => {
+                        if (skills && skills.length > 0) {
+                          return skills.slice(0, 2).map(skill => (
+                            <div key={skill.id} className="flex justify-between items-center text-xs">
+                              <span className="text-white font-mono truncate max-w-[150px]">{skill.name}</span>
+                              <span className="text-success font-black font-mono">+{Math.max(1, Math.round(skill.currentProficiency / 10))}%</span>
+                            </div>
+                          ));
+                        }
+                        if (ambitions && ambitions.length > 0) {
+                          return ambitions.slice(0, 2).map(ambition => (
+                            <div key={ambition.id} className="flex justify-between items-center text-xs">
+                              <span className="text-white font-mono truncate max-w-[150px]">{ambition.title}</span>
+                              <span className="text-success font-black font-mono">+{Math.max(1, Math.round(ambition.progress / 10))}%</span>
+                            </div>
+                          ));
+                        }
+                        return <div className="text-xs text-on-surface-variant font-mono">No calibration data available.</div>;
+                      })()}
                     </div>
                   </div>
                 </div>
