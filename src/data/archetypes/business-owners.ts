@@ -97,23 +97,31 @@ export const businessOwnerProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "void-staff-shortage",
-          title: "Weekend Staff Shortage",
-          description: "Two senior therapists called out on a fully booked Saturday.",
-          impact: "high",
-          engagedCount: 0,
-          maxAllowed: 0
-        },
-        {
-          id: "void-supply-delay",
-          title: "Signature Oil Delay",
-          description: "Supply chain issues holding up our most requested massage oil.",
-          impact: "medium",
-          engagedCount: 0,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-well-1",
+                    text: "Micro-managing Stylists",
+                    description: "Creating a tense atmosphere for clients",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-well-2",
+                    text: "Comping Services for Exposure",
+                    description: "Giving away treatments to low-tier influencers",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-well-3",
+                    text: "Engaging in Vendor Drama",
+                    description: "Complaining about product reps",
+                    impact: "low",
+                    maxAllowed: 3,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
@@ -211,23 +219,31 @@ export const businessOwnerProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "void-freezer-failure",
-          title: "Walk-in Freezer Failure",
-          description: "Compressor died during a busy Friday dinner prep.",
-          impact: "high",
-          engagedCount: 0,
-          maxAllowed: 0
-        },
-        {
-          id: "void-supplier-bankrupt",
-          title: "Key Supplier Bankrupt",
-          description: "Our exclusive truffle supplier suddenly went out of business.",
-          impact: "medium",
-          engagedCount: 0,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-cul-1",
+                    text: "Adding Unnecessary Menu Items",
+                    description: "Bloating the menu with complex dishes",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-cul-2",
+                    text: "Losing Temper with the Line",
+                    description: "Screaming at sous-chefs over plating",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-cul-3",
+                    text: "Obsessively Checking Reviews",
+                    description: "Refreshing Yelp multiple times a day",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
@@ -325,23 +341,31 @@ export const businessOwnerProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "void-site-crash",
-          title: "E-Commerce Site Crash",
-          description: "Server went down for two hours during the Black Friday launch.",
-          impact: "high",
-          engagedCount: 0,
-          maxAllowed: 0
-        },
-        {
-          id: "void-shipment-delay",
-          title: "Spring Collection Delay",
-          description: "A cargo ship delay pushed back the entire spring line launch by 3 weeks.",
-          impact: "medium",
-          engagedCount: 0,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-ret-1",
+                    text: "Over-ordering Unproven Trends",
+                    description: "Buying massive stock of a viral item",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-ret-2",
+                    text: "Competitor Doomscrolling",
+                    description: "Analyzing competitor Instagram grids",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-ret-3",
+                    text: "Manually Packing Orders",
+                    description: "Refusing to delegate fulfillment",
+                    impact: "low",
+                    maxAllowed: 3,
+                    engagedCount: 0
+          }
+]
     }
   },
   {

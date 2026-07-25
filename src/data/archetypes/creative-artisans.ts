@@ -98,23 +98,31 @@ export const creativeArtisanProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "v-1",
-          title: "Burnout Blackhole",
-          description: "Staring blankly at Lightroom without making any edits.",
-          impact: "high",
-          engagedCount: 12,
-          maxAllowed: 0
-        },
-        {
-          id: "v-2",
-          title: "Gear Acquisition Syndrome",
-          description: "Spending hours researching new lenses instead of editing.",
-          impact: "medium",
-          engagedCount: 5,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-fc-1",
+                    text: "Gear Acquisition Syndrome",
+                    description: "Researching lenses instead of editing",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-fc-2",
+                    text: "Preset Tweaking Paralysis",
+                    description: "Endlessly adjusting the same slider",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-fc-3",
+                    text: "Instagram Doomscrolling",
+                    description: "Comparing work to others",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
@@ -205,23 +213,31 @@ export const creativeArtisanProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "v-1",
-          title: "Pixel Peeping Paralysis",
-          description: "Zooming in to 400% to fix unnoticeable details.",
-          impact: "high",
-          engagedCount: 8,
-          maxAllowed: 0
-        },
-        {
-          id: "v-2",
-          title: "Endless Moodboarding",
-          description: "Scrolling Pinterest for inspiration indefinitely.",
-          impact: "medium",
-          engagedCount: 14,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-il-1",
+                    text: "Pixel Peeping Paralysis",
+                    description: "Zooming to 400% for invisible dust",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-il-2",
+                    text: "Over-packing Gear Anxiety",
+                    description: "Packing 4 backup flashes",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-il-3",
+                    text: "Endless Moodboarding",
+                    description: "Avoiding drafting the actual shot list",
+                    impact: "low",
+                    maxAllowed: 3,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
@@ -331,23 +347,31 @@ export const creativeArtisanProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "v-1",
-          title: "Font Scrolling Abyss",
-          description: "Spending 2 hours looking for the perfect sans-serif.",
-          impact: "medium",
-          engagedCount: 22,
-          maxAllowed: 0
-        },
-        {
-          id: "v-2",
-          title: "Alignment Obsession",
-          description: "Nudging elements by 1px repeatedly without making progress.",
-          impact: "low",
-          engagedCount: 18,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-aa-1",
+                    text: "Font Scrolling Abyss",
+                    description: "Testing identical fonts for hours",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-aa-2",
+                    text: "Alignment Obsession",
+                    description: "Nudging by 1px repeatedly",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-aa-3",
+                    text: "Scope Creep via Options",
+                    description: "Designing unbillable extra concepts",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
@@ -438,23 +462,31 @@ export const creativeArtisanProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "v-1",
-          title: "Research Rabbit Hole",
-          description: "Reading endless technical specs instead of writing the summary.",
-          impact: "high",
-          engagedCount: 15,
-          maxAllowed: 0
-        },
-        {
-          id: "v-2",
-          title: "Formatting Fiddling",
-          description: "Tweaking Markdown table alignments for 30 minutes.",
-          impact: "low",
-          engagedCount: 9,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-ww-1",
+                    text: "Research Rabbit Hole",
+                    description: "Deep-diving into edge cases needlessly",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-ww-2",
+                    text: "Formatting Fiddling",
+                    description: "Trying to perfectly align Markdown",
+                    impact: "low",
+                    maxAllowed: 3,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-ww-3",
+                    text: "Jargon Hoarding",
+                    description: "Over-complicating sentences",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
@@ -545,23 +577,31 @@ export const creativeArtisanProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "v-1",
-          title: "Feature Creep Fog",
-          description: "Starting to code a complex crafting system the game doesn't need.",
-          impact: "high",
-          engagedCount: 6,
-          maxAllowed: 0
-        },
-        {
-          id: "v-2",
-          title: "Engine Tinkering",
-          description: "Writing custom editor tools instead of working on the actual game.",
-          impact: "medium",
-          engagedCount: 11,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-ca-1",
+                    text: "Feature Creep Fog",
+                    description: "Simulating weather in a 2D platformer",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-ca-2",
+                    text: "Custom Tooling Trap",
+                    description: "Building custom editors instead of working",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-ca-3",
+                    text: "Premature Optimization",
+                    description: "Saving 2ms when already at 144fps",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          }
+]
     }
   }
 ];

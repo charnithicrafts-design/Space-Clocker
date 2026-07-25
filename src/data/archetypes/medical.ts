@@ -94,23 +94,31 @@ export const medicalProfiles: Archetype[] = [
         { id: 's-n3', name: 'Crisis Management', level: 8 }
       ],
       voids: [
-        {
-          id: 'v-neuro-1',
-          title: 'Skip post-op patient follow-up documentation',
-          description: 'Incomplete notes can lead to miscommunication in patient care.',
-          impact: 'high',
-          engagedCount: 0,
-          maxAllowed: 0
-        },
-        {
-          id: 'v-neuro-2',
-          title: 'Rushing pre-surgical checklists',
-          description: 'Skipping steps in the time-out process compromises patient safety.',
-          impact: 'high',
-          engagedCount: 0,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-neuro-1",
+                    text: "Skipping pre-op mental visualization",
+                    description: "Increases risk of hesitation",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-neuro-2",
+                    text: "Ignoring physical fatigue",
+                    description: "Compromises microsurgical precision",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-neuro-3",
+                    text: "Rushing post-op documentation",
+                    description: "Leads to miscommunication",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
@@ -316,23 +324,31 @@ export const medicalProfiles: Archetype[] = [
         { id: 's-r3', name: 'Statistical Analysis', level: 7 }
       ],
       voids: [
-        {
-          id: 'v-res-1',
-          title: 'Compromise on blinding protocols',
-          description: 'Allowing unblinding without strict medical necessity ruins trial integrity.',
-          impact: 'high',
-          engagedCount: 0,
-          maxAllowed: 0
-        },
-        {
-          id: 'v-res-2',
-          title: 'Miss reporting deadlines to regulatory bodies',
-          description: 'Failing to report data to the FDA/EMA on time risks study shutdown.',
-          impact: 'high',
-          engagedCount: 0,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-res-1",
+                    text: "Cherry-picking favorable data",
+                    description: "Focusing on data that supports the hypothesis",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-res-2",
+                    text: "Delaying adverse event reports",
+                    description: "Administrative backlog on non-critical events",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-res-3",
+                    text: "Losing touch with patients",
+                    description: "Forgetting the human element of the trial",
+                    impact: "low",
+                    maxAllowed: 3,
+                    engagedCount: 0
+          }
+]
     }
   }
 ];

@@ -90,23 +90,31 @@ export const operationalProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "void-oversight",
-          title: "Regulatory Oversight Lag",
-          description: "Delays in implementing newly legislated mandates across subsidiary units.",
-          impact: "high",
-          engagedCount: 3,
-          maxAllowed: 0
-        },
-        {
-          id: "void-documentation",
-          title: "Fragmented Evidence Trails",
-          description: "Inconsistent documentation standards leading to audit vulnerabilities.",
-          impact: "medium",
-          engagedCount: 5,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-comp-1",
+                    text: "Endless Policy Wordsmithing",
+                    description: "Delaying rollouts over minor phrasing",
+                    impact: "low",
+                    maxAllowed: 3,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-comp-2",
+                    text: "Micromanaging Discrepancies",
+                    description: "Flagging inconsequential variances",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-comp-3",
+                    text: "Rabbit-holing in Legacy Sheets",
+                    description: "Wasting time in outdated logs",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
@@ -196,23 +204,31 @@ export const operationalProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "void-bottleneck",
-          title: "Critical Node Congestion",
-          description: "Severe delays at major trans-shipment hubs causing cascading timeline failures.",
-          impact: "high",
-          engagedCount: 4,
-          maxAllowed: 0
-        },
-        {
-          id: "void-supplier-risk",
-          title: "Tier-2 Supplier Instability",
-          description: "Lack of visibility into upstream component availability.",
-          impact: "medium",
-          engagedCount: 2,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-sup-1",
+                    text: "Obsessive Tracking Refresh",
+                    description: "Checking freight status every 5 mins",
+                    impact: "low",
+                    maxAllowed: 3,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-sup-2",
+                    text: "Over-analyzing Freight Margins",
+                    description: "Losing days over pennies per mile",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-sup-3",
+                    text: "Engaging in Vendor Blame Games",
+                    description: "Arguing instead of problem-solving",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
@@ -313,23 +329,31 @@ export const operationalProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "void-exposure",
-          title: "Unmitigated Tax Exposure",
-          description: "Potential penalties due to misaligned intercompany pricing policies.",
-          impact: "high",
-          engagedCount: 2,
-          maxAllowed: 0
-        },
-        {
-          id: "void-data-silo",
-          title: "Financial Data Discrepancy",
-          description: "Inconsistencies between operational reporting and statutory ledgers.",
-          impact: "medium",
-          engagedCount: 6,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-fin-1",
+                    text: "Manual Reconciliation Loops",
+                    description: "Refusing to automate standard reconciliations",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-fin-2",
+                    text: "Deep-diving Tax Hypotheticals",
+                    description: "Researching unlikely tax scenarios",
+                    impact: "low",
+                    maxAllowed: 3,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-fin-3",
+                    text: "Tinkering with Complex Macros",
+                    description: "Building fragile Excel macros",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
@@ -420,23 +444,31 @@ export const operationalProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "void-model-drift",
-          title: "Predictive Model Drift",
-          description: "Divergence of model predictions from emerging real-world claim frequencies.",
-          impact: "high",
-          engagedCount: 1,
-          maxAllowed: 0
-        },
-        {
-          id: "void-data-latency",
-          title: "Actuarial Data Latency",
-          description: "Delays in receiving validated claims data for model recalibration.",
-          impact: "medium",
-          engagedCount: 4,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-num-1",
+                    text: "Stochastic Parameter Over-tuning",
+                    description: "Overfitting the model to noise",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-num-2",
+                    text: "Dismissing Qualitative Realities",
+                    description: "Ignoring human factors in the data",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-num-3",
+                    text: "Formatting Actuarial Tables",
+                    description: "Making tables pretty instead of accurate",
+                    impact: "low",
+                    maxAllowed: 3,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
@@ -537,23 +569,31 @@ export const operationalProfiles: Archetype[] = [
         }
       ],
       voids: [
-        {
-          id: "void-contamination",
-          title: "Micro-Contamination Risk",
-          description: "Trace impurities detected in solvent recovery loop threatening API stability.",
-          impact: "high",
-          engagedCount: 2,
-          maxAllowed: 0
-        },
-        {
-          id: "void-energy-inefficiency",
-          title: "Thermal Loss Variance",
-          description: "Unexplained energy loss in the distillation column reducing overall process efficiency.",
-          impact: "medium",
-          engagedCount: 3,
-          maxAllowed: 0
-        }
-      ]
+          {
+                    id: "v-yld-1",
+                    text: "Chasing 0.1% Yield Optimization",
+                    description: "Spending thousands to save pennies",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-yld-2",
+                    text: "Over-reading Safety Logs",
+                    description: "Finding patterns in random noise",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-yld-3",
+                    text: "Fixating on Lab Calibrations",
+                    description: "Recalibrating perfectly fine tools",
+                    impact: "low",
+                    maxAllowed: 3,
+                    engagedCount: 0
+          }
+]
     }
   }
 ];

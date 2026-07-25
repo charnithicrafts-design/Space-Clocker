@@ -119,9 +119,31 @@ export const digitalInstitutionalProfiles: Archetype[] = [
         { id: "t3", title: "Analyze SIEM alerts from red team exercise", completed: false, date: getToday(), ambitionId: "sec-audit", duration: 60 }
       ],
       voids: [
-        { id: "v1", title: "Scope Creep", impact: "high", engagedCount: 0, maxAllowed: 0, description: "Attacking out-of-scope assets during an engagement." },
-        { id: "v2", title: "Rabbit Hole Digging", impact: "medium", engagedCount: 0, maxAllowed: 0, description: "Spending too much time on a likely dead-end exploit." }
-      ]
+          {
+                    id: "v-cyb-1",
+                    text: "Chasing False Positives",
+                    description: "Investigating every low-priority alert",
+                    impact: "medium",
+                    maxAllowed: 2,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-cyb-2",
+                    text: "Draconian Policy Enforcement",
+                    description: "Blocking legitimate work with overly strict rules",
+                    impact: "high",
+                    maxAllowed: 1,
+                    engagedCount: 0
+          },
+          {
+                    id: "v-cyb-3",
+                    text: "Skipping Soft Skills",
+                    description: "Failing to educate users effectively",
+                    impact: "low",
+                    maxAllowed: 3,
+                    engagedCount: 0
+          }
+]
     }
   },
   {
