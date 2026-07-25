@@ -20,6 +20,7 @@ import LandingPage from './components/marketing/LandingPage';
 import UpdateModal from './components/layout/UpdateModal';
 import CriticalUpdateBanner from './components/layout/CriticalUpdateBanner';
 import { VoidEventHorizon } from './components/void-protocol/VoidEventHorizon';
+import { SupernovaEffect } from './components/reflection/SupernovaEffect';
 import { useTrackStore } from './store/useTrackStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Award } from 'lucide-react';
@@ -337,6 +338,7 @@ const AppContent = () => {
       )}
 
       <VoidEventHorizon />
+      <SupernovaEffect />
 
       <main className="pb-24 lg:pb-0">
         <Routes>

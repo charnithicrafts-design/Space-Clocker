@@ -164,12 +164,16 @@ interface TrackStore {
   showUpdateModal: boolean;
   updateType?: 'network' | 'database';
   showSyncModal: boolean;
+  showLevelUp: boolean;
+  showSupernova: boolean;
   
   // Actions
   performSystemUpgrade: () => Promise<void>;
   dismissUpdate: () => void;
   setShowUpdateModal: (show: boolean) => void;
   setShowSyncModal: (show: boolean) => void;
+  setShowLevelUp: (show: boolean) => void;
+  setShowSupernova: (show: boolean) => void;
   checkForUpdates: () => Promise<{ hasAppUpdate: boolean; syncResult: string }>;
   addAmbition: (title: string) => Promise<void>;
   updateAmbition: (id: string, title: string) => Promise<void>;
@@ -273,9 +277,13 @@ export const useTrackStore = create<TrackStore>()(
     showUpdateModal: false,
     updateType: undefined,
     showSyncModal: false,
+    showLevelUp: false,
+    showSupernova: false,
 
     setShowUpdateModal: (show) => set({ showUpdateModal: show }),
     setShowSyncModal: (show) => set({ showSyncModal: show }),
+    setShowLevelUp: (show) => set({ showLevelUp: show }),
+    setShowSupernova: (show) => set({ showSupernova: show }),
 
     checkForUpdates: async () => {
       set({ isCheckingUpdates: true });

@@ -57,9 +57,20 @@ const MomentumEngine = () => {
       <header className="flex justify-between items-center mb-8">
         <div>
           <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Space Science Level</h2>
-          <h1 className="text-4xl font-display font-black text-primary uppercase tracking-tighter">
-            Momentum Rank: LVL {profile.level}
-          </h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-4xl font-display font-black text-primary uppercase tracking-tighter">
+              Momentum Rank: LVL {profile.level}
+            </h1>
+            {preferences?.isSimulation && (
+              <button
+                onClick={() => useTrackStore.getState().setShowSupernova(true)}
+                className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest border border-amber-500/30 hover:bg-amber-500 hover:text-black transition-all"
+                title="Test Supernova Effect"
+              >
+                Trigger Supernova
+              </button>
+            )}
+          </div>
         </div>
         <Zap className="text-primary-container" size={32} />
       </header>
