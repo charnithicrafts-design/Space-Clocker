@@ -547,10 +547,13 @@ export const api = {
         }
         const p = payload.preferences;
         if (p) {
-          await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [
+          await tx.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2, is_simulation = $3 WHERE id = 1`, [
             p.confirmDelete ?? p.confirm_delete ?? true, 
-            p.uiMode || p.ui_mode || 'simple'
+            p.uiMode || p.ui_mode || 'simple',
+            payload.is_simulation ?? false
           ]);
+        } else if (payload.is_simulation) {
+          await tx.query(`UPDATE preferences SET is_simulation = true WHERE id = 1`);
         }
         if (payload.stats) {
           await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [
@@ -704,6 +707,25 @@ export const api = {
       await tx.query(`UPDATE stats SET streak = $1, tasks_completed = $2, total_focus_hours = $3 WHERE id = 1`, [0, 0, 0]);
       return true;
     });
+  },
+
+  async engageBlueprint() {
+    if (initializing) await initializing;
+    if (!db) throw new Error('Database not initialized');
+    
+    await db.transaction(async (tx) => {
+      // 1. Wipe simulated tasks & history
+      await tx.query(`DELETE FROM tasks`);
+      await tx.query(`DELETE FROM stellar_history`);
+      
+      // 2. Reset profile & stats
+      await tx.query(`UPDATE profile SET level = 1, xp = 0 WHERE id = 1`);
+      await tx.query(`UPDATE stats SET streak = 0, tasks_completed = 0, total_focus_hours = 0 WHERE id = 1`);
+      
+      // 3. Turn off simulation flag
+      await tx.query(`UPDATE preferences SET is_simulation = false WHERE id = 1`);
+    });
+    return true;
   },
 
   async exportToJson(): Promise<Uint8Array> {

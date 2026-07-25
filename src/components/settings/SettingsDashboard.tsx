@@ -190,8 +190,33 @@ const SettingsDashboard = () => {
     }
   };
 
-  const handleReset = () => {
-    if (window.confirm('CRITICAL: This will wipe all local data. Are you sure?')) {
+  const handleReset = async () => {
+    if (!store.preferences.isSimulation) {
+      const confirmApp = window.prompt('CRITICAL: You are about to wipe your real pilot data.\nTo proceed, type "Space-Clocker" below:');
+      if (confirmApp !== 'Space-Clocker') {
+        alert('Data wipe cancelled. App name did not match.');
+        return;
+      }
+      
+      const confirmName = window.prompt(`To confirm this action is intentional, please type your Pilot Name (${store.profile.name}):`);
+      if (confirmName !== store.profile.name) {
+        alert('Data wipe cancelled. Pilot name did not match.');
+        return;
+      }
+
+      alert('Authentication successful. Creating a final backup snapshot before wiping...');
+      await handleCreateSnapshot();
+    } else {
+      if (!window.confirm('CRITICAL: This will wipe your simulated blueprint data. Are you sure?')) {
+        return;
+      }
+    }
+
+    try {
+      await store.clearAllData();
+    } catch (e) {
+      console.error(e);
+      alert('Failed to clear database. Falling back to local storage wipe.');
       localStorage.clear();
       window.location.reload();
     }

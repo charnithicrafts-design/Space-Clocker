@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS preferences (
   id INTEGER PRIMARY KEY DEFAULT 1,
   confirm_delete BOOLEAN DEFAULT true,
   ui_mode TEXT DEFAULT 'simple',
+  is_simulation BOOLEAN DEFAULT false,
   CONSTRAINT single_prefs CHECK (id = 1)
 );
 

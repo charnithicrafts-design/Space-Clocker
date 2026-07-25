@@ -107,7 +107,8 @@ export interface Device {
 
 export interface Preferences {
   confirmDelete: boolean;
-  uiMode: 'simple' | 'professional';
+  uiMode: 'simple' | 'professional' | 'void' | 'nebula' | 'stellar';
+  isSimulation?: boolean;
 }
 
 export interface Transmission {
@@ -229,6 +230,7 @@ interface TrackStore {
   deleteVoidTask: (id: string) => Promise<void>;
   engageVoid: (voidId: string) => Promise<void>;
   importDemoData: (data: any) => Promise<void>;
+  engageBlueprint: () => Promise<void>;
   clearAllData: () => Promise<void>;
   initialize: () => Promise<void>;
   recalculateCognitiveSync: () => Promise<void>;
@@ -246,7 +248,7 @@ export const useTrackStore = create<TrackStore>()(
     internships: [],
     skills: [],
     transmissions: [],
-    stats: { streak: 0, tasks_completed: 0, total_focus_hours: 0 } as any,
+    stats: { streak: 0, tasksCompleted: 0, totalFocusHours: 0 } as any,
     oracleConfig: {
       apiKey: '',
       model: 'gemini-1.5-pro',
@@ -256,7 +258,8 @@ export const useTrackStore = create<TrackStore>()(
     },
     preferences: {
       confirmDelete: true,
-      uiMode: 'simple'
+      uiMode: 'simple',
+      isSimulation: false
     },
     syncStatus: {
       isSyncing: false,
@@ -1035,7 +1038,7 @@ export const useTrackStore = create<TrackStore>()(
       const newPrefs = { ...state.preferences, ...updates };
       import('../db/client').then(({ getDb }) => {
         const db = getDb();
-        db.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2 WHERE id = 1`, [newPrefs.confirmDelete, newPrefs.uiMode]);
+        db.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2, is_simulation = $3 WHERE id = 1`, [newPrefs.confirmDelete, newPrefs.uiMode, !!newPrefs.isSimulation]);
       });
       return { preferences: newPrefs };
     }),
@@ -1074,7 +1077,16 @@ export const useTrackStore = create<TrackStore>()(
         set((state) => ({ voids: state.voids.map((v) => v.id === voidId ? { ...v, engagedCount: newCount } : v) }));
       }
     },
-
+    engageBlueprint: async () => {
+      try {
+        const { dbProxy } = await import('../db/client');
+        await dbProxy.engageBlueprint();
+        await get().initialize();
+      } catch (error) {
+        console.error('Failed to engage blueprint:', error);
+        throw error;
+      }
+    },
     clearAllData: async () => {
       const { dbProxy } = await import('../db/client');
       try {
@@ -1088,7 +1100,8 @@ export const useTrackStore = create<TrackStore>()(
     importDemoData: async (data: any) => {
       const { dbProxy } = await import('../db/client');
       try {
-        await dbProxy.bulkImport(data);
+        // Pass is_simulation flag directly to bulk import so the DB knows to flag it
+        await dbProxy.bulkImport({ ...data, is_simulation: true });
         await get().initialize();
       } catch (err) {
         console.error('Demo data import failed:', err);
@@ -1145,7 +1158,7 @@ export const useTrackStore = create<TrackStore>()(
         
         // Stage 1: Critical Momentum Data (Sequential to avoid transaction overlap)
         const profileRes = await dbProxy.getProfile();
-        const prefsRes = await dbProxy.query(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode" FROM preferences WHERE id = 1`);
+        const prefsRes = await dbProxy.query(`SELECT confirm_delete as "confirmDelete", ui_mode as "uiMode", is_simulation as "isSimulation" FROM preferences WHERE id = 1`);
         const statsRes = await dbProxy.query(`SELECT streak, tasks_completed as "tasksCompleted", total_focus_hours as "totalFocusHours" FROM stats WHERE id = 1`);
         const oracleRes = await dbProxy.query(`SELECT api_key as "apiKey", model, provider_url as "providerUrl", client_id as "clientId", sync_enabled as "syncEnabled", sync_tier as "syncTier", sync_expires_at as "syncExpiresAt", one_time_syncs_available as "oneTimeSyncsAvailable" FROM oracle_config WHERE id = 1`);
         const ambitionsRes = await dbProxy.query(`SELECT * FROM ambitions`);
@@ -1158,7 +1171,8 @@ export const useTrackStore = create<TrackStore>()(
           profile: profileRes.rows[0] || get().profile,
           preferences: {
             confirmDelete: prefsRes.rows[0]?.confirmDelete ?? true,
-            uiMode: prefsRes.rows[0]?.uiMode || 'simple'
+            uiMode: prefsRes.rows[0]?.uiMode || 'simple',
+            isSimulation: prefsRes.rows[0]?.isSimulation ?? false
           },
           stats: statsRes.rows[0] || get().stats,
           oracleConfig: oracleRes.rows[0] ? { 

@@ -76,6 +76,14 @@ export const MIGRATIONS: Migration[] = [
         ALTER TABLE oracle_config ADD COLUMN IF NOT EXISTS one_time_syncs_available INTEGER DEFAULT 0;
       `);
     }
+  },
+  {
+    version: 5,
+    name: 'add_is_simulation_flag',
+    run: async (tx) => {
+      await tx.exec(`
+        ALTER TABLE preferences ADD COLUMN IF NOT EXISTS is_simulation BOOLEAN DEFAULT false;
+      `);
+    }
   }
 ];
-

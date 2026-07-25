@@ -8,7 +8,7 @@ import CommandModal from '../layout/CommandModal';
 import StellarTimeline from './StellarTimeline';
 
 const MomentumEngine = () => {
-  const { profile, ambitions, addAmbition } = useTrackStore();
+  const { profile, ambitions, addAmbition, preferences, engageBlueprint } = useTrackStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLaunchTrajectory = async (title: string) => {
@@ -21,6 +21,38 @@ const MomentumEngine = () => {
 
   return (
     <div className="p-6 lg:pl-80 space-y-6 bg-surface-lowest min-h-screen">
+      {/* Simulation Banner */}
+      {preferences?.isSimulation && (
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden w-full flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-surface-high border border-primary shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.15)] mb-6"
+        >
+          <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
+          <div className="relative z-10 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center animate-pulse">
+              <Zap size={20} />
+            </div>
+            <div>
+              <h3 className="text-sm font-black text-white uppercase tracking-widest leading-none mb-1">Mentor Blueprint Active</h3>
+              <p className="text-[10px] text-on-surface-variant uppercase tracking-wider">You are observing a simulated historical trajectory.</p>
+            </div>
+          </div>
+          <button
+            onClick={async () => {
+              if (window.confirm('CRITICAL: This will clear the simulated history, keep the goals/voids as a template, and start you at Level 1 Day 1. Proceed?')) {
+                SoundManager.playSwell();
+                await engageBlueprint();
+                SoundManager.playSyncSuccess();
+              }
+            }}
+            className="relative z-10 whitespace-nowrap bg-primary text-on-primary px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-container transition-all shadow-lg hover:shadow-primary/30 active:scale-95"
+          >
+            Initiate My Ascent
+          </button>
+        </motion.div>
+      )}
+
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
         <div>

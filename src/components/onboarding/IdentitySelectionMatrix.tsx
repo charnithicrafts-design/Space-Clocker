@@ -61,8 +61,30 @@ const IdentitySelectionMatrix: React.FC = () => {
   });
 
   const handleSelect = async (archetype: Archetype) => {
-    if (window.confirm(`Are you sure you want to initialize the [${archetype.title}] trajectory? This will overwrite your current state.`)) {
-      setIsInjecting(true);
+    const store = useTrackStore.getState();
+    const isRealData = !store.preferences.isSimulation && store.profile.xp > 0;
+    
+    if (isRealData) {
+      const confirmApp = window.prompt(`CRITICAL: You are about to overwrite your REAL pilot data with a simulated trajectory [${archetype.title}].\nTo proceed, type "Space-Clocker" below:`);
+      if (confirmApp !== 'Space-Clocker') {
+        alert('Identity assumption cancelled. App name did not match.');
+        return;
+      }
+      
+      const confirmName = window.prompt(`To confirm this action is intentional, please type your Pilot Name (${store.profile.name}):`);
+      if (confirmName !== store.profile.name) {
+        alert('Identity assumption cancelled. Pilot name did not match.');
+        return;
+      }
+      
+      alert('Authentication successful. Your current real trajectory will be replaced by the simulation.');
+    } else {
+      if (!window.confirm(`Are you sure you want to initialize the [${archetype.title}] trajectory? This will overwrite your current state.`)) {
+        return;
+      }
+    }
+
+    setIsInjecting(true);
       SoundManager.playSwell();
       try {
         await importDemoData(archetype.data);
@@ -76,7 +98,6 @@ const IdentitySelectionMatrix: React.FC = () => {
         SoundManager.playThud();
         setIsInjecting(false);
       }
-    }
   };
 
   return (
