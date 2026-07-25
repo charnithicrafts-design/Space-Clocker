@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SoundManager } from '../../utils/SoundManager';
 import { Sparkles, Moon } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 
 export const VoidEventHorizon = () => {
-  const { voids } = useTrackStore();
-  const [dismissedKeys, setDismissedKeys] = useState<Set<string>>(new Set());
+  const { voids, dismissedVoidKeys, setDismissedVoidKeys } = useTrackStore();
 
-  const breachedVoids = voids.filter(v => v.engagedCount >= v.maxAllowed && !dismissedKeys.has(`${v.id}-${v.engagedCount}`));
+  const breachedVoids = voids.filter(v => v.engagedCount >= v.maxAllowed && !dismissedVoidKeys.includes(`${v.id}-${v.engagedCount}`));
   const isBreached = breachedVoids.length > 0;
 
   const [holdProgress, setHoldProgress] = useState(0);
   const [isHolding, setIsHolding] = useState(false);
+  const holdStartTime = useRef<number | null>(null);
+  const HOLD_DURATION_MS = 3000;
 
   useEffect(() => {
     if (isBreached) {
@@ -25,29 +26,45 @@ export const VoidEventHorizon = () => {
   }, [isBreached]);
 
   useEffect(() => {
-    let interval: any;
-    if (isHolding) {
-      interval = setInterval(() => {
-        setHoldProgress(prev => {
-          if (prev >= 100) {
-            // Success! Acknowledge the breach without deleting data
-            setDismissedKeys(current => {
-              const next = new Set(current);
-              breachedVoids.forEach(v => next.add(`${v.id}-${v.engagedCount}`));
-              return next;
-            });
-            SoundManager.playSyncSuccess();
-            setIsHolding(false);
-            return 0;
-          }
-          return prev + 2; // 50 ticks of 60ms = 3 seconds
+    let animationFrame: number;
+    
+    const updateProgress = () => {
+      if (!isHolding || !holdStartTime.current) {
+        setHoldProgress(0);
+        return;
+      }
+
+      const elapsed = Date.now() - holdStartTime.current;
+      const progress = Math.min((elapsed / HOLD_DURATION_MS) * 100, 100);
+      
+      if (progress >= 100) {
+        // Success! Acknowledge the breach globally
+        setDismissedVoidKeys(current => {
+          const next = new Set(current);
+          breachedVoids.forEach(v => next.add(`${v.id}-${v.engagedCount}`));
+          return Array.from(next);
         });
-      }, 60);
+        SoundManager.playSyncSuccess();
+        setIsHolding(false);
+        setHoldProgress(0);
+      } else {
+        setHoldProgress(progress);
+        animationFrame = requestAnimationFrame(updateProgress);
+      }
+    };
+
+    if (isHolding) {
+      holdStartTime.current = Date.now();
+      animationFrame = requestAnimationFrame(updateProgress);
     } else {
       setHoldProgress(0);
+      holdStartTime.current = null;
     }
-    return () => clearInterval(interval);
-  }, [isHolding, breachedVoids]);
+
+    return () => {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+    };
+  }, [isHolding, breachedVoids, setDismissedVoidKeys]);
 
   if (!isBreached) return null;
 
@@ -106,7 +123,9 @@ export const VoidEventHorizon = () => {
                 onMouseLeave={() => setIsHolding(false)}
                 onTouchStart={() => setIsHolding(true)}
                 onTouchEnd={() => setIsHolding(false)}
-                className="relative group w-full py-6 rounded-3xl bg-violet-900/20 border border-violet-400/30 overflow-hidden transition-all hover:bg-violet-800/30 hover:border-violet-400/50"
+                onTouchCancel={() => setIsHolding(false)}
+                onContextMenu={(e) => e.preventDefault()}
+                className="select-none relative group w-full py-6 rounded-3xl bg-violet-900/20 border border-violet-400/30 overflow-hidden transition-all hover:bg-violet-800/30 hover:border-violet-400/50"
               >
                 <div 
                   className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-violet-600/40 to-amber-500/40 transition-all duration-75 ease-linear"

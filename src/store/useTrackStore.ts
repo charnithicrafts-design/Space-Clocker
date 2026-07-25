@@ -166,6 +166,7 @@ interface TrackStore {
   showSyncModal: boolean;
   showLevelUp: boolean;
   showSupernova: boolean;
+  dismissedVoidKeys: string[];
   
   // Actions
   performSystemUpgrade: () => Promise<void>;
@@ -174,6 +175,7 @@ interface TrackStore {
   setShowSyncModal: (show: boolean) => void;
   setShowLevelUp: (show: boolean) => void;
   setShowSupernova: (show: boolean) => void;
+  setDismissedVoidKeys: (keys: string[] | ((prev: string[]) => string[])) => void;
   checkForUpdates: () => Promise<{ hasAppUpdate: boolean; syncResult: string }>;
   addAmbition: (title: string) => Promise<void>;
   updateAmbition: (id: string, title: string) => Promise<void>;
@@ -279,11 +281,16 @@ export const useTrackStore = create<TrackStore>()(
     showSyncModal: false,
     showLevelUp: false,
     showSupernova: false,
+    dismissedVoidKeys: [],
 
     setShowUpdateModal: (show) => set({ showUpdateModal: show }),
     setShowSyncModal: (show) => set({ showSyncModal: show }),
     setShowLevelUp: (show) => set({ showLevelUp: show }),
     setShowSupernova: (show) => set({ showSupernova: show }),
+    setDismissedVoidKeys: (updater) => 
+      set((state) => ({
+        dismissedVoidKeys: typeof updater === 'function' ? updater(state.dismissedVoidKeys) : updater
+      })),
 
     checkForUpdates: async () => {
       set({ isCheckingUpdates: true });

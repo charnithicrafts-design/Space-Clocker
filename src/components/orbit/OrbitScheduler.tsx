@@ -463,10 +463,13 @@ const OrbitScheduler = () => {
                 const hasError = taskAnomalies.some(a => a.severity === 'error');
                 
                 // Calculate if deadline is critical (within 24 hours)
-                const isDeadlineCritical = task.deadline && !task.completed && (new Date(task.deadline).getTime() - Date.now() < 86400000);
+                const deadlineTime = task.deadline ? new Date(task.deadline).getTime() : NaN;
+                const isDeadlineCritical = task.deadline && !task.completed && !isNaN(deadlineTime) && (deadlineTime - Date.now() < 86400000);
                 
-                const isMissedHabit = !task.completed && task.plannedDate && task.plannedDate < getTodayLocalISO();
-                const isMissedDeadline = !task.completed && task.deadline && new Date(task.deadline).getTime() < Date.now();
+                const plannedDateTime = task.plannedDate ? new Date(task.plannedDate).getTime() : NaN;
+                const todayTime = new Date(getTodayLocalISO()).getTime();
+                const isMissedHabit = !task.completed && task.plannedDate && !isNaN(plannedDateTime) && (plannedDateTime < todayTime);
+                const isMissedDeadline = !task.completed && task.deadline && !isNaN(deadlineTime) && (deadlineTime < Date.now());
                 const isOrbitalDecay = isMissedHabit || isMissedDeadline;
 
                 return (

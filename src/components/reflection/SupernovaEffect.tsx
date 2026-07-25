@@ -9,15 +9,14 @@ export const SupernovaEffect = () => {
   
   useEffect(() => {
     if (showSupernova) {
-      SoundManager.playSwell(); // or a dedicated supernova sound
-      
-      // Auto-dismiss after 8 seconds
-      const timer = setTimeout(() => {
-        setShowSupernova(false);
-      }, 8000);
-      return () => clearTimeout(timer);
+      // Play sound, but catch potential autoplay block errors
+      try {
+        SoundManager.playSwell();
+      } catch (e) {
+        console.warn('Supernova autoplay sound blocked by browser');
+      }
     }
-  }, [showSupernova, setShowSupernova]);
+  }, [showSupernova]);
 
   if (!showSupernova) return null;
 
