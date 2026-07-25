@@ -19,6 +19,7 @@ import IdentitySelectionMatrix from './components/onboarding/IdentitySelectionMa
 import LandingPage from './components/marketing/LandingPage';
 import UpdateModal from './components/layout/UpdateModal';
 import CriticalUpdateBanner from './components/layout/CriticalUpdateBanner';
+import { VoidEventHorizon } from './components/void-protocol/VoidEventHorizon';
 import { useTrackStore } from './store/useTrackStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Award } from 'lucide-react';
@@ -334,6 +335,8 @@ const AppContent = () => {
       ) : (
         <UpdateModal />
       )}
+
+      <VoidEventHorizon />
 
       <main className="pb-24 lg:pb-0">
         <Routes>

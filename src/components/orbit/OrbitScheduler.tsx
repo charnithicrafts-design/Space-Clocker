@@ -408,9 +408,26 @@ const OrbitScheduler = () => {
               </div>
               
               {filteredTasks.length === 0 && (
-                <div className="py-20 text-center glass-panel border border-outline-variant border-dashed rounded-3xl">
-                  <div className="text-on-surface-variant font-display font-black text-2xl uppercase opacity-20 italic">No Orbital Activity Detected</div>
-                  <p className="text-on-surface-variant text-xs uppercase tracking-widest mt-2">Standing by for mission parameters.</p>
+                <div className="py-24 text-center glass-panel rounded-3xl relative overflow-hidden group border-0 bg-surface-highest/20 shadow-inner">
+                  {/* Floating dust particles effect via CSS gradients */}
+                  <div className="absolute inset-0 opacity-30 group-hover:opacity-60 transition-opacity duration-1000"
+                       style={{ background: 'radial-gradient(circle 2px at 10% 20%, rgba(255,255,255,0.4) 1px, transparent 1px), radial-gradient(circle 2px at 80% 40%, rgba(255,255,255,0.4) 1px, transparent 1px), radial-gradient(circle 2px at 30% 70%, rgba(255,255,255,0.4) 1px, transparent 1px), radial-gradient(circle 2px at 60% 90%, rgba(255,255,255,0.4) 1px, transparent 1px)', backgroundSize: '200px 200px', animation: 'float 20s infinite linear' }} />
+                  <style>{`
+                    @keyframes float {
+                      0% { transform: translateY(0); }
+                      100% { transform: translateY(-200px); }
+                    }
+                  `}</style>
+                  
+                  {/* Core pulsing star */}
+                  <motion.div 
+                    animate={{ scale: [0.95, 1.05, 0.95], opacity: [0.5, 0.8, 0.5] }}
+                    transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                    className="w-16 h-16 rounded-full mx-auto mb-6 bg-gradient-to-br from-indigo-500/30 to-purple-500/10 shadow-[0_0_30px_rgba(99,102,241,0.2)]"
+                  />
+                  
+                  <div className="text-on-surface-variant font-display font-black text-2xl uppercase opacity-60 relative z-10">The sector is quiet.</div>
+                  <p className="text-on-surface-variant text-xs uppercase tracking-[0.2em] mt-3 relative z-10 opacity-80">Chart your first trajectory.</p>
                 </div>
               )}
 
@@ -447,14 +464,18 @@ const OrbitScheduler = () => {
                 
                 // Calculate if deadline is critical (within 24 hours)
                 const isDeadlineCritical = task.deadline && !task.completed && (new Date(task.deadline).getTime() - Date.now() < 86400000);
+                
+                const isMissedHabit = !task.completed && task.plannedDate && task.plannedDate < getTodayLocalISO();
+                const isMissedDeadline = !task.completed && task.deadline && new Date(task.deadline).getTime() < Date.now();
+                const isOrbitalDecay = isMissedHabit || isMissedDeadline;
 
                 return (
                   <motion.div 
                     key={task.id}
                     layout
                     initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`glass-panel border p-5 rounded-3xl flex flex-col gap-4 transition-all group relative hover:z-30 focus-within:z-30 ${task.completed ? 'opacity-50 grayscale-[0.8]' : 'hover:border-primary/50'} ${task.isVoid ? 'border-error/30 bg-error/5' : 'border-outline-variant'} ${hasError ? 'border-error/50 ring-1 ring-error/20 shadow-[0_0_15px_rgba(var(--color-error-rgb),0.1)]' : ''} ${isDeadlineCritical ? 'border-error shadow-[0_0_15px_rgba(var(--color-error-rgb),0.2)]' : ''}`}
+                    animate={{ opacity: 1, y: 0, x: isOrbitalDecay ? 10 : 0, rotate: isOrbitalDecay ? -0.5 : 0 }}
+                    className={`glass-panel border p-5 rounded-3xl flex flex-col gap-4 transition-all group relative hover:z-30 focus-within:z-30 ${task.completed ? 'opacity-50 grayscale-[0.8]' : 'hover:border-primary/50'} ${task.isVoid ? 'border-error/30 bg-error/5' : 'border-outline-variant'} ${hasError ? 'border-error/50 ring-1 ring-error/20 shadow-[0_0_15px_rgba(var(--color-error-rgb),0.1)]' : ''} ${isDeadlineCritical && !isOrbitalDecay ? 'border-error shadow-[0_0_15px_rgba(var(--color-error-rgb),0.2)]' : ''} ${isOrbitalDecay ? 'grayscale-[0.6] opacity-80 border-outline-variant/30 bg-surface-highest/10' : ''}`}
                   >
                     {editingTaskId === task.id ? (
                       <form 
@@ -599,7 +620,19 @@ const OrbitScheduler = () => {
                         </div>
 
                         <div className="lg:opacity-0 lg:group-hover:opacity-100 transition-all ml-auto flex items-center gap-2">
-                          {activeHorizon === 'backlog' && (
+                          {isOrbitalDecay && (
+                            <button
+                              onClick={() => {
+                                SoundManager.playPowerUp();
+                                handleCarryForward(task.id);
+                              }}
+                              className="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-500 border border-amber-500/30 flex items-center gap-2 hover:bg-amber-500 hover:text-black transition-all text-[10px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+                            >
+                              <Zap size={12} />
+                              Recalibrate
+                            </button>
+                          )}
+                          {!isOrbitalDecay && activeHorizon === 'backlog' && (
                             <button
                               title="Carry Forward to Today"
                               onClick={() => handleCarryForward(task.id)}
