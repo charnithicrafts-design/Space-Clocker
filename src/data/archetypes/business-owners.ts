@@ -121,6 +121,44 @@ export const businessOwnerProfiles: Archetype[] = [
                     maxAllowed: 3,
                     engagedCount: 0
           }
+],
+      history: [
+          {
+                    id: "hist-well-1",
+                    title: "Voted Best Local Spa",
+                    date: "2023-12-01",
+                    type: "success",
+                    category: "award",
+                    description: "Won the city-wide reader's choice award for luxury wellness.",
+                    skills: [
+                              "Customer Experience",
+                              "Brand Management"
+                    ]
+          },
+          {
+                    id: "hist-well-2",
+                    title: "Hit $1M Annual Recurring Revenue",
+                    date: "2024-12-31",
+                    type: "success",
+                    category: "milestone",
+                    description: "Reached the seven-figure milestone entirely through organic growth.",
+                    skills: [
+                              "Business Scaling",
+                              "Financial Planning"
+                    ]
+          },
+          {
+                    id: "hist-well-3",
+                    title: "Launched In-House Organic Skincare Line",
+                    date: "2025-08-20",
+                    type: "success",
+                    category: "project",
+                    description: "Successfully formulated and sold out the first batch of branded products.",
+                    skills: [
+                              "Product Development",
+                              "Marketing"
+                    ]
+          }
 ]
     }
   },
@@ -243,6 +281,44 @@ export const businessOwnerProfiles: Archetype[] = [
                     maxAllowed: 2,
                     engagedCount: 0
           }
+],
+      history: [
+          {
+                    id: "hist-cul-1",
+                    title: "First Michelin Star",
+                    date: "2023-10-10",
+                    type: "success",
+                    category: "award",
+                    description: "Awarded a Michelin Star for innovative fusion cuisine.",
+                    skills: [
+                              "Culinary Arts",
+                              "Consistency"
+                    ]
+          },
+          {
+                    id: "hist-cul-2",
+                    title: "Opened Second Concept Restaurant",
+                    date: "2024-05-15",
+                    type: "success",
+                    category: "milestone",
+                    description: "Successfully launched a more casual sister-restaurant downtown.",
+                    skills: [
+                              "Expansion Strategy",
+                              "Menu Design"
+                    ]
+          },
+          {
+                    id: "hist-cul-3",
+                    title: "Featured in Food & Wine Magazine",
+                    date: "2025-02-28",
+                    type: "success",
+                    category: "publication",
+                    description: "Profiled as one of the top rising chefs in the region.",
+                    skills: [
+                              "PR",
+                              "Plating Aesthetics"
+                    ]
+          }
 ]
     }
   },
@@ -364,6 +440,44 @@ export const businessOwnerProfiles: Archetype[] = [
                     impact: "low",
                     maxAllowed: 3,
                     engagedCount: 0
+          }
+],
+      history: [
+          {
+                    id: "hist-ret-1",
+                    title: "Surpassed 100k Instagram Followers",
+                    date: "2023-07-22",
+                    type: "success",
+                    category: "milestone",
+                    description: "Built a massive organic audience for the boutique's style guide.",
+                    skills: [
+                              "Social Media Marketing",
+                              "Community Building"
+                    ]
+          },
+          {
+                    id: "hist-ret-2",
+                    title: "Secured Exclusive Distribution Rights",
+                    date: "2024-04-10",
+                    type: "success",
+                    category: "project",
+                    description: "Became the sole regional distributor for a highly sought-after European brand.",
+                    skills: [
+                              "Negotiation",
+                              "B2B Sales"
+                    ]
+          },
+          {
+                    id: "hist-ret-3",
+                    title: "Record-Breaking Black Friday Sales",
+                    date: "2025-11-28",
+                    type: "success",
+                    category: "milestone",
+                    description: "Cleared out old inventory and generated record profits in a single weekend.",
+                    skills: [
+                              "Inventory Management",
+                              "Campaign Execution"
+                    ]
           }
 ]
     }

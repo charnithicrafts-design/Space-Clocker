@@ -143,6 +143,44 @@ export const digitalInstitutionalProfiles: Archetype[] = [
                     maxAllowed: 3,
                     engagedCount: 0
           }
+],
+      history: [
+          {
+                    id: "hist-cyb-1",
+                    title: "Discovered Zero-Day Vulnerability",
+                    date: "2023-04-10",
+                    type: "success",
+                    category: "award",
+                    description: "Received a $50k bug bounty for finding a critical flaw in a major OS.",
+                    skills: [
+                              "Penetration Testing",
+                              "Reverse Engineering"
+                    ]
+          },
+          {
+                    id: "hist-cyb-2",
+                    title: "Certified Information Systems Security Professional (CISSP)",
+                    date: "2024-07-22",
+                    type: "success",
+                    category: "certification",
+                    description: "Obtained the gold standard certification for cybersecurity management.",
+                    skills: [
+                              "Security Architecture",
+                              "Risk Management"
+                    ]
+          },
+          {
+                    id: "hist-cyb-3",
+                    title: "Redesigned Corporate Zero-Trust Architecture",
+                    date: "2025-03-15",
+                    type: "success",
+                    category: "project",
+                    description: "Successfully implemented beyond-corp principles for a remote workforce.",
+                    skills: [
+                              "Zero Trust",
+                              "Identity Management"
+                    ]
+          }
 ]
     }
   },

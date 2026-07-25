@@ -118,6 +118,44 @@ export const medicalProfiles: Archetype[] = [
                     maxAllowed: 2,
                     engagedCount: 0
           }
+],
+      history: [
+          {
+                    id: "hist-neuro-1",
+                    title: "Chief Resident Excellence Award",
+                    date: "2023-05-12",
+                    type: "success",
+                    category: "award",
+                    description: "Awarded for outstanding surgical precision and leadership during residency.",
+                    skills: [
+                              "Leadership",
+                              "Microsurgery"
+                    ]
+          },
+          {
+                    id: "hist-neuro-2",
+                    title: "First Solo Craniotomy",
+                    date: "2024-02-18",
+                    type: "success",
+                    category: "milestone",
+                    description: "Successfully performed first unassisted craniotomy on a high-risk patient.",
+                    skills: [
+                              "Surgical Planning",
+                              "Crisis Management"
+                    ]
+          },
+          {
+                    id: "hist-neuro-3",
+                    title: "Published in Journal of Neurosurgery",
+                    date: "2025-01-10",
+                    type: "success",
+                    category: "publication",
+                    description: "Co-authored a paper on novel spinal fusion techniques.",
+                    skills: [
+                              "Research",
+                              "Medical Writing"
+                    ]
+          }
 ]
     }
   },
@@ -347,6 +385,44 @@ export const medicalProfiles: Archetype[] = [
                     impact: "low",
                     maxAllowed: 3,
                     engagedCount: 0
+          }
+],
+      history: [
+          {
+                    id: "hist-res-1",
+                    title: "Secured NIH Grant",
+                    date: "2023-04-01",
+                    type: "success",
+                    category: "award",
+                    description: "$2M grant awarded for longitudinal study on neuroplasticity.",
+                    skills: [
+                              "Grant Writing",
+                              "Study Design"
+                    ]
+          },
+          {
+                    id: "hist-res-2",
+                    title: "Phase II Clinical Trial Completion",
+                    date: "2024-12-15",
+                    type: "success",
+                    category: "milestone",
+                    description: "Successfully concluded Phase II with statistically significant efficacy.",
+                    skills: [
+                              "Data Analysis",
+                              "Clinical Trials"
+                    ]
+          },
+          {
+                    id: "hist-res-3",
+                    title: "Patent Granted for Novel Biomarker",
+                    date: "2025-07-22",
+                    type: "success",
+                    category: "milestone",
+                    description: "Patented a new blood-based biomarker for early detection.",
+                    skills: [
+                              "Patent Law",
+                              "Biochemistry"
+                    ]
           }
 ]
     }

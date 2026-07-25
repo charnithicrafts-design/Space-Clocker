@@ -114,6 +114,44 @@ export const operationalProfiles: Archetype[] = [
                     maxAllowed: 2,
                     engagedCount: 0
           }
+],
+      history: [
+          {
+                    id: "hist-comp-1",
+                    title: "Passed SOC 2 Type II Audit",
+                    date: "2023-03-20",
+                    type: "success",
+                    category: "milestone",
+                    description: "Led the organization through a flawless audit with zero exceptions.",
+                    skills: [
+                              "Audit Prep",
+                              "Policy Enforcement"
+                    ]
+          },
+          {
+                    id: "hist-comp-2",
+                    title: "Implemented Automated Compliance Dashboard",
+                    date: "2024-08-15",
+                    type: "success",
+                    category: "project",
+                    description: "Replaced manual spreadsheet checks with real-time API monitoring.",
+                    skills: [
+                              "Risk Management",
+                              "Data Visualization"
+                    ]
+          },
+          {
+                    id: "hist-comp-3",
+                    title: "Certified Information Systems Auditor (CISA)",
+                    date: "2025-05-10",
+                    type: "success",
+                    category: "certification",
+                    description: "Achieved global recognition as an expert in IS audit control.",
+                    skills: [
+                              "IT Governance",
+                              "Security Protocols"
+                    ]
+          }
 ]
     }
   },
@@ -227,6 +265,44 @@ export const operationalProfiles: Archetype[] = [
                     impact: "medium",
                     maxAllowed: 2,
                     engagedCount: 0
+          }
+],
+      history: [
+          {
+                    id: "hist-sup-1",
+                    title: "Resolved Suez Canal Delay Crisis",
+                    date: "2023-04-05",
+                    type: "success",
+                    category: "milestone",
+                    description: "Rerouted millions in inventory to avoid a catastrophic stockout.",
+                    skills: [
+                              "Crisis Management",
+                              "Global Logistics"
+                    ]
+          },
+          {
+                    id: "hist-sup-2",
+                    title: "Negotiated 15% Freight Cost Reduction",
+                    date: "2024-11-20",
+                    type: "success",
+                    category: "project",
+                    description: "Consolidated shipping lanes and negotiated bulk rates with new carriers.",
+                    skills: [
+                              "Negotiation",
+                              "Cost Analysis"
+                    ]
+          },
+          {
+                    id: "hist-sup-3",
+                    title: "Launched Zero-Carbon Logistics Initiative",
+                    date: "2025-09-12",
+                    type: "success",
+                    category: "project",
+                    description: "Transitioned 30% of last-mile deliveries to electric fleets.",
+                    skills: [
+                              "Sustainability",
+                              "Fleet Management"
+                    ]
           }
 ]
     }
@@ -353,6 +429,44 @@ export const operationalProfiles: Archetype[] = [
                     maxAllowed: 1,
                     engagedCount: 0
           }
+],
+      history: [
+          {
+                    id: "hist-fin-1",
+                    title: "Discovered $2M Tax Efficiency",
+                    date: "2023-02-14",
+                    type: "success",
+                    category: "milestone",
+                    description: "Found a legal restructuring loophole that saved the company millions.",
+                    skills: [
+                              "Corporate Tax Law",
+                              "Financial Forensics"
+                    ]
+          },
+          {
+                    id: "hist-fin-2",
+                    title: "Managed Series B Due Diligence",
+                    date: "2024-06-30",
+                    type: "success",
+                    category: "project",
+                    description: "Provided flawless financial models for a $50M funding round.",
+                    skills: [
+                              "Financial Modeling",
+                              "M&A Due Diligence"
+                    ]
+          },
+          {
+                    id: "hist-fin-3",
+                    title: "Chartered Financial Analyst (CFA) Charterholder",
+                    date: "2025-08-15",
+                    type: "success",
+                    category: "certification",
+                    description: "Passed Level III of the notoriously difficult CFA exams.",
+                    skills: [
+                              "Investment Analysis",
+                              "Portfolio Management"
+                    ]
+          }
 ]
     }
   },
@@ -467,6 +581,44 @@ export const operationalProfiles: Archetype[] = [
                     impact: "low",
                     maxAllowed: 3,
                     engagedCount: 0
+          }
+],
+      history: [
+          {
+                    id: "hist-num-1",
+                    title: "Predicted Market Correction",
+                    date: "2023-10-01",
+                    type: "success",
+                    category: "milestone",
+                    description: "Adjusted risk models 3 weeks before a major tech stock downturn.",
+                    skills: [
+                              "Predictive Modeling",
+                              "Risk Assessment"
+                    ]
+          },
+          {
+                    id: "hist-num-2",
+                    title: "Built Dynamic Pricing Algorithm",
+                    date: "2024-04-20",
+                    type: "success",
+                    category: "project",
+                    description: "Created an ML model that increased overall revenue by 8%.",
+                    skills: [
+                              "Machine Learning",
+                              "Python"
+                    ]
+          },
+          {
+                    id: "hist-num-3",
+                    title: "Published Paper on Stochastic Volatility",
+                    date: "2025-01-12",
+                    type: "success",
+                    category: "publication",
+                    description: "Contributed to the Journal of Quantitative Finance.",
+                    skills: [
+                              "Quantitative Analysis",
+                              "Academic Writing"
+                    ]
           }
 ]
     }
@@ -592,6 +744,44 @@ export const operationalProfiles: Archetype[] = [
                     impact: "low",
                     maxAllowed: 3,
                     engagedCount: 0
+          }
+],
+      history: [
+          {
+                    id: "hist-yld-1",
+                    title: "Reduced Factory Downtime by 40%",
+                    date: "2023-05-15",
+                    type: "success",
+                    category: "milestone",
+                    description: "Implemented predictive maintenance sensors on critical machinery.",
+                    skills: [
+                              "Predictive Maintenance",
+                              "IoT"
+                    ]
+          },
+          {
+                    id: "hist-yld-2",
+                    title: "Achieved ISO 9001 Certification",
+                    date: "2024-09-10",
+                    type: "success",
+                    category: "certification",
+                    description: "Led the facility to meet strict international quality management standards.",
+                    skills: [
+                              "Quality Assurance",
+                              "Process Mapping"
+                    ]
+          },
+          {
+                    id: "hist-yld-3",
+                    title: "Optimized Energy Consumption",
+                    date: "2025-07-05",
+                    type: "success",
+                    category: "project",
+                    description: "Redesigned HVAC and lighting schedules to save $500k annually.",
+                    skills: [
+                              "Energy Management",
+                              "Operations Research"
+                    ]
           }
 ]
     }

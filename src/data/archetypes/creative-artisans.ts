@@ -122,6 +122,44 @@ export const creativeArtisanProfiles: Archetype[] = [
                     maxAllowed: 1,
                     engagedCount: 0
           }
+],
+      history: [
+          {
+                    id: "hist-fc-1",
+                    title: "Featured in Vogue Weddings",
+                    date: "2023-06-05",
+                    type: "success",
+                    category: "publication",
+                    description: "Had a full-page spread detailing a high-profile destination wedding.",
+                    skills: [
+                              "Editorial Photography",
+                              "Networking"
+                    ]
+          },
+          {
+                    id: "hist-fc-2",
+                    title: "Switched to 100% Mirrorless System",
+                    date: "2024-01-15",
+                    type: "success",
+                    category: "milestone",
+                    description: "Successfully migrated all gear, improving silent shooting capabilities.",
+                    skills: [
+                              "Gear Optimization",
+                              "Adaptability"
+                    ]
+          },
+          {
+                    id: "hist-fc-3",
+                    title: "Booked First International Campaign",
+                    date: "2025-09-20",
+                    type: "success",
+                    category: "project",
+                    description: "Flew to Iceland to shoot a commercial campaign for an outerwear brand.",
+                    skills: [
+                              "Location Scouting",
+                              "Commercial Photography"
+                    ]
+          }
 ]
     }
   },
@@ -236,6 +274,44 @@ export const creativeArtisanProfiles: Archetype[] = [
                     impact: "low",
                     maxAllowed: 3,
                     engagedCount: 0
+          }
+],
+      history: [
+          {
+                    id: "hist-il-1",
+                    title: "Completed Aerospace Facility Shoot",
+                    date: "2023-04-12",
+                    type: "success",
+                    category: "project",
+                    description: "Captured highly technical images of a new jet engine assembly line.",
+                    skills: [
+                              "Lighting Large Spaces",
+                              "Technical Understanding"
+                    ]
+          },
+          {
+                    id: "hist-il-2",
+                    title: "Published Industrial Photobook",
+                    date: "2024-10-30",
+                    type: "success",
+                    category: "publication",
+                    description: "Released a coffee table book highlighting the beauty of manufacturing.",
+                    skills: [
+                              "Curating",
+                              "Print Production"
+                    ]
+          },
+          {
+                    id: "hist-il-3",
+                    title: "Secured Retainer with Global Logistics Firm",
+                    date: "2025-03-15",
+                    type: "success",
+                    category: "milestone",
+                    description: "Signed a 2-year contract to document their shipping ports worldwide.",
+                    skills: [
+                              "Contract Negotiation",
+                              "Drone Photography"
+                    ]
           }
 ]
     }
@@ -371,6 +447,44 @@ export const creativeArtisanProfiles: Archetype[] = [
                     maxAllowed: 1,
                     engagedCount: 0
           }
+],
+      history: [
+          {
+                    id: "hist-aa-1",
+                    title: "Awwwards Site of the Day",
+                    date: "2023-08-10",
+                    type: "success",
+                    category: "award",
+                    description: "Won SOTD for an immersive WebGL portfolio site.",
+                    skills: [
+                              "UI/UX Design",
+                              "Creative Direction"
+                    ]
+          },
+          {
+                    id: "hist-aa-2",
+                    title: "Led Rebrand for Major Fintech Startup",
+                    date: "2024-05-22",
+                    type: "success",
+                    category: "project",
+                    description: "Completely overhauled their visual identity, leading to a 40% conversion increase.",
+                    skills: [
+                              "Brand Strategy",
+                              "Visual Identity"
+                    ]
+          },
+          {
+                    id: "hist-aa-3",
+                    title: "Launched Custom Typography Foundry",
+                    date: "2025-11-05",
+                    type: "success",
+                    category: "milestone",
+                    description: "Released a highly successful geometric sans-serif font family.",
+                    skills: [
+                              "Type Design",
+                              "E-commerce"
+                    ]
+          }
 ]
     }
   },
@@ -486,6 +600,44 @@ export const creativeArtisanProfiles: Archetype[] = [
                     maxAllowed: 2,
                     engagedCount: 0
           }
+],
+      history: [
+          {
+                    id: "hist-ww-1",
+                    title: "Viral Thought Leadership Article",
+                    date: "2023-02-28",
+                    type: "success",
+                    category: "publication",
+                    description: "Wrote an article on tech ethics that hit the front page of HackerNews.",
+                    skills: [
+                              "Copywriting",
+                              "Tech Journalism"
+                    ]
+          },
+          {
+                    id: "hist-ww-2",
+                    title: "Wrote Official API Documentation",
+                    date: "2024-07-15",
+                    type: "success",
+                    category: "project",
+                    description: "Authored the complete developer docs for a popular open-source framework.",
+                    skills: [
+                              "Technical Writing",
+                              "Markdown"
+                    ]
+          },
+          {
+                    id: "hist-ww-3",
+                    title: "Ghostwrote NYT Bestseller",
+                    date: "2025-04-10",
+                    type: "success",
+                    category: "milestone",
+                    description: "Successfully ghostwrote a business strategy book for a famous CEO.",
+                    skills: [
+                              "Ghostwriting",
+                              "Long-form Content"
+                    ]
+          }
 ]
     }
   },
@@ -600,6 +752,44 @@ export const creativeArtisanProfiles: Archetype[] = [
                     impact: "high",
                     maxAllowed: 1,
                     engagedCount: 0
+          }
+],
+      history: [
+          {
+                    id: "hist-ca-1",
+                    title: "Shipped Solo Indie Game",
+                    date: "2023-11-11",
+                    type: "success",
+                    category: "project",
+                    description: "Released a critically acclaimed 2D metroidvania on Steam.",
+                    skills: [
+                              "Game Design",
+                              "C# / Unity"
+                    ]
+          },
+          {
+                    id: "hist-ca-2",
+                    title: "Over 10,000 GitHub Stars",
+                    date: "2024-09-05",
+                    type: "success",
+                    category: "milestone",
+                    description: "Achieved massive community adoption for an open-source physics library.",
+                    skills: [
+                              "Open Source",
+                              "Community Management"
+                    ]
+          },
+          {
+                    id: "hist-ca-3",
+                    title: "Won Global Game Jam",
+                    date: "2025-01-26",
+                    type: "success",
+                    category: "award",
+                    description: "Created the winning game prototype out of 500+ global entries in 48 hours.",
+                    skills: [
+                              "Rapid Prototyping",
+                              "Under-pressure Coding"
+                    ]
           }
 ]
     }
