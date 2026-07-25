@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SoundManager } from '../../utils/SoundManager';
-import { AlertTriangle, Zap } from 'lucide-react';
+import { Sparkles, Moon } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 
 export const VoidEventHorizon = () => {
-  const { voids, updateVoidTask } = useTrackStore();
-  const breachedVoids = voids.filter(v => v.engagedCount >= v.maxAllowed);
+  const { voids } = useTrackStore();
+  const [dismissedKeys, setDismissedKeys] = useState<Set<string>>(new Set());
+
+  const breachedVoids = voids.filter(v => v.engagedCount >= v.maxAllowed && !dismissedKeys.has(`${v.id}-${v.engagedCount}`));
   const isBreached = breachedVoids.length > 0;
 
   const [holdProgress, setHoldProgress] = useState(0);
@@ -14,9 +16,10 @@ export const VoidEventHorizon = () => {
 
   useEffect(() => {
     if (isBreached) {
+      // Gentle, grounding hum instead of harsh sirens
       const interval = setInterval(() => {
-        SoundManager.playThud();
-      }, 2000);
+        SoundManager.playSwell();
+      }, 4000);
       return () => clearInterval(interval);
     }
   }, [isBreached]);
@@ -27,11 +30,13 @@ export const VoidEventHorizon = () => {
       interval = setInterval(() => {
         setHoldProgress(prev => {
           if (prev >= 100) {
-            // Success! Reset the breached voids
-            breachedVoids.forEach(v => {
-              updateVoidTask(v.id, { engagedCount: 0 });
+            // Success! Acknowledge the breach without deleting data
+            setDismissedKeys(current => {
+              const next = new Set(current);
+              breachedVoids.forEach(v => next.add(`${v.id}-${v.engagedCount}`));
+              return next;
             });
-            SoundManager.playSwell();
+            SoundManager.playPowerUp();
             setIsHolding(false);
             return 0;
           }
@@ -42,7 +47,7 @@ export const VoidEventHorizon = () => {
       setHoldProgress(0);
     }
     return () => clearInterval(interval);
-  }, [isHolding, breachedVoids, updateVoidTask]);
+  }, [isHolding, breachedVoids]);
 
   if (!isBreached) return null;
 
@@ -51,36 +56,45 @@ export const VoidEventHorizon = () => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        exit={{ opacity: 0, transition: { duration: 1 } }}
         className="fixed inset-0 z-50 flex items-center justify-center p-6 overflow-hidden backdrop-blur-xl"
         style={{
-          background: 'radial-gradient(circle at center, rgba(30,0,0,0.8) 0%, rgba(10,0,0,0.95) 100%)',
-          boxShadow: 'inset 0 0 150px rgba(255,0,0,0.3)',
+          background: 'radial-gradient(circle at center, rgba(40,10,70,0.85) 0%, rgba(10,5,25,0.98) 100%)',
+          boxShadow: 'inset 0 0 150px rgba(139,92,246,0.15)',
         }}
       >
         <motion.div 
-          animate={{ x: [-5, 5, -5, 5, 0], y: [-2, 2, -2, 2, 0] }}
-          transition={{ repeat: Infinity, duration: 0.2, ease: "linear" }}
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
           className="relative max-w-xl w-full"
         >
-          {/* Shattered glass effect overlay using CSS gradients instead of external image for reliability */}
-          <div className="absolute inset-0 pointer-events-none opacity-20"
-               style={{ background: 'linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.8) 49%, rgba(255,255,255,0.8) 51%, transparent 52%), linear-gradient(-45deg, transparent 48%, rgba(255,255,255,0.8) 49%, rgba(255,255,255,0.8) 51%, transparent 52%)', backgroundSize: '100px 100px' }} />
+          {/* Subtle floating dust */}
+          <div className="absolute inset-0 pointer-events-none opacity-30"
+               style={{ background: 'radial-gradient(circle 2px at 20% 30%, rgba(251,191,36,0.3) 1px, transparent 1px), radial-gradient(circle 2px at 70% 60%, rgba(251,191,36,0.3) 1px, transparent 1px)', backgroundSize: '150px 150px', animation: 'float 20s infinite linear' }} />
           
-          <div className="glass-panel bg-error/10 border-2 border-error/50 p-10 rounded-[3rem] text-center space-y-8 relative overflow-hidden">
-            <div className="absolute inset-0 bg-error/20 animate-pulse pointer-events-none" />
+          <div className="glass-panel bg-violet-900/10 border border-violet-500/20 p-12 rounded-[3rem] text-center space-y-10 relative overflow-hidden shadow-[0_0_50px_rgba(139,92,246,0.1)]">
+            <div className="absolute inset-0 bg-violet-500/5 animate-pulse pointer-events-none" style={{ animationDuration: '4s' }} />
             
-            <AlertTriangle size={64} className="text-error mx-auto animate-bounce" />
+            <motion.div 
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Moon size={56} className="text-amber-200/80 mx-auto" strokeWidth={1.5} />
+            </motion.div>
             
-            <div className="space-y-2 relative z-10">
-              <h2 className="text-4xl font-black text-error uppercase tracking-widest font-display">Event Horizon</h2>
-              <p className="text-on-surface-variant text-sm uppercase tracking-[0.2em]">Structural integrity compromised. Critical distraction loop detected.</p>
+            <div className="space-y-4 relative z-10">
+              <h2 className="text-3xl font-black text-amber-100 uppercase tracking-widest font-display">Event Horizon</h2>
+              <p className="text-violet-200/70 text-sm uppercase tracking-[0.2em] leading-relaxed">
+                Gravitational pull detected. Take a moment to breathe and realign your trajectory.
+              </p>
             </div>
 
             <div className="space-y-4 relative z-10">
               {breachedVoids.map(v => (
-                <div key={v.id} className="text-error/80 font-mono text-xs p-3 bg-error/5 rounded-xl border border-error/20">
-                  Anomaly: {v.text} [{v.engagedCount}/{v.maxAllowed}]
+                <div key={v.id} className="text-amber-200/90 font-mono text-xs p-4 bg-violet-950/40 rounded-2xl border border-violet-500/20 flex items-center justify-between">
+                  <span>{v.text}</span>
+                  <span className="opacity-50">[{v.engagedCount}/{v.maxAllowed}]</span>
                 </div>
               ))}
             </div>
@@ -92,20 +106,20 @@ export const VoidEventHorizon = () => {
                 onMouseLeave={() => setIsHolding(false)}
                 onTouchStart={() => setIsHolding(true)}
                 onTouchEnd={() => setIsHolding(false)}
-                className="relative group w-full py-6 rounded-2xl bg-error/20 border-2 border-error/50 overflow-hidden"
+                className="relative group w-full py-6 rounded-3xl bg-violet-900/20 border border-violet-400/30 overflow-hidden transition-all hover:bg-violet-800/30 hover:border-violet-400/50"
               >
                 <div 
-                  className="absolute left-0 top-0 bottom-0 bg-error transition-all duration-75 ease-linear"
+                  className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-violet-600/40 to-amber-500/40 transition-all duration-75 ease-linear"
                   style={{ width: `${holdProgress}%` }}
                 />
                 <div className="relative z-10 flex items-center justify-center gap-3">
-                  <Zap className="text-white" size={24} />
-                  <span className="text-white font-black uppercase tracking-widest text-lg group-hover:scale-105 transition-transform">
-                    {holdProgress > 0 ? 'Charging Thrust...' : 'Hold to Override'}
+                  <Sparkles className="text-amber-200 group-hover:scale-110 transition-transform" size={20} />
+                  <span className="text-amber-100 font-black uppercase tracking-[0.2em] text-sm group-hover:scale-105 transition-transform">
+                    {holdProgress > 0 ? 'Breathe...' : 'Hold to Recalibrate'}
                   </span>
                 </div>
               </button>
-              <p className="text-[10px] text-error/60 mt-4 uppercase tracking-widest">Hold for 3 seconds to recalibrate trajectory</p>
+              <p className="text-[10px] text-violet-300/50 mt-6 uppercase tracking-[0.3em]">Hold for 3 seconds to clear</p>
             </div>
           </div>
         </motion.div>
