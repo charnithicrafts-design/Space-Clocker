@@ -606,7 +606,7 @@ export const api = {
                 await tx.query(`INSERT INTO milestones (id, title, status, ambition_id) VALUES ($1, $2, $3, $4)`, [
                   m.id, m.title, finalStatus, a.id
                 ]);
-                if (m.tasks) {
+                if (m.tasks && m.tasks.length > 0) {
                   for (const t of m.tasks) {
                     await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
                       t.id, m.id, a.id, 
@@ -620,6 +620,19 @@ export const api = {
                       t.plannedDate || t.planned_date || null, 
                       t.completedAt || t.completed_at || null, 
                       t.isVoid || t.is_void || false
+                    ]);
+                  }
+                } else if (payload.is_simulation) {
+                  // Stop Faking: generate actual tasks for empty simulation milestones
+                  const isCompleted = finalStatus === 'completed';
+                  for (let k = 0; k < 3; k++) {
+                    await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, weightage, title, completed, horizon) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [
+                      `sim-task-${m.id}-${k}`, m.id, a.id, 
+                      null, 
+                      10, 
+                      `Execute procedural parameter ${k+1}`, 
+                      isCompleted, 
+                      'daily'
                     ]);
                   }
                 }

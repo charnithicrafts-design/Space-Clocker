@@ -101,7 +101,7 @@ describe('useTrackStore - Demo Data Integration', () => {
       DROP TABLE IF EXISTS devices;
 
       CREATE TABLE IF NOT EXISTS profile (id INTEGER PRIMARY KEY DEFAULT 1, name TEXT, level INTEGER, xp INTEGER, title TEXT);
-      CREATE TABLE IF NOT EXISTS preferences (id INTEGER PRIMARY KEY DEFAULT 1, confirm_delete BOOLEAN, ui_mode TEXT);
+      CREATE TABLE IF NOT EXISTS preferences (id INTEGER PRIMARY KEY DEFAULT 1, confirm_delete BOOLEAN, ui_mode TEXT, is_simulation BOOLEAN DEFAULT false);
       CREATE TABLE IF NOT EXISTS stats (id INTEGER PRIMARY KEY DEFAULT 1, streak INTEGER, tasks_completed INTEGER, total_focus_hours INTEGER);
       CREATE TABLE IF NOT EXISTS oracle_config (id INTEGER PRIMARY KEY DEFAULT 1, api_key TEXT, model TEXT, provider_url TEXT, client_id TEXT, sync_enabled BOOLEAN, sync_tier TEXT DEFAULT 'none', sync_expires_at TEXT DEFAULT NULL, one_time_syncs_available INTEGER DEFAULT 0);
       CREATE TABLE IF NOT EXISTS devices (id TEXT PRIMARY KEY, name TEXT NOT NULL, type TEXT NOT NULL, last_active TEXT NOT NULL);
