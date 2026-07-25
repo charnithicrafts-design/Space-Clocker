@@ -633,7 +633,7 @@ export const api = {
 
       // 5. Other Collections (Chunked by 50)
       const collections = [
-        { key: 'voids', table: 'void_tasks', query: 'INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)', map: (v: any) => [v.id, v.text, v.impact || 'low', v.engagedCount ?? v.engaged_count ?? 0, v.maxAllowed ?? v.max_allowed ?? 3] },
+        { key: 'voids', table: 'void_tasks', query: 'INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)', map: (v: any) => [v.id, v.text || v.title || '', v.impact || 'low', v.engagedCount ?? v.engaged_count ?? 0, v.maxAllowed ?? v.max_allowed ?? 3] },
         { key: 'reflections', table: 'reflections', query: 'INSERT INTO reflections (id, date, content, type) VALUES ($1, $2, $3, $4)', map: (r: any) => [r.id, r.date || null, r.content, r.type || 'daily-summary'] },
         { key: 'skills', table: 'skills', query: 'INSERT INTO skills (id, name, current_proficiency, target_proficiency, recommendation, type, ambition_id) VALUES ($1, $2, $3, $4, $5, $6, $7)', map: (s: any) => [s.id, s.name, s.currentProficiency ?? s.current_proficiency ?? 0, s.targetProficiency ?? s.target_proficiency ?? 100, s.recommendation || null, s.type || 'personal', s.ambitionId || s.ambition_id || null] },
         { key: 'internships', table: 'internships', query: 'INSERT INTO internships (id, organization, start_date, end_date) VALUES ($1, $2, $3, $4)', map: (i: any) => [i.id || `int-${Date.now()}-${Math.random()}`, i.organization, i.start_date || i.start || null, i.end_date || i.end || null] },
