@@ -7,7 +7,11 @@ import { useTrackStore } from '../../store/useTrackStore';
 export const VoidEventHorizon = () => {
   const { voids, dismissedVoidKeys, setDismissedVoidKeys } = useTrackStore();
 
-  const breachedVoids = voids.filter(v => v.engagedCount >= v.maxAllowed && !dismissedVoidKeys.includes(`${v.id}-${v.engagedCount}`));
+  const breachedVoids = voids.filter(v => 
+    v.engagedCount > 0 && 
+    v.engagedCount >= v.maxAllowed && 
+    !dismissedVoidKeys.includes(`${v.id}-${v.engagedCount}`)
+  );
   const isBreached = breachedVoids.length > 0;
 
   const [holdProgress, setHoldProgress] = useState(0);
