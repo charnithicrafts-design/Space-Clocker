@@ -36,6 +36,52 @@ vi.mock('../db/client', async () => {
             await tx.query(`INSERT INTO ambitions (id, title, progress, xp, horizon) VALUES ($1, $2, $3, $4, $5)`, [
               a.id, a.title, a.progress || 0, a.xp || 0, a.horizon || 'yearly'
             ]);
+            
+            // Fix: Properly recurse into milestones mimicking db.worker.ts
+            if (a.milestones) {
+              for (let i = 0; i < a.milestones.length; i++) {
+                const m = a.milestones[i];
+                let finalStatus = m.status || 'pending';
+                if (payload.is_simulation && i < Math.ceil(a.milestones.length * 0.8)) {
+                  finalStatus = 'completed';
+                }
+                
+                await tx.query(`INSERT INTO milestones (id, title, status, ambition_id) VALUES ($1, $2, $3, $4)`, [
+                  m.id, m.title, finalStatus, a.id
+                ]);
+                
+                if (m.tasks && m.tasks.length > 0) {
+                  for (const t of m.tasks) {
+                    await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, end_time, deadline, weightage, title, completed, horizon, planned_date, completed_at, is_void) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`, [
+                      t.id, m.id, a.id, 
+                      t.time || null, 
+                      t.endTime || t.end_time || null, 
+                      t.deadline || null, 
+                      t.weightage ?? 10, 
+                      t.title, 
+                      t.completed ?? false, 
+                      t.horizon || 'daily', 
+                      t.plannedDate || t.planned_date || null, 
+                      t.completedAt || t.completed_at || null, 
+                      t.isVoid || t.is_void || false
+                    ]);
+                  }
+                } else if (payload.is_simulation) {
+                  // The boundary behavior we are validating
+                  const isCompleted = finalStatus === 'completed';
+                  for (let k = 0; k < 3; k++) {
+                    await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, weightage, title, completed, horizon) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [
+                      `sim-task-${m.id}-${k}`, m.id, a.id, 
+                      null, 
+                      10, 
+                      `Execute procedural parameter ${k+1}`, 
+                      isCompleted, 
+                      'daily'
+                    ]);
+                  }
+                }
+              }
+            }
           }
         }
         if (payload.tasks) {
@@ -167,5 +213,41 @@ describe('useTrackStore - Demo Data Integration', () => {
     // Assert
     const result = await (mockDb as any).query("SELECT * FROM ambitions WHERE id = 'old-amb'");
     expect(result.rows.length).toBe(0);
+  });
+
+  it('should generate dummy tasks for simulation milestones that originally had none', async () => {
+    // Arrange: Create a custom payload with a milestone with zero tasks
+    const testData = {
+      ...demoData,
+      ambitions: [
+        {
+          id: 'amb-sim-test',
+          title: 'Simulation Test Ambition',
+          progress: 10,
+          xp: 100,
+          horizon: 'yearly',
+          milestones: [
+            {
+              id: 'ms-sim-empty',
+              title: 'Empty Milestone',
+              status: 'pending',
+              tasks: [] // Boundary condition: empty tasks
+            }
+          ]
+        }
+      ]
+    };
+    
+    // Act: useTrackStore automatically adds `is_simulation: true` for bulk imports
+    await useTrackStore.getState().importDemoData(testData);
+    
+    // Assert: Verify data integrity against the injected data
+    const res = await (mockDb as any).query("SELECT * FROM tasks WHERE milestone_id = 'ms-sim-empty'");
+    
+    // If this fails, simulations break the UI by loading 0-task structural milestones
+    expect(res.rows.length).toBe(3);
+    expect(res.rows[0].title).toContain('Execute procedural parameter');
+    expect(res.rows[1].title).toContain('Execute procedural parameter');
+    expect(res.rows[2].title).toContain('Execute procedural parameter');
   });
 });
