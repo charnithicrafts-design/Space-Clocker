@@ -31,8 +31,8 @@ export const medicalProfiles: Archetype[] = [
           description: 'Develop and publish new techniques for complex spinal fusions.',
           status: 'active',
           milestones: [
-            { id: 'm-n1', title: 'Complete 100 successful surgeries', completed: true },
-            { id: 'm-n2', title: 'Publish findings in medical journal', completed: false }
+            { id: 'm-n1', title: "Complete 100 Surgeries: Master the minimally invasive technique", completed: true },
+            { id: 'm-n2', title: "Publish Findings: Submit peer-reviewed results to The Lancet", completed: false }
           ]
         }
       ],

@@ -31,9 +31,9 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Design and implement the foundation and utilities network for the new metropolitan district.",
           status: "in-progress",
           milestones: [
-            { id: "ms-4cdd7782", title: "Finalize subgrade blueprints", completed: true },
-            { id: "ms-da4e2b8e", title: "Approve deep foundation piling plan", completed: false },
-            { id: "ms-076fed79", title: "Sign off on municipal drainage integration", completed: false }
+            { id: "ms-4cdd7782", title: "Finalize subgrade blueprints: Guarantee 100-year foundation stability", completed: true },
+            { id: "ms-da4e2b8e", title: "Approve deep piling plan: Navigate complex subterranean bedrock", completed: false },
+            { id: "ms-076fed79", title: "Municipal drainage: Engineer flood-proof storm retention", completed: false }
           ]
         },
         {
@@ -42,8 +42,8 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Upgrade the old suspension bridge to withstand high magnitude seismic activity.",
           status: "in-progress",
           milestones: [
-            { id: "ms-05a2210e", title: "Structural integrity assessment", completed: true },
-            { id: "ms-21869cf1", title: "Design damper installations", completed: false }
+            { id: "ms-05a2210e", title: "Structural integrity assessment: X-ray the 50-year-old suspension cables", completed: true },
+            { id: "ms-21869cf1", title: "Design damper installations: Absorb 8.0 magnitude seismic shockwaves", completed: false }
           ]
         }
       ],
@@ -246,9 +246,9 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Optimize production workflow to reduce defect rate to below 3.4 per million.",
           status: "in-progress",
           milestones: [
-            { id: "ms-dfd3baa8", title: "Map current value stream", completed: true },
-            { id: "ms-7bb0fef6", title: "Implement statistical process control", completed: false },
-            { id: "ms-a376deb1", title: "Train shift supervisors on lean principles", completed: false }
+            { id: "ms-dfd3baa8", title: "Map current value stream: Expose hidden assembly bottlenecks", completed: true },
+            { id: "ms-7bb0fef6", title: "Statistical process control: Reduce defect tolerance to Six Sigma", completed: false },
+            { id: "ms-a376deb1", title: "Train shift supervisors: Cultivate a Kaizen continuous improvement culture", completed: false }
           ]
         }
       ],
@@ -347,9 +347,9 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Integrate a fleet of AGVs (Automated Guided Vehicles) for warehouse logistics.",
           status: "in-progress",
           milestones: [
-            { id: "ms-cde68f7f", title: "Map facility for LiDAR navigation", completed: true },
-            { id: "ms-6e5c340c", title: "Program traffic control algorithms", completed: false },
-            { id: "ms-10b66cd4", title: "Conduct full fleet dry run", completed: false }
+            { id: "ms-cde68f7f", title: "Map facility for LiDAR: Establish millimeter-perfect AGV routes", completed: true },
+            { id: "ms-6e5c340c", title: "Program traffic control: Prevent autonomous vehicle gridlock", completed: false },
+            { id: "ms-10b66cd4", title: "Full fleet dry run: Execute 24-hour lights-out manufacturing test", completed: false }
           ]
         }
       ],
@@ -448,9 +448,9 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Install and commission the high-voltage distribution network for a Tier 4 data center.",
           status: "in-progress",
           milestones: [
-            { id: "ms-47c7dac2", title: "Complete main switchgear installation", completed: true },
-            { id: "ms-95dfa44d", title: "Pull primary feeder cables", completed: false },
-            { id: "ms-855deb3b", title: "Commission backup generator arrays", completed: false }
+            { id: "ms-47c7dac2", title: "Main switchgear installation: Power the 50MW data center core", completed: true },
+            { id: "ms-95dfa44d", title: "Pull primary feeder cables: Route heavy copper through sub-floors", completed: false },
+            { id: "ms-855deb3b", title: "Commission backup generators: Guarantee 99.999% uptime during grid failure", completed: false }
           ]
         }
       ],

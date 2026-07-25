@@ -23,9 +23,9 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Launch Platform V2",
           type: "professional",
           milestones: [
-            { id: "ms-6e37a551", title: "Finalize PRD", status: "completed" },
-            { id: "ms-f6a85447", title: "Beta Testing", status: "active" },
-            { id: "ms-5b833b87", title: "General Availability", status: "pending" }
+            { id: "ms-6e37a551", title: "Finalize PRD: Secure buy-in from engineering & design leads", status: "completed" },
+            { id: "ms-f6a85447", title: "Beta Testing: Onboard 500 legacy users & map friction logs", status: "active" },
+            { id: "ms-5b833b87", title: "General Availability: Achieve zero-downtime global rollout", status: "pending" }
           ]
         },
         {
@@ -33,8 +33,8 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Establish PM Guild",
           type: "community",
           milestones: [
-            { id: "ms-15e840a0", title: "Define Curriculum", status: "active" },
-            { id: "ms-a5c9ece6", title: "Host First Cohort", status: "pending" }
+            { id: "ms-15e840a0", title: "Define Curriculum: Map out core competencies for junior PMs", status: "active" },
+            { id: "ms-a5c9ece6", title: "Host First Cohort: Mentor 15 aspiring product managers", status: "pending" }
           ]
         }
       ],
@@ -84,8 +84,8 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Obtain OSCP Certification",
           type: "personal",
           milestones: [
-            { id: "ms-183be0f5", title: "Complete Lab Machines", status: "completed" },
-            { id: "ms-a56fe2fd", title: "Pass 24hr Exam", status: "active" }
+            { id: "ms-183be0f5", title: "Complete Lab Machines: Root all 75 active directory boxes", status: "completed" },
+            { id: "ms-a56fe2fd", title: "Pass 24hr Exam: Secure 5 systems without sleep", status: "active" }
           ]
         },
         {
@@ -93,9 +93,9 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Enterprise Security Audit",
           type: "professional",
           milestones: [
-            { id: "ms-1f4d91c7", title: "External Network Pentest", status: "completed" },
-            { id: "ms-c19bf669", title: "Social Engineering Campaign", status: "active" },
-            { id: "ms-c3fec0ed", title: "Final Report Delivery", status: "pending" }
+            { id: "ms-1f4d91c7", title: "External Pentest: Breach the staging perimeter", status: "completed" },
+            { id: "ms-c19bf669", title: "Social Engineering: Execute targeted phishing on C-suite", status: "active" },
+            { id: "ms-c3fec0ed", title: "Final Report: Present critical vulnerabilities to the Board", status: "pending" }
           ]
         }
       ],

@@ -30,9 +30,9 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Open a Second Luxury Location",
           description: "Expand the brand to a prime downtown spot.",
           milestones: [
-            { id: "ms-0156d8cf", title: "Secure commercial lease", completed: true },
-            { id: "ms-9fea25c9", title: "Finalize interior design plans", completed: false },
-            { id: "ms-715fcbab", title: "Hire flagship manager", completed: false }
+            { id: "ms-0156d8cf", title: "Secure Commercial Lease: Negotiate prime downtown foot traffic", completed: true },
+            { id: "ms-9fea25c9", title: "Finalize Interior Design: Create an Instagram-worthy aesthetic", completed: false },
+            { id: "ms-715fcbab", title: "Hire Flagship Manager: Poach top-tier retail talent", completed: false }
           ]
         },
         {

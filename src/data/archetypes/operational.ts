@@ -32,9 +32,9 @@ export const operationalProfiles: Archetype[] = [
           status: "in-progress",
           progress: 65,
           milestones: [
-            { id: "ms-5b91c4b2", title: "Site A Pre-Assessment", status: "completed" },
-            { id: "ms-42fbecfd", title: "Remediation Follow-ups", status: "in-progress" },
-            { id: "ms-cb032225", title: "Final Board Report Submission", status: "pending" }
+            { id: "ms-5b91c4b2", title: "Site A Pre-Assessment: Uncover hidden safety violations", status: "completed" },
+            { id: "ms-42fbecfd", title: "Remediation Follow-ups: Enforce strict compliance mandates", status: "in-progress" },
+            { id: "ms-cb032225", title: "Final Board Report: Present zero-liability audit results", status: "pending" }
           ]
         }
       ],

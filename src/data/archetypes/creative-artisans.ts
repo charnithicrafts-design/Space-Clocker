@@ -30,9 +30,9 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Survive & Thrive Peak Wedding Season",
           description: "Deliver all galleries on time while maintaining creative sanity.",
           milestones: [
-            { id: "ms-73cf3142", title: "Cull 5000 images from Smith wedding", completed: true },
-            { id: "ms-c5c63af0", title: "Complete initial color grade for Jones wedding", completed: false },
-            { id: "ms-b22aff4b", title: "Deliver final gallery to Williams family", completed: false }
+            { id: "ms-73cf3142", title: "Cull 5000 images: Find the emotional core of the Smith wedding", completed: true },
+            { id: "ms-c5c63af0", title: "Initial color grade: Apply signature moody aesthetic to Jones gallery", completed: false },
+            { id: "ms-b22aff4b", title: "Deliver final gallery: Exceed the Williams family expectations", completed: false }
           ]
         },
         {
@@ -40,8 +40,8 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Revamp 2026 Portfolio",
           description: "Curate the absolute best shots for the new website launch.",
           milestones: [
-            { id: "ms-4a38fbc8", title: "Select top 50 portrait shots", completed: true },
-            { id: "ms-53b7acbe", title: "Write new service descriptions", completed: false }
+            { id: "ms-4a38fbc8", title: "Select top 50 shots: Curate a breathtaking 2026 portfolio", completed: true },
+            { id: "ms-53b7acbe", title: "Write service descriptions: Command premium artisan pricing", completed: false }
           ]
         }
       ],
