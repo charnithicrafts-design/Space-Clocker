@@ -26,9 +26,10 @@ interface NavLinkProps {
   label: string;
   active: boolean;
   color?: string;
+  badge?: string;
 }
 
-const NavLink: React.FC<NavLinkProps> = ({ to, icon: Icon, label, active, color = 'text-primary' }) => (
+const NavLink: React.FC<NavLinkProps> = ({ to, icon: Icon, label, active, color = 'text-primary', badge }) => (
   <Link 
     to={to} 
     onClick={() => SoundManager.playPop()}
@@ -43,7 +44,10 @@ const NavLink: React.FC<NavLinkProps> = ({ to, icon: Icon, label, active, color 
       />
     )}
     <Icon size={20} className={active ? color : 'group-hover:scale-110 transition-transform'} aria-hidden="true" />
-    <span className="hidden lg:block font-bold text-xs uppercase tracking-widest">{label}</span>
+    <span className="hidden lg:flex items-center gap-2 font-bold text-xs uppercase tracking-widest flex-1">
+      {label}
+      {badge && <span className="text-[8px] bg-secondary/20 text-secondary border border-secondary/30 px-1.5 py-0.5 rounded-md ml-auto">{badge}</span>}
+    </span>
   </Link>
 );
 
@@ -70,7 +74,7 @@ const Navigation = () => {
   ];
 
   const communicationLinks = [
-    { to: '/transmission', icon: Signal, label: 'Transmission', color: 'text-primary' },
+    { to: '/transmission', icon: Signal, label: 'Transmission', color: 'text-primary', badge: 'SOON' },
   ];
 
   return (

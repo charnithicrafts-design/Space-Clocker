@@ -713,7 +713,7 @@ const OrbitScheduler = () => {
                 <div className="flex justify-between items-start border-b border-outline-variant/30 pb-4">
                   <div>
                     <span className="text-[10px] px-3.5 py-1 bg-secondary/15 border border-secondary/20 rounded-full text-secondary font-mono tracking-widest uppercase">
-                      Transmission Preview
+                      Transmission Preview (Alpha)
                     </span>
                     <h2 className="text-2xl font-display font-black text-white uppercase tracking-tight mt-3">
                       Telemetry Session Brief

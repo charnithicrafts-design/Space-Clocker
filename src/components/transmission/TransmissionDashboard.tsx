@@ -14,7 +14,8 @@ import {
   AlertTriangle,
   Clock,
   Target,
-  Zap
+  Zap,
+  Info
 } from 'lucide-react';
 import { useTrackStore, Transmission } from '../../store/useTrackStore';
 import { generateShareLink } from '../../utils/TransmissionExporter';
@@ -102,7 +103,7 @@ const TransmissionDashboard = () => {
         <div>
           <h1 className="font-display text-4xl font-bold text-primary flex items-center gap-3">
             <Signal className="text-secondary" size={36} />
-            The Transmission
+            The Transmission <span className="text-[12px] bg-secondary/20 text-secondary border border-secondary/30 px-2 py-1 rounded-md align-middle uppercase tracking-widest ml-2">Alpha Preview</span>
           </h1>
           <p className="text-on-surface-variant mt-2">Self-reporting & Mission Readiness Briefings</p>
         </div>
@@ -116,6 +117,19 @@ const TransmissionDashboard = () => {
           Initiate Briefing
         </button>
       </header>
+
+      {/* Alpha Preview Banner */}
+      <div className="bg-primary/10 border border-primary/30 p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8 shadow-sm">
+        <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center shrink-0">
+          <Info size={20} />
+        </div>
+        <div>
+          <h3 className="text-sm font-black text-white uppercase tracking-widest leading-none mb-1">Mentor Uplink: V2.0 Integration Pending</h3>
+          <p className="text-[11px] text-on-surface-variant leading-relaxed">
+            The Transmission system currently generates local, shareable offline readouts. Full real-time mentorship sync, automated feedback loops, and secure instructor endpoints will be unlocked in the upcoming V2.0 release.
+          </p>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         {/* Previous Transmissions List */}
