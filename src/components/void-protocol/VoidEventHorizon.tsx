@@ -36,7 +36,7 @@ export const VoidEventHorizon = () => {
               breachedVoids.forEach(v => next.add(`${v.id}-${v.engagedCount}`));
               return next;
             });
-            SoundManager.playPowerUp();
+            SoundManager.playSyncSuccess();
             setIsHolding(false);
             return 0;
           }

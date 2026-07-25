@@ -623,7 +623,7 @@ const OrbitScheduler = () => {
                           {isOrbitalDecay && (
                             <button
                               onClick={() => {
-                                SoundManager.playPowerUp();
+                                SoundManager.playSyncSuccess();
                                 handleCarryForward(task.id);
                               }}
                               className="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-500 border border-amber-500/30 flex items-center gap-2 hover:bg-amber-500 hover:text-black transition-all text-[10px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(245,158,11,0.2)]"
