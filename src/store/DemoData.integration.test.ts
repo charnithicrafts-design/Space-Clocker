@@ -69,12 +69,14 @@ vi.mock('../db/client', async () => {
                 } else if (payload.is_simulation) {
                   // The boundary behavior we are validating
                   const isCompleted = finalStatus === 'completed';
+                  const baseTitle = m.title ? m.title.split(':')[0].trim() : 'Phase';
+                  const phases = ['Initiate', 'Execute', 'Finalize'];
                   for (let k = 0; k < 3; k++) {
                     await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, weightage, title, completed, horizon) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [
                       `sim-task-${m.id}-${k}`, m.id, a.id, 
                       null, 
                       10, 
-                      `Execute procedural parameter ${k+1}`, 
+                      `${phases[k]}: ${baseTitle}`, 
                       isCompleted, 
                       'daily'
                     ]);
@@ -246,8 +248,8 @@ describe('useTrackStore - Demo Data Integration', () => {
     
     // If this fails, simulations break the UI by loading 0-task structural milestones
     expect(res.rows.length).toBe(3);
-    expect(res.rows[0].title).toContain('Execute procedural parameter');
-    expect(res.rows[1].title).toContain('Execute procedural parameter');
-    expect(res.rows[2].title).toContain('Execute procedural parameter');
+    expect(res.rows[0].title).toBe('Initiate: Empty Milestone');
+    expect(res.rows[1].title).toBe('Execute: Empty Milestone');
+    expect(res.rows[2].title).toBe('Finalize: Empty Milestone');
   });
 });

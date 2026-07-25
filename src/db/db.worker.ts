@@ -625,12 +625,14 @@ export const api = {
                 } else if (payload.is_simulation) {
                   // Stop Faking: generate actual tasks for empty simulation milestones
                   const isCompleted = finalStatus === 'completed';
+                  const baseTitle = m.title ? m.title.split(':')[0].trim() : 'Phase';
+                  const phases = ['Initiate', 'Execute', 'Finalize'];
                   for (let k = 0; k < 3; k++) {
                     await tx.query(`INSERT INTO tasks (id, milestone_id, ambition_id, time, weightage, title, completed, horizon) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [
                       `sim-task-${m.id}-${k}`, m.id, a.id, 
                       null, 
                       10, 
-                      `Execute procedural parameter ${k+1}`, 
+                      `${phases[k]}: ${baseTitle}`, 
                       isCompleted, 
                       'daily'
                     ]);
