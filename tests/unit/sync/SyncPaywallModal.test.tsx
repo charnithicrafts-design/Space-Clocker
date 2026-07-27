@@ -15,6 +15,14 @@ vi.mock('../../../src/lib/auth-client', () => ({
     social: vi.fn()
   }
 }));
+vi.mock('../../../src/utils/SoundManager', () => ({
+  SoundManager: {
+    playPop: vi.fn(),
+    playSyncSuccess: vi.fn(),
+    playThud: vi.fn(),
+    playSwell: vi.fn()
+  }
+}));
 
 describe('SyncPaywallModal (Business Requirements)', () => {
   let updateOracleConfigMock: any;
