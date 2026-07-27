@@ -1,5 +1,17 @@
 [
   {
+    "version": "1.10.0",
+    "date": "2026-07-27",
+    "title": "The Horizon Analytics Suite",
+    "details": [
+      "Implemented Horizon Trajectory Dashboard with Recharts and glassmorphism styling",
+      "Added Empathetic Analysis AI integration to guide users through setbacks without judgment",
+      "Mapped rich, grounded skills to 35 Professional Demo Archetypes for immediate Stellar Matrix testing",
+      "Renamed failures to \"Gravity Wells\" to reduce friction and shame in productivity tracking",
+      "Optimized SQL aggregations via PGlite Web Worker to maintain UI thread performance"
+    ]
+  },
+  {
     "version": "1.9.0",
     "date": "2026-07-20",
     "transmission": "The Bio-Feedback Monitor: Psychological Momentum Unlocked.",
