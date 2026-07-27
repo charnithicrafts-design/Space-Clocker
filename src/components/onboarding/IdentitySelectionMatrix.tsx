@@ -49,15 +49,39 @@ import { useNavigate } from 'react-router-dom';
 
 const IdentitySelectionMatrix: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('All');
   const { importDemoData, profile } = useTrackStore();
   const [isInjecting, setIsInjecting] = useState(false);
   const navigate = useNavigate();
 
+  const categories = ["All", "Tech", "Creative", "Medical", "Business", "Student"];
+
   const filteredArchetypes = curatedArchetypes.filter(arch => {
     const term = searchQuery.toLowerCase();
-    return arch.title.toLowerCase().includes(term) ||
+    const matchesSearch = arch.title.toLowerCase().includes(term) ||
            arch.subtitle.toLowerCase().includes(term) ||
            arch.vibe.toLowerCase().includes(term);
+           
+    if (activeCategory === 'All') return matchesSearch;
+    
+    const combinedText = (arch.title + arch.subtitle + arch.vibe).toLowerCase();
+    const isTech = /engineer|developer|tech|data|cyber|software|programmer|it|system/i.test(combinedText);
+    const isCreative = /designer|writer|creative|artisan|photographer|artist|director/i.test(combinedText);
+    const isMedical = /medical|surgeon|doctor|scientist|health|clinical/i.test(combinedText);
+    const isBusiness = /business|founder|executive|manager|ceo|finance/i.test(combinedText);
+    const isStudent = /student|learner|academic/i.test(combinedText);
+    
+    let matchesCategory = false;
+    switch (activeCategory) {
+      case 'Tech': matchesCategory = isTech; break;
+      case 'Creative': matchesCategory = isCreative; break;
+      case 'Medical': matchesCategory = isMedical; break;
+      case 'Business': matchesCategory = isBusiness; break;
+      case 'Student': matchesCategory = isStudent; break;
+      default: matchesCategory = true;
+    }
+    
+    return matchesSearch && matchesCategory;
   });
 
   const handleSelect = async (archetype: Archetype) => {
@@ -145,22 +169,40 @@ const IdentitySelectionMatrix: React.FC = () => {
             </p>
           </header>
 
-          <div className="relative w-full max-w-md">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-on-surface-variant" />
+          <div className="space-y-6">
+            <div className="relative w-full max-w-md">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-on-surface-variant" />
+              </div>
+              <input
+                type="text"
+                className="block w-full pl-12 pr-4 py-4 bg-surface-high border border-outline-variant rounded-2xl text-white placeholder-on-surface-variant focus:ring-2 focus:ring-primary focus:border-transparent transition-all sm:text-sm"
+                placeholder="Search professions (e.g., Surgeon, Developer, Chef)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-            <input
-              type="text"
-              className="block w-full pl-12 pr-4 py-4 bg-surface-high border border-outline-variant rounded-2xl text-white placeholder-on-surface-variant focus:ring-2 focus:ring-primary focus:border-transparent transition-all sm:text-sm"
-              placeholder="Search professions (e.g., Surgeon, Developer, Chef)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+            
+            <div className="flex flex-wrap gap-2">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
+                    activeCategory === cat 
+                      ? 'bg-primary text-on-primary shadow-[0_0_15px_rgba(var(--color-primary),0.5)]' 
+                      : 'bg-surface-high border border-outline-variant text-on-surface hover:text-primary'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="relative">
-            {/* Wrapping grid for desktop and mobile to make scanning easier */}
-            <motion.div layout className="flex flex-wrap gap-4 md:gap-6 pb-8 md:pb-0 justify-center sm:justify-start">
+            {/* Horizontal scroll on mobile to save space, flex wrap on desktop */}
+            <motion.div layout className="flex overflow-x-auto snap-x snap-mandatory md:flex-wrap md:overflow-x-visible md:snap-none gap-4 md:gap-6 pb-8 justify-start -mx-6 px-6 md:mx-0 md:px-0" style={{ scrollbarWidth: 'none' }}>
               <AnimatePresence mode="popLayout">
                 {filteredArchetypes.length > 0 ? (
                   filteredArchetypes.map((arch) => (
@@ -170,6 +212,7 @@ const IdentitySelectionMatrix: React.FC = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       layout
+                      className="snap-center"
                     >
                       <ArchetypeCard 
                         archetype={arch} 
