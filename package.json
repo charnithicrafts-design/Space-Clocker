@@ -10,7 +10,11 @@
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "test": "vitest --run",
+    "test:unit": "vitest run tests/unit",
+    "test:sync": "vitest run tests/unit/sync",
+    "test:oauth": "vitest run tests/unit/oauth",
     "test:e2e": "playwright test",
+    "test:watch": "vitest",
     "postinstall": "node scripts/patch-pglite-memory.cjs"
   },
   "dependencies": {

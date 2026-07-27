@@ -29,11 +29,11 @@ jobs:
     - name: Sally's Gate (Lint & Format)
       run: npm run lint
 
-    - name: Murat's Gate (Unit & Component Tests)
-      run: npm run test --run
+    - name: Murat's Gate (Unit & Modular Tests)
+      run: npm run test:unit
 
     - name: Quinn's Gate (E2E & Integration Validation)
-      run: npm run test --run src/tests/db-restoration.test.ts src/tests/RestoreUpgrade.test.ts src/db/__tests__/sync-engine.test.ts
+      run: npm run test:e2e
       
     - name: Amelia's Gate (Build Integrity Check)
       run: npm run build
