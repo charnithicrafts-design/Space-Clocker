@@ -11,8 +11,11 @@ vi.mock('@vercel/blob/client', () => ({
   upload: vi.fn().mockResolvedValue({ url: 'stellar-file-id-001' }),
 }));
 
-// Mock fetch for getFileMetadata
-const fetchMock = vi.fn();
+// Mock fetch for getFileMetadata and uploadFile
+const fetchMock = vi.fn().mockResolvedValue({
+  ok: true,
+  json: () => Promise.resolve({ url: 'stellar-file-id-001' })
+});
 vi.stubGlobal('fetch', fetchMock);
 
 // Mock DbClient
@@ -65,11 +68,9 @@ describe('SyncService: Stellar Uplink Protocol', () => {
 
     it('should halt infinite retry loop and throw timeout on CORS/Network block', async () => {
       // Arrange
-      const { upload } = await import('@vercel/blob/client');
-      // Simulate Vercel Blob SDK throwing an AbortError due to our timeout
       const abortError = new Error('The user aborted a request.');
       abortError.name = 'AbortError';
-      (upload as any).mockRejectedValueOnce(abortError);
+      fetchMock.mockRejectedValueOnce(abortError);
 
       // Act & Assert
       await expect(syncService.pushUpdate()).rejects.toThrow('Upload timed out after 10 seconds. Network or CORS blocked.');

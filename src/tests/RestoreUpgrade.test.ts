@@ -15,6 +15,9 @@ vi.mock('../db/client', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...(actual as any),
+    getDb: vi.fn().mockReturnValue({
+      query: vi.fn()
+    }),
     dbProxy: {
       importFromJson: vi.fn(),
       init: vi.fn(),
@@ -27,6 +30,10 @@ vi.mock('../db/client', async (importOriginal) => {
 describe('System Data Lifecycle: Restore & Upgrade', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    (DbClient.dbProxy.query as any).mockResolvedValue({ rows: [] });
+    
+    // Simulate successful restore
+    vi.mocked(DbClient.dbProxy.importFromJson).mockResolvedValue(undefined);
   });
 
   it('should ensure database closure and version alignment during a production snapshot restore', async () => {
@@ -56,7 +63,8 @@ describe('System Data Lifecycle: Restore & Upgrade', () => {
 
     // 3. Verify Version Alignment (System Info Update)
     // Ensure that the upgrade logic correctly inserted/updated the current version
-    const versionQuery = vi.spyOn(DbClient.dbProxy, 'query');
+    const mockDb = DbClient.getDb() as any;
+    const versionQuery = vi.spyOn(mockDb, 'query');
     await store.performSystemUpgrade();
     expect(versionQuery).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO system_info'),

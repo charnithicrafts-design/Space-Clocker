@@ -5,7 +5,23 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   {
     id: "product-visionary",
     icon: "🚀",
-    title: "The Product Visionary",
+    title: "",
+    voids: [
+        {
+            id: "void-product-visionary-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-product-visionary-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Priya | Product Manager",
     vibe: "Strategic, user-obsessed, and ruthlessly prioritizing.",
     data: {
@@ -23,9 +39,21 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Launch Platform V2",
           type: "professional",
           milestones: [
-            { id: "ms-6e37a551", title: "Finalize PRD: Secure buy-in from engineering & design leads", status: "completed" },
-            { id: "ms-f6a85447", title: "Beta Testing: Onboard 500 legacy users & map friction logs", status: "active" },
-            { id: "ms-5b833b87", title: "General Availability: Achieve zero-downtime global rollout", status: "pending" }
+            { id: "ms-6e37a551", title: "Finalize PRD: Secure buy-in from engineering & design leads", status: "completed" , tasks: [
+                  { id: 'launch-v2-t1', title: 'Resolve final edge case comments', completed: true },
+                  { id: 'launch-v2-t2', title: 'Get formal sign-off from tech lead', completed: true },
+                  { id: 'launch-v2-t3', title: 'Lock PRD for sprint planning', completed: true }
+                ] },
+            { id: "ms-f6a85447", title: "Beta Testing: Onboard 500 legacy users & map friction logs", status: "active" , tasks: [
+                  { id: 'ms-f6a85447-t1', title: 'Send beta invite emails', completed: true },
+                  { id: 'ms-f6a85447-t2', title: 'Monitor daily active usage metrics', completed: false },
+                  { id: 'ms-f6a85447-t3', title: 'Analyze Zendesk tickets for friction points', completed: false }
+                ] },
+            { id: "ms-5b833b87", title: "General Availability: Achieve zero-downtime global rollout", status: "pending" , tasks: [
+                  { id: 'ms-5b833b87-t1', title: 'Scale up database read replicas', completed: true },
+                  { id: 'ms-5b833b87-t2', title: 'Monitor error rates on Datadog', completed: false },
+                  { id: 'ms-5b833b87-t3', title: 'Send launch announcement to entire userbase', completed: false }
+                ] }
           ]
         },
         {
@@ -33,8 +61,16 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Establish PM Guild",
           type: "community",
           milestones: [
-            { id: "ms-15e840a0", title: "Define Curriculum: Map out core competencies for junior PMs", status: "active" },
-            { id: "ms-a5c9ece6", title: "Host First Cohort: Mentor 15 aspiring product managers", status: "pending" }
+            { id: "ms-15e840a0", title: "Define Curriculum: Map out core competencies for junior PMs", status: "active" , tasks: [
+                  { id: 'pm-mentorship-t1', title: 'Interview senior PMs for required skills', completed: true },
+                  { id: 'pm-mentorship-t2', title: 'Draft 6-week syllabus', completed: false },
+                  { id: 'pm-mentorship-t3', title: 'Create practical milestone projects', completed: false }
+                ] },
+            { id: "ms-a5c9ece6", title: "Host First Cohort: Mentor 15 aspiring product managers", status: "pending" , tasks: [
+                  { id: 'ms-a5c9ece6-t1', title: 'Conduct weekly 1-on-1s', completed: true },
+                  { id: 'ms-a5c9ece6-t2', title: 'Grade final product teardowns', completed: false },
+                  { id: 'ms-a5c9ece6-t3', title: 'Host graduation networking event', completed: false }
+                ] }
           ]
         }
       ],
@@ -66,7 +102,23 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   {
     id: "cyber-sentinel",
     icon: "🛡️",
-    title: "The Cyber Sentinel",
+    title: "",
+    voids: [
+        {
+            id: "void-cyber-sentinel-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-cyber-sentinel-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Omar | Penetration Tester",
     vibe: "Analytical, methodical, and always thinking like the adversary.",
     data: {
@@ -84,8 +136,16 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Obtain OSCP Certification",
           type: "personal",
           milestones: [
-            { id: "ms-183be0f5", title: "Complete Lab Machines: Root all 75 active directory boxes", status: "completed" },
-            { id: "ms-a56fe2fd", title: "Pass 24hr Exam: Secure 5 systems without sleep", status: "active" }
+            { id: "ms-183be0f5", title: "Complete Lab Machines: Root all 75 active directory boxes", status: "completed" , tasks: [
+                  { id: 'cert-oscp-t1', title: 'Run initial Nmap scans', completed: true },
+                  { id: 'cert-oscp-t2', title: 'Exploit Kerberos misconfigurations', completed: true },
+                  { id: 'cert-oscp-t3', title: 'Achieve Domain Admin on all targets', completed: true }
+                ] },
+            { id: "ms-a56fe2fd", title: "Pass 24hr Exam: Secure 5 systems without sleep", status: "active" , tasks: [
+                  { id: 'ms-a56fe2fd-t1', title: 'Prepare local enumeration scripts', completed: true },
+                  { id: 'ms-a56fe2fd-t2', title: 'Document findings in real-time', completed: false },
+                  { id: 'ms-a56fe2fd-t3', title: 'Submit final penetration test report', completed: false }
+                ] }
           ]
         },
         {
@@ -93,9 +153,21 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Enterprise Security Audit",
           type: "professional",
           milestones: [
-            { id: "ms-1f4d91c7", title: "External Pentest: Breach the staging perimeter", status: "completed" },
-            { id: "ms-c19bf669", title: "Social Engineering: Execute targeted phishing on C-suite", status: "active" },
-            { id: "ms-c3fec0ed", title: "Final Report: Present critical vulnerabilities to the Board", status: "pending" }
+            { id: "ms-1f4d91c7", title: "External Pentest: Breach the staging perimeter", status: "completed" , tasks: [
+                  { id: 'sec-audit-t1', title: 'Identify exposed AWS S3 buckets', completed: true },
+                  { id: 'sec-audit-t2', title: 'Exploit unpatched web vulnerabilities', completed: true },
+                  { id: 'sec-audit-t3', title: 'Exfiltrate dummy PII data', completed: true }
+                ] },
+            { id: "ms-c19bf669", title: "Social Engineering: Execute targeted phishing on C-suite", status: "active" , tasks: [
+                  { id: 'ms-c19bf669-t1', title: 'Craft highly convincing spear-phishing emails', completed: true },
+                  { id: 'ms-c19bf669-t2', title: 'Bypass spam filters', completed: false },
+                  { id: 'ms-c19bf669-t3', title: 'Track credential harvesting success rate', completed: false }
+                ] },
+            { id: "ms-c3fec0ed", title: "Final Report: Present critical vulnerabilities to the Board", status: "pending" , tasks: [
+                  { id: 'ms-c3fec0ed-t1', title: 'Draft executive summary', completed: true },
+                  { id: 'ms-c3fec0ed-t2', title: 'Create remediation checklist', completed: false },
+                  { id: 'ms-c3fec0ed-t3', title: 'Present findings to CISO', completed: false }
+                ] }
           ]
         }
       ],
@@ -187,7 +259,23 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   {
     id: "silent-guardian",
     icon: "☁️",
-    title: "The Silent Guardian",
+    title: "",
+    voids: [
+        {
+            id: "void-silent-guardian-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-silent-guardian-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "David | Cloud DevOps Engineer",
     vibe: "Automated, resilient, and architecting for scale.",
     data: {
@@ -205,9 +293,21 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Complete Kubernetes Migration",
           type: "professional",
           milestones: [
-            { id: "ms-ac8d8429", title: "Containerize Monolith", status: "completed" },
-            { id: "ms-626537b4", title: "Setup CI/CD Pipelines", status: "completed" },
-            { id: "ms-4a0bc2cd", title: "Production Cutover", status: "active" }
+            { id: "ms-ac8d8429", title: "Containerize Monolith", status: "completed" , tasks: [
+                  { id: 'k8s-migration-t1', title: 'Write Dockerfile for legacy app', completed: true },
+                  { id: 'k8s-migration-t2', title: 'Optimize image size', completed: true },
+                  { id: 'k8s-migration-t3', title: 'Test local container execution', completed: true }
+                ] },
+            { id: "ms-626537b4", title: "Setup CI/CD Pipelines", status: "completed" , tasks: [
+                  { id: 'ms-626537b4-t1', title: 'Configure GitHub Actions workflow', completed: true },
+                  { id: 'ms-626537b4-t2', title: 'Add automated unit testing stage', completed: true },
+                  { id: 'ms-626537b4-t3', title: 'Implement staging deployment step', completed: true }
+                ] },
+            { id: "ms-4a0bc2cd", title: "Production Cutover", status: "active" , tasks: [
+                  { id: 'ms-4a0bc2cd-t1', title: 'Drain traffic from legacy instances', completed: true },
+                  { id: 'ms-4a0bc2cd-t2', title: 'Monitor new Kubernetes pods', completed: false },
+                  { id: 'ms-4a0bc2cd-t3', title: 'Verify successful traffic routing', completed: false }
+                ] }
           ]
         },
         {
@@ -215,8 +315,16 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "100% Infrastructure as Code",
           type: "professional",
           milestones: [
-            { id: "ms-c8c42905", title: "Terraform Network Layer", status: "completed" },
-            { id: "ms-a21fce54", title: "Terraform Data Layer", status: "active" }
+            { id: "ms-c8c42905", title: "Terraform Network Layer", status: "completed" , tasks: [
+                  { id: 'infra-as-code-t1', title: 'Define VPC and Subnets in HCL', completed: true },
+                  { id: 'infra-as-code-t2', title: 'Configure NAT Gateways', completed: true },
+                  { id: 'infra-as-code-t3', title: 'Apply network state to AWS', completed: true }
+                ] },
+            { id: "ms-a21fce54", title: "Terraform Data Layer", status: "active" , tasks: [
+                  { id: 'ms-a21fce54-t1', title: 'Write RDS instance configuration', completed: true },
+                  { id: 'ms-a21fce54-t2', title: 'Implement automated snapshot policies', completed: false },
+                  { id: 'ms-a21fce54-t3', title: 'Deploy staging database', completed: false }
+                ] }
           ]
         }
       ],
@@ -248,7 +356,23 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   {
     id: "legal-eagle",
     icon: "⚖️",
-    title: "The Legal Eagle",
+    title: "",
+    voids: [
+        {
+            id: "void-legal-eagle-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-legal-eagle-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Elena | Corporate Mergers Lawyer",
     vibe: "Precise, formidable, and navigating complex negotiations.",
     data: {
@@ -266,9 +390,21 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Close Project Titan Acquisition",
           type: "professional",
           milestones: [
-            { id: "ms-ed5ce5be", title: "Due Diligence Complete", status: "completed" },
-            { id: "ms-ba636335", title: "Definitive Agreement Drafted", status: "active" },
-            { id: "ms-a09f6aae", title: "Regulatory Approval", status: "pending" }
+            { id: "ms-ed5ce5be", title: "Due Diligence Complete", status: "completed" , tasks: [
+                  { id: 'project-titan-t1', title: 'Review 3 years of financial statements', completed: true },
+                  { id: 'project-titan-t2', title: 'Audit IP and patent portfolio', completed: true },
+                  { id: 'project-titan-t3', title: 'Conduct technical code review', completed: true }
+                ] },
+            { id: "ms-ba636335", title: "Definitive Agreement Drafted", status: "active" , tasks: [
+                  { id: 'ms-ba636335-t1', title: 'Negotiate representations and warranties', completed: true },
+                  { id: 'ms-ba636335-t2', title: 'Finalize earn-out structure', completed: false },
+                  { id: 'ms-ba636335-t3', title: 'Sign final binding agreement', completed: false }
+                ] },
+            { id: "ms-a09f6aae", title: "Regulatory Approval", status: "pending" , tasks: [
+                  { id: 'ms-a09f6aae-t1', title: 'Submit anti-trust filings', completed: true },
+                  { id: 'ms-a09f6aae-t2', title: 'Respond to SEC inquiries', completed: false },
+                  { id: 'ms-a09f6aae-t3', title: 'Receive final clearance letter', completed: false }
+                ] }
           ]
         },
         {
@@ -276,8 +412,16 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Expand Practice Group",
           type: "professional",
           milestones: [
-            { id: "ms-fe5694ca", title: "Hire 2 Associates", status: "completed" },
-            { id: "ms-e0a64f78", title: "Publish M&A Article in Journal", status: "active" }
+            { id: "ms-fe5694ca", title: "Hire 2 Associates", status: "completed" , tasks: [
+                  { id: 'partner-track-t1', title: 'Review 50 resumes', completed: true },
+                  { id: 'partner-track-t2', title: 'Conduct technical interviews', completed: true },
+                  { id: 'partner-track-t3', title: 'Extend final offers', completed: true }
+                ] },
+            { id: "ms-e0a64f78", title: "Publish M&A Article in Journal", status: "active" , tasks: [
+                  { id: 'ms-e0a64f78-t1', title: 'Draft outline on recent market trends', completed: true },
+                  { id: 'ms-e0a64f78-t2', title: 'Co-author with senior partner', completed: false },
+                  { id: 'ms-e0a64f78-t3', title: 'Submit to Wall Street Journal', completed: false }
+                ] }
           ]
         }
       ],
@@ -309,7 +453,23 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   {
     id: "athletic-ascendant",
     icon: "📊",
-    title: "The Athletic Ascendant",
+    title: "",
+    voids: [
+        {
+            id: "void-athletic-ascendant-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-athletic-ascendant-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Kofi | High-Performance Coach",
     vibe: "Motivating, data-driven, and unlocking human potential.",
     data: {
@@ -327,9 +487,21 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Prepare Athletes for Trials",
           type: "professional",
           milestones: [
-            { id: "ms-d487b998", title: "Base Conditioning Phase", status: "completed" },
-            { id: "ms-620170ed", title: "Strength & Power Phase", status: "active" },
-            { id: "ms-54672de3", title: "Tapering Phase", status: "pending" }
+            { id: "ms-d487b998", title: "Base Conditioning Phase", status: "completed" , tasks: [
+                  { id: 'olympic-prep-t1', title: 'Run 40 miles per week', completed: true },
+                  { id: 'olympic-prep-t2', title: 'Perform 3x weekly strength sessions', completed: true },
+                  { id: 'olympic-prep-t3', title: 'Log daily HRV metrics', completed: true }
+                ] },
+            { id: "ms-620170ed", title: "Strength & Power Phase", status: "active" , tasks: [
+                  { id: 'ms-620170ed-t1', title: 'Incorporate heavy compound lifts', completed: true },
+                  { id: 'ms-620170ed-t2', title: 'Add weekly track intervals', completed: false },
+                  { id: 'ms-620170ed-t3', title: 'Optimize protein intake macros', completed: false }
+                ] },
+            { id: "ms-54672de3", title: "Tapering Phase", status: "pending" , tasks: [
+                  { id: 'ms-54672de3-t1', title: 'Reduce weekly mileage by 50%', completed: true },
+                  { id: 'ms-54672de3-t2', title: 'Focus on mobility and sleep', completed: false },
+                  { id: 'ms-54672de3-t3', title: 'Finalize race day nutrition plan', completed: false }
+                ] }
           ]
         },
         {
@@ -337,8 +509,16 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Master Advanced Biomechanics",
           type: "personal",
           milestones: [
-            { id: "ms-822eff1f", title: "Complete Kinematics Module", status: "completed" },
-            { id: "ms-b5f35096", title: "Pass Final Assessment", status: "active" }
+            { id: "ms-822eff1f", title: "Complete Kinematics Module", status: "completed" , tasks: [
+                  { id: 'biomechanics-course-t1', title: 'Watch 5 hours of video lectures', completed: true },
+                  { id: 'biomechanics-course-t2', title: 'Solve 20 practice problems', completed: true },
+                  { id: 'biomechanics-course-t3', title: 'Pass weekly quiz with 90%+', completed: true }
+                ] },
+            { id: "ms-b5f35096", title: "Pass Final Assessment", status: "active" , tasks: [
+                  { id: 'ms-b5f35096-t1', title: 'Review all semester notes', completed: true },
+                  { id: 'ms-b5f35096-t2', title: 'Take 2 full-length practice exams', completed: false },
+                  { id: 'ms-b5f35096-t3', title: 'Achieve passing grade on final', completed: false }
+                ] }
           ]
         }
       ],
@@ -370,7 +550,23 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   {
     id: "soil-whisperer",
     icon: "🍃",
-    title: "The Soil Whisperer",
+    title: "",
+    voids: [
+        {
+            id: "void-soil-whisperer-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-soil-whisperer-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Jack | Commercial Agronomist",
     vibe: "Grounded, scientific, and optimizing natural yields.",
     data: {
@@ -388,9 +584,21 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Increase Regional Corn Yield by 15%",
           type: "professional",
           milestones: [
-            { id: "ms-2367d545", title: "Soil Sampling & Analysis", status: "completed" },
-            { id: "ms-2da3dae4", title: "Implement Precision Fertilizer Plan", status: "active" },
-            { id: "ms-be08456c", title: "Harvest Yield Analysis", status: "pending" }
+            { id: "ms-2367d545", title: "Soil Sampling & Analysis", status: "completed" , tasks: [
+                  { id: 'yield-opt-t1', title: 'Collect grid-based soil samples', completed: true },
+                  { id: 'yield-opt-t2', title: 'Send samples to agricultural lab', completed: true },
+                  { id: 'yield-opt-t3', title: 'Analyze pH and nutrient reports', completed: true }
+                ] },
+            { id: "ms-2da3dae4", title: "Implement Precision Fertilizer Plan", status: "active" , tasks: [
+                  { id: 'ms-2da3dae4-t1', title: 'Upload prescription maps to tractor GPS', completed: true },
+                  { id: 'ms-2da3dae4-t2', title: 'Calibrate application equipment', completed: false },
+                  { id: 'ms-2da3dae4-t3', title: 'Execute variable rate application', completed: false }
+                ] },
+            { id: "ms-be08456c", title: "Harvest Yield Analysis", status: "pending" , tasks: [
+                  { id: 'ms-be08456c-t1', title: 'Download yield monitor data', completed: true },
+                  { id: 'ms-be08456c-t2', title: 'Identify high and low performing zones', completed: false },
+                  { id: 'ms-be08456c-t3', title: 'Plan adjustments for next season', completed: false }
+                ] }
           ]
         },
         {
@@ -398,8 +606,16 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Pilot Regenerative Ag Program",
           type: "professional",
           milestones: [
-            { id: "ms-ad71ec08", title: "Select Test Plots", status: "completed" },
-            { id: "ms-044f3b5e", title: "Plant Cover Crops", status: "active" }
+            { id: "ms-ad71ec08", title: "Select Test Plots", status: "completed" , tasks: [
+                  { id: 'regen-ag-t1', title: 'Identify representative acreage', completed: true },
+                  { id: 'regen-ag-t2', title: 'Stake out plot boundaries', completed: true },
+                  { id: 'regen-ag-t3', title: 'Establish control group plot', completed: true }
+                ] },
+            { id: "ms-044f3b5e", title: "Plant Cover Crops", status: "active" , tasks: [
+                  { id: 'ms-044f3b5e-t1', title: 'Select optimal seed mix', completed: true },
+                  { id: 'ms-044f3b5e-t2', title: 'Calibrate drill seeder', completed: false },
+                  { id: 'ms-044f3b5e-t3', title: 'Ensure proper seed-to-soil contact', completed: false }
+                ] }
           ]
         }
       ],
@@ -431,7 +647,23 @@ export const digitalInstitutionalProfiles: Archetype[] = [
   {
     id: "real-estate-maven",
     icon: "🏛️",
-    title: "The Real Estate Maven",
+    title: "",
+    voids: [
+        {
+            id: "void-real-estate-maven-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-real-estate-maven-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "James | Commercial Developer",
     vibe: "Visionary, calculated, and transforming skylines.",
     data: {
@@ -449,9 +681,21 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "Mixed-Use Downtown Project",
           type: "professional",
           milestones: [
-            { id: "ms-c04f88df", title: "Land Acquisition", status: "completed" },
-            { id: "ms-f65b5806", title: "Zoning & Entitlements", status: "active" },
-            { id: "ms-611f18e7", title: "Secure Anchor Tenant", status: "pending" }
+            { id: "ms-c04f88df", title: "Land Acquisition", status: "completed" , tasks: [
+                  { id: 'downtown-revival-t1', title: 'Identify 3 potential greenfield sites', completed: true },
+                  { id: 'downtown-revival-t2', title: 'Conduct phase 1 environmental survey', completed: true },
+                  { id: 'downtown-revival-t3', title: 'Close escrow on final property', completed: true }
+                ] },
+            { id: "ms-f65b5806", title: "Zoning & Entitlements", status: "active" , tasks: [
+                  { id: 'ms-f65b5806-t1', title: 'Submit rezoning application', completed: true },
+                  { id: 'ms-f65b5806-t2', title: 'Attend public hearings', completed: false },
+                  { id: 'ms-f65b5806-t3', title: 'Obtain final building permits', completed: false }
+                ] },
+            { id: "ms-611f18e7", title: "Secure Anchor Tenant", status: "pending" , tasks: [
+                  { id: 'ms-611f18e7-t1', title: 'Pitch to Fortune 500 logistics firms', completed: true },
+                  { id: 'ms-611f18e7-t2', title: 'Negotiate triple-net lease terms', completed: false },
+                  { id: 'ms-611f18e7-t3', title: 'Sign letter of intent', completed: false }
+                ] }
           ]
         },
         {
@@ -459,8 +703,16 @@ export const digitalInstitutionalProfiles: Archetype[] = [
           title: "LEED Platinum Portfolio",
           type: "professional",
           milestones: [
-            { id: "ms-8f6ba5e9", title: "Retrofit HVAC Systems", status: "completed" },
-            { id: "ms-4588ba4e", title: "Install Solar Arrays", status: "active" }
+            { id: "ms-8f6ba5e9", title: "Retrofit HVAC Systems", status: "completed" , tasks: [
+                  { id: 'green-cert-t1', title: 'Remove outdated R-22 units', completed: true },
+                  { id: 'green-cert-t2', title: 'Install high-efficiency VRF systems', completed: true },
+                  { id: 'green-cert-t3', title: 'Commission new smart thermostats', completed: true }
+                ] },
+            { id: "ms-4588ba4e", title: "Install Solar Arrays", status: "active" , tasks: [
+                  { id: 'ms-4588ba4e-t1', title: 'Conduct roof structural analysis', completed: true },
+                  { id: 'ms-4588ba4e-t2', title: 'Install mounting hardware and panels', completed: false },
+                  { id: 'ms-4588ba4e-t3', title: 'Connect inverters to main grid', completed: false }
+                ] }
           ]
         }
       ],

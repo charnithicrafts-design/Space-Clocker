@@ -18,7 +18,10 @@ vi.mock('@vercel/blob/client', () => ({
 }));
 
 // Mock Fetch for Remote Command Simulation
-const fetchMock = vi.fn();
+const fetchMock = vi.fn().mockResolvedValue({
+  ok: true,
+  json: () => Promise.resolve({ url: 'stellar-file-id-001' })
+});
 vi.stubGlobal('fetch', fetchMock);
 
 // Realistic Database Mock with State Tracking
@@ -117,7 +120,14 @@ describe('Communication Array - High-Fidelity Integration Cycle', () => {
 
     // --- ACT (Phase 3: Resolve Rift via Downlink) ---
     // Resolve the rift by pulling the newer trajectory from the remote terminal.
-    fetchMock.mockResolvedValueOnce({
+    fetchMock.mockResolvedValueOnce({ 
+      ok: true, 
+      json: () => Promise.resolve({ 
+        found: true,
+        url: 'remote-id-virmire-01', 
+        modifiedAt: '2183-11-07T00:00:00Z'
+      }) 
+    }).mockResolvedValueOnce({
       ok: true,
       blob: () => Promise.resolve(new Blob(['citadel-encoded-data']))
     });
@@ -127,7 +137,7 @@ describe('Communication Array - High-Fidelity Integration Cycle', () => {
     // --- ASSERT (Phase 3) ---
     // Verify high-fidelity resolution steps:
     // 1. Remote data was fetched.
-    expect(fetchMock).toHaveBeenCalledWith('stellar-file-id-001');
+    expect(fetchMock).toHaveBeenCalledWith('/api/sync/download?url=remote-id-virmire-01');
     // 2. Local Database was re-initialized from the remote blob.
     expect(DbClient.dbProxy.importFromJson).toHaveBeenCalled();
     // 3. Store was refreshed from the new DB state.

@@ -5,7 +5,23 @@ export const medicalProfiles: Archetype[] = [
   {
     id: 'medical-neuro',
     icon: "🧠",
-    title: 'The Neural Artisan',
+    title: '',
+    voids: [
+        {
+            id: "void-medical-neuro-1",
+            text: "Waiting for 'perfect inspiration' to start",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-medical-neuro-2",
+            text: "Over-tweaking finished work instead of publishing",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: 'Precision under pressure',
     vibe: 'calm, focused, meticulous',
     data: {
@@ -31,8 +47,16 @@ export const medicalProfiles: Archetype[] = [
           description: 'Develop and publish new techniques for complex spinal fusions.',
           status: 'active',
           milestones: [
-            { id: 'm-n1', title: "Complete 100 Surgeries: Master the minimally invasive technique", completed: true },
-            { id: 'm-n2', title: "Publish Findings: Submit peer-reviewed results to The Lancet", completed: false }
+            { id: 'm-n1', title: "Complete 100 Surgeries: Master the minimally invasive technique", completed: true , tasks: [
+                  { id: 'amb-neuro-1-t1', title: 'Perform first 10 proctored cases', completed: true },
+                  { id: 'amb-neuro-1-t2', title: 'Achieve consistent sub-2-hour operation times', completed: true },
+                  { id: 'amb-neuro-1-t3', title: 'Log 100th successful independent case', completed: true }
+                ] },
+            { id: 'm-n2', title: "Publish Findings: Submit peer-reviewed results to The Lancet", completed: false , tasks: [
+                  { id: 'm-n2-t1', title: 'Compile post-op recovery data', completed: true },
+                  { id: 'm-n2-t2', title: 'Draft clinical manuscript', completed: false },
+                  { id: 'm-n2-t3', title: 'Address peer-reviewer revisions', completed: false }
+                ] }
           ]
         }
       ],
@@ -162,7 +186,23 @@ export const medicalProfiles: Archetype[] = [
   {
     id: 'medical-diagnostician',
     icon: "🩺",
-    title: 'The Clinical Anchor',
+    title: '',
+    voids: [
+        {
+            id: "void-medical-diagnostician-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-medical-diagnostician-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: 'Connecting the dots',
     vibe: 'analytical, empathetic, thorough',
     data: {
@@ -188,8 +228,16 @@ export const medicalProfiles: Archetype[] = [
           description: 'Create a specialized clinic for undiagnosed and complex diseases.',
           status: 'active',
           milestones: [
-            { id: 'm-d1', title: 'Secure hospital board approval', completed: true },
-            { id: 'm-d2', title: 'Hire interdisciplinary team of specialists', completed: false }
+            { id: 'm-d1', title: 'Secure hospital board approval', completed: true , tasks: [
+                  { id: 'amb-diag-1-t1', title: 'Present clinical outcomes to medical board', completed: true },
+                  { id: 'amb-diag-1-t2', title: 'Submit financial feasibility report', completed: true },
+                  { id: 'amb-diag-1-t3', title: 'Obtain formal budget allocation', completed: true }
+                ] },
+            { id: 'm-d2', title: 'Hire interdisciplinary team of specialists', completed: false , tasks: [
+                  { id: 'm-d2-t1', title: 'Recruit lead anesthesiologist', completed: true },
+                  { id: 'm-d2-t2', title: 'Interview specialized scrub nurses', completed: false },
+                  { id: 'm-d2-t3', title: 'Finalize team scheduling', completed: false }
+                ] }
           ]
         }
       ],
@@ -273,7 +321,23 @@ export const medicalProfiles: Archetype[] = [
   {
     id: 'medical-research',
     icon: "🔬",
-    title: 'The Scientific Vanguard',
+    title: '',
+    voids: [
+        {
+            id: "void-medical-research-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-medical-research-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: 'Driving medical breakthroughs',
     vibe: 'innovative, rigorous, visionary',
     data: {
@@ -299,8 +363,16 @@ export const medicalProfiles: Archetype[] = [
           description: 'Lead a multi-center international clinical trial for novel immunotherapy.',
           status: 'active',
           milestones: [
-            { id: 'm-r1', title: 'Finalize trial protocols', completed: true },
-            { id: 'm-r2', title: 'Enroll 500 patient cohort', completed: false }
+            { id: 'm-r1', title: 'Finalize trial protocols', completed: true , tasks: [
+                  { id: 'amb-res-1-t1', title: 'Draft IRB submission package', completed: true },
+                  { id: 'amb-res-1-t2', title: 'Define inclusion/exclusion criteria', completed: true },
+                  { id: 'amb-res-1-t3', title: 'Obtain ethics board approval', completed: true }
+                ] },
+            { id: 'm-r2', title: 'Enroll 500 patient cohort', completed: false , tasks: [
+                  { id: 'm-r2-t1', title: 'Identify 15 clinical sites', completed: true },
+                  { id: 'm-r2-t2', title: 'Run local awareness campaigns', completed: false },
+                  { id: 'm-r2-t3', title: 'Complete patient onboarding', completed: false }
+                ] }
           ]
         }
       ],

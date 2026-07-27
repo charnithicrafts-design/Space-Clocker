@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import SettingsDashboard from './SettingsDashboard';
 import { useTrackStore } from '../../store/useTrackStore';
@@ -27,7 +28,8 @@ vi.mock('../../constants', () => ({
 vi.mock('../../services/SyncService', () => ({
   syncService: {
     pushUpdate: vi.fn(),
-    authorize: vi.fn()
+    authorize: vi.fn(),
+    checkDivergence: vi.fn().mockResolvedValue('synced')
   }
 }));
 
@@ -92,10 +94,14 @@ describe('SettingsDashboard', () => {
     vi.clearAllMocks();
     (useTrackStore as any).mockReturnValue(mockInitialState);
   });
+  
+  const renderWithRouter = (ui: React.ReactElement) => {
+    return render(<MemoryRouter>{ui}</MemoryRouter>);
+  };
 
   it('renders pilot profile and system settings with space-themed data', () => {
     // Arrange
-    render(<SettingsDashboard />);
+    renderWithRouter(<SettingsDashboard />);
 
     // Assert
     expect(screen.getByDisplayValue('Commander Valentina')).toBeInTheDocument();
@@ -105,7 +111,7 @@ describe('SettingsDashboard', () => {
 
   it('saves updated system protocol changes', async () => {
     // Arrange
-    render(<SettingsDashboard />);
+    renderWithRouter(<SettingsDashboard />);
     const nameInput = screen.getByDisplayValue('Commander Valentina');
     const saveButton = screen.getByText(/Sync Changes/i);
 
@@ -127,7 +133,7 @@ describe('SettingsDashboard', () => {
       oracleConfig: { ...mockInitialState.oracleConfig, syncEnabled: true }
     });
     (syncService.pushUpdate as any).mockResolvedValue({ syncedAt: '2024-01-01T12:00:00Z' });
-    render(<SettingsDashboard />);
+    renderWithRouter(<SettingsDashboard />);
     const syncButton = screen.getByRole('button', { name: /Sync Now/i });
 
     // Act
@@ -188,7 +194,7 @@ describe('SettingsDashboard', () => {
       (window as any).Razorpay = mockRazorpayConstructor;
     }
 
-    render(<SettingsDashboard />);
+    renderWithRouter(<SettingsDashboard />);
     const linkButton = screen.getByRole('button', { name: /Establish Link/i });
 
     // Act - Open paywall modal
@@ -234,7 +240,7 @@ describe('SettingsDashboard', () => {
     // Arrange
     const mockBlob = new Blob(['mock-data'], { type: 'application/octet-stream' });
     (dbProxy.exportToJson as any).mockResolvedValue(new Uint8Array([1, 2, 3]));
-    render(<SettingsDashboard />);
+    renderWithRouter(<SettingsDashboard />);
     const snapshotButton = screen.getByText(/Create Snapshot/i);
 
     // Act
@@ -252,7 +258,7 @@ describe('SettingsDashboard', () => {
 
   it('toggles UI strategy between Simple and Pro modes', async () => {
     // Arrange
-    render(<SettingsDashboard />);
+    renderWithRouter(<SettingsDashboard />);
     const proButton = screen.getByRole('button', { name: /Pro/i });
 
     // Act
@@ -280,7 +286,7 @@ describe('SettingsDashboard', () => {
       devices: mockDevices
     });
 
-    render(<SettingsDashboard />);
+    renderWithRouter(<SettingsDashboard />);
 
     // Assert
     expect(screen.getByText('Linked Devices Array')).toBeInTheDocument();
@@ -293,7 +299,7 @@ describe('SettingsDashboard', () => {
       ...mockInitialState
     });
 
-    render(<SettingsDashboard />);
+    renderWithRouter(<SettingsDashboard />);
     const establishButton = screen.getByRole('button', { name: /Establish Link/i });
     await act(async () => {
       fireEvent.click(establishButton);

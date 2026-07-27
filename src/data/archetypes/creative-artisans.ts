@@ -5,7 +5,23 @@ export const creativeArtisanProfiles: Archetype[] = [
   {
     id: "frame-chaser",
     icon: "📷",
-    title: "The Frame Chaser",
+    title: "",
+    voids: [
+        {
+            id: "void-frame-chaser-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-frame-chaser-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Lucas | Wedding & Portrait Photographer",
     vibe: "Warm, energetic, constantly chasing the perfect golden hour light.",
     data: {
@@ -30,9 +46,21 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Survive & Thrive Peak Wedding Season",
           description: "Deliver all galleries on time while maintaining creative sanity.",
           milestones: [
-            { id: "ms-73cf3142", title: "Cull 5000 images: Find the emotional core of the Smith wedding", completed: true },
-            { id: "ms-c5c63af0", title: "Initial color grade: Apply signature moody aesthetic to Jones gallery", completed: false },
-            { id: "ms-b22aff4b", title: "Deliver final gallery: Exceed the Williams family expectations", completed: false }
+            { id: "ms-73cf3142", title: "Cull 5000 images: Find the emotional core of the Smith wedding", completed: true , tasks: [
+                  { id: 'wedding-season-t1', title: 'Backup all RAW files', completed: true },
+                  { id: 'wedding-season-t2', title: 'Perform first-pass culling in Lightroom', completed: true },
+                  { id: 'wedding-season-t3', title: 'Select final 800 hero shots', completed: true }
+                ] },
+            { id: "ms-c5c63af0", title: "Initial color grade: Apply signature moody aesthetic to Jones gallery", completed: false , tasks: [
+                  { id: 'ms-c5c63af0-t1', title: 'Apply base custom presets', completed: true },
+                  { id: 'ms-c5c63af0-t2', title: 'Adjust exposure and white balance locally', completed: false },
+                  { id: 'ms-c5c63af0-t3', title: 'Export low-res proofs for client', completed: false }
+                ] },
+            { id: "ms-b22aff4b", title: "Deliver final gallery: Exceed the Williams family expectations", completed: false , tasks: [
+                  { id: 'ms-b22aff4b-t1', title: 'Perform final blemish retouching', completed: true },
+                  { id: 'ms-b22aff4b-t2', title: 'Design luxury layflat album layout', completed: false },
+                  { id: 'ms-b22aff4b-t3', title: 'Send personalized final delivery package', completed: false }
+                ] }
           ]
         },
         {
@@ -40,8 +68,16 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Revamp 2026 Portfolio",
           description: "Curate the absolute best shots for the new website launch.",
           milestones: [
-            { id: "ms-4a38fbc8", title: "Select top 50 shots: Curate a breathtaking 2026 portfolio", completed: true },
-            { id: "ms-53b7acbe", title: "Write service descriptions: Command premium artisan pricing", completed: false }
+            { id: "ms-4a38fbc8", title: "Select top 50 shots: Curate a breathtaking 2026 portfolio", completed: true , tasks: [
+                  { id: 'portfolio-update-t1', title: 'Review past 12 months of client work', completed: true },
+                  { id: 'portfolio-update-t2', title: 'Select images demonstrating stylistic range', completed: true },
+                  { id: 'portfolio-update-t3', title: 'Update website portfolio gallery', completed: true }
+                ] },
+            { id: "ms-53b7acbe", title: "Write service descriptions: Command premium artisan pricing", completed: false , tasks: [
+                  { id: 'ms-53b7acbe-t1', title: 'Research luxury market positioning', completed: true },
+                  { id: 'ms-53b7acbe-t2', title: 'Draft compelling service copy', completed: false },
+                  { id: 'ms-53b7acbe-t3', title: 'Update pricing tiers on website', completed: false }
+                ] }
           ]
         }
       ],
@@ -166,7 +202,23 @@ export const creativeArtisanProfiles: Archetype[] = [
   {
     id: "industrial-lens",
     icon: "📸",
-    title: "The Industrial Lens",
+    title: "",
+    voids: [
+        {
+            id: "void-industrial-lens-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-industrial-lens-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Sarah | Commercial & Industrial Photographer",
     vibe: "Precise, structured, navigating hard hats and heavy machinery with a camera.",
     data: {
@@ -191,10 +243,26 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Apex Corp Annual Report Shoot",
           description: "Capture hero images of the new manufacturing facility.",
           milestones: [
-            { id: "ms-9ca44cf2", title: "Site walk-through and safety briefing", completed: true },
-            { id: "ms-942ff961", title: "Shoot executive headshots", completed: true },
-            { id: "ms-04694088", title: "Capture assembly line action shots", completed: false },
-            { id: "ms-cd7422be", title: "Deliver final retouched images", completed: false }
+            { id: "ms-9ca44cf2", title: "Site walk-through and safety briefing", completed: true , tasks: [
+                  { id: 'annual-report-t1', title: 'Conduct risk assessment sweep', completed: true },
+                  { id: 'annual-report-t2', title: 'Review safety protocols with crew', completed: true },
+                  { id: 'annual-report-t3', title: 'Sign off on site safety logs', completed: true }
+                ] },
+            { id: "ms-942ff961", title: "Shoot executive headshots", completed: true , tasks: [
+                  { id: 'ms-942ff961-t1', title: 'Set up portable studio lighting', completed: true },
+                  { id: 'ms-942ff961-t2', title: 'Direct poses for 15 executives', completed: true },
+                  { id: 'ms-942ff961-t3', title: 'Tethered review of initial shots', completed: true }
+                ] },
+            { id: "ms-04694088", title: "Capture assembly line action shots", completed: false , tasks: [
+                  { id: 'ms-04694088-t1', title: 'Coordinate with floor manager for timing', completed: true },
+                  { id: 'ms-04694088-t2', title: 'Use high-speed sync for machinery', completed: false },
+                  { id: 'ms-04694088-t3', title: 'Capture candid worker interactions', completed: false }
+                ] },
+            { id: "ms-cd7422be", title: "Deliver final retouched images", completed: false , tasks: [
+                  { id: 'ms-cd7422be-t1', title: 'Apply corporate color grading', completed: true },
+                  { id: 'ms-cd7422be-t2', title: 'Retouch background distractions', completed: false },
+                  { id: 'ms-cd7422be-t3', title: 'Deliver final assets via secure portal', completed: false }
+                ] }
           ]
         }
       ],
@@ -319,7 +387,23 @@ export const creativeArtisanProfiles: Archetype[] = [
   {
     id: "aesthetic-architect",
     icon: "🖋️",
-    title: "The Aesthetic Architect",
+    title: "",
+    voids: [
+        {
+            id: "void-aesthetic-architect-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-aesthetic-architect-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Liam | Freelance Graphic Designer",
     vibe: "Minimalist, caffeinated, obsessed with typography and grid systems.",
     data: {
@@ -344,9 +428,21 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Nova Tech Brand Identity",
           description: "Complete overhaul of Nova's visual language and logo.",
           milestones: [
-            { id: "ms-270f7871", title: "Brand discovery workshop", completed: true },
-            { id: "ms-33581b05", title: "Present 3 logo concepts", completed: true },
-            { id: "ms-d4a05d84", title: "Finalize brand guidelines document", completed: false }
+            { id: "ms-270f7871", title: "Brand discovery workshop", completed: true , tasks: [
+                  { id: 'brand-identity-t1', title: 'Host 2-hour stakeholder interview', completed: true },
+                  { id: 'brand-identity-t2', title: 'Analyze competitor visual identities', completed: true },
+                  { id: 'brand-identity-t3', title: 'Define core brand archetypes', completed: true }
+                ] },
+            { id: "ms-33581b05", title: "Present 3 logo concepts", completed: true , tasks: [
+                  { id: 'ms-33581b05-t1', title: 'Draft initial vector sketches', completed: true },
+                  { id: 'ms-33581b05-t2', title: 'Develop monochrome and color variations', completed: true },
+                  { id: 'ms-33581b05-t3', title: 'Present concepts via Zoom pitch', completed: true }
+                ] },
+            { id: "ms-d4a05d84", title: "Finalize brand guidelines document", completed: false , tasks: [
+                  { id: 'ms-d4a05d84-t1', title: 'Define typography hierarchy', completed: true },
+                  { id: 'ms-d4a05d84-t2', title: 'Establish primary and secondary color palettes', completed: false },
+                  { id: 'ms-d4a05d84-t3', title: 'Export final PDF brand book', completed: false }
+                ] }
           ]
         },
         {
@@ -354,8 +450,16 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Advanced Typography Course",
           description: "Level up my type game to command higher rates.",
           milestones: [
-            { id: "ms-f0ab4c93", title: "Complete module 1: History", completed: true },
-            { id: "ms-6eff110d", title: "Complete final project", completed: false }
+            { id: "ms-f0ab4c93", title: "Complete module 1: History", completed: true , tasks: [
+                  { id: 'typography-course-t1', title: 'Read assigned chapters', completed: true },
+                  { id: 'typography-course-t2', title: 'Participate in seminar discussion', completed: true },
+                  { id: 'typography-course-t3', title: 'Submit 2000-word essay', completed: true }
+                ] },
+            { id: "ms-6eff110d", title: "Complete final project", completed: false , tasks: [
+                  { id: 'ms-6eff110d-t1', title: 'Outline research methodology', completed: true },
+                  { id: 'ms-6eff110d-t2', title: 'Conduct primary data collection', completed: false },
+                  { id: 'ms-6eff110d-t3', title: 'Present findings to thesis committee', completed: false }
+                ] }
           ]
         }
       ],
@@ -491,7 +595,23 @@ export const creativeArtisanProfiles: Archetype[] = [
   {
     id: "word-weaver",
     icon: "📝",
-    title: "The Word Weaver",
+    title: "",
+    voids: [
+        {
+            id: "void-word-weaver-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-word-weaver-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Sarah | Technical Writer",
     vibe: "Methodical, clear-headed, translating complex engineering into plain English.",
     data: {
@@ -516,10 +636,26 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "v2.0 API Documentation Rewrite",
           description: "Migrate and update all endpoint docs to the new OpenAPI spec.",
           milestones: [
-            { id: "ms-c49101fe", title: "Audit existing v1.0 docs", completed: true },
-            { id: "ms-8533eee8", title: "Write authentication guide", completed: true },
-            { id: "ms-223d6ba1", title: "Document core endpoints", completed: false },
-            { id: "ms-66c962f1", title: "Publish to developer portal", completed: false }
+            { id: "ms-c49101fe", title: "Audit existing v1.0 docs", completed: true , tasks: [
+                  { id: 'api-docs-t1', title: 'Review analytics for highest traffic pages', completed: true },
+                  { id: 'api-docs-t2', title: 'Identify outdated code snippets', completed: true },
+                  { id: 'api-docs-t3', title: 'Create migration checklist', completed: true }
+                ] },
+            { id: "ms-8533eee8", title: "Write authentication guide", completed: true , tasks: [
+                  { id: 'ms-8533eee8-t1', title: 'Draft OAuth2 implementation steps', completed: true },
+                  { id: 'ms-8533eee8-t2', title: 'Create sample code for Node.js', completed: true },
+                  { id: 'ms-8533eee8-t3', title: 'Review with senior security engineer', completed: true }
+                ] },
+            { id: "ms-223d6ba1", title: "Document core endpoints", completed: false , tasks: [
+                  { id: 'ms-223d6ba1-t1', title: 'Use OpenAPI spec to generate reference', completed: true },
+                  { id: 'ms-223d6ba1-t2', title: 'Add cURL examples for all methods', completed: false },
+                  { id: 'ms-223d6ba1-t3', title: 'Verify responses against production API', completed: false }
+                ] },
+            { id: "ms-66c962f1", title: "Publish to developer portal", completed: false , tasks: [
+                  { id: 'ms-66c962f1-t1', title: 'Merge markdown files to main', completed: true },
+                  { id: 'ms-66c962f1-t2', title: 'Trigger static site generator build', completed: false },
+                  { id: 'ms-66c962f1-t3', title: 'Verify live links and formatting', completed: false }
+                ] }
           ]
         }
       ],
@@ -644,7 +780,23 @@ export const creativeArtisanProfiles: Archetype[] = [
   {
     id: "code-artisan",
     icon: "🎮",
-    title: "The Code Artisan",
+    title: "",
+    voids: [
+        {
+            id: "void-code-artisan-1",
+            text: "Waiting for 'perfect inspiration' to start",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-code-artisan-2",
+            text: "Over-tweaking finished work instead of publishing",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Alex | Indie Game Developer",
     vibe: "Creative, technically ambitious, fueled by energy drinks and synthwave.",
     data: {
@@ -669,10 +821,26 @@ export const creativeArtisanProfiles: Archetype[] = [
           title: "Complete Vertical Slice Demo",
           description: "Finish the core gameplay loop for publisher pitches.",
           milestones: [
-            { id: "ms-9f6212fc", title: "Implement player controller", completed: true },
-            { id: "ms-b339ff19", title: "Finish first level blockout", completed: true },
-            { id: "ms-3a69b046", title: "Implement basic enemy AI", completed: false },
-            { id: "ms-3b2de235", title: "Polish UI and add sound effects", completed: false }
+            { id: "ms-9f6212fc", title: "Implement player controller", completed: true , tasks: [
+                  { id: 'vertical-slice-t1', title: 'Code basic movement physics', completed: true },
+                  { id: 'vertical-slice-t2', title: 'Integrate jump and dash mechanics', completed: true },
+                  { id: 'vertical-slice-t3', title: 'Refine input responsiveness', completed: true }
+                ] },
+            { id: "ms-b339ff19", title: "Finish first level blockout", completed: true , tasks: [
+                  { id: 'ms-b339ff19-t1', title: 'Design greybox level layout', completed: true },
+                  { id: 'ms-b339ff19-t2', title: 'Place initial spawn points', completed: true },
+                  { id: 'ms-b339ff19-t3', title: 'Playtest for pacing and flow', completed: true }
+                ] },
+            { id: "ms-3a69b046", title: "Implement basic enemy AI", completed: false , tasks: [
+                  { id: 'ms-3a69b046-t1', title: 'Create patrol waypoints', completed: true },
+                  { id: 'ms-3a69b046-t2', title: 'Implement line-of-sight detection', completed: false },
+                  { id: 'ms-3a69b046-t3', title: 'Code basic attack state machine', completed: false }
+                ] },
+            { id: "ms-3b2de235", title: "Polish UI and add sound effects", completed: false , tasks: [
+                  { id: 'ms-3b2de235-t1', title: 'Integrate menu animations', completed: true },
+                  { id: 'ms-3b2de235-t2', title: 'Add footstep and interaction SFX', completed: false },
+                  { id: 'ms-3b2de235-t3', title: 'Balance overall audio mix', completed: false }
+                ] }
           ]
         }
       ],

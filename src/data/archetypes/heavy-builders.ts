@@ -5,7 +5,23 @@ export const heavyBuilderProfiles: Archetype[] = [
   {
     id: "heavy-blueprint-orchestrator",
     icon: "🏗️",
-    title: "The Blueprint Orchestrator",
+    title: "",
+    voids: [
+        {
+            id: "void-heavy-blueprint-orchestrator-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-heavy-blueprint-orchestrator-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Marcus | Senior Civil Engineer",
     vibe: "Precise, structured, large-scale vision, foundational.",
     data: {
@@ -31,9 +47,21 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Design and implement the foundation and utilities network for the new metropolitan district.",
           status: "in-progress",
           milestones: [
-            { id: "ms-4cdd7782", title: "Finalize subgrade blueprints: Guarantee 100-year foundation stability", completed: true },
-            { id: "ms-da4e2b8e", title: "Approve deep piling plan: Navigate complex subterranean bedrock", completed: false },
-            { id: "ms-076fed79", title: "Municipal drainage: Engineer flood-proof storm retention", completed: false }
+            { id: "ms-4cdd7782", title: "Finalize subgrade blueprints: Guarantee 100-year foundation stability", completed: true , tasks: [
+                  { id: 'amb-marcus-1-t1', title: 'Consult with geotechnical engineers', completed: true },
+                  { id: 'amb-marcus-1-t2', title: 'Review soil boring logs', completed: true },
+                  { id: 'amb-marcus-1-t3', title: 'Approve final rebar specifications', completed: true }
+                ] },
+            { id: "ms-da4e2b8e", title: "Approve deep piling plan: Navigate complex subterranean bedrock", completed: false , tasks: [
+                  { id: 'ms-da4e2b8e-t1', title: 'Map bedrock depth across site', completed: true },
+                  { id: 'ms-da4e2b8e-t2', title: 'Select pile driving equipment', completed: false },
+                  { id: 'ms-da4e2b8e-t3', title: 'Monitor test pile installation', completed: false }
+                ] },
+            { id: "ms-076fed79", title: "Municipal drainage: Engineer flood-proof storm retention", completed: false , tasks: [
+                  { id: 'ms-076fed79-t1', title: 'Calculate 100-year flood volumes', completed: true },
+                  { id: 'ms-076fed79-t2', title: 'Design underground retention vaults', completed: false },
+                  { id: 'ms-076fed79-t3', title: 'Obtain civil engineering sign-off', completed: false }
+                ] }
           ]
         },
         {
@@ -42,8 +70,16 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Upgrade the old suspension bridge to withstand high magnitude seismic activity.",
           status: "in-progress",
           milestones: [
-            { id: "ms-05a2210e", title: "Structural integrity assessment: X-ray the 50-year-old suspension cables", completed: true },
-            { id: "ms-21869cf1", title: "Design damper installations: Absorb 8.0 magnitude seismic shockwaves", completed: false }
+            { id: "ms-05a2210e", title: "Structural integrity assessment: X-ray the 50-year-old suspension cables", completed: true , tasks: [
+                  { id: 'amb-marcus-2-t1', title: 'Deploy ultrasonic testing drones', completed: true },
+                  { id: 'amb-marcus-2-t2', title: 'Analyze stress fracture reports', completed: true },
+                  { id: 'amb-marcus-2-t3', title: 'Draft maintenance recommendation', completed: true }
+                ] },
+            { id: "ms-21869cf1", title: "Design damper installations: Absorb 8.0 magnitude seismic shockwaves", completed: false , tasks: [
+                  { id: 'ms-21869cf1-t1', title: 'Model seismic loads in software', completed: true },
+                  { id: 'ms-21869cf1-t2', title: 'Select tuned mass damper system', completed: false },
+                  { id: 'ms-21869cf1-t3', title: 'Supervise installation on top floor', completed: false }
+                ] }
           ]
         }
       ],
@@ -118,7 +154,23 @@ export const heavyBuilderProfiles: Archetype[] = [
   {
     id: "heavy-structural-titan",
     icon: "👷",
-    title: "The Structural Titan",
+    title: "",
+    voids: [
+        {
+            id: "void-heavy-structural-titan-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-heavy-structural-titan-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Tariq | Heavy Construction PM",
     vibe: "Commanding, deadline-driven, logistics master, unyielding.",
     data: {
@@ -144,9 +196,21 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Oversee the end-to-end construction of a 50-story mixed-use commercial tower.",
           status: "in-progress",
           milestones: [
-            { id: "ms-657a525e", title: "Pour 10,000 yards of foundation concrete", completed: true },
-            { id: "ms-9bc3fb77", title: "Complete steel framing up to floor 25", completed: true },
-            { id: "ms-7508a687", title: "Top out roof structure", completed: false }
+            { id: "ms-657a525e", title: "Pour 10,000 yards of foundation concrete", completed: true , tasks: [
+                  { id: 'amb-tariq-1-t1', title: 'Coordinate 100+ cement trucks', completed: true },
+                  { id: 'amb-tariq-1-t2', title: 'Monitor concrete curing temperatures', completed: true },
+                  { id: 'amb-tariq-1-t3', title: 'Perform slump and strength tests', completed: true }
+                ] },
+            { id: "ms-9bc3fb77", title: "Complete steel framing up to floor 25", completed: true , tasks: [
+                  { id: 'ms-9bc3fb77-t1', title: 'Erect central elevator core', completed: true },
+                  { id: 'ms-9bc3fb77-t2', title: 'Weld primary steel girders', completed: true },
+                  { id: 'ms-9bc3fb77-t3', title: 'Inspect all high-strength bolt torques', completed: true }
+                ] },
+            { id: "ms-7508a687", title: "Top out roof structure", completed: false , tasks: [
+                  { id: 'ms-7508a687-t1', title: 'Hoist final steel beam', completed: true },
+                  { id: 'ms-7508a687-t2', title: 'Host topping out ceremony', completed: false },
+                  { id: 'ms-7508a687-t3', title: 'Begin exterior envelope sealing', completed: false }
+                ] }
           ]
         }
       ],
@@ -220,7 +284,23 @@ export const heavyBuilderProfiles: Archetype[] = [
   {
     id: "heavy-plant-maestro",
     icon: "🏭",
-    title: "The Plant Maestro",
+    title: "",
+    voids: [
+        {
+            id: "void-heavy-plant-maestro-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-heavy-plant-maestro-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "David | Factory Operations Manager",
     vibe: "Systematic, efficiency-obsessed, process-oriented, steadfast.",
     data: {
@@ -246,9 +326,21 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Optimize production workflow to reduce defect rate to below 3.4 per million.",
           status: "in-progress",
           milestones: [
-            { id: "ms-dfd3baa8", title: "Map current value stream: Expose hidden assembly bottlenecks", completed: true },
-            { id: "ms-7bb0fef6", title: "Statistical process control: Reduce defect tolerance to Six Sigma", completed: false },
-            { id: "ms-a376deb1", title: "Train shift supervisors: Cultivate a Kaizen continuous improvement culture", completed: false }
+            { id: "ms-dfd3baa8", title: "Map current value stream: Expose hidden assembly bottlenecks", completed: true , tasks: [
+                  { id: 'amb-david-1-t1', title: 'Observe factory floor operations for 3 days', completed: true },
+                  { id: 'amb-david-1-t2', title: 'Identify non-value-added activities', completed: true },
+                  { id: 'amb-david-1-t3', title: 'Draft current state VSM', completed: true }
+                ] },
+            { id: "ms-7bb0fef6", title: "Statistical process control: Reduce defect tolerance to Six Sigma", completed: false , tasks: [
+                  { id: 'ms-7bb0fef6-t1', title: 'Implement automated optical inspection', completed: true },
+                  { id: 'ms-7bb0fef6-t2', title: 'Train operators on control charts', completed: false },
+                  { id: 'ms-7bb0fef6-t3', title: 'Achieve 3.4 DPMO target', completed: false }
+                ] },
+            { id: "ms-a376deb1", title: "Train shift supervisors: Cultivate a Kaizen continuous improvement culture", completed: false , tasks: [
+                  { id: 'ms-a376deb1-t1', title: 'Host 5S organizational workshop', completed: true },
+                  { id: 'ms-a376deb1-t2', title: 'Implement daily huddle routine', completed: false },
+                  { id: 'ms-a376deb1-t3', title: 'Launch employee suggestion program', completed: false }
+                ] }
           ]
         }
       ],
@@ -321,7 +413,23 @@ export const heavyBuilderProfiles: Archetype[] = [
   {
     id: "heavy-machine-whisperer",
     icon: "🦾",
-    title: "The Machine Whisperer",
+    title: "",
+    voids: [
+        {
+            id: "void-heavy-machine-whisperer-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-heavy-machine-whisperer-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Elena | Robotics & Automation Engineer",
     vibe: "Innovative, highly technical, futuristic, meticulous.",
     data: {
@@ -347,9 +455,21 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Integrate a fleet of AGVs (Automated Guided Vehicles) for warehouse logistics.",
           status: "in-progress",
           milestones: [
-            { id: "ms-cde68f7f", title: "Map facility for LiDAR: Establish millimeter-perfect AGV routes", completed: true },
-            { id: "ms-6e5c340c", title: "Program traffic control: Prevent autonomous vehicle gridlock", completed: false },
-            { id: "ms-10b66cd4", title: "Full fleet dry run: Execute 24-hour lights-out manufacturing test", completed: false }
+            { id: "ms-cde68f7f", title: "Map facility for LiDAR: Establish millimeter-perfect AGV routes", completed: true , tasks: [
+                  { id: 'amb-elena-1-t1', title: 'Scan entire warehouse with 3D LiDAR', completed: true },
+                  { id: 'amb-elena-1-t2', title: 'Define designated exclusion zones', completed: true },
+                  { id: 'amb-elena-1-t3', title: 'Upload map to AGV fleet manager', completed: true }
+                ] },
+            { id: "ms-6e5c340c", title: "Program traffic control: Prevent autonomous vehicle gridlock", completed: false , tasks: [
+                  { id: 'ms-6e5c340c-t1', title: 'Implement right-of-way logic', completed: true },
+                  { id: 'ms-6e5c340c-t2', title: 'Test bottleneck resolution algorithms', completed: false },
+                  { id: 'ms-6e5c340c-t3', title: 'Simulate 50-vehicle operations', completed: false }
+                ] },
+            { id: "ms-10b66cd4", title: "Full fleet dry run: Execute 24-hour lights-out manufacturing test", completed: false , tasks: [
+                  { id: 'ms-10b66cd4-t1', title: 'Power down all manual systems', completed: true },
+                  { id: 'ms-10b66cd4-t2', title: 'Monitor AGV battery management', completed: false },
+                  { id: 'ms-10b66cd4-t3', title: 'Review efficiency logs post-test', completed: false }
+                ] }
           ]
         }
       ],
@@ -422,7 +542,23 @@ export const heavyBuilderProfiles: Archetype[] = [
   {
     id: "heavy-voltage-vanguard",
     icon: "⚡",
-    title: "The Voltage Vanguard",
+    title: "",
+    voids: [
+        {
+            id: "void-heavy-voltage-vanguard-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-heavy-voltage-vanguard-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Sam | Master Electrician & Foreman",
     vibe: "Energetic, safety-first, pragmatic, highly skilled.",
     data: {
@@ -448,9 +584,21 @@ export const heavyBuilderProfiles: Archetype[] = [
           description: "Install and commission the high-voltage distribution network for a Tier 4 data center.",
           status: "in-progress",
           milestones: [
-            { id: "ms-47c7dac2", title: "Main switchgear installation: Power the 50MW data center core", completed: true },
-            { id: "ms-95dfa44d", title: "Pull primary feeder cables: Route heavy copper through sub-floors", completed: false },
-            { id: "ms-855deb3b", title: "Commission backup generators: Guarantee 99.999% uptime during grid failure", completed: false }
+            { id: "ms-47c7dac2", title: "Main switchgear installation: Power the 50MW data center core", completed: true , tasks: [
+                  { id: 'amb-sam-1-t1', title: 'Coordinate heavy lifting crane', completed: true },
+                  { id: 'amb-sam-1-t2', title: 'Install primary transformers', completed: true },
+                  { id: 'amb-sam-1-t3', title: 'Perform high-voltage megger testing', completed: true }
+                ] },
+            { id: "ms-95dfa44d", title: "Pull primary feeder cables: Route heavy copper through sub-floors", completed: false , tasks: [
+                  { id: 'ms-95dfa44d-t1', title: 'Setup cable pulling winches', completed: true },
+                  { id: 'ms-95dfa44d-t2', title: 'Route 10,000 feet of copper cable', completed: false },
+                  { id: 'ms-95dfa44d-t3', title: 'Terminate connections at breaker panels', completed: false }
+                ] },
+            { id: "ms-855deb3b", title: "Commission backup generators: Guarantee 99.999% uptime during grid failure", completed: false , tasks: [
+                  { id: 'ms-855deb3b-t1', title: 'Perform load bank testing', completed: true },
+                  { id: 'ms-855deb3b-t2', title: 'Verify automatic transfer switch operation', completed: false },
+                  { id: 'ms-855deb3b-t3', title: 'Sign off on final commissioning report', completed: false }
+                ] }
           ]
         }
       ],

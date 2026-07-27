@@ -27,6 +27,7 @@ describe('JSON Compression Sync Engine', () => {
       CREATE TABLE void_tasks (id TEXT PRIMARY KEY, title TEXT);
       CREATE TABLE reflections (id TEXT PRIMARY KEY, content TEXT);
       CREATE TABLE skills (id TEXT PRIMARY KEY, level INTEGER);
+      CREATE TABLE devices (id TEXT PRIMARY KEY, name TEXT);
     `);
   });
 

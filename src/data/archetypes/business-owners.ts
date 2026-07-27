@@ -5,7 +5,23 @@ export const businessOwnerProfiles: Archetype[] = [
   {
     id: "wellness-visionary",
     icon: "🌸",
-    title: "The Wellness Visionary",
+    title: "",
+    voids: [
+        {
+            id: "void-wellness-visionary-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-wellness-visionary-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Chloe | Luxury Spa & Salon Owner",
     vibe: "Serene, opulent, and rejuvenating.",
     data: {
@@ -30,9 +46,21 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Open a Second Luxury Location",
           description: "Expand the brand to a prime downtown spot.",
           milestones: [
-            { id: "ms-0156d8cf", title: "Secure Commercial Lease: Negotiate prime downtown foot traffic", completed: true },
-            { id: "ms-9fea25c9", title: "Finalize Interior Design: Create an Instagram-worthy aesthetic", completed: false },
-            { id: "ms-715fcbab", title: "Hire Flagship Manager: Poach top-tier retail talent", completed: false }
+            { id: "ms-0156d8cf", title: "Secure Commercial Lease: Negotiate prime downtown foot traffic", completed: true , tasks: [
+                  { id: 'open-second-location-t1', title: 'Tour top 5 potential locations', completed: true },
+                  { id: 'open-second-location-t2', title: 'Perform foot traffic analysis', completed: true },
+                  { id: 'open-second-location-t3', title: 'Sign final 5-year lease agreement', completed: true }
+                ] },
+            { id: "ms-9fea25c9", title: "Finalize Interior Design: Create an Instagram-worthy aesthetic", completed: false , tasks: [
+                  { id: 'ms-9fea25c9-t1', title: 'Consult with local boutique design firm', completed: true },
+                  { id: 'ms-9fea25c9-t2', title: 'Select custom lighting fixtures', completed: false },
+                  { id: 'ms-9fea25c9-t3', title: 'Approve final 3D renders', completed: false }
+                ] },
+            { id: "ms-715fcbab", title: "Hire Flagship Manager: Poach top-tier retail talent", completed: false , tasks: [
+                  { id: 'ms-715fcbab-t1', title: 'Post discreet job listings on executive boards', completed: true },
+                  { id: 'ms-715fcbab-t2', title: 'Interview top 3 candidates', completed: false },
+                  { id: 'ms-715fcbab-t3', title: 'Negotiate competitive compensation package', completed: false }
+                ] }
           ]
         },
         {
@@ -40,9 +68,21 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Launch Proprietary Skincare Line",
           description: "Develop and market an organic, in-house product line.",
           milestones: [
-            { id: "ms-bb920a56", title: "Finalize formulations with lab", completed: true },
-            { id: "ms-ac658b55", title: "Design packaging and branding", completed: false },
-            { id: "ms-f0f7ecf8", title: "Host launch party", completed: false }
+            { id: "ms-bb920a56", title: "Finalize formulations with lab", completed: true , tasks: [
+                  { id: 'launch-skincare-line-t1', title: 'Review stability testing results', completed: true },
+                  { id: 'launch-skincare-line-t2', title: 'Adjust active ingredient concentrations', completed: true },
+                  { id: 'launch-skincare-line-t3', title: 'Sign off on final product formula', completed: true }
+                ] },
+            { id: "ms-ac658b55", title: "Design packaging and branding", completed: false , tasks: [
+                  { id: 'ms-ac658b55-t1', title: 'Select eco-friendly packaging suppliers', completed: true },
+                  { id: 'ms-ac658b55-t2', title: 'Review color mockups with design agency', completed: false },
+                  { id: 'ms-ac658b55-t3', title: 'Order initial prototype batch', completed: false }
+                ] },
+            { id: "ms-f0f7ecf8", title: "Host launch party", completed: false , tasks: [
+                  { id: 'ms-f0f7ecf8-t1', title: 'Secure luxury event venue', completed: true },
+                  { id: 'ms-f0f7ecf8-t2', title: 'Send PR packages to top influencers', completed: false },
+                  { id: 'ms-f0f7ecf8-t3', title: 'Manage day-of event logistics', completed: false }
+                ] }
           ]
         }
       ],
@@ -165,7 +205,23 @@ export const businessOwnerProfiles: Archetype[] = [
   {
     id: "culinary-maestro",
     icon: "🍳",
-    title: "The Culinary Maestro",
+    title: "",
+    voids: [
+        {
+            id: "void-culinary-maestro-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-culinary-maestro-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Chef Diego | Restaurant Owner & Head Chef",
     vibe: "Passionate, fast-paced, and exquisite.",
     data: {
@@ -190,9 +246,21 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Achieve a Michelin Star",
           description: "Elevate the dining experience to earn the ultimate culinary accolade.",
           milestones: [
-            { id: "ms-23b1882b", title: "Refine seasonal tasting menu", completed: true },
-            { id: "ms-55002f83", title: "Upgrade wine pairing program", completed: false },
-            { id: "ms-73bf4d22", title: "Perfect front-of-house service standards", completed: false }
+            { id: "ms-23b1882b", title: "Refine seasonal tasting menu", completed: true , tasks: [
+                  { id: 'michelin-star-t1', title: 'Source seasonal local ingredients', completed: true },
+                  { id: 'michelin-star-t2', title: 'Test pairings with sommelier', completed: true },
+                  { id: 'michelin-star-t3', title: 'Finalize menu pricing and layout', completed: true }
+                ] },
+            { id: "ms-55002f83", title: "Upgrade wine pairing program", completed: false , tasks: [
+                  { id: 'ms-55002f83-t1', title: 'Attend regional wine tasting events', completed: true },
+                  { id: 'ms-55002f83-t2', title: 'Negotiate with exclusive distributors', completed: false },
+                  { id: 'ms-55002f83-t3', title: 'Train staff on new tasting notes', completed: false }
+                ] },
+            { id: "ms-73bf4d22", title: "Perfect front-of-house service standards", completed: false , tasks: [
+                  { id: 'ms-73bf4d22-t1', title: 'Conduct role-playing service drills', completed: true },
+                  { id: 'ms-73bf4d22-t2', title: 'Review customer feedback metrics', completed: false },
+                  { id: 'ms-73bf4d22-t3', title: 'Implement secret diner program', completed: false }
+                ] }
           ]
         },
         {
@@ -200,9 +268,21 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Expand to a Second Concept",
           description: "Open a casual, high-volume sister restaurant.",
           milestones: [
-            { id: "ms-b2fcd11b", title: "Secure financing", completed: true },
-            { id: "ms-59db271d", title: "Sign lease for new space", completed: true },
-            { id: "ms-db79c339", title: "Menu development for new concept", completed: false }
+            { id: "ms-b2fcd11b", title: "Secure financing", completed: true , tasks: [
+                  { id: 'second-concept-t1', title: 'Prepare detailed financial projections', completed: true },
+                  { id: 'second-concept-t2', title: 'Pitch to angel investor syndicate', completed: true },
+                  { id: 'second-concept-t3', title: 'Sign term sheet', completed: true }
+                ] },
+            { id: "ms-59db271d", title: "Sign lease for new space", completed: true , tasks: [
+                  { id: 'ms-59db271d-t1', title: 'Review commercial zoning laws', completed: true },
+                  { id: 'ms-59db271d-t2', title: 'Negotiate tenant improvement allowance', completed: true },
+                  { id: 'ms-59db271d-t3', title: 'Finalize legal lease review', completed: true }
+                ] },
+            { id: "ms-db79c339", title: "Menu development for new concept", completed: false , tasks: [
+                  { id: 'ms-db79c339-t1', title: 'Identify target demographic preferences', completed: true },
+                  { id: 'ms-db79c339-t2', title: 'Conduct competitor menu analysis', completed: false },
+                  { id: 'ms-db79c339-t3', title: 'Host soft-tasting for investors', completed: false }
+                ] }
           ]
         }
       ],
@@ -325,7 +405,23 @@ export const businessOwnerProfiles: Archetype[] = [
   {
     id: "retail-trailblazer",
     icon: "🏪",
-    title: "The Retail Trailblazer",
+    title: "",
+    voids: [
+        {
+            id: "void-retail-trailblazer-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-retail-trailblazer-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Zoe | Boutique E-Commerce & Storefront Owner",
     vibe: "Trendy, data-driven, and chic.",
     data: {
@@ -350,9 +446,21 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Hit $1M in Annual Revenue",
           description: "Scale both e-commerce and physical storefront sales.",
           milestones: [
-            { id: "ms-b9c11bbc", title: "Optimize online conversion rate", completed: true },
-            { id: "ms-e1040ed8", title: "Launch influencer affiliate program", completed: false },
-            { id: "ms-b1e111eb", title: "Expand wholesale partnerships", completed: false }
+            { id: "ms-b9c11bbc", title: "Optimize online conversion rate", completed: true , tasks: [
+                  { id: 'hit-1m-arr-t1', title: 'A/B test checkout flow', completed: true },
+                  { id: 'hit-1m-arr-t2', title: 'Implement cart abandonment emails', completed: true },
+                  { id: 'hit-1m-arr-t3', title: 'Analyze heatmaps for landing page', completed: true }
+                ] },
+            { id: "ms-e1040ed8", title: "Launch influencer affiliate program", completed: false , tasks: [
+                  { id: 'ms-e1040ed8-t1', title: 'Identify 50 brand-aligned creators', completed: true },
+                  { id: 'ms-e1040ed8-t2', title: 'Draft commission structure agreements', completed: false },
+                  { id: 'ms-e1040ed8-t3', title: 'Ship initial PR boxes', completed: false }
+                ] },
+            { id: "ms-b1e111eb", title: "Expand wholesale partnerships", completed: false , tasks: [
+                  { id: 'ms-b1e111eb-t1', title: 'Pitch to regional boutique retailers', completed: true },
+                  { id: 'ms-b1e111eb-t2', title: 'Design B2B wholesale catalog', completed: false },
+                  { id: 'ms-b1e111eb-t3', title: 'Fulfill first major purchase order', completed: false }
+                ] }
           ]
         },
         {
@@ -360,9 +468,21 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Launch International Shipping",
           description: "Expand customer base beyond domestic borders.",
           milestones: [
-            { id: "ms-f7fc874a", title: "Negotiate international carrier rates", completed: true },
-            { id: "ms-08daa3fe", title: "Implement customs and duties calculator at checkout", completed: false },
-            { id: "ms-e9bdf96d", title: "Run targeted ad campaigns in UK & Australia", completed: false }
+            { id: "ms-f7fc874a", title: "Negotiate international carrier rates", completed: true , tasks: [
+                  { id: 'intl-shipping-t1', title: 'Compare DHL and FedEx enterprise rates', completed: true },
+                  { id: 'intl-shipping-t2', title: 'Integrate carrier APIs', completed: true },
+                  { id: 'intl-shipping-t3', title: 'Perform test shipments to EU', completed: true }
+                ] },
+            { id: "ms-08daa3fe", title: "Implement customs and duties calculator at checkout", completed: false , tasks: [
+                  { id: 'ms-08daa3fe-t1', title: 'Install cross-border compliance plugin', completed: true },
+                  { id: 'ms-08daa3fe-t2', title: 'Map product HS codes', completed: false },
+                  { id: 'ms-08daa3fe-t3', title: 'Test localized tax calculations', completed: false }
+                ] },
+            { id: "ms-e9bdf96d", title: "Run targeted ad campaigns in UK & Australia", completed: false , tasks: [
+                  { id: 'ms-e9bdf96d-t1', title: 'Localize ad copy for regional dialects', completed: true },
+                  { id: 'ms-e9bdf96d-t2', title: 'Set up regional retargeting pixels', completed: false },
+                  { id: 'ms-e9bdf96d-t3', title: 'Analyze initial ROAS', completed: false }
+                ] }
           ]
         }
       ],
@@ -485,7 +605,23 @@ export const businessOwnerProfiles: Archetype[] = [
   {
     id: "urban-botanist",
     icon: "🌿",
-    title: "The Urban Botanist",
+    title: "",
+    voids: [
+        {
+            id: "void-urban-botanist-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-urban-botanist-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Maya | Landscape Architecture Firm Owner",
     vibe: "Earthy, structural, and sustainable.",
     data: {
@@ -510,9 +646,21 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Win City Green Space Initiative",
           description: "Secure the massive multi-million dollar city contract for park revitalization.",
           milestones: [
-            { id: "ms-84e1617e", title: "Submit initial design proposal", completed: true },
-            { id: "ms-3a48e68d", title: "Pass environmental impact review", completed: false },
-            { id: "ms-97fc8ca1", title: "Present final pitch to city council", completed: false }
+            { id: "ms-84e1617e", title: "Submit initial design proposal", completed: true , tasks: [
+                  { id: 'city-green-space-t1', title: 'Draft preliminary mood boards', completed: true },
+                  { id: 'city-green-space-t2', title: 'Create 3D spatial renders', completed: true },
+                  { id: 'city-green-space-t3', title: 'Present concept to stakeholders', completed: true }
+                ] },
+            { id: "ms-3a48e68d", title: "Pass environmental impact review", completed: false , tasks: [
+                  { id: 'ms-3a48e68d-t1', title: 'Hire independent environmental consultant', completed: true },
+                  { id: 'ms-3a48e68d-t2', title: 'Submit revised drainage plan', completed: false },
+                  { id: 'ms-3a48e68d-t3', title: 'Receive municipal clearance', completed: false }
+                ] },
+            { id: "ms-97fc8ca1", title: "Present final pitch to city council", completed: false , tasks: [
+                  { id: 'ms-97fc8ca1-t1', title: 'Prepare interactive architectural model', completed: true },
+                  { id: 'ms-97fc8ca1-t2', title: 'Rehearse presentation with PR team', completed: false },
+                  { id: 'ms-97fc8ca1-t3', title: 'Address community feedback in town hall', completed: false }
+                ] }
           ]
         },
         {
@@ -520,9 +668,21 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Publish Sustainable Landscaping Book",
           description: "Author a coffee-table book on drought-resistant urban gardens.",
           milestones: [
-            { id: "ms-c62c016b", title: "Secure publishing deal", completed: true },
-            { id: "ms-82c4b0dd", title: "Finish writing manuscript", completed: false },
-            { id: "ms-34109e0a", title: "Complete photography for all featured gardens", completed: false }
+            { id: "ms-c62c016b", title: "Secure publishing deal", completed: true , tasks: [
+                  { id: 'publish-book-t1', title: 'Refine query letter', completed: true },
+                  { id: 'publish-book-t2', title: 'Pitch to top 5 literary agents', completed: true },
+                  { id: 'publish-book-t3', title: 'Negotiate advance and royalties', completed: true }
+                ] },
+            { id: "ms-82c4b0dd", title: "Finish writing manuscript", completed: false , tasks: [
+                  { id: 'ms-82c4b0dd-t1', title: 'Complete final structural edit', completed: true },
+                  { id: 'ms-82c4b0dd-t2', title: 'Run professional proofreading pass', completed: false },
+                  { id: 'ms-82c4b0dd-t3', title: 'Submit final draft to editor', completed: false }
+                ] },
+            { id: "ms-34109e0a", title: "Complete photography for all featured gardens", completed: false , tasks: [
+                  { id: 'ms-34109e0a-t1', title: 'Scout optimal lighting at locations', completed: true },
+                  { id: 'ms-34109e0a-t2', title: 'Conduct multi-day photo shoots', completed: false },
+                  { id: 'ms-34109e0a-t3', title: 'Curate final 100 images for print', completed: false }
+                ] }
           ]
         }
       ],
@@ -599,7 +759,23 @@ export const businessOwnerProfiles: Archetype[] = [
   {
     id: "event-orchestrator",
     icon: "🎉",
-    title: "The Event Orchestrator",
+    title: "",
+    voids: [
+        {
+            id: "void-event-orchestrator-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-event-orchestrator-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Sofia | Wedding Planning Agency Owner",
     vibe: "Detail-oriented, glamorous, and flawless.",
     data: {
@@ -624,9 +800,21 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Feature in Vogue Weddings",
           description: "Plan a high-profile wedding that gets a full editorial feature in Vogue.",
           milestones: [
-            { id: "ms-06c9cb84", title: "Sign a celebrity or high-society client", completed: true },
-            { id: "ms-6783605f", title: "Secure exclusive design and floral partnerships", completed: false },
-            { id: "ms-ed3ba7fa", title: "Coordinate with Vogue editorial team for exclusive coverage", completed: false }
+            { id: "ms-06c9cb84", title: "Sign a celebrity or high-society client", completed: true , tasks: [
+                  { id: 'vogue-weddings-t1', title: 'Leverage high-net-worth network', completed: true },
+                  { id: 'vogue-weddings-t2', title: 'Present customized luxury portfolio', completed: true },
+                  { id: 'vogue-weddings-t3', title: 'Finalize NDA and service agreement', completed: true }
+                ] },
+            { id: "ms-6783605f", title: "Secure exclusive design and floral partnerships", completed: false , tasks: [
+                  { id: 'ms-6783605f-t1', title: 'Meet with elite regional florists', completed: true },
+                  { id: 'ms-6783605f-t2', title: 'Negotiate wholesale priority access', completed: false },
+                  { id: 'ms-6783605f-t3', title: 'Draft exclusivity contracts', completed: false }
+                ] },
+            { id: "ms-ed3ba7fa", title: "Coordinate with Vogue editorial team for exclusive coverage", completed: false , tasks: [
+                  { id: 'ms-ed3ba7fa-t1', title: 'Pitch exclusive editorial angle', completed: true },
+                  { id: 'ms-ed3ba7fa-t2', title: 'Provide high-res event sneak peeks', completed: false },
+                  { id: 'ms-ed3ba7fa-t3', title: 'Coordinate day-of press access', completed: false }
+                ] }
           ]
         },
         {
@@ -634,9 +822,21 @@ export const businessOwnerProfiles: Archetype[] = [
           title: "Exclusive Destination Weddings",
           description: "Transition the agency to only handle luxury destination weddings.",
           milestones: [
-            { id: "ms-4bf54c69", title: "Establish partnerships with 5-star European resorts", completed: true },
-            { id: "ms-85fbdd0b", title: "Rebrand the agency website for international luxury", completed: false },
-            { id: "ms-42eaac7b", title: "Hire a dedicated travel concierge for the team", completed: false }
+            { id: "ms-4bf54c69", title: "Establish partnerships with 5-star European resorts", completed: true , tasks: [
+                  { id: 'destination-exclusive-t1', title: 'Fly to Europe for site inspections', completed: true },
+                  { id: 'destination-exclusive-t2', title: 'Negotiate preferred agency rates', completed: true },
+                  { id: 'destination-exclusive-t3', title: 'Sign mutual referral agreements', completed: true }
+                ] },
+            { id: "ms-85fbdd0b", title: "Rebrand the agency website for international luxury", completed: false , tasks: [
+                  { id: 'ms-85fbdd0b-t1', title: 'Hire premium web design agency', completed: true },
+                  { id: 'ms-85fbdd0b-t2', title: 'Curate high-end lifestyle imagery', completed: false },
+                  { id: 'ms-85fbdd0b-t3', title: 'Launch new site with VIP newsletter', completed: false }
+                ] },
+            { id: "ms-42eaac7b", title: "Hire a dedicated travel concierge for the team", completed: false , tasks: [
+                  { id: 'ms-42eaac7b-t1', title: 'Define concierge service SOPs', completed: true },
+                  { id: 'ms-42eaac7b-t2', title: 'Interview luxury hospitality candidates', completed: false },
+                  { id: 'ms-42eaac7b-t3', title: 'Onboard new hire with VIP clients', completed: false }
+                ] }
           ]
         }
       ],

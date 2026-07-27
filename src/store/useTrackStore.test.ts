@@ -21,6 +21,7 @@ const { mockDb, mockSyncService } = vi.hoisted(() => {
       pullUpdate: vi.fn(),
       pushUpdate: vi.fn(),
       authorize: vi.fn(),
+      getFileMetadata: vi.fn(),
     }
   };
 });
@@ -98,16 +99,17 @@ describe('useTrackStore - Mission Control Store', () => {
   it('should pull remote stellar updates and re-initialize local state', async () => {
     // Arrange: Setup mock data for remote file ID and spy on initialize
     const remoteFileId = 'nebula-remote-777';
-    mockDb.query.mockResolvedValueOnce({ rows: [{ remote_file_id: remoteFileId }] });
+    mockSyncService.getFileMetadata.mockResolvedValueOnce({ id: remoteFileId, modifiedAt: '2024-01-01T00:00:00Z' });
     const initializeSpy = vi.spyOn(useTrackStore.getState(), 'initialize').mockResolvedValue(undefined);
 
     // Act: Execute pull operation
     await useTrackStore.getState().performPull();
     
-    // Assert: Verify DB query for metadata and SyncService pull execution
-    expect(mockDb.query).toHaveBeenCalledWith(expect.stringContaining('SELECT remote_file_id'));
+    // Assert: Verify SyncService pull execution
+    expect(mockSyncService.getFileMetadata).toHaveBeenCalled();
     expect(mockSyncService.pullUpdate).toHaveBeenCalledWith(remoteFileId);
     expect(initializeSpy).toHaveBeenCalled();
+    initializeSpy.mockRestore();
   });
 
   it('should synchronize local state with stellar database records on initialization', async () => {
@@ -115,10 +117,10 @@ describe('useTrackStore - Mission Control Store', () => {
     mockDb.getProfile.mockResolvedValue({ rows: [{ name: 'Commander Shepard', level: 50, xp: 500, title: 'Spectre' }] });
     
     mockDb.query.mockImplementation(async (query: string) => {
-      if (query.includes('FROM oracle_config')) {
+      if (query.includes('oracle_config')) {
         return { rows: [{ apiKey: 'normandy-key', model: 'edi-v1', providerUrl: 'citadel-api' }] };
       }
-      if (query.includes('FROM preferences')) {
+      if (query.includes('preferences')) {
         return { rows: [{ confirmDelete: false, uiMode: 'professional' }] };
       }
       return { rows: [] };
@@ -127,7 +129,7 @@ describe('useTrackStore - Mission Control Store', () => {
     // Act: Initialize the store from the database
     await useTrackStore.getState().initialize();
     
-    // Assert: Verify all state domains are correctly hydrated
+    // Assert: Check mapping
     const state = useTrackStore.getState();
     expect(state.profile.name).toBe('Commander Shepard');
     expect(state.profile.title).toBe('Spectre');

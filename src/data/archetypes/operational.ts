@@ -5,7 +5,23 @@ export const operationalProfiles: Archetype[] = [
   {
     id: "compliance-sentinel",
     icon: "🛡️",
-    title: "The Compliance Sentinel",
+    title: "",
+    voids: [
+        {
+            id: "void-compliance-sentinel-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-compliance-sentinel-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Lead Operational Auditor",
     vibe: "Meticulous, authoritative, process-driven",
     data: {
@@ -32,9 +48,21 @@ export const operationalProfiles: Archetype[] = [
           status: "in-progress",
           progress: 65,
           milestones: [
-            { id: "ms-5b91c4b2", title: "Site A Pre-Assessment: Uncover hidden safety violations", status: "completed" },
-            { id: "ms-42fbecfd", title: "Remediation Follow-ups: Enforce strict compliance mandates", status: "in-progress" },
-            { id: "ms-cb032225", title: "Final Board Report: Present zero-liability audit results", status: "pending" }
+            { id: "ms-5b91c4b2", title: "Site A Pre-Assessment: Uncover hidden safety violations", status: "completed" , tasks: [
+                  { id: 'amb-q3-audit-t1', title: 'Review historical injury logs', completed: true },
+                  { id: 'amb-q3-audit-t2', title: 'Conduct unannounced walkthrough', completed: true },
+                  { id: 'amb-q3-audit-t3', title: 'Draft initial hazard report', completed: true }
+                ] },
+            { id: "ms-42fbecfd", title: "Remediation Follow-ups: Enforce strict compliance mandates", status: "in-progress" , tasks: [
+                  { id: 'ms-42fbecfd-t1', title: 'Verify installation of machine guards', completed: true },
+                  { id: 'ms-42fbecfd-t2', title: 'Review updated training records', completed: false },
+                  { id: 'ms-42fbecfd-t3', title: 'Close out all critical action items', completed: false }
+                ] },
+            { id: "ms-cb032225", title: "Final Board Report: Present zero-liability audit results", status: "pending" , tasks: [
+                  { id: 'ms-cb032225-t1', title: 'Compile final compliance metrics', completed: true },
+                  { id: 'ms-cb032225-t2', title: 'Draft executive risk summary', completed: false },
+                  { id: 'ms-cb032225-t3', title: 'Present findings to safety committee', completed: false }
+                ] }
           ]
         }
       ],
@@ -158,7 +186,23 @@ export const operationalProfiles: Archetype[] = [
   {
     id: "supply-chain-overlord",
     icon: "🌍",
-    title: "The Supply Chain Overlord",
+    title: "",
+    voids: [
+        {
+            id: "void-supply-chain-overlord-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-supply-chain-overlord-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Global Logistics Director",
     vibe: "Strategic, adaptive, efficiency-focused",
     data: {
@@ -185,9 +229,21 @@ export const operationalProfiles: Archetype[] = [
           status: "in-progress",
           progress: 55,
           milestones: [
-            { id: "ms-e6b92aec", title: "Vendor Renegotiations", status: "completed" },
-            { id: "ms-86f0e011", title: "Route Algorithm Update", status: "in-progress" },
-            { id: "ms-6bd0d3c3", title: "Carbon Offset Integration", status: "pending" }
+            { id: "ms-e6b92aec", title: "Vendor Renegotiations", status: "completed" , tasks: [
+                  { id: 'amb-logistics-opt-t1', title: 'Analyze past 12 months of spend', completed: true },
+                  { id: 'amb-logistics-opt-t2', title: 'Send RFPs to top 3 competitors', completed: true },
+                  { id: 'amb-logistics-opt-t3', title: 'Sign new SLA with 15% cost reduction', completed: true }
+                ] },
+            { id: "ms-86f0e011", title: "Route Algorithm Update", status: "in-progress" , tasks: [
+                  { id: 'ms-86f0e011-t1', title: 'Analyze historical delivery times', completed: true },
+                  { id: 'ms-86f0e011-t2', title: 'Deploy new traveling salesman algorithm', completed: false },
+                  { id: 'ms-86f0e011-t3', title: 'Monitor driver satisfaction metrics', completed: false }
+                ] },
+            { id: "ms-6bd0d3c3", title: "Carbon Offset Integration", status: "pending" , tasks: [
+                  { id: 'ms-6bd0d3c3-t1', title: 'Calculate total fleet emissions', completed: true },
+                  { id: 'ms-6bd0d3c3-t2', title: 'Select verified carbon offset partner', completed: false },
+                  { id: 'ms-6bd0d3c3-t3', title: 'Launch carbon-neutral shipping option', completed: false }
+                ] }
           ]
         }
       ],
@@ -310,7 +366,23 @@ export const operationalProfiles: Archetype[] = [
   {
     id: "financial-navigator",
     icon: "🧮",
-    title: "The Financial Navigator",
+    title: "",
+    voids: [
+        {
+            id: "void-financial-navigator-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-financial-navigator-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Corporate Tax Auditor",
     vibe: "Analytical, precise, detail-oriented",
     data: {
@@ -337,9 +409,21 @@ export const operationalProfiles: Archetype[] = [
           status: "in-progress",
           progress: 40,
           milestones: [
-            { id: "ms-36a42859", title: "Current Structure Assessment", status: "completed" },
-            { id: "ms-5eb964cd", title: "Transfer Pricing Policy Update", status: "in-progress" },
-            { id: "ms-b63246e9", title: "Implementation of New Holding Structure", status: "pending" }
+            { id: "ms-36a42859", title: "Current Structure Assessment", status: "completed" , tasks: [
+                  { id: 'amb-tax-restructure-t1', title: 'Map out all international subsidiaries', completed: true },
+                  { id: 'amb-tax-restructure-t2', title: 'Analyze current tax burden', completed: true },
+                  { id: 'amb-tax-restructure-t3', title: 'Identify high-risk jurisdictions', completed: true }
+                ] },
+            { id: "ms-5eb964cd", title: "Transfer Pricing Policy Update", status: "in-progress" , tasks: [
+                  { id: 'ms-5eb964cd-t1', title: 'Conduct benchmark economic analysis', completed: true },
+                  { id: 'ms-5eb964cd-t2', title: 'Draft new intercompany agreements', completed: false },
+                  { id: 'ms-5eb964cd-t3', title: 'Review with external legal counsel', completed: false }
+                ] },
+            { id: "ms-b63246e9", title: "Implementation of New Holding Structure", status: "pending" , tasks: [
+                  { id: 'ms-b63246e9-t1', title: 'Incorporate new entities in Ireland', completed: true },
+                  { id: 'ms-b63246e9-t2', title: 'Execute asset transfers', completed: false },
+                  { id: 'ms-b63246e9-t3', title: 'File required regulatory notices', completed: false }
+                ] }
           ]
         }
       ],
@@ -473,7 +557,23 @@ export const operationalProfiles: Archetype[] = [
   {
     id: "numeric-oracle",
     icon: "📈",
-    title: "The Numeric Oracle",
+    title: "",
+    voids: [
+        {
+            id: "void-numeric-oracle-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-numeric-oracle-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Actuarial Modeler",
     vibe: "Calculated, prescient, data-driven",
     data: {
@@ -500,9 +600,21 @@ export const operationalProfiles: Archetype[] = [
           status: "in-progress",
           progress: 80,
           milestones: [
-            { id: "ms-3e7062a7", title: "Historical Data Ingestion", status: "completed" },
-            { id: "ms-9829f99f", title: "Stochastic Model Calibration", status: "completed" },
-            { id: "ms-85f55fb1", title: "Peer Review and Validation", status: "in-progress" }
+            { id: "ms-3e7062a7", title: "Historical Data Ingestion", status: "completed" , tasks: [
+                  { id: 'amb-risk-model-t1', title: 'Cleanse 10 years of market data', completed: true },
+                  { id: 'amb-risk-model-t2', title: 'Upload to secure AWS S3 bucket', completed: true },
+                  { id: 'amb-risk-model-t3', title: 'Verify data integrity against source', completed: true }
+                ] },
+            { id: "ms-9829f99f", title: "Stochastic Model Calibration", status: "completed" , tasks: [
+                  { id: 'ms-9829f99f-t1', title: 'Implement Monte Carlo simulations', completed: true },
+                  { id: 'ms-9829f99f-t2', title: 'Backtest model against 2008 crash', completed: true },
+                  { id: 'ms-9829f99f-t3', title: 'Tune volatility parameters', completed: true }
+                ] },
+            { id: "ms-85f55fb1", title: "Peer Review and Validation", status: "in-progress" , tasks: [
+                  { id: 'ms-85f55fb1-t1', title: 'Present model to senior quants', completed: true },
+                  { id: 'ms-85f55fb1-t2', title: 'Address extreme edge case scenarios', completed: false },
+                  { id: 'ms-85f55fb1-t3', title: 'Promote model to production', completed: false }
+                ] }
           ]
         }
       ],
@@ -626,7 +738,23 @@ export const operationalProfiles: Archetype[] = [
   {
     id: "yield-maximizer",
     icon: "🧪",
-    title: "The Yield Maximizer",
+    title: "",
+    voids: [
+        {
+            id: "void-yield-maximizer-1",
+            text: "Endlessly researching instead of doing the work",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        },
+        {
+            id: "void-yield-maximizer-2",
+            text: "Getting distracted by superficial industry drama",
+            impact: "high",
+            engagedCount: 0,
+            maxAllowed: 3
+        }
+    ],
     subtitle: "Process Chemical Engineer",
     vibe: "Innovative, systemic, safety-conscious",
     data: {
@@ -653,9 +781,21 @@ export const operationalProfiles: Archetype[] = [
           status: "in-progress",
           progress: 45,
           milestones: [
-            { id: "ms-839e893e", title: "Pilot Plant Trials", status: "completed" },
-            { id: "ms-45e1c24a", title: "Thermodynamic Modeling", status: "in-progress" },
-            { id: "ms-eb205bb4", title: "Full Scale Implementation", status: "pending" }
+            { id: "ms-839e893e", title: "Pilot Plant Trials", status: "completed" , tasks: [
+                  { id: 'amb-reactor-upgrade-t1', title: 'Scale up formulation to 500L reactor', completed: true },
+                  { id: 'amb-reactor-upgrade-t2', title: 'Monitor exotherm and pressure', completed: true },
+                  { id: 'amb-reactor-upgrade-t3', title: 'Analyze product purity', completed: true }
+                ] },
+            { id: "ms-45e1c24a", title: "Thermodynamic Modeling", status: "in-progress" , tasks: [
+                  { id: 'ms-45e1c24a-t1', title: 'Calculate heat of reaction', completed: true },
+                  { id: 'ms-45e1c24a-t2', title: 'Determine cooling requirements', completed: false },
+                  { id: 'ms-45e1c24a-t3', title: 'Design optimal reactor jacket', completed: false }
+                ] },
+            { id: "ms-eb205bb4", title: "Full Scale Implementation", status: "pending" , tasks: [
+                  { id: 'ms-eb205bb4-t1', title: 'Train plant operators on new SOP', completed: true },
+                  { id: 'ms-eb205bb4-t2', title: 'Execute first 5000L production run', completed: false },
+                  { id: 'ms-eb205bb4-t3', title: 'Sign off on commercial quality batch', completed: false }
+                ] }
           ]
         }
       ],
