@@ -70,7 +70,7 @@ const Navigation = () => {
     { to: '/timeline', icon: CalendarDays, label: 'Timeline', color: 'text-primary-container' },
     { to: '/skills', icon: Brain, label: 'Skills', color: 'text-success' },
     { to: '/profile', icon: UserCircle, label: 'Profile', color: 'text-tertiary' },
-    { to: '/about', icon: Info, label: 'About', color: 'text-on-surface-variant' },
+    { to: '/horizon', icon: Telescope, label: 'Horizon', color: 'text-error' },
   ];
 
   const communicationLinks = [
