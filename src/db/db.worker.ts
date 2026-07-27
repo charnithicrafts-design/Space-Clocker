@@ -371,12 +371,35 @@ export const api = {
     const currentVersion = result.rows[0]?.current || 0;
     const pending = MIGRATIONS.filter(m => m.version > currentVersion).sort((a, b) => a.version - b.version);
 
-    for (const migration of pending) {
-      console.log(`[Worker] Applying migration ${migration.version}: ${migration.name}`);
-      await db.transaction(async (tx) => {
-        await migration.run(tx);
-        await tx.query('INSERT INTO schema_migrations (version, name) VALUES ($1, $2)', [migration.version, migration.name]);
-      });
+    if (pending.length > 0) {
+      console.log(`[Worker] Taking pre-migration snapshot for safety...`);
+      let preMigrationSnapshot;
+      try {
+        preMigrationSnapshot = await exportToJson(db);
+      } catch (e) {
+        console.warn('[Worker] Failed to create pre-migration snapshot (safe to ignore on fresh db)', e);
+      }
+
+      try {
+        for (const migration of pending) {
+          console.log(`[Worker] Applying migration ${migration.version}: ${migration.name}`);
+          await db.transaction(async (tx) => {
+            await migration.run(tx);
+            await tx.query('INSERT INTO schema_migrations (version, name) VALUES ($1, $2)', [migration.version, migration.name]);
+          });
+        }
+      } catch (migrationError) {
+        console.error('[Worker] Fatal migration error. Attempting rollback to pre-migration snapshot...', migrationError);
+        if (preMigrationSnapshot) {
+          try {
+            await importFromJson(db, preMigrationSnapshot);
+            console.log('[Worker] Rollback successful. Safe state restored.');
+          } catch (rollbackError) {
+            console.error('[Worker] Rollback failed. Database may be in an inconsistent state.', rollbackError);
+          }
+        }
+        throw migrationError;
+      }
     }
   },
 

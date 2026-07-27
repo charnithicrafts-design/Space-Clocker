@@ -1,0 +1,39 @@
+name: Space-Clocker CI
+
+on:
+  push:
+    branches: [ "master", "main", "feat/*" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Sally's Gate (Lint & Format)
+      run: npm run lint
+
+    - name: Murat's Gate (Unit & Component Tests)
+      run: npm run test --run
+
+    - name: Quinn's Gate (E2E & Integration Validation)
+      run: npm run test --run src/tests/db-restoration.test.ts src/tests/RestoreUpgrade.test.ts src/db/__tests__/sync-engine.test.ts
+      
+    - name: Amelia's Gate (Build Integrity Check)
+      run: npm run build
