@@ -5,7 +5,7 @@ import MomentumEngine from './components/dashboard/MomentumEngine';
 import NebulaMap from './components/nebula/NebulaMap';
 import OrbitScheduler from './components/orbit/OrbitScheduler';
 import CalendarShell from './components/horizon/CalendarShell';
-import EventHorizon from './components/horizon/EventHorizon';
+import TrajectoryHorizon from './components/horizon/TrajectoryHorizon';
 import SkillsMatrix from './components/skills/SkillsMatrix';
 import { OracleDashboard } from './components/oracle/OracleDashboard';
 import SettingsDashboard from './components/settings/SettingsDashboard';
@@ -346,7 +346,7 @@ const AppContent = () => {
           <Route path="/nebula" element={<NebulaMap />} />
           <Route path="/orbit" element={<OrbitScheduler />} />
           <Route path="/timeline" element={<CalendarShell />} />
-          <Route path="/horizon" element={<EventHorizon />} />
+          <Route path="/horizon" element={<TrajectoryHorizon />} />
           <Route path="/skills" element={<SkillsMatrix />} />
           <Route path="/oracle" element={<OracleDashboard onClose={() => window.history.back()} />} />
           <Route path="/transmission" element={<TransmissionDashboard />} />

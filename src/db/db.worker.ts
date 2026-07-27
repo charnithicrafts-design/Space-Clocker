@@ -499,6 +499,42 @@ export const api = {
     return this.query('DELETE FROM tasks WHERE id = $1', [id]);
   },
 
+  async getTelemetry(timeframeDays: number) {
+    if (initializing) await initializing;
+    if (!db) throw new Error('Database not initialized');
+    
+    return await db.transaction(async (tx) => {
+      // 1. Heatmap Data (Completed tasks grouped by date, max 30 days)
+      const tasksRes = await tx.query(
+        `SELECT planned_date as date, COUNT(*) as count 
+         FROM tasks 
+         WHERE completed = true AND planned_date::date >= CURRENT_DATE - ($1 * INTERVAL '1 day')
+         GROUP BY planned_date 
+         ORDER BY planned_date ASC`, 
+        [timeframeDays]
+      );
+
+      // 2. Void Breach Data (grouped by date)
+      const voidsRes = await tx.query(`
+        SELECT date(created_at) as date, COUNT(*) as count
+        FROM stellar_history
+        WHERE type = 'failure' AND created_at >= CURRENT_DATE - ($1 * INTERVAL '1 day')
+        GROUP BY date(created_at)
+        ORDER BY date(created_at) ASC
+      `, [timeframeDays]);
+
+      // 3. XP Progression
+      const profile = await tx.query<any>('SELECT xp, level FROM profile WHERE id = 1');
+
+      return {
+        heatmap: tasksRes.rows as { date: string; count: number }[],
+        voidBreaches: voidsRes.rows as { date: string; count: number }[],
+        currentXp: profile.rows[0]?.xp || 0,
+        currentLevel: profile.rows[0]?.level || 1
+      };
+    });
+  },
+
   async toggleTask(id: string, xpPerLevel: number) {
     if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
