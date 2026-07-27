@@ -1,0 +1,335 @@
+{
+  "industrial-lens": {
+    "history": [
+      {
+        "id": "hist-industrial-lens-1",
+        "title": "First Solo Industrial Shoot",
+        "date": "2023-05-12",
+        "type": "success",
+        "category": "project",
+        "description": "Successfully navigated the intense environment of a steel mill, capturing raw power while adhering to strict safety protocols.",
+        "skills": ["Photography", "Safety Protocols", "Lighting"]
+      },
+      {
+        "id": "hist-industrial-lens-2",
+        "title": "Lost Drone in the Quarry",
+        "date": "2024-02-18",
+        "type": "failure",
+        "category": "setback",
+        "description": "A sudden wind shear sent the main drone crashing into the quarry depths. An expensive lesson in weather monitoring.",
+        "skills": ["Drone Operation", "Risk Management"]
+      },
+      {
+        "id": "hist-industrial-lens-3",
+        "title": "Featured in 'Modern Manufacturing'",
+        "date": "2025-01-10",
+        "type": "success",
+        "category": "award",
+        "description": "A proud moment seeing the sprawling assembly line panorama grace the cover of a leading industry magazine.",
+        "skills": ["Networking", "Editorial Pitching"]
+      }
+    ],
+    "tasks": {
+      "ms-9ca44cf2": [
+        { "id": "task-9ca44cf2-1", "title": "Review OSHA site-specific guidelines and hazard maps", "time": 60, "weightage": 5 },
+        { "id": "task-9ca44cf2-2", "title": "Calibrate personal protective equipment (PPE) and verify comms", "time": 30, "weightage": 3 },
+        { "id": "task-9ca44cf2-3", "title": "Map ideal vantage points while navigating active forklift lanes", "time": 120, "weightage": 10 }
+      ],
+      "ms-942ff961": [
+        { "id": "task-942ff961-1", "title": "Set up mobile studio lighting in the boardroom", "time": 45, "weightage": 5 },
+        { "id": "task-942ff961-2", "title": "Direct poses to convey approachability and authority", "time": 90, "weightage": 15 },
+        { "id": "task-942ff961-3", "title": "Tethered capture and live review with the CEO", "time": 60, "weightage": 10 }
+      ],
+      "ms-04694088": [
+        { "id": "task-04694088-1", "title": "Secure camera mounts near the robotic welding station", "time": 45, "weightage": 8 },
+        { "id": "task-04694088-2", "title": "Time exposures to capture sparks without motion blur", "time": 120, "weightage": 20 },
+        { "id": "task-04694088-3", "title": "Interview shift foreman to anticipate peak activity moments", "time": 30, "weightage": 5 }
+      ],
+      "ms-cd7422be": [
+        { "id": "task-cd7422be-1", "title": "Perform baseline color grading for high-contrast industrial environments", "time": 120, "weightage": 10 },
+        { "id": "task-cd7422be-2", "title": "Meticulously clone out distracting safety debris in the background", "time": 180, "weightage": 25 },
+        { "id": "task-cd7422be-3", "title": "Export and compress full-resolution TIFFs for print and web formats", "time": 45, "weightage": 5 }
+      ]
+    }
+  },
+  "aesthetic-architect": {
+    "history": [
+      {
+        "id": "hist-aesthetic-architect-1",
+        "title": "Rebranding 'EcoVital'",
+        "date": "2022-11-05",
+        "type": "success",
+        "category": "project",
+        "description": "Completely overhauled a struggling startup's identity, resulting in a 40% user engagement spike. Felt like breathing life into a dying star.",
+        "skills": ["Typography", "Color Theory", "Client Empathy"]
+      },
+      {
+        "id": "hist-aesthetic-architect-2",
+        "title": "The 'Blue Monday' Pitch Disaster",
+        "date": "2023-04-12",
+        "type": "failure",
+        "category": "presentation",
+        "description": "Presented a highly experimental brutalist concept to conservative stakeholders. Read the room completely wrong.",
+        "skills": ["Presentation Skills", "Stakeholder Alignment"]
+      },
+      {
+        "id": "hist-aesthetic-architect-3",
+        "title": "Winner of AIGA Design Award",
+        "date": "2024-09-20",
+        "type": "success",
+        "category": "award",
+        "description": "Validated years of late nights and obsessive pixel-pushing when the minimalist packaging design won gold.",
+        "skills": ["Packaging Design", "Visual Hierarchy"]
+      }
+    ],
+    "tasks": {
+      "ms-270f7871": [
+        { "id": "task-270f7871-1", "title": "Facilitate stakeholder empathy mapping session", "time": 90, "weightage": 15 },
+        { "id": "task-270f7871-2", "title": "Analyze competitor visual landscapes and identify white space", "time": 120, "weightage": 10 },
+        { "id": "task-270f7871-3", "title": "Synthesize workshop notes into core brand archetypes", "time": 60, "weightage": 5 }
+      ],
+      "ms-33581b05": [
+        { "id": "task-33581b05-1", "title": "Vectorize initial sketches focusing on negative space", "time": 180, "weightage": 20 },
+        { "id": "task-33581b05-2", "title": "Build real-world mockups (business cards, digital billboards) for context", "time": 120, "weightage": 15 },
+        { "id": "task-33581b05-3", "title": "Draft presentation narrative explaining the conceptual foundation", "time": 60, "weightage": 10 }
+      ],
+      "ms-d4a05d84": [
+        { "id": "task-d4a05d84-1", "title": "Define primary and secondary color palettes with accessibility checks", "time": 90, "weightage": 10 },
+        { "id": "task-d4a05d84-2", "title": "Establish typographic hierarchy and spacing rules", "time": 120, "weightage": 15 },
+        { "id": "task-d4a05d84-3", "title": "Write 'Tone of Voice' guidelines with clear dos and don'ts", "time": 90, "weightage": 10 }
+      ],
+      "ms-f0ab4c93": [
+        { "id": "task-f0ab4c93-1", "title": "Research Bauhaus movement influences on modern UI", "time": 120, "weightage": 10 },
+        { "id": "task-f0ab4c93-2", "title": "Compile visual essay on the evolution of Swiss Design", "time": 180, "weightage": 15 },
+        { "id": "task-f0ab4c93-3", "title": "Draft reflective essay on historical aesthetic cycles", "time": 90, "weightage": 15 }
+      ],
+      "ms-6eff110d": [
+        { "id": "task-6eff110d-1", "title": "Consolidate brand system across 15 distinct touchpoints", "time": 240, "weightage": 30 },
+        { "id": "task-6eff110d-2", "title": "Record video walkthrough of the design rationale", "time": 120, "weightage": 15 },
+        { "id": "task-6eff110d-3", "title": "Compile and submit final portfolio ZIP to the review board", "time": 30, "weightage": 5 }
+      ]
+    }
+  },
+  "word-weaver": {
+    "history": [
+      {
+        "id": "hist-word-weaver-1",
+        "title": "Saved the Q3 Launch",
+        "date": "2023-08-22",
+        "type": "success",
+        "category": "project",
+        "description": "Untangled a spaghetti-mess of engineer notes into a pristine API guide 24 hours before release. Pure adrenaline.",
+        "skills": ["Technical Writing", "API Documentation", "Grace Under Pressure"]
+      },
+      {
+        "id": "hist-word-weaver-2",
+        "title": "The Missing Parameter Fiasco",
+        "date": "2024-03-15",
+        "type": "failure",
+        "category": "setback",
+        "description": "Forgot to document a required authentication header. Broke integrations for three enterprise clients. A humbling lesson in thoroughness.",
+        "skills": ["Quality Assurance", "Empathy for Developers"]
+      },
+      {
+        "id": "hist-word-weaver-3",
+        "title": "Promoted to Lead Documentarian",
+        "date": "2025-05-01",
+        "type": "success",
+        "category": "promotion",
+        "description": "Finally recognized not just as a 'writer', but as a core architect of the developer experience.",
+        "skills": ["Leadership", "Information Architecture"]
+      }
+    ],
+    "tasks": {
+      "ms-c49101fe": [
+        { "id": "task-c49101fe-1", "title": "Run broken link checker and catalog 404 errors", "time": 60, "weightage": 5 },
+        { "id": "task-c49101fe-2", "title": "Cross-reference existing endpoints against the OpenAPI spec", "time": 180, "weightage": 20 },
+        { "id": "task-c49101fe-3", "title": "Interview support team to identify most common developer confusions", "time": 90, "weightage": 15 }
+      ],
+      "ms-8533eee8": [
+        { "id": "task-8533eee8-1", "title": "Draft step-by-step OAuth2 flow for third-party apps", "time": 120, "weightage": 15 },
+        { "id": "task-8533eee8-2", "title": "Create cURL and Python code snippets for JWT token retrieval", "time": 90, "weightage": 10 },
+        { "id": "task-8533eee8-3", "title": "Review authentication draft with the security engineering team", "time": 60, "weightage": 10 }
+      ],
+      "ms-223d6ba1": [
+        { "id": "task-223d6ba1-1", "title": "Define request/response schemas for the /users endpoint", "time": 120, "weightage": 15 },
+        { "id": "task-223d6ba1-2", "title": "Document error codes, edge cases, and rate limits", "time": 90, "weightage": 10 },
+        { "id": "task-223d6ba1-3", "title": "Write intuitive plain-English descriptions for complex data payloads", "time": 120, "weightage": 15 }
+      ],
+      "ms-66c962f1": [
+        { "id": "task-66c962f1-1", "title": "Merge markdown files and resolve Git conflicts", "time": 60, "weightage": 5 },
+        { "id": "task-66c962f1-2", "title": "Verify syntax highlighting and formatting in staging environment", "time": 45, "weightage": 5 },
+        { "id": "task-66c962f1-3", "title": "Send release notes announcement to the developer mailing list", "time": 30, "weightage": 5 }
+      ]
+    }
+  },
+  "code-artisan": {
+    "history": [
+      {
+        "id": "hist-code-artisan-1",
+        "title": "First Indie Game Release",
+        "date": "2021-12-10",
+        "type": "success",
+        "category": "project",
+        "description": "Pushed the final build of my 2D platformer to Steam. Seeing strangers play my creation was an indescribable high.",
+        "skills": ["C#", "Unity", "Game Design"]
+      },
+      {
+        "id": "hist-code-artisan-2",
+        "title": "The Save Corruption Bug",
+        "date": "2022-08-15",
+        "type": "failure",
+        "category": "setback",
+        "description": "A poorly optimized garbage collection cycle corrupted save states for hundreds of players. Spent 48 sleepless hours patching it.",
+        "skills": ["Debugging", "Memory Management"]
+      },
+      {
+        "id": "hist-code-artisan-3",
+        "title": "Accepted into Elite Game Incubator",
+        "date": "2024-01-20",
+        "type": "success",
+        "category": "milestone",
+        "description": "Proved my experimental fluid dynamics engine could scale, earning a spot in a top-tier accelerator.",
+        "skills": ["Physics Programming", "Pitching"]
+      }
+    ],
+    "tasks": {
+      "ms-9f6212fc": [
+        { "id": "task-9f6212fc-1", "title": "Code physics-based rigid body movement and jump arcs", "time": 180, "weightage": 20 },
+        { "id": "task-9f6212fc-2", "title": "Implement coyote time and jump buffering for tighter feel", "time": 120, "weightage": 15 },
+        { "id": "task-9f6212fc-3", "title": "Integrate animation state machine with input events", "time": 90, "weightage": 10 }
+      ],
+      "ms-b339ff19": [
+        { "id": "task-b339ff19-1", "title": "Construct greybox geometry for the tutorial area", "time": 120, "weightage": 10 },
+        { "id": "task-b339ff19-2", "title": "Place primary collision volumes and trigger zones", "time": 60, "weightage": 5 },
+        { "id": "task-b339ff19-3", "title": "Playtest pacing and adjust platform distances", "time": 90, "weightage": 15 }
+      ],
+      "ms-3a69b046": [
+        { "id": "task-3a69b046-1", "title": "Write behavior tree for patrol and chase states", "time": 180, "weightage": 25 },
+        { "id": "task-3a69b046-2", "title": "Implement line-of-sight raycasting for player detection", "time": 120, "weightage": 15 },
+        { "id": "task-3a69b046-3", "title": "Tune enemy movement speed and attack cooldowns", "time": 90, "weightage": 10 }
+      ],
+      "ms-3b2de235": [
+        { "id": "task-3b2de235-1", "title": "Animate health bar depletion with easing functions", "time": 60, "weightage": 5 },
+        { "id": "task-3b2de235-2", "title": "Hook up spatial audio emitters for footsteps and impacts", "time": 120, "weightage": 15 },
+        { "id": "task-3b2de235-3", "title": "Implement dynamic music crossfading during combat", "time": 90, "weightage": 10 }
+      ]
+    }
+  },
+  "product-visionary": {
+    "history": [
+      {
+        "id": "hist-product-visionary-1",
+        "title": "The Impossible Pivot",
+        "date": "2022-03-10",
+        "type": "success",
+        "category": "project",
+        "description": "Convinced the board to abandon a failing feature and pivot to a B2B model. It saved the company and taught me the power of data-driven storytelling.",
+        "skills": ["Data Analysis", "Strategic Communication", "Stakeholder Management"]
+      },
+      {
+        "id": "hist-product-visionary-2",
+        "title": "The Feature Bloat Catastrophe",
+        "date": "2023-11-05",
+        "type": "failure",
+        "category": "setback",
+        "description": "Listened to every vocal minority and shipped a bloated release that tanked our NPS. Learned that saying 'no' is a PM's most vital skill.",
+        "skills": ["Prioritization", "User Research"]
+      },
+      {
+        "id": "hist-product-visionary-3",
+        "title": "Director of Product Promotion",
+        "date": "2025-06-15",
+        "type": "success",
+        "category": "promotion",
+        "description": "Stepped into leadership, shifting from managing pixels and tickets to managing people and paradigms.",
+        "skills": ["Leadership", "Vision Casting"]
+      }
+    ],
+    "tasks": {
+      "ms-6e37a551": [
+        { "id": "task-6e37a551-1", "title": "Resolve remaining open questions on edge-case data handling", "time": 90, "weightage": 10 },
+        { "id": "task-6e37a551-2", "title": "Host synchronous alignment meeting with tech lead and head of design", "time": 60, "weightage": 15 },
+        { "id": "task-6e37a551-3", "title": "Incorporate technical constraints and obtain formal sign-off signatures", "time": 45, "weightage": 10 }
+      ],
+      "ms-f6a85447": [
+        { "id": "task-f6a85447-1", "title": "Draft and schedule targeted email campaign for beta cohort", "time": 60, "weightage": 5 },
+        { "id": "task-f6a85447-2", "title": "Analyze Mixpanel funnel drop-offs during the new onboarding flow", "time": 120, "weightage": 20 },
+        { "id": "task-f6a85447-3", "title": "Conduct 5 qualitative user interviews to understand usability hurdles", "time": 150, "weightage": 25 }
+      ],
+      "ms-5b833b87": [
+        { "id": "task-5b833b87-1", "title": "Review deployment runbook and rollback procedures with DevOps", "time": 90, "weightage": 15 },
+        { "id": "task-5b833b87-2", "title": "Monitor real-time error rates and latency metrics on Datadog during switch-over", "time": 180, "weightage": 30 },
+        { "id": "task-5b833b87-3", "title": "Coordinate live launch announcement with Marketing and PR teams", "time": 60, "weightage": 10 }
+      ],
+      "ms-15e840a0": [
+        { "id": "task-15e840a0-1", "title": "Draft syllabus modules covering Agile, analytics, and user empathy", "time": 120, "weightage": 15 },
+        { "id": "task-15e840a0-2", "title": "Create rubrics for evaluating PM case studies", "time": 90, "weightage": 10 },
+        { "id": "task-15e840a0-3", "title": "Curate a required reading list of industry-standard texts and articles", "time": 60, "weightage": 5 }
+      ],
+      "ms-a5c9ece6": [
+        { "id": "task-a5c9ece6-1", "title": "Facilitate opening workshop on the 'Product Mindset'", "time": 120, "weightage": 15 },
+        { "id": "task-a5c9ece6-2", "title": "Conduct 1:1 career coaching sessions to identify individual growth areas", "time": 300, "weightage": 30 },
+        { "id": "task-a5c9ece6-3", "title": "Grade and provide extensive feedback on their capstone PRD projects", "time": 240, "weightage": 25 }
+      ]
+    }
+  },
+  "cyber-sentinel": {
+    "history": [
+      {
+        "id": "hist-cyber-sentinel-1",
+        "title": "Cracking the Uncrackable",
+        "date": "2023-02-14",
+        "type": "success",
+        "category": "achievement",
+        "description": "Found a zero-day in a widely used authentication protocol. The rush of bypassing the perimeter was intoxicating, followed by the quiet satisfaction of responsible disclosure.",
+        "skills": ["Reverse Engineering", "Exploit Development", "Ethics"]
+      },
+      {
+        "id": "hist-cyber-sentinel-2",
+        "title": "The Silent Alarm",
+        "date": "2023-10-31",
+        "type": "failure",
+        "category": "setback",
+        "description": "Tripped a canary token during a red team engagement due to sloppy opsec. The blue team caught me in minutes. A devastating blow to my ego.",
+        "skills": ["OpSec", "Evasion Techniques"]
+      },
+      {
+        "id": "hist-cyber-sentinel-3",
+        "title": "OSCP Certification Achieved",
+        "date": "2024-07-22",
+        "type": "success",
+        "category": "milestone",
+        "description": "Endured the grueling 24-hour exam. Rooting the final box in the 23rd hour was the most exhausting and rewarding moment of my career.",
+        "skills": ["Penetration Testing", "Endurance", "Privilege Escalation"]
+      }
+    ],
+    "tasks": {
+      "ms-183be0f5": [
+        { "id": "task-183be0f5-1", "title": "Enumerate SMB shares and exploit legacy protocol vulnerabilities", "time": 180, "weightage": 15 },
+        { "id": "task-183be0f5-2", "title": "Perform Kerberoasting to extract and crack service ticket hashes", "time": 120, "weightage": 20 },
+        { "id": "task-183be0f5-3", "title": "Pivot through compromised hosts using SSH tunneling", "time": 150, "weightage": 15 }
+      ],
+      "ms-a56fe2fd": [
+        { "id": "task-a56fe2fd-1", "title": "Run automated vulnerability scanners and sift through false positives", "time": 90, "weightage": 10 },
+        { "id": "task-a56fe2fd-2", "title": "Manually exploit a buffer overflow vulnerability to gain initial shell", "time": 240, "weightage": 30 },
+        { "id": "task-a56fe2fd-3", "title": "Document exploitation steps meticulously while exhausted", "time": 120, "weightage": 15 }
+      ],
+      "ms-1f4d91c7": [
+        { "id": "task-1f4d91c7-1", "title": "Map external attack surface using OSINT and DNS enumeration", "time": 120, "weightage": 15 },
+        { "id": "task-1f4d91c7-2", "title": "Identify and exploit an unpatched deserialization flaw in a web app", "time": 180, "weightage": 25 },
+        { "id": "task-1f4d91c7-3", "title": "Establish persistent command and control (C2) beacon", "time": 90, "weightage": 15 }
+      ],
+      "ms-c19bf669": [
+        { "id": "task-c19bf669-1", "title": "Scrape LinkedIn profiles to craft highly personalized pretext emails", "time": 120, "weightage": 15 },
+        { "id": "task-c19bf669-2", "title": "Deploy clone of the company's SSO login page with credential harvesting", "time": 90, "weightage": 15 },
+        { "id": "task-c19bf669-3", "title": "Bypass multi-factor authentication using an adversary-in-the-middle proxy", "time": 150, "weightage": 25 }
+      ],
+      "ms-c3fec0ed": [
+        { "id": "task-c3fec0ed-1", "title": "Translate technical exploit chains into business risk metrics", "time": 120, "weightage": 20 },
+        { "id": "task-c3fec0ed-2", "title": "Draft an executive summary highlighting potential financial impact", "time": 90, "weightage": 15 },
+        { "id": "task-c3fec0ed-3", "title": "Rehearse Q&A for anticipated defensive pushback from the CIO", "time": 60, "weightage": 10 }
+      ]
+    }
+  }
+}

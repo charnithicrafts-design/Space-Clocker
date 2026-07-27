@@ -1,0 +1,540 @@
+{
+  "medical-research": {
+    "history": [
+      {
+        "id": "hist-medical-research-1",
+        "title": "Breakthrough in Oncology Markers",
+        "date": "2023-11-04",
+        "type": "success",
+        "category": "project",
+        "description": "After months of gruelling nights in the lab, finally identified a stable biomarker. The sheer relief when the assays came back positive was indescribable.",
+        "skills": ["Data Analysis", "Biochemistry", "Patience"]
+      },
+      {
+        "id": "hist-medical-research-2",
+        "title": "Grant Application Rejected",
+        "date": "2024-02-15",
+        "type": "failure",
+        "category": "funding",
+        "description": "The NIH grant was denied. A heavy blow to the team's morale, forcing a critical pivot in our funding strategy and humbling our assumptions.",
+        "skills": ["Grant Writing", "Resilience", "Strategic Pivot"]
+      },
+      {
+        "id": "hist-medical-research-3",
+        "title": "Publication in The Lancet",
+        "date": "2024-09-21",
+        "type": "success",
+        "category": "award",
+        "description": "Seeing our work published in a premier journal was a validating triumph, proving that our unconventional approach was entirely justified.",
+        "skills": ["Scientific Writing", "Peer Review", "Communication"]
+      }
+    ],
+    "tasks": {
+      "m-r1": [
+        {
+          "id": "task-m-r1-1",
+          "title": "Draft the inclusion/exclusion criteria based on ethical review board guidelines",
+          "time": 90,
+          "weightage": 15
+        },
+        {
+          "id": "task-m-r1-2",
+          "title": "Calculate statistical power to determine minimum viable cohort size",
+          "time": 120,
+          "weightage": 20
+        },
+        {
+          "id": "task-m-r1-3",
+          "title": "Synthesize risk mitigation strategies into the final patient consent form",
+          "time": 60,
+          "weightage": 10
+        }
+      ],
+      "m-r2": [
+        {
+          "id": "task-m-r2-1",
+          "title": "Launch targeted recruitment campaign across regional oncology centers",
+          "time": 180,
+          "weightage": 25
+        },
+        {
+          "id": "task-m-r2-2",
+          "title": "Screen initial applicants against strict genetic marker prerequisites",
+          "time": 240,
+          "weightage": 30
+        },
+        {
+          "id": "task-m-r2-3",
+          "title": "Conduct orientation webinars for the first 100 enrolled candidates",
+          "time": 90,
+          "weightage": 15
+        }
+      ]
+    }
+  },
+  "compliance-sentinel": {
+    "history": [
+      {
+        "id": "hist-compliance-sentinel-1",
+        "title": "Averted Critical Plant Shutdown",
+        "date": "2023-08-12",
+        "type": "success",
+        "category": "project",
+        "description": "Caught a subtle structural flaw in the blueprints just hours before final approval. The weight of disaster narrowly avoided still lingers.",
+        "skills": ["Attention to Detail", "Risk Assessment", "Blueprint Analysis"]
+      },
+      {
+        "id": "hist-compliance-sentinel-2",
+        "title": "Auditor Certification Achieved",
+        "date": "2024-01-20",
+        "type": "success",
+        "category": "promotion",
+        "description": "Achieved lead auditor status. The grueling exam was a test of willpower, but earning the title validated years of meticulous fieldwork.",
+        "skills": ["Regulatory Knowledge", "ISO Standards", "Leadership"]
+      },
+      {
+        "id": "hist-compliance-sentinel-3",
+        "title": "Missed Violation in Sector 4",
+        "date": "2024-11-05",
+        "type": "failure",
+        "category": "audit",
+        "description": "Overlooked a minor chemical storage violation that resulted in a fine. A humbling reminder that vigilance must never wane.",
+        "skills": ["Incident Analysis", "Accountability", "Process Improvement"]
+      }
+    ],
+    "tasks": {
+      "ms-5b91c4b2": [
+        {
+          "id": "task-ms-5b91c4b2-1",
+          "title": "Perform a physical sweep of the high-risk manufacturing floor",
+          "time": 180,
+          "weightage": 25
+        },
+        {
+          "id": "task-ms-5b91c4b2-2",
+          "title": "Cross-reference employee safety logs with reported minor incident tickets",
+          "time": 120,
+          "weightage": 15
+        },
+        {
+          "id": "task-ms-5b91c4b2-3",
+          "title": "Interview line managers to expose undocumented workflow shortcuts",
+          "time": 90,
+          "weightage": 20
+        }
+      ],
+      "ms-42fbecfd": [
+        {
+          "id": "task-ms-42fbecfd-1",
+          "title": "Draft strict disciplinary addendums for non-compliant zone supervisors",
+          "time": 60,
+          "weightage": 10
+        },
+        {
+          "id": "task-ms-42fbecfd-2",
+          "title": "Audit the implementation of the new hazardous waste disposal protocol",
+          "time": 150,
+          "weightage": 25
+        },
+        {
+          "id": "task-ms-42fbecfd-3",
+          "title": "Conduct surprise inspections on previously flagged workstations",
+          "time": 120,
+          "weightage": 20
+        }
+      ],
+      "ms-cb032225": [
+        {
+          "id": "task-ms-cb032225-1",
+          "title": "Compile aggregate liability data into a stark executive summary",
+          "time": 90,
+          "weightage": 15
+        },
+        {
+          "id": "task-ms-cb032225-2",
+          "title": "Design a 10-slide impact presentation exposing remaining vulnerabilities",
+          "time": 120,
+          "weightage": 20
+        },
+        {
+          "id": "task-ms-cb032225-3",
+          "title": "Deliver the unvarnished truth to the steering committee in the boardroom",
+          "time": 60,
+          "weightage": 25
+        }
+      ]
+    }
+  },
+  "supply-chain-overlord": {
+    "history": [
+      {
+        "id": "hist-supply-chain-overlord-1",
+        "title": "Global Logistics Crisis Managed",
+        "date": "2023-10-18",
+        "type": "success",
+        "category": "project",
+        "description": "Rerouted 40% of shipments during a major port strike. The intense pressure forged an unbreakable bond within the rapid response team.",
+        "skills": ["Crisis Management", "Logistics", "Negotiation"]
+      },
+      {
+        "id": "hist-supply-chain-overlord-2",
+        "title": "Vendor Bankruptcy Fallout",
+        "date": "2024-03-22",
+        "type": "failure",
+        "category": "operations",
+        "description": "A primary supplier went under, stalling production for two weeks. It was a painful lesson in the necessity of aggressive diversification.",
+        "skills": ["Risk Mitigation", "Supplier Sourcing", "Adaptability"]
+      },
+      {
+        "id": "hist-supply-chain-overlord-3",
+        "title": "Automated Warehouse Launch",
+        "date": "2025-01-10",
+        "type": "success",
+        "category": "promotion",
+        "description": "Spearheaded the transition to a fully automated fulfillment center. Watching the first drone drop an order perfectly was pure euphoria.",
+        "skills": ["Automation Integration", "Project Management", "Process Engineering"]
+      }
+    ],
+    "tasks": {
+      "ms-e6b92aec": [
+        {
+          "id": "task-ms-e6b92aec-1",
+          "title": "Analyze current supplier margins to identify critical leverage points",
+          "time": 120,
+          "weightage": 20
+        },
+        {
+          "id": "task-ms-e6b92aec-2",
+          "title": "Draft aggressive counter-proposals demanding 15% cost reductions",
+          "time": 90,
+          "weightage": 15
+        },
+        {
+          "id": "task-ms-e6b92aec-3",
+          "title": "Conduct high-stakes face-to-face negotiation with top-tier suppliers",
+          "time": 180,
+          "weightage": 30
+        }
+      ],
+      "ms-86f0e011": [
+        {
+          "id": "task-ms-86f0e011-1",
+          "title": "Simulate peak-traffic scenarios in the new geospatial routing engine",
+          "time": 150,
+          "weightage": 25
+        },
+        {
+          "id": "task-ms-86f0e011-2",
+          "title": "Identify and manually patch three major inefficiencies in the beta model",
+          "time": 120,
+          "weightage": 20
+        },
+        {
+          "id": "task-ms-86f0e011-3",
+          "title": "Deploy the updated algorithm to the live European fleet",
+          "time": 60,
+          "weightage": 15
+        }
+      ],
+      "ms-6bd0d3c3": [
+        {
+          "id": "task-ms-6bd0d3c3-1",
+          "title": "Calculate the exact carbon footprint of Q1 maritime logistics",
+          "time": 180,
+          "weightage": 25
+        },
+        {
+          "id": "task-ms-6bd0d3c3-2",
+          "title": "Vet and purchase verified carbon credits from renewable energy partners",
+          "time": 90,
+          "weightage": 15
+        },
+        {
+          "id": "task-ms-6bd0d3c3-3",
+          "title": "Publish transparent sustainability metrics to the public investor portal",
+          "time": 60,
+          "weightage": 10
+        }
+      ]
+    }
+  },
+  "financial-navigator": {
+    "history": [
+      {
+        "id": "hist-financial-navigator-1",
+        "title": "Hostile Takeover Defense",
+        "date": "2023-07-02",
+        "type": "success",
+        "category": "project",
+        "description": "Constructed a poison pill defense in a 72-hour marathon session. Exhaustion was eclipsed by the thrill of saving the company's independence.",
+        "skills": ["M&A Strategy", "Financial Modeling", "Crisis Finance"]
+      },
+      {
+        "id": "hist-financial-navigator-2",
+        "title": "Q3 Earnings Miss",
+        "date": "2024-10-15",
+        "type": "failure",
+        "category": "operations",
+        "description": "Failed to forecast a massive currency fluctuation, leading to a severe earnings miss. The investor call was a brutal gauntlet.",
+        "skills": ["Forecasting", "FX Hedging", "Communication"]
+      },
+      {
+        "id": "hist-financial-navigator-3",
+        "title": "CFO Appointment",
+        "date": "2025-05-01",
+        "type": "success",
+        "category": "promotion",
+        "description": "Stepped into the CFO role. The weight of responsibility was immense, but it marked the pinnacle of a decade of relentless ambition.",
+        "skills": ["Leadership", "Corporate Finance", "Strategic Vision"]
+      }
+    ],
+    "tasks": {
+      "ms-36a42859": [
+        {
+          "id": "task-ms-36a42859-1",
+          "title": "Deconstruct the legacy corporate entity map across 15 jurisdictions",
+          "time": 240,
+          "weightage": 30
+        },
+        {
+          "id": "task-ms-36a42859-2",
+          "title": "Identify massive tax inefficiencies trapped in redundant subsidiaries",
+          "time": 180,
+          "weightage": 25
+        },
+        {
+          "id": "task-ms-36a42859-3",
+          "title": "Present the glaring structural flaws to the notoriously conservative board",
+          "time": 90,
+          "weightage": 20
+        }
+      ],
+      "ms-5eb964cd": [
+        {
+          "id": "task-ms-5eb964cd-1",
+          "title": "Draft comprehensive transfer pricing agreements aligned with OECD guidelines",
+          "time": 180,
+          "weightage": 25
+        },
+        {
+          "id": "task-ms-5eb964cd-2",
+          "title": "Run a worst-case scenario tax audit simulation on the new policy",
+          "time": 150,
+          "weightage": 20
+        },
+        {
+          "id": "task-ms-5eb964cd-3",
+          "title": "Secure formal sign-off from top-tier external legal counsel",
+          "time": 60,
+          "weightage": 15
+        }
+      ],
+      "ms-b63246e9": [
+        {
+          "id": "task-ms-b63246e9-1",
+          "title": "Execute the legal merging of three redundant European entities",
+          "time": 300,
+          "weightage": 35
+        },
+        {
+          "id": "task-ms-b63246e9-2",
+          "title": "Migrate crucial intellectual property assets to the new central holding",
+          "time": 180,
+          "weightage": 25
+        },
+        {
+          "id": "task-ms-b63246e9-3",
+          "title": "Reconcile the opening balance sheets under the newly formed structure",
+          "time": 120,
+          "weightage": 20
+        }
+      ]
+    }
+  },
+  "numeric-oracle": {
+    "history": [
+      {
+        "id": "hist-numeric-oracle-1",
+        "title": "Predictive Model Alpha",
+        "date": "2023-05-19",
+        "type": "success",
+        "category": "project",
+        "description": "The moment the algorithm correctly predicted the market crash was terrifying and exhilarating—a culmination of years of theoretical math.",
+        "skills": ["Machine Learning", "Quantitative Analysis", "Python"]
+      },
+      {
+        "id": "hist-numeric-oracle-2",
+        "title": "Data Corruption Disaster",
+        "date": "2024-08-03",
+        "type": "failure",
+        "category": "operations",
+        "description": "A silent bug corrupted three months of training data. Rebuilding the datasets from scratch was a dark, exhausting period.",
+        "skills": ["Data Engineering", "Debugging", "Resilience"]
+      },
+      {
+        "id": "hist-numeric-oracle-3",
+        "title": "Chief Data Scientist",
+        "date": "2025-11-20",
+        "type": "success",
+        "category": "promotion",
+        "description": "Taking the helm of the data science division meant moving from the code to the strategy, a difficult but profoundly rewarding leap.",
+        "skills": ["Leadership", "Data Strategy", "Mentorship"]
+      }
+    ],
+    "tasks": {
+      "ms-3e7062a7": [
+        {
+          "id": "task-ms-3e7062a7-1",
+          "title": "Engineer a robust pipeline to scrape and normalize 10 years of market ticks",
+          "time": 240,
+          "weightage": 30
+        },
+        {
+          "id": "task-ms-3e7062a7-2",
+          "title": "Purge catastrophic anomalies and dead data from the unstructured lake",
+          "time": 180,
+          "weightage": 25
+        },
+        {
+          "id": "task-ms-3e7062a7-3",
+          "title": "Verify data integrity against pristine, audited historical benchmarks",
+          "time": 120,
+          "weightage": 20
+        }
+      ],
+      "ms-9829f99f": [
+        {
+          "id": "task-ms-9829f99f-1",
+          "title": "Tune the hyperparameters of the Monte Carlo simulation engine",
+          "time": 180,
+          "weightage": 25
+        },
+        {
+          "id": "task-ms-9829f99f-2",
+          "title": "Inject extreme volatility stress-tests to break the current model",
+          "time": 150,
+          "weightage": 20
+        },
+        {
+          "id": "task-ms-9829f99f-3",
+          "title": "Refine the drift equations to eliminate massive compounding errors",
+          "time": 120,
+          "weightage": 15
+        }
+      ],
+      "ms-85f55fb1": [
+        {
+          "id": "task-ms-85f55fb1-1",
+          "title": "Defend the model architecture in a ruthless peer-review crucible",
+          "time": 90,
+          "weightage": 25
+        },
+        {
+          "id": "task-ms-85f55fb1-2",
+          "title": "Implement backtesting adjustments demanded by the senior quant team",
+          "time": 180,
+          "weightage": 20
+        },
+        {
+          "id": "task-ms-85f55fb1-3",
+          "title": "Lock down the final algorithm and deploy to the shadow trading environment",
+          "time": 60,
+          "weightage": 15
+        }
+      ]
+    }
+  },
+  "yield-maximizer": {
+    "history": [
+      {
+        "id": "hist-yield-maximizer-1",
+        "title": "Process Efficiency Breakthrough",
+        "date": "2023-02-11",
+        "type": "success",
+        "category": "project",
+        "description": "Squeezed a 4% yield increase from the aging reactors. The satisfaction of proving the cynics wrong was intoxicating.",
+        "skills": ["Process Engineering", "Optimization", "Data Analysis"]
+      },
+      {
+        "id": "hist-yield-maximizer-2",
+        "title": "Reactor Pressure Failure",
+        "date": "2024-06-25",
+        "type": "failure",
+        "category": "operations",
+        "description": "A miscalculated heat exchange led to a pressure vent, halting operations. A terrifying moment that reshaped my approach to safety margins.",
+        "skills": ["Safety Protocols", "Root Cause Analysis", "Thermodynamics"]
+      },
+      {
+        "id": "hist-yield-maximizer-3",
+        "title": "Plant Manager Role",
+        "date": "2025-08-14",
+        "type": "success",
+        "category": "promotion",
+        "description": "Handed the keys to the main facility. Walking the floor as the person in charge brought a fierce sense of pride and heavy responsibility.",
+        "skills": ["Operations Management", "Leadership", "Strategic Planning"]
+      }
+    ],
+    "tasks": {
+      "ms-839e893e": [
+        {
+          "id": "task-ms-839e893e-1",
+          "title": "Configure the pilot reactor sensors to capture micro-fluctuations in pressure",
+          "time": 120,
+          "weightage": 20
+        },
+        {
+          "id": "task-ms-839e893e-2",
+          "title": "Run a 48-hour continuous extraction cycle to identify catalyst degradation",
+          "time": 300,
+          "weightage": 35
+        },
+        {
+          "id": "task-ms-839e893e-3",
+          "title": "Analyze the raw output sludge to quantify the baseline purity metrics",
+          "time": 180,
+          "weightage": 25
+        }
+      ],
+      "ms-45e1c24a": [
+        {
+          "id": "task-ms-45e1c24a-1",
+          "title": "Build a heat-transfer digital twin to map critical energy loss zones",
+          "time": 240,
+          "weightage": 30
+        },
+        {
+          "id": "task-ms-45e1c24a-2",
+          "title": "Simulate endothermic reactions under extreme temperature differentials",
+          "time": 150,
+          "weightage": 20
+        },
+        {
+          "id": "task-ms-45e1c24a-3",
+          "title": "Translate theoretical thermal models into actionable machinery adjustments",
+          "time": 120,
+          "weightage": 15
+        }
+      ],
+      "ms-eb205bb4": [
+        {
+          "id": "task-ms-eb205bb4-1",
+          "title": "Supervise the physical installation of the upgraded heat exchange coils",
+          "time": 240,
+          "weightage": 30
+        },
+        {
+          "id": "task-ms-eb205bb4-2",
+          "title": "Execute a phased, high-risk ramp-up of the main production line",
+          "time": 180,
+          "weightage": 25
+        },
+        {
+          "id": "task-ms-eb205bb4-3",
+          "title": "Lock in the new operational baselines and sign off on the safety parameters",
+          "time": 90,
+          "weightage": 20
+        }
+      ]
+    }
+  }
+}

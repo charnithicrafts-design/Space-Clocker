@@ -1,0 +1,375 @@
+{
+  "wellness-visionary": {
+    "history": [
+      {
+        "id": "hist-wellness-1",
+        "title": "Secured Seed Funding",
+        "date": "2024-05-12",
+        "type": "success",
+        "category": "finance",
+        "description": "Successfully pitched the overarching brand ethos to angel investors, securing initial runway and emotional validation.",
+        "skills": ["Pitching", "Financial Modeling", "Storytelling"]
+      },
+      {
+        "id": "hist-wellness-2",
+        "title": "First Lab Rejection",
+        "date": "2024-11-03",
+        "type": "failure",
+        "category": "product",
+        "description": "Initial formulation failed stability testing, forcing a heartbreaking but necessary pivot in ingredient sourcing.",
+        "skills": ["Resilience", "Quality Assurance", "Supplier Negotiation"]
+      },
+      {
+        "id": "hist-wellness-3",
+        "title": "Viral Pop-up Success",
+        "date": "2025-08-20",
+        "type": "success",
+        "category": "marketing",
+        "description": "Organized a temporary experiential space that sold out of inventory and cultivated a fiercely loyal early-adopter community.",
+        "skills": ["Event Planning", "Community Building", "Brand Design"]
+      }
+    ],
+    "tasks": {
+      "ms-0156d8cf": [
+        { "id": "task-wv-1", "title": "Scout prime locations analyzing target demographic foot traffic", "time": 180, "weightage": 8 },
+        { "id": "task-wv-2", "title": "Draft counter-offer incorporating tenant improvement allowances", "time": 90, "weightage": 9 },
+        { "id": "task-wv-3", "title": "Review leasing contract with real estate attorney for exit clauses", "time": 60, "weightage": 10 }
+      ],
+      "ms-9fea25c9": [
+        { "id": "task-wv-4", "title": "Curate mood board for sensory elements like bespoke lighting and scent profiles", "time": 120, "weightage": 6 },
+        { "id": "task-wv-5", "title": "Source rare biophilic installations from local artisans", "time": 150, "weightage": 8 },
+        { "id": "task-wv-6", "title": "Finalize rendering approvals with the architectural team", "time": 60, "weightage": 10 }
+      ],
+      "ms-715fcbab": [
+        { "id": "task-wv-7", "title": "Discreetly headhunt operations experts from leading luxury competitors", "time": 120, "weightage": 9 },
+        { "id": "task-wv-8", "title": "Design an equitable profit-sharing compensation package to retain talent", "time": 90, "weightage": 10 },
+        { "id": "task-wv-9", "title": "Conduct immersive cultural-fit interviews with top three executive candidates", "time": 180, "weightage": 9 }
+      ],
+      "ms-bb920a56": [
+        { "id": "task-wv-10", "title": "Review independent heavy-metal and pesticide lab tests for raw materials", "time": 90, "weightage": 10 },
+        { "id": "task-wv-11", "title": "Perform rigorous blind sensory evaluation of the V3 product prototypes", "time": 60, "weightage": 7 },
+        { "id": "task-wv-12", "title": "Sign off on final master formulation and legally lock IP rights", "time": 30, "weightage": 10 }
+      ],
+      "ms-ac658b55": [
+        { "id": "task-wv-13", "title": "Audit sustainable packaging materials for both luxury feel and compostability", "time": 150, "weightage": 8 },
+        { "id": "task-wv-14", "title": "Refine the unboxing experience map with a contracted UX consultant", "time": 90, "weightage": 7 },
+        { "id": "task-wv-15", "title": "Approve final die-lines and precise color swatches for the first production run", "time": 45, "weightage": 10 }
+      ],
+      "ms-f0f7ecf8": [
+        { "id": "task-wv-16", "title": "Finalize an exclusive guest list targeting relevant micro-influencers and press", "time": 90, "weightage": 7 },
+        { "id": "task-wv-17", "title": "Coordinate experiential event activations like aura reading and custom blending", "time": 120, "weightage": 8 },
+        { "id": "task-wv-18", "title": "Rehearse the founder origin story speech to ensure maximum emotional resonance", "time": 60, "weightage": 9 }
+      ]
+    }
+  },
+  "culinary-maestro": {
+    "history": [
+      {
+        "id": "hist-cm-1",
+        "title": "Sous Chef Promotion",
+        "date": "2021-09-15",
+        "type": "success",
+        "category": "promotion",
+        "description": "Elevated to lead the line during the busiest season, proving grit and culinary vision under intense pressure.",
+        "skills": ["Leadership", "Plating", "Inventory Management"]
+      },
+      {
+        "id": "hist-cm-2",
+        "title": "Searing Critic Review",
+        "date": "2023-02-14",
+        "type": "failure",
+        "category": "press",
+        "description": "Received a devastating local review on Valentine's Day, sparking a profound re-evaluation of ego and technique.",
+        "skills": ["Humility", "Menu Redesign", "Quality Control"]
+      },
+      {
+        "id": "hist-cm-3",
+        "title": "Michelin Star Recognition",
+        "date": "2025-10-01",
+        "type": "success",
+        "category": "award",
+        "description": "Achieved the ultimate dream: the first star, validating years of burnt fingers and relentless pursuit of perfection.",
+        "skills": ["Gastronomy", "Consistency", "Team Mentorship"]
+      }
+    ],
+    "tasks": {
+      "ms-23b1882b": [
+        { "id": "task-cm-1", "title": "Forage and source hyper-local spring ingredients from exclusive partnered farms", "time": 180, "weightage": 8 },
+        { "id": "task-cm-2", "title": "Conduct intensive R&D kitchen sessions to finalize flavor profiles of the amuse-bouche", "time": 240, "weightage": 9 },
+        { "id": "task-cm-3", "title": "Draft an exhaustive allergy matrix for the entire new 12-course tasting progression", "time": 90, "weightage": 10 }
+      ],
+      "ms-55002f83": [
+        { "id": "task-cm-4", "title": "Blind-taste rare vintages with the head sommelier to identify perfect course synergies", "time": 120, "weightage": 8 },
+        { "id": "task-cm-5", "title": "Calculate exact margins and adjust pricing for the premium non-alcoholic pairing tier", "time": 60, "weightage": 9 },
+        { "id": "task-cm-6", "title": "Train floor staff heavily on the narrative and tasting notes of each new pour", "time": 90, "weightage": 7 }
+      ],
+      "ms-73bf4d22": [
+        { "id": "task-cm-7", "title": "Choreograph silent service protocols for seamless table maintenance and crumb clearing", "time": 120, "weightage": 9 },
+        { "id": "task-cm-8", "title": "Run a full-service mock dinner with friends and family to ruthlessly stress-test flow", "time": 240, "weightage": 10 },
+        { "id": "task-cm-9", "title": "Revise the script for the maitre'd to elevate the initial guest greeting experience", "time": 45, "weightage": 6 }
+      ],
+      "ms-b2fcd11b": [
+        { "id": "task-cm-10", "title": "Update the business plan pro-forma with recently revised and inflated construction costs", "time": 150, "weightage": 10 },
+        { "id": "task-cm-11", "title": "Pitch the restaurant concept to a private equity syndicate focusing on luxury hospitality", "time": 90, "weightage": 9 },
+        { "id": "task-cm-12", "title": "Finalize the investment term sheet and equity breakdown with legal counsel", "time": 60, "weightage": 10 }
+      ],
+      "ms-59db271d": [
+        { "id": "task-cm-13", "title": "Walk through potential raw commercial spaces with the lead MEP engineer", "time": 120, "weightage": 9 },
+        { "id": "task-cm-14", "title": "Negotiate vital HVAC and heavy-duty kitchen build-out contingencies in the lease", "time": 90, "weightage": 10 },
+        { "id": "task-cm-15", "title": "Execute the final lease signing and securely wire the massive security deposit", "time": 30, "weightage": 10 }
+      ],
+      "ms-db79c339": [
+        { "id": "task-cm-16", "title": "Define the core culinary philosophy and operational limitations for the new casual concept", "time": 90, "weightage": 8 },
+        { "id": "task-cm-17", "title": "Develop 5 highly scalable signature dishes that require minimal prep time during rush", "time": 180, "weightage": 9 },
+        { "id": "task-cm-18", "title": "Ruthlessly cost out recipes to ensure the target 22% food cost is strictly maintained", "time": 120, "weightage": 10 }
+      ]
+    }
+  },
+  "retail-trailblazer": {
+    "history": [
+      {
+        "id": "hist-rt-1",
+        "title": "First 10K Month",
+        "date": "2023-11-30",
+        "type": "success",
+        "category": "sales",
+        "description": "Broke the five-figure monthly revenue ceiling through relentless hustle and optimized ad spend.",
+        "skills": ["Digital Marketing", "Inventory Forecasting", "Customer Service"]
+      },
+      {
+        "id": "hist-rt-2",
+        "title": "Supply Chain Collapse",
+        "date": "2024-04-15",
+        "type": "failure",
+        "category": "operations",
+        "description": "A major overseas manufacturer defaulted, causing stockouts during peak season and testing crisis management skills.",
+        "skills": ["Crisis Mitigation", "Communication", "Sourcing"]
+      },
+      {
+        "id": "hist-rt-3",
+        "title": "Acquisition Offer",
+        "date": "2025-12-10",
+        "type": "success",
+        "category": "business",
+        "description": "Received (and boldly declined) a 7-figure buyout offer, reaffirming faith in the long-term independent vision.",
+        "skills": ["Valuation", "Negotiation", "Strategic Planning"]
+      }
+    ],
+    "tasks": {
+      "ms-b9c11bbc": [
+        { "id": "task-rt-1", "title": "A/B test dynamic urgency triggers on the primary product description pages", "time": 60, "weightage": 8 },
+        { "id": "task-rt-2", "title": "Analyze user heatmaps to identify and remove friction points in the mobile checkout flow", "time": 90, "weightage": 9 },
+        { "id": "task-rt-3", "title": "Implement a seamless one-click post-purchase upsell funnel to increase AOV", "time": 120, "weightage": 10 }
+      ],
+      "ms-e1040ed8": [
+        { "id": "task-rt-4", "title": "Identify and vet 50 highly-aligned micro-influencers within the target lifestyle niche", "time": 120, "weightage": 7 },
+        { "id": "task-rt-5", "title": "Draft compelling, non-salesy outreach templates and tier-based commission structures", "time": 60, "weightage": 8 },
+        { "id": "task-rt-6", "title": "Set up a real-time tracking dashboard and generate unique discount codes in Shopify", "time": 45, "weightage": 9 }
+      ],
+      "ms-b1e111eb": [
+        { "id": "task-rt-7", "title": "Build a persuasive B2B pitch deck highlighting strong retail margins and sell-through rates", "time": 150, "weightage": 9 },
+        { "id": "task-rt-8", "title": "Bravely cold-call head buyers at the top 10 targeted independent boutique chains", "time": 90, "weightage": 8 },
+        { "id": "task-rt-9", "title": "Draft a rock-solid wholesale agreement outlining MAP (Minimum Advertised Price) policies", "time": 60, "weightage": 10 }
+      ],
+      "ms-f7fc874a": [
+        { "id": "task-rt-10", "title": "Compile the past 12 months of shipping dimension and dimensional weight data", "time": 90, "weightage": 7 },
+        { "id": "task-rt-11", "title": "Leverage dense volume data to fiercely negotiate tier-3 pricing with DHL and FedEx reps", "time": 60, "weightage": 10 },
+        { "id": "task-rt-12", "title": "Update the 3PL integration with new, cost-effective routing rules to maximize margin savings", "time": 120, "weightage": 9 }
+      ],
+      "ms-08daa3fe": [
+        { "id": "task-rt-13", "title": "Evaluate robust third-party APIs for real-time, localized tax and duty compliance", "time": 60, "weightage": 8 },
+        { "id": "task-rt-14", "title": "Meticulously map precise HTS (Harmonized Tariff Schedule) codes to the entire product catalog", "time": 180, "weightage": 10 },
+        { "id": "task-rt-15", "title": "Run sandboxed test transactions simulating complex multi-item orders from the EU and Asia", "time": 90, "weightage": 9 }
+      ],
+      "ms-e9bdf96d": [
+        { "id": "task-rt-16", "title": "Artfully localize ad copy to reflect regional colloquialisms, humor, and seasonality", "time": 90, "weightage": 8 },
+        { "id": "task-rt-17", "title": "Configure the Meta Ads manager for hyper-specific geo-fencing and accurate local currency", "time": 60, "weightage": 9 },
+        { "id": "task-rt-18", "title": "Monitor the critical initial 48-hour ROAS and aggressively adjust bid caps accordingly", "time": 45, "weightage": 10 }
+      ]
+    }
+  },
+  "urban-botanist": {
+    "history": [
+      {
+        "id": "hist-ub-1",
+        "title": "First Rooftop Oasis",
+        "date": "2021-06-22",
+        "type": "success",
+        "category": "project",
+        "description": "Transformed a barren concrete Brooklyn roof into a thriving, pollinator-friendly sanctuary.",
+        "skills": ["Horticulture", "Structural Assessment", "Design"]
+      },
+      {
+        "id": "hist-ub-2",
+        "title": "Blight Outbreak",
+        "date": "2023-08-14",
+        "type": "failure",
+        "category": "project",
+        "description": "Lost an entire community garden installation to an aggressive fungal blight due to poor drainage planning.",
+        "skills": ["Soil Science", "Pathology", "Crisis Management"]
+      },
+      {
+        "id": "hist-ub-3",
+        "title": "Civic Beautification Award",
+        "date": "2025-04-10",
+        "type": "success",
+        "category": "award",
+        "description": "Honored by the mayor for spearheading an initiative that integrated native flora into brutalist public squares.",
+        "skills": ["Public Speaking", "Urban Planning", "Advocacy"]
+      }
+    ],
+    "tasks": {
+      "ms-84e1617e": [
+        { "id": "task-ub-1", "title": "Draft visionary preliminary 3D renderings showcasing specific seasonal sunlight trajectories", "time": 120, "weightage": 8 },
+        { "id": "task-ub-2", "title": "Calculate exhaustive estimated water retention levels and absolute structural load requirements", "time": 90, "weightage": 10 },
+        { "id": "task-ub-3", "title": "Compile a robust list of resilient, ultra-local native and drought-tolerant botanical species", "time": 60, "weightage": 7 }
+      ],
+      "ms-3a48e68d": [
+        { "id": "task-ub-4", "title": "Submit an overwhelmingly detailed soil remediation and runoff plan to the municipal board", "time": 90, "weightage": 10 },
+        { "id": "task-ub-5", "title": "Methodically address conservative zoning board concerns regarding micro-habitat disruption", "time": 120, "weightage": 9 },
+        { "id": "task-ub-6", "title": "Procure a specialized, peer-reviewed ecological survey from an independent biology firm", "time": 60, "weightage": 8 }
+      ],
+      "ms-97fc8ca1": [
+        { "id": "task-ub-7", "title": "Refine the deeply emotional civic narrative of the final presentation deck", "time": 90, "weightage": 7 },
+        { "id": "task-ub-8", "title": "Roleplay and rehearse tough Q&A responses for expected budget and maintenance pushback", "time": 60, "weightage": 9 },
+        { "id": "task-ub-9", "title": "Deliver the impassioned public plea for green equity and wellness in District 4", "time": 45, "weightage": 10 }
+      ],
+      "ms-c62c016b": [
+        { "id": "task-ub-10", "title": "Polish the three core sample chapters advocating for widespread biophilic urbanism", "time": 120, "weightage": 9 },
+        { "id": "task-ub-11", "title": "Pitch prestigious literary agents with a proven, dedicated track record in architecture and nature", "time": 90, "weightage": 8 },
+        { "id": "task-ub-12", "title": "Scrutinize the advance and royalty structure alongside a trusted intellectual property lawyer", "time": 60, "weightage": 10 }
+      ],
+      "ms-82c4b0dd": [
+        { "id": "task-ub-13", "title": "Synthesize 5 grueling years of muddy field notes into cohesive, thematic manuscript chapters", "time": 240, "weightage": 10 },
+        { "id": "task-ub-14", "title": "Painstakingly fact-check all Latin botanical nomenclature and historical landscaping references", "time": 120, "weightage": 9 },
+        { "id": "task-ub-15", "title": "Execute a final developmental edit focusing entirely on narrative flow and public accessibility", "time": 180, "weightage": 9 }
+      ],
+      "ms-34109e0a": [
+        { "id": "task-ub-16", "title": "Scout multiple garden locations precisely at golden hour for optimal diffuse, warm lighting", "time": 120, "weightage": 7 },
+        { "id": "task-ub-17", "title": "Capture intimate macro shots showcasing unique leaf textures, soil grit, and dew integration", "time": 180, "weightage": 8 },
+        { "id": "task-ub-18", "title": "Carefully color correct final selects in post to ensure vibrant, deeply true-to-life organic greens", "time": 90, "weightage": 9 }
+      ]
+    }
+  },
+  "event-orchestrator": {
+    "history": [
+      {
+        "id": "hist-eo-1",
+        "title": "The Monaco Gala",
+        "date": "2023-05-20",
+        "type": "success",
+        "category": "project",
+        "description": "Flawlessly executed a 500-guest charity gala on the Riviera, cementing the agency's luxury reputation.",
+        "skills": ["Logistics", "VIP Handling", "Budgeting"]
+      },
+      {
+        "id": "hist-eo-2",
+        "title": "Vendor Bankruptcy Crisis",
+        "date": "2024-09-02",
+        "type": "failure",
+        "category": "operations",
+        "description": "Primary decor vendor folded 48 hours before a summit, requiring a massive, exhausting, last-minute salvage operation.",
+        "skills": ["Crisis Management", "Network Utilization", "Stress Tolerance"]
+      },
+      {
+        "id": "hist-eo-3",
+        "title": "Forbes 30 Under 30",
+        "date": "2025-11-15",
+        "type": "success",
+        "category": "award",
+        "description": "Recognized globally as a rising titan in experiential luxury and corporate event architecture.",
+        "skills": ["Branding", "Leadership", "Vision"]
+      }
+    ],
+    "tasks": {
+      "ms-06c9cb84": [
+        { "id": "task-eo-1", "title": "Discreetly network with elite wealth managers to identify potential high-society leads", "time": 120, "weightage": 9 },
+        { "id": "task-eo-2", "title": "Curate an ultra-personalized, multi-sensory proposal box delivered via courier for the prospect", "time": 180, "weightage": 8 },
+        { "id": "task-eo-3", "title": "Aggressively negotiate the strict NDA and highly lucrative exclusive retainer agreement", "time": 90, "weightage": 10 }
+      ],
+      "ms-6783605f": [
+        { "id": "task-eo-4", "title": "Fly to Paris to meet exclusively with top-tier, generational floral artisans and growers", "time": 300, "weightage": 8 },
+        { "id": "task-eo-5", "title": "Draft ironclad exclusivity contracts locking in premium pricing and priority for the gala season", "time": 60, "weightage": 10 },
+        { "id": "task-eo-6", "title": "Collaborate on a signature, proprietary scent and floral profile absolutely exclusive to the agency", "time": 90, "weightage": 7 }
+      ],
+      "ms-ed3ba7fa": [
+        { "id": "task-eo-7", "title": "Pitch the bold 'Secret Garden' concept directly to the Editor-in-Chief's personal assistant", "time": 60, "weightage": 9 },
+        { "id": "task-eo-8", "title": "Meticulously coordinate exact shot lists and ultra-exclusive access passes for the magazine's photo crew", "time": 90, "weightage": 8 },
+        { "id": "task-eo-9", "title": "Review final editorial copy proofs to ensure the luxury brand narrative remains completely flawless", "time": 45, "weightage": 10 }
+      ],
+      "ms-4bf54c69": [
+        { "id": "task-eo-10", "title": "Personally audit 15 historic European chateaus for strict logistical viability (power, access, curfews)", "time": 240, "weightage": 10 },
+        { "id": "task-eo-11", "title": "Host an opulent tasting and capabilities dinner to win over skeptical resort general managers", "time": 180, "weightage": 8 },
+        { "id": "task-eo-12", "title": "Finalize complex commission structures and mutually beneficial preferred vendor status agreements", "time": 90, "weightage": 9 }
+      ],
+      "ms-85fbdd0b": [
+        { "id": "task-eo-13", "title": "Direct a moody, high-fashion editorial shoot specifically for the new website's cinematic video background", "time": 240, "weightage": 8 },
+        { "id": "task-eo-14", "title": "Ruthlessly rewrite all service copy to reflect a tone of quiet, highly understated luxury", "time": 120, "weightage": 7 },
+        { "id": "task-eo-15", "title": "QA the new interactive, white-glove client portal for absolute, bug-free aesthetic perfection", "time": 90, "weightage": 10 }
+      ],
+      "ms-42eaac7b": [
+        { "id": "task-eo-16", "title": "Conduct grueling interviews with candidates possessing proven UHNW (Ultra High Net Worth) travel experience", "time": 150, "weightage": 10 },
+        { "id": "task-eo-17", "title": "Establish strict, uncompromising internal SOPs for last-minute private jet and yacht charter bookings", "time": 120, "weightage": 9 },
+        { "id": "task-eo-18", "title": "Onboard the new concierge with the agency's rigid, hyper-responsive communication protocols", "time": 90, "weightage": 8 }
+      ]
+    }
+  },
+  "frame-chaser": {
+    "history": [
+      {
+        "id": "hist-fc-1",
+        "title": "First Vogue Italia Feature",
+        "date": "2022-10-12",
+        "type": "success",
+        "category": "press",
+        "description": "An intimate, grainy black-and-white editorial shot on 35mm caught the eye of the iconic publication.",
+        "skills": ["Analog Photography", "Lighting", "Art Direction"]
+      },
+      {
+        "id": "hist-fc-2",
+        "title": "The Corrupted Hard Drive",
+        "date": "2023-06-08",
+        "type": "failure",
+        "category": "technology",
+        "description": "Lost 30% of a commercial shoot due to a failed backup protocol, resulting in deep shame and an ironclad new workflow.",
+        "skills": ["Data Management", "Client Communication", "Resilience"]
+      },
+      {
+        "id": "hist-fc-3",
+        "title": "International Masterclass",
+        "date": "2025-02-20",
+        "type": "success",
+        "category": "education",
+        "description": "Sold out a 3-day storytelling and color-grading workshop in Iceland, transitioning from practitioner to educator.",
+        "skills": ["Public Speaking", "Mentorship", "Color Grading"]
+      }
+    ],
+    "tasks": {
+      "ms-73cf3142": [
+        { "id": "task-fc-1", "title": "Execute a brutal, unsentimental first-pass cull using PhotoMechanic to instantly strip out blinks and blur", "time": 120, "weightage": 8 },
+        { "id": "task-fc-2", "title": "Meticulously select the defining 'hero' shots that perfectly encapsulate the day's raw emotion", "time": 90, "weightage": 10 },
+        { "id": "task-fc-3", "title": "Sequence the final 800 images to tell a breathtaking, cinematic chronological story", "time": 150, "weightage": 9 }
+      ],
+      "ms-c5c63af0": [
+        { "id": "task-fc-4", "title": "Build a custom Lightroom preset explicitly matching the venue's moody, overcast autumn vibe", "time": 60, "weightage": 9 },
+        { "id": "task-fc-5", "title": "Batch sync baseline corrections and meticulously adjust white balance pixel-by-pixel per scene", "time": 180, "weightage": 8 },
+        { "id": "task-fc-6", "title": "Apply advanced split-toning and custom grain profiles to achieve the signature analog film feel", "time": 90, "weightage": 10 }
+      ],
+      "ms-b22aff4b": [
+        { "id": "task-fc-7", "title": "Design a visually stunning, minimalist digital gallery layout on the Pic-Time platform", "time": 45, "weightage": 7 },
+        { "id": "task-fc-8", "title": "Render and seamlessly upload the deeply emotional 3-minute highlight slideshow featuring licensed indie music", "time": 120, "weightage": 10 },
+        { "id": "task-fc-9", "title": "Draft a heartfelt, personalized delivery email powerfully reinforcing their family legacy and bond", "time": 30, "weightage": 8 }
+      ],
+      "ms-4a38fbc8": [
+        { "id": "task-fc-10", "title": "Ruthlessly audit the entire year's catalog to find only the 50 most technically perfect and emotional frames", "time": 240, "weightage": 10 },
+        { "id": "task-fc-11", "title": "Carefully resize, sharpen for high-res web displays, and meticulously update metadata and SEO tags", "time": 90, "weightage": 8 },
+        { "id": "task-fc-12", "title": "Redesign the portfolio landing page UI flow to maximize immediate visceral impact on loading", "time": 120, "weightage": 9 }
+      ],
+      "ms-53b7acbe": [
+        { "id": "task-fc-13", "title": "Deeply research ultra-luxury competitor pricing structures, boundaries, and physical deliverables", "time": 90, "weightage": 8 },
+        { "id": "task-fc-14", "title": "Rewrite all package descriptions focusing heavily on 'legacy' and 'experience' rather than billable hours", "time": 120, "weightage": 10 },
+        { "id": "task-fc-15", "title": "Update the PDF digital investment guide with elegant new typography and breathtaking, full-bleed spreads", "time": 150, "weightage": 9 }
+      ]
+    }
+  }
+}

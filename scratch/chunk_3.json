@@ -1,0 +1,90 @@
+{
+  "heavy-structural-titan": {
+    "milestones": [
+      {
+        "id": "ms-657a525e",
+        "title": "Pour 10,000 yards of foundation concrete"
+      },
+      {
+        "id": "ms-9bc3fb77",
+        "title": "Complete steel framing up to floor 25"
+      },
+      {
+        "id": "ms-7508a687",
+        "title": "Top out roof structure"
+      }
+    ]
+  },
+  "heavy-plant-maestro": {
+    "milestones": [
+      {
+        "id": "ms-dfd3baa8",
+        "title": "Map current value stream: Expose hidden assembly bottlenecks"
+      },
+      {
+        "id": "ms-7bb0fef6",
+        "title": "Statistical process control: Reduce defect tolerance to Six Sigma"
+      },
+      {
+        "id": "ms-a376deb1",
+        "title": "Train shift supervisors: Cultivate a Kaizen continuous improvement culture"
+      }
+    ]
+  },
+  "heavy-machine-whisperer": {
+    "milestones": [
+      {
+        "id": "ms-cde68f7f",
+        "title": "Map facility for LiDAR: Establish millimeter-perfect AGV routes"
+      },
+      {
+        "id": "ms-6e5c340c",
+        "title": "Program traffic control: Prevent autonomous vehicle gridlock"
+      },
+      {
+        "id": "ms-10b66cd4",
+        "title": "Full fleet dry run: Execute 24-hour lights-out manufacturing test"
+      }
+    ]
+  },
+  "heavy-voltage-vanguard": {
+    "milestones": [
+      {
+        "id": "ms-47c7dac2",
+        "title": "Main switchgear installation: Power the 50MW data center core"
+      },
+      {
+        "id": "ms-95dfa44d",
+        "title": "Pull primary feeder cables: Route heavy copper through sub-floors"
+      },
+      {
+        "id": "ms-855deb3b",
+        "title": "Commission backup generators: Guarantee 99.999% uptime during grid failure"
+      }
+    ]
+  },
+  "medical-neuro": {
+    "milestones": [
+      {
+        "id": "m-n1",
+        "title": "Complete 100 Surgeries: Master the minimally invasive technique"
+      },
+      {
+        "id": "m-n2",
+        "title": "Publish Findings: Submit peer-reviewed results to The Lancet"
+      }
+    ]
+  },
+  "medical-diagnostician": {
+    "milestones": [
+      {
+        "id": "m-d1",
+        "title": "Secure hospital board approval"
+      },
+      {
+        "id": "m-d2",
+        "title": "Hire interdisciplinary team of specialists"
+      }
+    ]
+  }
+}

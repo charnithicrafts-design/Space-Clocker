@@ -1,0 +1,622 @@
+{
+  "wellness-visionary": {
+    "milestones": [
+      {
+        "id": "ms-0156d8cf",
+        "title": "Secure Commercial Lease: Negotiate prime downtown foot traffic"
+      },
+      {
+        "id": "ms-9fea25c9",
+        "title": "Finalize Interior Design: Create an Instagram-worthy aesthetic"
+      },
+      {
+        "id": "ms-715fcbab",
+        "title": "Hire Flagship Manager: Poach top-tier retail talent"
+      },
+      {
+        "id": "ms-bb920a56",
+        "title": "Finalize formulations with lab"
+      },
+      {
+        "id": "ms-ac658b55",
+        "title": "Design packaging and branding"
+      },
+      {
+        "id": "ms-f0f7ecf8",
+        "title": "Host launch party"
+      }
+    ]
+  },
+  "culinary-maestro": {
+    "milestones": [
+      {
+        "id": "ms-23b1882b",
+        "title": "Refine seasonal tasting menu"
+      },
+      {
+        "id": "ms-55002f83",
+        "title": "Upgrade wine pairing program"
+      },
+      {
+        "id": "ms-73bf4d22",
+        "title": "Perfect front-of-house service standards"
+      },
+      {
+        "id": "ms-b2fcd11b",
+        "title": "Secure financing"
+      },
+      {
+        "id": "ms-59db271d",
+        "title": "Sign lease for new space"
+      },
+      {
+        "id": "ms-db79c339",
+        "title": "Menu development for new concept"
+      }
+    ]
+  },
+  "retail-trailblazer": {
+    "milestones": [
+      {
+        "id": "ms-b9c11bbc",
+        "title": "Optimize online conversion rate"
+      },
+      {
+        "id": "ms-e1040ed8",
+        "title": "Launch influencer affiliate program"
+      },
+      {
+        "id": "ms-b1e111eb",
+        "title": "Expand wholesale partnerships"
+      },
+      {
+        "id": "ms-f7fc874a",
+        "title": "Negotiate international carrier rates"
+      },
+      {
+        "id": "ms-08daa3fe",
+        "title": "Implement customs and duties calculator at checkout"
+      },
+      {
+        "id": "ms-e9bdf96d",
+        "title": "Run targeted ad campaigns in UK & Australia"
+      }
+    ]
+  },
+  "urban-botanist": {
+    "milestones": [
+      {
+        "id": "ms-84e1617e",
+        "title": "Submit initial design proposal"
+      },
+      {
+        "id": "ms-3a48e68d",
+        "title": "Pass environmental impact review"
+      },
+      {
+        "id": "ms-97fc8ca1",
+        "title": "Present final pitch to city council"
+      },
+      {
+        "id": "ms-c62c016b",
+        "title": "Secure publishing deal"
+      },
+      {
+        "id": "ms-82c4b0dd",
+        "title": "Finish writing manuscript"
+      },
+      {
+        "id": "ms-34109e0a",
+        "title": "Complete photography for all featured gardens"
+      }
+    ]
+  },
+  "event-orchestrator": {
+    "milestones": [
+      {
+        "id": "ms-06c9cb84",
+        "title": "Sign a celebrity or high-society client"
+      },
+      {
+        "id": "ms-6783605f",
+        "title": "Secure exclusive design and floral partnerships"
+      },
+      {
+        "id": "ms-ed3ba7fa",
+        "title": "Coordinate with Vogue editorial team for exclusive coverage"
+      },
+      {
+        "id": "ms-4bf54c69",
+        "title": "Establish partnerships with 5-star European resorts"
+      },
+      {
+        "id": "ms-85fbdd0b",
+        "title": "Rebrand the agency website for international luxury"
+      },
+      {
+        "id": "ms-42eaac7b",
+        "title": "Hire a dedicated travel concierge for the team"
+      }
+    ]
+  },
+  "frame-chaser": {
+    "milestones": [
+      {
+        "id": "ms-73cf3142",
+        "title": "Cull 5000 images: Find the emotional core of the Smith wedding"
+      },
+      {
+        "id": "ms-c5c63af0",
+        "title": "Initial color grade: Apply signature moody aesthetic to Jones gallery"
+      },
+      {
+        "id": "ms-b22aff4b",
+        "title": "Deliver final gallery: Exceed the Williams family expectations"
+      },
+      {
+        "id": "ms-4a38fbc8",
+        "title": "Select top 50 shots: Curate a breathtaking 2026 portfolio"
+      },
+      {
+        "id": "ms-53b7acbe",
+        "title": "Write service descriptions: Command premium artisan pricing"
+      }
+    ]
+  },
+  "industrial-lens": {
+    "milestones": [
+      {
+        "id": "ms-9ca44cf2",
+        "title": "Site walk-through and safety briefing"
+      },
+      {
+        "id": "ms-942ff961",
+        "title": "Shoot executive headshots"
+      },
+      {
+        "id": "ms-04694088",
+        "title": "Capture assembly line action shots"
+      },
+      {
+        "id": "ms-cd7422be",
+        "title": "Deliver final retouched images"
+      }
+    ]
+  },
+  "aesthetic-architect": {
+    "milestones": [
+      {
+        "id": "ms-270f7871",
+        "title": "Brand discovery workshop"
+      },
+      {
+        "id": "ms-33581b05",
+        "title": "Present 3 logo concepts"
+      },
+      {
+        "id": "ms-d4a05d84",
+        "title": "Finalize brand guidelines document"
+      },
+      {
+        "id": "ms-f0ab4c93",
+        "title": "Complete module 1: History"
+      },
+      {
+        "id": "ms-6eff110d",
+        "title": "Complete final project"
+      }
+    ]
+  },
+  "word-weaver": {
+    "milestones": [
+      {
+        "id": "ms-c49101fe",
+        "title": "Audit existing v1.0 docs"
+      },
+      {
+        "id": "ms-8533eee8",
+        "title": "Write authentication guide"
+      },
+      {
+        "id": "ms-223d6ba1",
+        "title": "Document core endpoints"
+      },
+      {
+        "id": "ms-66c962f1",
+        "title": "Publish to developer portal"
+      }
+    ]
+  },
+  "code-artisan": {
+    "milestones": [
+      {
+        "id": "ms-9f6212fc",
+        "title": "Implement player controller"
+      },
+      {
+        "id": "ms-b339ff19",
+        "title": "Finish first level blockout"
+      },
+      {
+        "id": "ms-3a69b046",
+        "title": "Implement basic enemy AI"
+      },
+      {
+        "id": "ms-3b2de235",
+        "title": "Polish UI and add sound effects"
+      }
+    ]
+  },
+  "product-visionary": {
+    "milestones": [
+      {
+        "id": "ms-6e37a551",
+        "title": "Finalize PRD: Secure buy-in from engineering & design leads"
+      },
+      {
+        "id": "ms-f6a85447",
+        "title": "Beta Testing: Onboard 500 legacy users & map friction logs"
+      },
+      {
+        "id": "ms-5b833b87",
+        "title": "General Availability: Achieve zero-downtime global rollout"
+      },
+      {
+        "id": "ms-15e840a0",
+        "title": "Define Curriculum: Map out core competencies for junior PMs"
+      },
+      {
+        "id": "ms-a5c9ece6",
+        "title": "Host First Cohort: Mentor 15 aspiring product managers"
+      }
+    ]
+  },
+  "cyber-sentinel": {
+    "milestones": [
+      {
+        "id": "ms-183be0f5",
+        "title": "Complete Lab Machines: Root all 75 active directory boxes"
+      },
+      {
+        "id": "ms-a56fe2fd",
+        "title": "Pass 24hr Exam: Secure 5 systems without sleep"
+      },
+      {
+        "id": "ms-1f4d91c7",
+        "title": "External Pentest: Breach the staging perimeter"
+      },
+      {
+        "id": "ms-c19bf669",
+        "title": "Social Engineering: Execute targeted phishing on C-suite"
+      },
+      {
+        "id": "ms-c3fec0ed",
+        "title": "Final Report: Present critical vulnerabilities to the Board"
+      }
+    ]
+  },
+  "silent-guardian": {
+    "milestones": [
+      {
+        "id": "ms-ac8d8429",
+        "title": "Containerize Monolith"
+      },
+      {
+        "id": "ms-626537b4",
+        "title": "Setup CI/CD Pipelines"
+      },
+      {
+        "id": "ms-4a0bc2cd",
+        "title": "Production Cutover"
+      },
+      {
+        "id": "ms-c8c42905",
+        "title": "Terraform Network Layer"
+      },
+      {
+        "id": "ms-a21fce54",
+        "title": "Terraform Data Layer"
+      }
+    ]
+  },
+  "legal-eagle": {
+    "milestones": [
+      {
+        "id": "ms-ed5ce5be",
+        "title": "Due Diligence Complete"
+      },
+      {
+        "id": "ms-ba636335",
+        "title": "Definitive Agreement Drafted"
+      },
+      {
+        "id": "ms-a09f6aae",
+        "title": "Regulatory Approval"
+      },
+      {
+        "id": "ms-fe5694ca",
+        "title": "Hire 2 Associates"
+      },
+      {
+        "id": "ms-e0a64f78",
+        "title": "Publish M&A Article in Journal"
+      }
+    ]
+  },
+  "athletic-ascendant": {
+    "milestones": [
+      {
+        "id": "ms-d487b998",
+        "title": "Base Conditioning Phase"
+      },
+      {
+        "id": "ms-620170ed",
+        "title": "Strength & Power Phase"
+      },
+      {
+        "id": "ms-54672de3",
+        "title": "Tapering Phase"
+      },
+      {
+        "id": "ms-822eff1f",
+        "title": "Complete Kinematics Module"
+      },
+      {
+        "id": "ms-b5f35096",
+        "title": "Pass Final Assessment"
+      }
+    ]
+  },
+  "soil-whisperer": {
+    "milestones": [
+      {
+        "id": "ms-2367d545",
+        "title": "Soil Sampling & Analysis"
+      },
+      {
+        "id": "ms-2da3dae4",
+        "title": "Implement Precision Fertilizer Plan"
+      },
+      {
+        "id": "ms-be08456c",
+        "title": "Harvest Yield Analysis"
+      },
+      {
+        "id": "ms-ad71ec08",
+        "title": "Select Test Plots"
+      },
+      {
+        "id": "ms-044f3b5e",
+        "title": "Plant Cover Crops"
+      }
+    ]
+  },
+  "real-estate-maven": {
+    "milestones": [
+      {
+        "id": "ms-c04f88df",
+        "title": "Land Acquisition"
+      },
+      {
+        "id": "ms-f65b5806",
+        "title": "Zoning & Entitlements"
+      },
+      {
+        "id": "ms-611f18e7",
+        "title": "Secure Anchor Tenant"
+      },
+      {
+        "id": "ms-8f6ba5e9",
+        "title": "Retrofit HVAC Systems"
+      },
+      {
+        "id": "ms-4588ba4e",
+        "title": "Install Solar Arrays"
+      }
+    ]
+  },
+  "heavy-blueprint-orchestrator": {
+    "milestones": [
+      {
+        "id": "ms-4cdd7782",
+        "title": "Finalize subgrade blueprints: Guarantee 100-year foundation stability"
+      },
+      {
+        "id": "ms-da4e2b8e",
+        "title": "Approve deep piling plan: Navigate complex subterranean bedrock"
+      },
+      {
+        "id": "ms-076fed79",
+        "title": "Municipal drainage: Engineer flood-proof storm retention"
+      },
+      {
+        "id": "ms-05a2210e",
+        "title": "Structural integrity assessment: X-ray the 50-year-old suspension cables"
+      },
+      {
+        "id": "ms-21869cf1",
+        "title": "Design damper installations: Absorb 8.0 magnitude seismic shockwaves"
+      }
+    ]
+  },
+  "heavy-structural-titan": {
+    "milestones": [
+      {
+        "id": "ms-657a525e",
+        "title": "Pour 10,000 yards of foundation concrete"
+      },
+      {
+        "id": "ms-9bc3fb77",
+        "title": "Complete steel framing up to floor 25"
+      },
+      {
+        "id": "ms-7508a687",
+        "title": "Top out roof structure"
+      }
+    ]
+  },
+  "heavy-plant-maestro": {
+    "milestones": [
+      {
+        "id": "ms-dfd3baa8",
+        "title": "Map current value stream: Expose hidden assembly bottlenecks"
+      },
+      {
+        "id": "ms-7bb0fef6",
+        "title": "Statistical process control: Reduce defect tolerance to Six Sigma"
+      },
+      {
+        "id": "ms-a376deb1",
+        "title": "Train shift supervisors: Cultivate a Kaizen continuous improvement culture"
+      }
+    ]
+  },
+  "heavy-machine-whisperer": {
+    "milestones": [
+      {
+        "id": "ms-cde68f7f",
+        "title": "Map facility for LiDAR: Establish millimeter-perfect AGV routes"
+      },
+      {
+        "id": "ms-6e5c340c",
+        "title": "Program traffic control: Prevent autonomous vehicle gridlock"
+      },
+      {
+        "id": "ms-10b66cd4",
+        "title": "Full fleet dry run: Execute 24-hour lights-out manufacturing test"
+      }
+    ]
+  },
+  "heavy-voltage-vanguard": {
+    "milestones": [
+      {
+        "id": "ms-47c7dac2",
+        "title": "Main switchgear installation: Power the 50MW data center core"
+      },
+      {
+        "id": "ms-95dfa44d",
+        "title": "Pull primary feeder cables: Route heavy copper through sub-floors"
+      },
+      {
+        "id": "ms-855deb3b",
+        "title": "Commission backup generators: Guarantee 99.999% uptime during grid failure"
+      }
+    ]
+  },
+  "medical-neuro": {
+    "milestones": [
+      {
+        "id": "m-n1",
+        "title": "Complete 100 Surgeries: Master the minimally invasive technique"
+      },
+      {
+        "id": "m-n2",
+        "title": "Publish Findings: Submit peer-reviewed results to The Lancet"
+      }
+    ]
+  },
+  "medical-diagnostician": {
+    "milestones": [
+      {
+        "id": "m-d1",
+        "title": "Secure hospital board approval"
+      },
+      {
+        "id": "m-d2",
+        "title": "Hire interdisciplinary team of specialists"
+      }
+    ]
+  },
+  "medical-research": {
+    "milestones": [
+      {
+        "id": "m-r1",
+        "title": "Finalize trial protocols"
+      },
+      {
+        "id": "m-r2",
+        "title": "Enroll 500 patient cohort"
+      }
+    ]
+  },
+  "compliance-sentinel": {
+    "milestones": [
+      {
+        "id": "ms-5b91c4b2",
+        "title": "Site A Pre-Assessment: Uncover hidden safety violations"
+      },
+      {
+        "id": "ms-42fbecfd",
+        "title": "Remediation Follow-ups: Enforce strict compliance mandates"
+      },
+      {
+        "id": "ms-cb032225",
+        "title": "Final Board Report: Present zero-liability audit results"
+      }
+    ]
+  },
+  "supply-chain-overlord": {
+    "milestones": [
+      {
+        "id": "ms-e6b92aec",
+        "title": "Vendor Renegotiations"
+      },
+      {
+        "id": "ms-86f0e011",
+        "title": "Route Algorithm Update"
+      },
+      {
+        "id": "ms-6bd0d3c3",
+        "title": "Carbon Offset Integration"
+      }
+    ]
+  },
+  "financial-navigator": {
+    "milestones": [
+      {
+        "id": "ms-36a42859",
+        "title": "Current Structure Assessment"
+      },
+      {
+        "id": "ms-5eb964cd",
+        "title": "Transfer Pricing Policy Update"
+      },
+      {
+        "id": "ms-b63246e9",
+        "title": "Implementation of New Holding Structure"
+      }
+    ]
+  },
+  "numeric-oracle": {
+    "milestones": [
+      {
+        "id": "ms-3e7062a7",
+        "title": "Historical Data Ingestion"
+      },
+      {
+        "id": "ms-9829f99f",
+        "title": "Stochastic Model Calibration"
+      },
+      {
+        "id": "ms-85f55fb1",
+        "title": "Peer Review and Validation"
+      }
+    ]
+  },
+  "yield-maximizer": {
+    "milestones": [
+      {
+        "id": "ms-839e893e",
+        "title": "Pilot Plant Trials"
+      },
+      {
+        "id": "ms-45e1c24a",
+        "title": "Thermodynamic Modeling"
+      },
+      {
+        "id": "ms-eb205bb4",
+        "title": "Full Scale Implementation"
+      }
+    ]
+  }
+}

@@ -1,0 +1,280 @@
+{
+  "heavy-structural-titan": {
+    "history": [
+      {
+        "id": "hist-heavy-structural-titan-1",
+        "title": "Lead Engineer on Horizon Tower",
+        "date": "2023-08-12",
+        "type": "success",
+        "category": "project",
+        "description": "Orchestrated the structural framing for a 60-story commercial skyscraper, conquering unprecedented wind shear challenges.",
+        "skills": ["Structural Analysis", "Steel Framing", "Wind Load Modeling"]
+      },
+      {
+        "id": "hist-heavy-structural-titan-2",
+        "title": "Failed River Bridge Foundation",
+        "date": "2021-04-20",
+        "type": "failure",
+        "category": "project",
+        "description": "Experienced severe delays and cost overruns due to unforeseen bedrock fractures during foundation pouring. A harsh lesson in geological risk assessment.",
+        "skills": ["Geotechnical Engineering", "Risk Assessment", "Crisis Management"]
+      },
+      {
+        "id": "hist-heavy-structural-titan-3",
+        "title": "Innovator in High-Tensile Concrete",
+        "date": "2024-11-05",
+        "type": "success",
+        "category": "award",
+        "description": "Received industry recognition for developing a faster-curing concrete blend that reduced construction time by 15%.",
+        "skills": ["Material Science", "Concrete Pouring", "Innovation"]
+      }
+    ],
+    "tasks": {
+      "ms-657a525e": [
+        { "id": "task-ms-657a525e-1", "title": "Coordinate batch plant deliveries to ensure continuous 24-hour pour cycle", "time": 180, "weightage": 15 },
+        { "id": "task-ms-657a525e-2", "title": "Conduct real-time thermal monitoring of curing mass to prevent internal micro-fractures", "time": 120, "weightage": 20 },
+        { "id": "task-ms-657a525e-3", "title": "Inspect rebar cage integrity against vibration stresses before final concrete placement", "time": 90, "weightage": 10 }
+      ],
+      "ms-9bc3fb77": [
+        { "id": "task-ms-9bc3fb77-1", "title": "Verify torque specs on structural bolts for primary load-bearing columns on floors 15-20", "time": 150, "weightage": 10 },
+        { "id": "task-ms-9bc3fb77-2", "title": "Calibrate tower cranes for high-wind lifting of pre-assembled truss sections", "time": 60, "weightage": 5 },
+        { "id": "task-ms-9bc3fb77-3", "title": "Perform ultrasonic weld inspections on beam-to-column connections", "time": 240, "weightage": 25 }
+      ],
+      "ms-7508a687": [
+        { "id": "task-ms-7508a687-1", "title": "Supervise the complex rigging and placement of the central rooftop spire", "time": 300, "weightage": 30 },
+        { "id": "task-ms-7508a687-2", "title": "Finalize tensioning of perimeter cables stabilizing the mechanical penthouse", "time": 120, "weightage": 15 },
+        { "id": "task-ms-7508a687-3", "title": "Conduct final structural walk-through and sign off on total load transfer", "time": 180, "weightage": 20 }
+      ]
+    }
+  },
+  "heavy-plant-maestro": {
+    "history": [
+      {
+        "id": "hist-heavy-plant-maestro-1",
+        "title": "Overhauled Assembly Line Alpha",
+        "date": "2024-02-14",
+        "type": "success",
+        "category": "project",
+        "description": "Redesigned the primary engine assembly layout, reducing cycle time by 22% and eliminating ergonomic bottlenecks.",
+        "skills": ["Lean Manufacturing", "Ergonomics", "Process Optimization"]
+      },
+      {
+        "id": "hist-heavy-plant-maestro-2",
+        "title": "Supply Chain Integration Mishap",
+        "date": "2022-09-10",
+        "type": "failure",
+        "category": "project",
+        "description": "Attempted Just-In-Time rollout without adequate supplier buffer, leading to a costly 3-day line stoppage.",
+        "skills": ["Supply Chain Management", "JIT Implementation", "Contingency Planning"]
+      },
+      {
+        "id": "hist-heavy-plant-maestro-3",
+        "title": "Plant Manager of the Year",
+        "date": "2025-01-20",
+        "type": "success",
+        "category": "award",
+        "description": "Recognized for achieving zero lost-time incidents while increasing plant output by 40%.",
+        "skills": ["Safety Management", "Leadership", "Capacity Planning"]
+      }
+    ],
+    "tasks": {
+      "ms-dfd3baa8": [
+        { "id": "task-ms-dfd3baa8-1", "title": "Shadow line operators to document undocumented manual workarounds and tribal knowledge", "time": 240, "weightage": 15 },
+        { "id": "task-ms-dfd3baa8-2", "title": "Analyze material flow data logs to identify the top 3 physical bottlenecks in the facility", "time": 120, "weightage": 20 },
+        { "id": "task-ms-dfd3baa8-3", "title": "Draft the 'Future State' value stream map and present to executive stakeholders", "time": 180, "weightage": 10 }
+      ],
+      "ms-7bb0fef6": [
+        { "id": "task-ms-7bb0fef6-1", "title": "Calculate baseline sigma levels for the top 5 most critical sub-assemblies", "time": 120, "weightage": 15 },
+        { "id": "task-ms-7bb0fef6-2", "title": "Implement automated vision inspection stations at key high-defect risk zones", "time": 300, "weightage": 25 },
+        { "id": "task-ms-7bb0fef6-3", "title": "Conduct a Root Cause Analysis workshop for recurring dimensional variance issues", "time": 150, "weightage": 15 }
+      ],
+      "ms-a376deb1": [
+        { "id": "task-ms-a376deb1-1", "title": "Develop a standard work template for frontline supervisors to audit daily procedures", "time": 90, "weightage": 10 },
+        { "id": "task-ms-a376deb1-2", "title": "Host a Kaizen burst event focusing on rapid tool changeover reduction (SMED)", "time": 240, "weightage": 20 },
+        { "id": "task-ms-a376deb1-3", "title": "Establish a visual management board to track daily improvements and team suggestions", "time": 60, "weightage": 5 }
+      ]
+    }
+  },
+  "heavy-machine-whisperer": {
+    "history": [
+      {
+        "id": "hist-heavy-machine-whisperer-1",
+        "title": "Automated Warehouse Retrofit",
+        "date": "2023-11-20",
+        "type": "success",
+        "category": "project",
+        "description": "Successfully transitioned a 500,000 sq ft legacy warehouse to a fully autonomous swarm robot picking system.",
+        "skills": ["AGV Programming", "LiDAR Mapping", "System Integration"]
+      },
+      {
+        "id": "hist-heavy-machine-whisperer-2",
+        "title": "Firmware Rollout Failure",
+        "date": "2021-06-05",
+        "type": "failure",
+        "category": "project",
+        "description": "A flawed firmware update caused a sync error in robot arms, resulting in collisions and a massive scrap spike.",
+        "skills": ["Firmware Deployment", "Quality Assurance", "Disaster Recovery"]
+      },
+      {
+        "id": "hist-heavy-machine-whisperer-3",
+        "title": "Promoted to Robotics Chief",
+        "date": "2024-08-01",
+        "type": "success",
+        "category": "promotion",
+        "description": "Elevated to lead the entire automation division after single-handedly resolving a ghosting issue in the navigation meshes.",
+        "skills": ["Leadership", "Troubleshooting", "Pathfinding Algorithms"]
+      }
+    ],
+    "tasks": {
+      "ms-cde68f7f": [
+        { "id": "task-ms-cde68f7f-1", "title": "Calibrate stationary LiDAR scanners to capture high-resolution point clouds of facility pillars", "time": 120, "weightage": 15 },
+        { "id": "task-ms-cde68f7f-2", "title": "Process 3D environmental data to generate a clean, obstacle-free navigational mesh", "time": 180, "weightage": 20 },
+        { "id": "task-ms-cde68f7f-3", "title": "Test specific blind spot scenarios by simulating unexpected dynamic obstacles in virtual space", "time": 90, "weightage": 10 }
+      ],
+      "ms-6e5c340c": [
+        { "id": "task-ms-6e5c340c-1", "title": "Optimize intersection prioritization logic to prevent 'four-way stop' deadlocks in the AGV fleet", "time": 240, "weightage": 25 },
+        { "id": "task-ms-6e5c340c-2", "title": "Tune battery-management routing so low-charge units return to base without blocking high-priority lanes", "time": 150, "weightage": 15 },
+        { "id": "task-ms-6e5c340c-3", "title": "Run simulated stress tests with 150% peak volume to identify traffic bottleneck zones", "time": 180, "weightage": 20 }
+      ],
+      "ms-10b66cd4": [
+        { "id": "task-ms-10b66cd4-1", "title": "Configure emergency e-stop overrides and fail-safe protocols across all machine interfaces", "time": 120, "weightage": 15 },
+        { "id": "task-ms-10b66cd4-2", "title": "Monitor real-time telemetry during the first 12 hours of the unassisted production run", "time": 720, "weightage": 40 },
+        { "id": "task-ms-10b66cd4-3", "title": "Analyze the post-run logs to quantify microscopic deviations in expected cycle times", "time": 180, "weightage": 20 }
+      ]
+    }
+  },
+  "heavy-voltage-vanguard": {
+    "history": [
+      {
+        "id": "hist-heavy-voltage-vanguard-1",
+        "title": "Energized Mega-Data Center",
+        "date": "2024-05-30",
+        "type": "success",
+        "category": "project",
+        "description": "Oversaw the flawless commissioning of a 100MW substation, providing lifeblood to a tier-4 hyperscale data center.",
+        "skills": ["High-Voltage Systems", "Substation Commissioning", "Power Distribution"]
+      },
+      {
+        "id": "hist-heavy-voltage-vanguard-2",
+        "title": "Catastrophic Arc Flash Incident",
+        "date": "2022-11-12",
+        "type": "failure",
+        "category": "project",
+        "description": "A miscalculation in switchgear ratings led to a severe arc flash during testing. No injuries, but millions in hardware damage.",
+        "skills": ["Safety Protocols", "Circuit Analysis", "Incident Investigation"]
+      },
+      {
+        "id": "hist-heavy-voltage-vanguard-3",
+        "title": "Master Electrician Certification",
+        "date": "2023-03-15",
+        "type": "success",
+        "category": "award",
+        "description": "Achieved the highest level of certification in the state, recognized for deep expertise in industrial electrical codes.",
+        "skills": ["Code Compliance", "Electrical Theory", "Advanced Wiring"]
+      }
+    ],
+    "tasks": {
+      "ms-47c7dac2": [
+        { "id": "task-ms-47c7dac2-1", "title": "Rig and mount the 15-ton main switchgear housing using heavy lift protocols", "time": 240, "weightage": 20 },
+        { "id": "task-ms-47c7dac2-2", "title": "Perform Megger testing on main busbars to verify insulation integrity before energization", "time": 90, "weightage": 15 },
+        { "id": "task-ms-47c7dac2-3", "title": "Torque and color-code all primary lugs according to the strict tier-4 facility specifications", "time": 120, "weightage": 10 }
+      ],
+      "ms-95dfa44d": [
+        { "id": "task-ms-95dfa44d-1", "title": "Calculate complex conduit bend radii to prevent stress fracturing in 750 MCM copper cables", "time": 60, "weightage": 10 },
+        { "id": "task-ms-95dfa44d-2", "title": "Operate the mechanized tugger to pull primary feeders through 500 feet of sub-floor trenching", "time": 300, "weightage": 30 },
+        { "id": "task-ms-95dfa44d-3", "title": "Terminate heavy-gauge cables using hydraulic crimpers and apply high-voltage heat shrink", "time": 180, "weightage": 20 }
+      ],
+      "ms-855deb3b": [
+        { "id": "task-ms-855deb3b-1", "title": "Program the Automatic Transfer Switch (ATS) logic to detect grid anomalies in milliseconds", "time": 150, "weightage": 25 },
+        { "id": "task-ms-855deb3b-2", "title": "Conduct a full-load reactive power test using load banks on the primary diesel generators", "time": 240, "weightage": 30 },
+        { "id": "task-ms-855deb3b-3", "title": "Verify seamless synchronization between multiple paralleled generators under simulated outage", "time": 180, "weightage": 20 }
+      ]
+    }
+  },
+  "medical-neuro": {
+    "history": [
+      {
+        "id": "hist-medical-neuro-1",
+        "title": "First Solo Aneurysm Coiling",
+        "date": "2023-10-18",
+        "type": "success",
+        "category": "project",
+        "description": "Successfully completed a high-stakes endovascular coiling on a critical patient, marking a breakthrough in surgical independence.",
+        "skills": ["Endovascular Surgery", "Steady Hands", "High-pressure Decision Making"]
+      },
+      {
+        "id": "hist-medical-neuro-2",
+        "title": "Loss of Motor Function Post-Op",
+        "date": "2021-08-03",
+        "type": "failure",
+        "category": "project",
+        "description": "A complex tumor resection resulted in unexpected peripheral nerve damage. A devastating outcome that reshaped surgical planning.",
+        "skills": ["Patient Communication", "Anatomy Mapping", "Resilience"]
+      },
+      {
+        "id": "hist-medical-neuro-3",
+        "title": "Appointed Chief of Neurosurgery",
+        "date": "2025-06-01",
+        "type": "success",
+        "category": "promotion",
+        "description": "Recognized for pioneering minimally invasive spinal techniques, leading to an appointment as head of the department.",
+        "skills": ["Leadership", "Advanced Surgical Techniques", "Mentorship"]
+      }
+    ],
+    "tasks": {
+      "m-n1": [
+        { "id": "task-m-n1-1", "title": "Perform microscopic dissection on cadavers to refine instrument handling in deep cranial corridors", "time": 240, "weightage": 15 },
+        { "id": "task-m-n1-2", "title": "Review pre-operative functional MRI scans to map eloquent cortex boundaries for the next 5 cases", "time": 120, "weightage": 20 },
+        { "id": "task-m-n1-3", "title": "Execute the intricate dura mater closure protocol to guarantee zero post-op cerebrospinal fluid leaks", "time": 90, "weightage": 25 }
+      ],
+      "m-n2": [
+        { "id": "task-m-n2-1", "title": "Compile statistical outcome data comparing patient recovery times between standard and novel surgical approaches", "time": 180, "weightage": 15 },
+        { "id": "task-m-n2-2", "title": "Draft the methodology section detailing the specific modified retractors used during the procedures", "time": 150, "weightage": 20 },
+        { "id": "task-m-n2-3", "title": "Address brutal peer-review critiques regarding the sample size and long-term neuropathy risks", "time": 240, "weightage": 30 }
+      ]
+    }
+  },
+  "medical-diagnostician": {
+    "history": [
+      {
+        "id": "hist-medical-diagnostician-1",
+        "title": "Solved the 'Invisible Fever' Case",
+        "date": "2024-04-10",
+        "type": "success",
+        "category": "project",
+        "description": "Correctly diagnosed a rare autoimmune condition that baffled five other specialists, saving the patient's life.",
+        "skills": ["Differential Diagnosis", "Pattern Recognition", "Tenacity"]
+      },
+      {
+        "id": "hist-medical-diagnostician-2",
+        "title": "Missed Sepsis Window",
+        "date": "2020-12-22",
+        "type": "failure",
+        "category": "project",
+        "description": "Dismissed early markers of sepsis as a common viral infection, leading to a prolonged ICU stay for the patient.",
+        "skills": ["Clinical Humility", "Triage Assessment", "Rapid Response"]
+      },
+      {
+        "id": "hist-medical-diagnostician-3",
+        "title": "Diagnostic Excellence Award",
+        "date": "2023-09-15",
+        "type": "success",
+        "category": "award",
+        "description": "Awarded by the national medical board for authoring a new heuristic algorithm for identifying tropical diseases.",
+        "skills": ["Algorithmic Thinking", "Medical Research", "Innovation"]
+      }
+    ],
+    "tasks": {
+      "m-d1": [
+        { "id": "task-m-d1-1", "title": "Prepare a 10-year cost-benefit analysis proving the ROI of a dedicated diagnostic think-tank", "time": 240, "weightage": 20 },
+        { "id": "task-m-d1-2", "title": "Present case studies to the board demonstrating critical mortality reductions from rapid multi-disciplinary diagnoses", "time": 120, "weightage": 30 },
+        { "id": "task-m-d1-3", "title": "Negotiate departmental space and priority lab access with the hostile Chief of Surgery", "time": 90, "weightage": 15 }
+      ],
+      "m-d2": [
+        { "id": "task-m-d2-1", "title": "Interview leading immunologists to find candidates who thrive under extreme diagnostic uncertainty", "time": 180, "weightage": 20 },
+        { "id": "task-m-d2-2", "title": "Design a 'stress test' simulation to evaluate how potential hires handle contradictory pathology reports", "time": 150, "weightage": 25 },
+        { "id": "task-m-d2-3", "title": "Finalize the onboarding protocol to integrate toxicologists and geneticists into a unified workflow", "time": 120, "weightage": 15 }
+      ]
+    }
+  }
+}

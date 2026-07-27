@@ -1,0 +1,94 @@
+{
+  "medical-research": {
+    "milestones": [
+      {
+        "id": "m-r1",
+        "title": "Finalize trial protocols"
+      },
+      {
+        "id": "m-r2",
+        "title": "Enroll 500 patient cohort"
+      }
+    ]
+  },
+  "compliance-sentinel": {
+    "milestones": [
+      {
+        "id": "ms-5b91c4b2",
+        "title": "Site A Pre-Assessment: Uncover hidden safety violations"
+      },
+      {
+        "id": "ms-42fbecfd",
+        "title": "Remediation Follow-ups: Enforce strict compliance mandates"
+      },
+      {
+        "id": "ms-cb032225",
+        "title": "Final Board Report: Present zero-liability audit results"
+      }
+    ]
+  },
+  "supply-chain-overlord": {
+    "milestones": [
+      {
+        "id": "ms-e6b92aec",
+        "title": "Vendor Renegotiations"
+      },
+      {
+        "id": "ms-86f0e011",
+        "title": "Route Algorithm Update"
+      },
+      {
+        "id": "ms-6bd0d3c3",
+        "title": "Carbon Offset Integration"
+      }
+    ]
+  },
+  "financial-navigator": {
+    "milestones": [
+      {
+        "id": "ms-36a42859",
+        "title": "Current Structure Assessment"
+      },
+      {
+        "id": "ms-5eb964cd",
+        "title": "Transfer Pricing Policy Update"
+      },
+      {
+        "id": "ms-b63246e9",
+        "title": "Implementation of New Holding Structure"
+      }
+    ]
+  },
+  "numeric-oracle": {
+    "milestones": [
+      {
+        "id": "ms-3e7062a7",
+        "title": "Historical Data Ingestion"
+      },
+      {
+        "id": "ms-9829f99f",
+        "title": "Stochastic Model Calibration"
+      },
+      {
+        "id": "ms-85f55fb1",
+        "title": "Peer Review and Validation"
+      }
+    ]
+  },
+  "yield-maximizer": {
+    "milestones": [
+      {
+        "id": "ms-839e893e",
+        "title": "Pilot Plant Trials"
+      },
+      {
+        "id": "ms-45e1c24a",
+        "title": "Thermodynamic Modeling"
+      },
+      {
+        "id": "ms-eb205bb4",
+        "title": "Full Scale Implementation"
+      }
+    ]
+  }
+}

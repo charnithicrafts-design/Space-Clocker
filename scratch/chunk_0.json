@@ -1,0 +1,166 @@
+{
+  "wellness-visionary": {
+    "milestones": [
+      {
+        "id": "ms-0156d8cf",
+        "title": "Secure Commercial Lease: Negotiate prime downtown foot traffic"
+      },
+      {
+        "id": "ms-9fea25c9",
+        "title": "Finalize Interior Design: Create an Instagram-worthy aesthetic"
+      },
+      {
+        "id": "ms-715fcbab",
+        "title": "Hire Flagship Manager: Poach top-tier retail talent"
+      },
+      {
+        "id": "ms-bb920a56",
+        "title": "Finalize formulations with lab"
+      },
+      {
+        "id": "ms-ac658b55",
+        "title": "Design packaging and branding"
+      },
+      {
+        "id": "ms-f0f7ecf8",
+        "title": "Host launch party"
+      }
+    ]
+  },
+  "culinary-maestro": {
+    "milestones": [
+      {
+        "id": "ms-23b1882b",
+        "title": "Refine seasonal tasting menu"
+      },
+      {
+        "id": "ms-55002f83",
+        "title": "Upgrade wine pairing program"
+      },
+      {
+        "id": "ms-73bf4d22",
+        "title": "Perfect front-of-house service standards"
+      },
+      {
+        "id": "ms-b2fcd11b",
+        "title": "Secure financing"
+      },
+      {
+        "id": "ms-59db271d",
+        "title": "Sign lease for new space"
+      },
+      {
+        "id": "ms-db79c339",
+        "title": "Menu development for new concept"
+      }
+    ]
+  },
+  "retail-trailblazer": {
+    "milestones": [
+      {
+        "id": "ms-b9c11bbc",
+        "title": "Optimize online conversion rate"
+      },
+      {
+        "id": "ms-e1040ed8",
+        "title": "Launch influencer affiliate program"
+      },
+      {
+        "id": "ms-b1e111eb",
+        "title": "Expand wholesale partnerships"
+      },
+      {
+        "id": "ms-f7fc874a",
+        "title": "Negotiate international carrier rates"
+      },
+      {
+        "id": "ms-08daa3fe",
+        "title": "Implement customs and duties calculator at checkout"
+      },
+      {
+        "id": "ms-e9bdf96d",
+        "title": "Run targeted ad campaigns in UK & Australia"
+      }
+    ]
+  },
+  "urban-botanist": {
+    "milestones": [
+      {
+        "id": "ms-84e1617e",
+        "title": "Submit initial design proposal"
+      },
+      {
+        "id": "ms-3a48e68d",
+        "title": "Pass environmental impact review"
+      },
+      {
+        "id": "ms-97fc8ca1",
+        "title": "Present final pitch to city council"
+      },
+      {
+        "id": "ms-c62c016b",
+        "title": "Secure publishing deal"
+      },
+      {
+        "id": "ms-82c4b0dd",
+        "title": "Finish writing manuscript"
+      },
+      {
+        "id": "ms-34109e0a",
+        "title": "Complete photography for all featured gardens"
+      }
+    ]
+  },
+  "event-orchestrator": {
+    "milestones": [
+      {
+        "id": "ms-06c9cb84",
+        "title": "Sign a celebrity or high-society client"
+      },
+      {
+        "id": "ms-6783605f",
+        "title": "Secure exclusive design and floral partnerships"
+      },
+      {
+        "id": "ms-ed3ba7fa",
+        "title": "Coordinate with Vogue editorial team for exclusive coverage"
+      },
+      {
+        "id": "ms-4bf54c69",
+        "title": "Establish partnerships with 5-star European resorts"
+      },
+      {
+        "id": "ms-85fbdd0b",
+        "title": "Rebrand the agency website for international luxury"
+      },
+      {
+        "id": "ms-42eaac7b",
+        "title": "Hire a dedicated travel concierge for the team"
+      }
+    ]
+  },
+  "frame-chaser": {
+    "milestones": [
+      {
+        "id": "ms-73cf3142",
+        "title": "Cull 5000 images: Find the emotional core of the Smith wedding"
+      },
+      {
+        "id": "ms-c5c63af0",
+        "title": "Initial color grade: Apply signature moody aesthetic to Jones gallery"
+      },
+      {
+        "id": "ms-b22aff4b",
+        "title": "Deliver final gallery: Exceed the Williams family expectations"
+      },
+      {
+        "id": "ms-4a38fbc8",
+        "title": "Select top 50 shots: Curate a breathtaking 2026 portfolio"
+      },
+      {
+        "id": "ms-53b7acbe",
+        "title": "Write service descriptions: Command premium artisan pricing"
+      }
+    ]
+  }
+}

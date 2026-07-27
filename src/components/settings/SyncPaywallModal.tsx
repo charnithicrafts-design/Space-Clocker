@@ -243,54 +243,56 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4 mb-8">
-                {/* Tier 1 */}
-                <button
-                  onClick={() => !isProcessing && setSelectedTier('one-time')}
-                  disabled={isProcessing}
-                  className={`relative p-6 rounded-3xl border-2 transition-all text-left group ${selectedTier === 'one-time' ? 'bg-secondary/10 border-secondary' : 'bg-surface-high border-outline-variant hover:border-secondary/50'} disabled:opacity-50`}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="p-3 bg-secondary/20 rounded-xl">
-                      <Zap size={24} className="text-secondary" />
+              {!session && (
+                <div className="grid md:grid-cols-2 gap-4 mb-8">
+                  {/* Tier 1 */}
+                  <button
+                    onClick={() => !isProcessing && setSelectedTier('one-time')}
+                    disabled={isProcessing}
+                    className={`relative p-6 rounded-3xl border-2 transition-all text-left group ${selectedTier === 'one-time' ? 'bg-secondary/10 border-secondary' : 'bg-surface-high border-outline-variant hover:border-secondary/50'} disabled:opacity-50`}
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="p-3 bg-secondary/20 rounded-xl">
+                        <Zap size={24} className="text-secondary" />
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-black text-white">₹10</div>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-black text-white">₹10</div>
-                    </div>
-                  </div>
-                  <h3 className="text-lg font-black text-white uppercase tracking-widest mb-1">Temporal Burst</h3>
-                  <p className="text-xs text-on-surface-variant mb-4">One-time sync deployment.</p>
-                  <ul className="text-[10px] uppercase font-bold text-on-surface-variant space-y-2">
-                    <li className="flex gap-2 items-center"><CheckCircle2 size={12} className="text-secondary" /> Instant cloud push</li>
-                    <li className="flex gap-2 items-center"><CheckCircle2 size={12} className="text-secondary" /> Lifetime pull access</li>
-                  </ul>
-                </button>
+                    <h3 className="text-lg font-black text-white uppercase tracking-widest mb-1">Temporal Burst</h3>
+                    <p className="text-xs text-on-surface-variant mb-4">One-time sync deployment.</p>
+                    <ul className="text-[10px] uppercase font-bold text-on-surface-variant space-y-2">
+                      <li className="flex gap-2 items-center"><CheckCircle2 size={12} className="text-secondary" /> Instant cloud push</li>
+                      <li className="flex gap-2 items-center"><CheckCircle2 size={12} className="text-secondary" /> Lifetime pull access</li>
+                    </ul>
+                  </button>
 
-                {/* Tier 2 */}
-                <button
-                  onClick={() => !isProcessing && setSelectedTier('premium')}
-                  disabled={isProcessing}
-                  className={`relative p-6 rounded-3xl border-2 transition-all text-left group overflow-hidden ${selectedTier === 'premium' ? 'bg-primary/10 border-primary' : 'bg-surface-high border-outline-variant hover:border-primary/50'} disabled:opacity-50`}
-                >
-                  <div className="absolute top-0 right-0 bg-primary text-on-primary text-[9px] font-black uppercase px-3 py-1 rounded-bl-xl z-10">Best Value</div>
-                  <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/10 blur-2xl rounded-full" />
-                  
-                  <div className="flex justify-between items-start mb-4 relative z-10">
-                    <div className="p-3 bg-primary/20 rounded-xl">
-                      <Clock size={24} className="text-primary" />
+                  {/* Tier 2 */}
+                  <button
+                    onClick={() => !isProcessing && setSelectedTier('premium')}
+                    disabled={isProcessing}
+                    className={`relative p-6 rounded-3xl border-2 transition-all text-left group overflow-hidden ${selectedTier === 'premium' ? 'bg-primary/10 border-primary' : 'bg-surface-high border-outline-variant hover:border-primary/50'} disabled:opacity-50`}
+                  >
+                    <div className="absolute top-0 right-0 bg-primary text-on-primary text-[9px] font-black uppercase px-3 py-1 rounded-bl-xl z-10">Best Value</div>
+                    <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/10 blur-2xl rounded-full" />
+                    
+                    <div className="flex justify-between items-start mb-4 relative z-10">
+                      <div className="p-3 bg-primary/20 rounded-xl">
+                        <Clock size={24} className="text-primary" />
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-black text-white">₹100</div>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-black text-white">₹100</div>
-                    </div>
-                  </div>
-                  <h3 className="text-lg font-black text-white uppercase tracking-widest mb-1 relative z-10">Quantum Uplink</h3>
-                  <p className="text-xs text-on-surface-variant mb-4 relative z-10">Unlimited sync for 3 Months.</p>
-                  <ul className="text-[10px] uppercase font-bold text-on-surface-variant space-y-2 relative z-10">
-                    <li className="flex gap-2 items-center"><CheckCircle2 size={12} className="text-primary" /> Automated continuous sync</li>
-                    <li className="flex gap-2 items-center"><CheckCircle2 size={12} className="text-primary" /> Multi-device real-time</li>
-                  </ul>
-                </button>
-              </div>
+                    <h3 className="text-lg font-black text-white uppercase tracking-widest mb-1 relative z-10">Quantum Uplink</h3>
+                    <p className="text-xs text-on-surface-variant mb-4 relative z-10">Unlimited sync for 3 Months.</p>
+                    <ul className="text-[10px] uppercase font-bold text-on-surface-variant space-y-2 relative z-10">
+                      <li className="flex gap-2 items-center"><CheckCircle2 size={12} className="text-primary" /> Automated continuous sync</li>
+                      <li className="flex gap-2 items-center"><CheckCircle2 size={12} className="text-primary" /> Multi-device real-time</li>
+                    </ul>
+                  </button>
+                </div>
+              )}
 
               <div className="border-t border-outline-variant/60 pt-6 mt-2 space-y-4">
                 {isPending ? (

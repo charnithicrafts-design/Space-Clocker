@@ -1,0 +1,350 @@
+{
+  "silent-guardian": {
+    "history": [
+      {
+        "id": "hist-silent-guardian-1",
+        "title": "Mitigated DDoS Attack on Edge Nodes",
+        "date": "2024-03-12",
+        "type": "success",
+        "category": "project",
+        "description": "Successfully repelled a massive scale DDoS attack on the edge infrastructure without downtime, securing client data pipelines.",
+        "skills": ["Security", "Network Operations", "Incident Response"]
+      },
+      {
+        "id": "hist-silent-guardian-2",
+        "title": "Failed Zero-Trust Migration",
+        "date": "2024-07-22",
+        "type": "failure",
+        "category": "project",
+        "description": "Zero-trust rollout paused due to unforeseen legacy system dependencies, highlighting a need for deeper monolithic decoupling.",
+        "skills": ["Architecture", "Zero-Trust", "Legacy Systems"]
+      },
+      {
+        "id": "hist-silent-guardian-3",
+        "title": "Architect of the Year Award",
+        "date": "2025-01-15",
+        "type": "success",
+        "category": "award",
+        "description": "Recognized internally for designing the resilient multi-region failover topology.",
+        "skills": ["Cloud Architecture", "Resilience"]
+      }
+    ],
+    "tasks": {
+      "ms-ac8d8429": [
+        { "id": "task-ms-ac8d8429-1", "title": "Write Dockerfile multi-stage builds for the legacy PHP application", "time": 180, "weightage": 30 },
+        { "id": "task-ms-ac8d8429-2", "title": "Extract hardcoded database credentials into vault-backed environment variables", "time": 90, "weightage": 20 },
+        { "id": "task-ms-ac8d8429-3", "title": "Test local Docker compose setup with seeded dummy data", "time": 120, "weightage": 20 }
+      ],
+      "ms-626537b4": [
+        { "id": "task-ms-626537b4-1", "title": "Write GitHub Actions workflow for linting and unit tests", "time": 90, "weightage": 20 },
+        { "id": "task-ms-626537b4-2", "title": "Configure OIDC trust between AWS and GitHub Actions", "time": 120, "weightage": 25 },
+        { "id": "task-ms-626537b4-3", "title": "Deploy staging helm chart dynamically per pull request", "time": 180, "weightage": 30 }
+      ],
+      "ms-4a0bc2cd": [
+        { "id": "task-ms-4a0bc2cd-1", "title": "Draft the runbook for database state migration during the cutover window", "time": 150, "weightage": 20 },
+        { "id": "task-ms-4a0bc2cd-2", "title": "Route 5% of production traffic to the containerized stack via API Gateway", "time": 120, "weightage": 35 },
+        { "id": "task-ms-4a0bc2cd-3", "title": "Monitor error rates and latency on Datadog for the canary release", "time": 60, "weightage": 15 }
+      ],
+      "ms-c8c42905": [
+        { "id": "task-ms-c8c42905-1", "title": "Define VPC and private subnet CIDR blocks in Terraform variables", "time": 90, "weightage": 15 },
+        { "id": "task-ms-c8c42905-2", "title": "Provision NAT Gateways and configure route tables for outbound traffic", "time": 120, "weightage": 25 },
+        { "id": "task-ms-c8c42905-3", "title": "Apply Network ACLs restricting inbound traffic to VPN IP ranges only", "time": 90, "weightage": 20 }
+      ],
+      "ms-a21fce54": [
+        { "id": "task-ms-a21fce54-1", "title": "Code the RDS Aurora cluster module with multi-AZ enabled in Terraform", "time": 120, "weightage": 30 },
+        { "id": "task-ms-a21fce54-2", "title": "Set up ElastiCache Redis replication group configurations", "time": 90, "weightage": 20 },
+        { "id": "task-ms-a21fce54-3", "title": "Run tfsec to validate encryption at rest is enabled for all data stores", "time": 60, "weightage": 10 }
+      ]
+    }
+  },
+  "legal-eagle": {
+    "history": [
+      {
+        "id": "hist-legal-eagle-1",
+        "title": "Closed $500M Tech Merger",
+        "date": "2023-11-20",
+        "type": "success",
+        "category": "project",
+        "description": "Navigated complex IP negotiations to successfully close a high-profile SaaS merger.",
+        "skills": ["M&A", "IP Law", "Negotiation"]
+      },
+      {
+        "id": "hist-legal-eagle-2",
+        "title": "Lost Crucial Regulatory Hearing",
+        "date": "2024-05-14",
+        "type": "failure",
+        "category": "project",
+        "description": "Failed to secure anti-trust clearance for a healthcare acquisition, resulting in a blocked deal.",
+        "skills": ["Anti-trust", "Regulatory Compliance"]
+      },
+      {
+        "id": "hist-legal-eagle-3",
+        "title": "Partner Track Promotion",
+        "date": "2025-02-01",
+        "type": "success",
+        "category": "promotion",
+        "description": "Elevated to Senior Partner after consistently billing top-tier hours and retaining key clients.",
+        "skills": ["Leadership", "Client Relations"]
+      }
+    ],
+    "tasks": {
+      "ms-ed5ce5be": [
+        { "id": "task-ms-ed5ce5be-1", "title": "Review TargetCo's employment contracts for change-of-control clauses", "time": 180, "weightage": 25 },
+        { "id": "task-ms-ed5ce5be-2", "title": "Audit open litigation dockets and assess potential liability exposure", "time": 240, "weightage": 30 },
+        { "id": "task-ms-ed5ce5be-3", "title": "Draft the red-flag diligence summary report for the managing partners", "time": 120, "weightage": 20 }
+      ],
+      "ms-ba636335": [
+        { "id": "task-ms-ba636335-1", "title": "Draft the indemnification and escrow holdback provisions", "time": 150, "weightage": 25 },
+        { "id": "task-ms-ba636335-2", "title": "Align representations and warranties with the findings from due diligence", "time": 180, "weightage": 30 },
+        { "id": "task-ms-ba636335-3", "title": "Host a negotiation call with opposing counsel to finalize closing conditions", "time": 90, "weightage": 20 }
+      ],
+      "ms-a09f6aae": [
+        { "id": "task-ms-a09f6aae-1", "title": "Prepare and file the Hart-Scott-Rodino (HSR) antitrust notification", "time": 180, "weightage": 35 },
+        { "id": "task-ms-a09f6aae-2", "title": "Respond to the FTC's preliminary request for additional information", "time": 240, "weightage": 40 },
+        { "id": "task-ms-a09f6aae-3", "title": "Brief the client on timelines and potential divestiture requirements", "time": 60, "weightage": 10 }
+      ],
+      "ms-fe5694ca": [
+        { "id": "task-ms-fe5694ca-1", "title": "Screen resumes from top-tier law school candidates", "time": 120, "weightage": 15 },
+        { "id": "task-ms-fe5694ca-2", "title": "Conduct behavioral and case study interviews for final round candidates", "time": 240, "weightage": 30 },
+        { "id": "task-ms-fe5694ca-3", "title": "Negotiate and extend offer letters to the two selected associates", "time": 90, "weightage": 15 }
+      ],
+      "ms-e0a64f78": [
+        { "id": "task-ms-e0a64f78-1", "title": "Outline the abstract focusing on recent shifts in tech M&A anti-trust rulings", "time": 90, "weightage": 20 },
+        { "id": "task-ms-e0a64f78-2", "title": "Draft the manuscript incorporating precedent case citations", "time": 300, "weightage": 40 },
+        { "id": "task-ms-e0a64f78-3", "title": "Format and submit the paper to the Harvard Business Law Review", "time": 60, "weightage": 10 }
+      ]
+    }
+  },
+  "athletic-ascendant": {
+    "history": [
+      {
+        "id": "hist-athletic-ascendant-1",
+        "title": "Completed First Iron-Distance Triathlon",
+        "date": "2023-08-15",
+        "type": "success",
+        "category": "project",
+        "description": "Pushed through immense physical and mental barriers to cross the finish line in under 12 hours.",
+        "skills": ["Endurance", "Mental Toughness", "Pacing"]
+      },
+      {
+        "id": "hist-athletic-ascendant-2",
+        "title": "Torn Meniscus Setback",
+        "date": "2024-02-10",
+        "type": "failure",
+        "category": "project",
+        "description": "Overtraining led to a significant knee injury, enforcing a 6-month rehabilitation period.",
+        "skills": ["Rehabilitation", "Patience"]
+      },
+      {
+        "id": "hist-athletic-ascendant-3",
+        "title": "Certified Strength and Conditioning Specialist",
+        "date": "2025-05-20",
+        "type": "success",
+        "category": "award",
+        "description": "Passed the rigorous NSCA exam to officially qualify as a conditioning expert.",
+        "skills": ["Kinesiology", "Coaching"]
+      }
+    ],
+    "tasks": {
+      "ms-d487b998": [
+        { "id": "task-ms-d487b998-1", "title": "Complete 90-minute Zone 2 steady-state cardiac output run", "time": 90, "weightage": 20 },
+        { "id": "task-ms-d487b998-2", "title": "Perform mobility and active recovery session targeting hip flexors", "time": 45, "weightage": 10 },
+        { "id": "task-ms-d487b998-3", "title": "Calculate and log weekly aerobic volume to ensure a 10% progressive overload", "time": 30, "weightage": 5 }
+      ],
+      "ms-620170ed": [
+        { "id": "task-ms-620170ed-1", "title": "Execute 5x5 heavy back squats at 85% of 1RM", "time": 60, "weightage": 25 },
+        { "id": "task-ms-620170ed-2", "title": "Perform plyometric depth jumps to enhance fast-twitch muscle response", "time": 40, "weightage": 20 },
+        { "id": "task-ms-620170ed-3", "title": "Analyze lifting form footage to correct pelvic tilt during deadlifts", "time": 30, "weightage": 10 }
+      ],
+      "ms-54672de3": [
+        { "id": "task-ms-54672de3-1", "title": "Reduce overall weekly training volume by 40% while maintaining high intensity", "time": 60, "weightage": 15 },
+        { "id": "task-ms-54672de3-2", "title": "Practice race-day nutrition strategy during a shortened simulation run", "time": 90, "weightage": 25 },
+        { "id": "task-ms-54672de3-3", "title": "Engage in a 60-minute visualization session of the race course and pacing", "time": 60, "weightage": 10 }
+      ],
+      "ms-822eff1f": [
+        { "id": "task-ms-822eff1f-1", "title": "Study the biomechanics of the shoulder joint complex and rotator cuff", "time": 120, "weightage": 20 },
+        { "id": "task-ms-822eff1f-2", "title": "Draft a paper on force vector analysis during a sprinting stride", "time": 180, "weightage": 30 },
+        { "id": "task-ms-822eff1f-3", "title": "Pass the module quiz on energy systems and ATP-CP pathways", "time": 45, "weightage": 15 }
+      ],
+      "ms-b5f35096": [
+        { "id": "task-ms-b5f35096-1", "title": "Review 50 flashcards on muscle anatomy and insertion points", "time": 60, "weightage": 10 },
+        { "id": "task-ms-b5f35096-2", "title": "Take the timed practice exam under simulated testing conditions", "time": 120, "weightage": 25 },
+        { "id": "task-ms-b5f35096-3", "title": "Sit for the final proctored certification assessment", "time": 180, "weightage": 40 }
+      ]
+    }
+  },
+  "soil-whisperer": {
+    "history": [
+      {
+        "id": "hist-soil-whisperer-1",
+        "title": "Revitalized 500-Acre Barren Plot",
+        "date": "2023-10-05",
+        "type": "success",
+        "category": "project",
+        "description": "Used advanced regenerative agriculture techniques to restore topsoil and achieve a profitable yield.",
+        "skills": ["Regenerative Ag", "Soil Biology"]
+      },
+      {
+        "id": "hist-soil-whisperer-2",
+        "title": "Lost Cash Crop to Sudden Blight",
+        "date": "2024-08-12",
+        "type": "failure",
+        "category": "project",
+        "description": "A late-season fungal infection decimated the soybean crop, revealing a flaw in moisture control.",
+        "skills": ["Pathology", "Risk Management"]
+      },
+      {
+        "id": "hist-soil-whisperer-3",
+        "title": "Master Agronomist Certification",
+        "date": "2025-01-10",
+        "type": "success",
+        "category": "award",
+        "description": "Recognized by the national board for extensive knowledge in sustainable crop management.",
+        "skills": ["Agronomy", "Sustainability"]
+      }
+    ],
+    "tasks": {
+      "ms-2367d545": [
+        { "id": "task-ms-2367d545-1", "title": "Extract soil core samples at varying depths across the north quadrant", "time": 180, "weightage": 20 },
+        { "id": "task-ms-2367d545-2", "title": "Perform laboratory titration to determine baseline soil pH and nitrogen levels", "time": 120, "weightage": 25 },
+        { "id": "task-ms-2367d545-3", "title": "Map the micronutrient deficiencies using GIS software", "time": 90, "weightage": 15 }
+      ],
+      "ms-2da3dae4": [
+        { "id": "task-ms-2da3dae4-1", "title": "Calibrate the variable-rate spreader machinery based on the GIS map", "time": 60, "weightage": 15 },
+        { "id": "task-ms-2da3dae4-2", "title": "Mix the custom blend of organic potassium and phosphorus fertilizers", "time": 90, "weightage": 20 },
+        { "id": "task-ms-2da3dae4-3", "title": "Execute the first pass of localized fertilizer application before rainfall", "time": 180, "weightage": 30 }
+      ],
+      "ms-be08456c": [
+        { "id": "task-ms-be08456c-1", "title": "Download and process yield monitor data from the combine harvester", "time": 60, "weightage": 15 },
+        { "id": "task-ms-be08456c-2", "title": "Correlate yield maps against the initial soil nutrient deficiency maps", "time": 120, "weightage": 25 },
+        { "id": "task-ms-be08456c-3", "title": "Draft the seasonal profit-and-loss summary report for the acreage", "time": 90, "weightage": 20 }
+      ],
+      "ms-ad71ec08": [
+        { "id": "task-ms-ad71ec08-1", "title": "Identify 5 isolated half-acre zones with distinct topography for trials", "time": 60, "weightage": 10 },
+        { "id": "task-ms-ad71ec08-2", "title": "Stake and physically demarcate the boundaries of the test plots", "time": 90, "weightage": 15 },
+        { "id": "task-ms-ad71ec08-3", "title": "Install local soil moisture sensors at the center of each plot", "time": 120, "weightage": 25 }
+      ],
+      "ms-044f3b5e": [
+        { "id": "task-ms-044f3b5e-1", "title": "Source high-quality clover and winter rye seed mixes", "time": 45, "weightage": 10 },
+        { "id": "task-ms-044f3b5e-2", "title": "Adjust the drill seeder for the precise depth required for cover crops", "time": 60, "weightage": 15 },
+        { "id": "task-ms-044f3b5e-3", "title": "Seed the harvested fields to prevent topsoil erosion during winter", "time": 240, "weightage": 35 }
+      ]
+    }
+  },
+  "real-estate-maven": {
+    "history": [
+      {
+        "id": "hist-real-estate-maven-1",
+        "title": "Secured $50M Mixed-Use Development",
+        "date": "2024-01-12",
+        "type": "success",
+        "category": "project",
+        "description": "Successfully brokered the acquisition and syndication for a landmark downtown revitalization project.",
+        "skills": ["Syndication", "Commercial Real Estate", "Negotiation"]
+      },
+      {
+        "id": "hist-real-estate-maven-2",
+        "title": "Failed Re-Zoning Bid",
+        "date": "2024-06-08",
+        "type": "failure",
+        "category": "project",
+        "description": "City council rejected the zoning variance due to local community pushback, resulting in a written-off deposit.",
+        "skills": ["Urban Planning", "Community Relations"]
+      },
+      {
+        "id": "hist-real-estate-maven-3",
+        "title": "Top Regional Broker Award",
+        "date": "2025-03-01",
+        "type": "success",
+        "category": "award",
+        "description": "Achieved the highest transaction volume in the tri-state area.",
+        "skills": ["Sales", "Market Analysis"]
+      }
+    ],
+    "tasks": {
+      "ms-c04f88df": [
+        { "id": "task-ms-c04f88df-1", "title": "Run a pro forma financial model to determine the maximum offer price", "time": 120, "weightage": 25 },
+        { "id": "task-ms-c04f88df-2", "title": "Draft the Letter of Intent (LOI) with specific financing contingencies", "time": 90, "weightage": 15 },
+        { "id": "task-ms-c04f88df-3", "title": "Review the Phase I Environmental Site Assessment report for red flags", "time": 150, "weightage": 20 }
+      ],
+      "ms-f65b5806": [
+        { "id": "task-ms-f65b5806-1", "title": "Present the preliminary traffic impact study to the city planning board", "time": 120, "weightage": 25 },
+        { "id": "task-ms-f65b5806-2", "title": "Host a town hall meeting to address neighbor concerns about density", "time": 180, "weightage": 30 },
+        { "id": "task-ms-f65b5806-3", "title": "Submit the finalized plat map and variance request application", "time": 90, "weightage": 15 }
+      ],
+      "ms-611f18e7": [
+        { "id": "task-ms-611f18e7-1", "title": "Pitch the flagship retail space to a national grocery chain representative", "time": 120, "weightage": 20 },
+        { "id": "task-ms-611f18e7-2", "title": "Negotiate the Triple Net (NNN) lease terms and tenant improvement allowances", "time": 180, "weightage": 30 },
+        { "id": "task-ms-611f18e7-3", "title": "Review the final executed 10-year lease agreement with legal counsel", "time": 60, "weightage": 15 }
+      ],
+      "ms-8f6ba5e9": [
+        { "id": "task-ms-8f6ba5e9-1", "title": "Solicit three competitive bids from commercial mechanical contractors", "time": 90, "weightage": 10 },
+        { "id": "task-ms-8f6ba5e9-2", "title": "Evaluate the energy efficiency ratings and ROI of proposed chiller units", "time": 60, "weightage": 15 },
+        { "id": "task-ms-8f6ba5e9-3", "title": "Coordinate the crane logistics and street closure for rooftop unit installation", "time": 150, "weightage": 25 }
+      ],
+      "ms-4588ba4e": [
+        { "id": "task-ms-4588ba4e-1", "title": "Calculate structural roof load limits to safely support the solar racking system", "time": 90, "weightage": 20 },
+        { "id": "task-ms-4588ba4e-2", "title": "Apply for state-level renewable energy tax credits and utility rebates", "time": 120, "weightage": 15 },
+        { "id": "task-ms-4588ba4e-3", "title": "Commission the inverters and tie the generated power into the grid", "time": 180, "weightage": 35 }
+      ]
+    }
+  },
+  "heavy-blueprint-orchestrator": {
+    "history": [
+      {
+        "id": "hist-heavy-blueprint-orchestrator-1",
+        "title": "Completed the Harbor Suspension Bridge",
+        "date": "2022-11-30",
+        "type": "success",
+        "category": "project",
+        "description": "Led the engineering team that designed and erected a 2-mile suspension bridge ahead of schedule.",
+        "skills": ["Structural Engineering", "Project Management", "Logistics"]
+      },
+      {
+        "id": "hist-heavy-blueprint-orchestrator-2",
+        "title": "Subterranean Tunnel Collapse",
+        "date": "2023-09-14",
+        "type": "failure",
+        "category": "project",
+        "description": "Unpredicted geological fault lines led to a partial tunnel collapse, delaying the transit project by a year.",
+        "skills": ["Geotechnical Engineering", "Crisis Management"]
+      },
+      {
+        "id": "hist-heavy-blueprint-orchestrator-3",
+        "title": "Civil Engineering Excellence Award",
+        "date": "2024-12-05",
+        "type": "success",
+        "category": "award",
+        "description": "Honored by the society of civil engineers for innovative seismic dampening designs.",
+        "skills": ["Innovation", "Seismic Design"]
+      }
+    ],
+    "tasks": {
+      "ms-4cdd7782": [
+        { "id": "task-ms-4cdd7782-1", "title": "Review geological survey data to assess soil bearing capacity", "time": 120, "weightage": 25 },
+        { "id": "task-ms-4cdd7782-2", "title": "Calculate the concrete mix specifications required for the 100-year slab", "time": 90, "weightage": 20 },
+        { "id": "task-ms-4cdd7782-3", "title": "Sign off on the rebar grid layout blueprints for the foundation pour", "time": 60, "weightage": 15 }
+      ],
+      "ms-da4e2b8e": [
+        { "id": "task-ms-da4e2b8e-1", "title": "Analyze the core sample acoustics to locate bedrock fracture zones", "time": 150, "weightage": 25 },
+        { "id": "task-ms-da4e2b8e-2", "title": "Design steel friction piles with load-bearing redundancy", "time": 180, "weightage": 30 },
+        { "id": "task-ms-da4e2b8e-3", "title": "Present the deep piling load simulation results to the chief inspector", "time": 90, "weightage": 15 }
+      ],
+      "ms-076fed79": [
+        { "id": "task-ms-076fed79-1", "title": "Model 500-year flood event hydrology data using flow simulation software", "time": 240, "weightage": 35 },
+        { "id": "task-ms-076fed79-2", "title": "Draft the schematics for the subterranean overflow retention basins", "time": 180, "weightage": 25 },
+        { "id": "task-ms-076fed79-3", "title": "Specify the capacity and pressure rating for the emergency outfall pumps", "time": 90, "weightage": 20 }
+      ],
+      "ms-05a2210e": [
+        { "id": "task-ms-05a2210e-1", "title": "Deploy magnetic particle inspection equipment to the primary anchor blocks", "time": 180, "weightage": 30 },
+        { "id": "task-ms-05a2210e-2", "title": "Review the radiographic (X-ray) scans of the main suspension cable splices", "time": 120, "weightage": 25 },
+        { "id": "task-ms-05a2210e-3", "title": "Document micro-fractures in the tension rods and prescribe immediate retrofits", "time": 150, "weightage": 30 }
+      ],
+      "ms-21869cf1": [
+        { "id": "task-ms-21869cf1-1", "title": "Simulate a magnitude 8.0 lateral wave impact on the superstructure", "time": 240, "weightage": 35 },
+        { "id": "task-ms-21869cf1-2", "title": "Size the tuned mass dampers to counteract the calculated resonant frequency", "time": 180, "weightage": 30 },
+        { "id": "task-ms-21869cf1-3", "title": "Draft installation sequencing for mounting the viscous dampers to the shear walls", "time": 120, "weightage": 20 }
+      ]
+    }
+  }
+}

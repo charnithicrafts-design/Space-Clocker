@@ -1,0 +1,134 @@
+{
+  "industrial-lens": {
+    "milestones": [
+      {
+        "id": "ms-9ca44cf2",
+        "title": "Site walk-through and safety briefing"
+      },
+      {
+        "id": "ms-942ff961",
+        "title": "Shoot executive headshots"
+      },
+      {
+        "id": "ms-04694088",
+        "title": "Capture assembly line action shots"
+      },
+      {
+        "id": "ms-cd7422be",
+        "title": "Deliver final retouched images"
+      }
+    ]
+  },
+  "aesthetic-architect": {
+    "milestones": [
+      {
+        "id": "ms-270f7871",
+        "title": "Brand discovery workshop"
+      },
+      {
+        "id": "ms-33581b05",
+        "title": "Present 3 logo concepts"
+      },
+      {
+        "id": "ms-d4a05d84",
+        "title": "Finalize brand guidelines document"
+      },
+      {
+        "id": "ms-f0ab4c93",
+        "title": "Complete module 1: History"
+      },
+      {
+        "id": "ms-6eff110d",
+        "title": "Complete final project"
+      }
+    ]
+  },
+  "word-weaver": {
+    "milestones": [
+      {
+        "id": "ms-c49101fe",
+        "title": "Audit existing v1.0 docs"
+      },
+      {
+        "id": "ms-8533eee8",
+        "title": "Write authentication guide"
+      },
+      {
+        "id": "ms-223d6ba1",
+        "title": "Document core endpoints"
+      },
+      {
+        "id": "ms-66c962f1",
+        "title": "Publish to developer portal"
+      }
+    ]
+  },
+  "code-artisan": {
+    "milestones": [
+      {
+        "id": "ms-9f6212fc",
+        "title": "Implement player controller"
+      },
+      {
+        "id": "ms-b339ff19",
+        "title": "Finish first level blockout"
+      },
+      {
+        "id": "ms-3a69b046",
+        "title": "Implement basic enemy AI"
+      },
+      {
+        "id": "ms-3b2de235",
+        "title": "Polish UI and add sound effects"
+      }
+    ]
+  },
+  "product-visionary": {
+    "milestones": [
+      {
+        "id": "ms-6e37a551",
+        "title": "Finalize PRD: Secure buy-in from engineering & design leads"
+      },
+      {
+        "id": "ms-f6a85447",
+        "title": "Beta Testing: Onboard 500 legacy users & map friction logs"
+      },
+      {
+        "id": "ms-5b833b87",
+        "title": "General Availability: Achieve zero-downtime global rollout"
+      },
+      {
+        "id": "ms-15e840a0",
+        "title": "Define Curriculum: Map out core competencies for junior PMs"
+      },
+      {
+        "id": "ms-a5c9ece6",
+        "title": "Host First Cohort: Mentor 15 aspiring product managers"
+      }
+    ]
+  },
+  "cyber-sentinel": {
+    "milestones": [
+      {
+        "id": "ms-183be0f5",
+        "title": "Complete Lab Machines: Root all 75 active directory boxes"
+      },
+      {
+        "id": "ms-a56fe2fd",
+        "title": "Pass 24hr Exam: Secure 5 systems without sleep"
+      },
+      {
+        "id": "ms-1f4d91c7",
+        "title": "External Pentest: Breach the staging perimeter"
+      },
+      {
+        "id": "ms-c19bf669",
+        "title": "Social Engineering: Execute targeted phishing on C-suite"
+      },
+      {
+        "id": "ms-c3fec0ed",
+        "title": "Final Report: Present critical vulnerabilities to the Board"
+      }
+    ]
+  }
+}
