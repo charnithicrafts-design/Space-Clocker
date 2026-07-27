@@ -516,11 +516,11 @@ export const api = {
 
       // 2. Void Breach Data (grouped by date)
       const voidsRes = await tx.query(`
-        SELECT date(created_at) as date, COUNT(*) as count
+        SELECT date as date, COUNT(*) as count
         FROM stellar_history
-        WHERE type = 'failure' AND created_at >= CURRENT_DATE - ($1 * INTERVAL '1 day')
-        GROUP BY date(created_at)
-        ORDER BY date(created_at) ASC
+        WHERE type = 'failure' AND date::date >= CURRENT_DATE - ($1 * INTERVAL '1 day')
+        GROUP BY date
+        ORDER BY date ASC
       `, [timeframeDays]);
 
       // 3. XP Progression
