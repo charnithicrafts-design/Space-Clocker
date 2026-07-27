@@ -1029,7 +1029,7 @@ export const useTrackStore = create<TrackStore>()(
           newConfig.model,
           newConfig.providerUrl,
           newConfig.clientId || '',
-          newConfig.syncEnabled ?? false,
+          newConfig.syncEnabled ? 1 : 0,
           newConfig.syncTier || 'none',
           newConfig.syncExpiresAt || null,
           newConfig.oneTimeSyncsAvailable || 0

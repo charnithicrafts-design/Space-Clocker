@@ -323,11 +323,29 @@ const SyncPaywallModal: React.FC<SyncPaywallModalProps> = ({ isOpen, onClose }) 
                     )}
                   </>
                 ) : (
-                  <div className="flex justify-center">
-                    <div className="flex items-center gap-2 bg-success/10 border border-success/30 px-4 py-2 rounded-xl">
+                  <div className="flex justify-center flex-col items-center gap-4">
+                    <div className="flex items-center gap-2 bg-success/10 border border-success/30 px-4 py-2 rounded-xl w-fit">
                       <CheckCircle2 size={16} className="text-success" />
                       <span className="text-xs font-bold text-success">Linked as {session.user?.email || 'User'}</span>
                     </div>
+                    {!oracleConfig.syncEnabled && (
+                      <button 
+                        onClick={() => {
+                          const newClientId = session.user?.id || oracleConfig.clientId;
+                          syncService.authorize(newClientId);
+                          updateOracleConfig({ 
+                            clientId: newClientId,
+                            syncTier: 'premium',
+                            syncEnabled: true 
+                          });
+                          onClose();
+                          SoundManager.playSyncSuccess();
+                        }}
+                        className="bg-primary text-on-primary font-black uppercase tracking-widest px-6 py-3 rounded-xl text-xs shadow-lg shadow-primary/20 hover:bg-primary-container transition-colors w-full max-w-xs"
+                      >
+                        Restore Link (Activate Device)
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
