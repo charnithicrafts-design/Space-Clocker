@@ -196,7 +196,63 @@ export const creativeArtisanProfiles: Archetype[] = [
                               "Commercial Photography"
                     ]
           }
-]
+],
+        skills: [
+              {
+                "id": "skill-1785233050745-0",
+                "name": "Editorial Photography",
+                "currentProficiency": 37,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "portfolio-update"
+              },
+              {
+                "id": "skill-1785233050745-1",
+                "name": "Networking",
+                "currentProficiency": 33,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "A quiet, powerful capability that protects you from burnout.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050745-2",
+                "name": "Gear Optimization",
+                "currentProficiency": 47,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "A quiet, powerful capability that protects you from burnout.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050745-3",
+                "name": "Adaptability",
+                "currentProficiency": 73,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "portfolio-update"
+              },
+              {
+                "id": "skill-1785233050745-4",
+                "name": "Location Scouting",
+                "currentProficiency": 69,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "wedding-season"
+              },
+              {
+                "id": "skill-1785233050745-5",
+                "name": "Commercial Photography",
+                "currentProficiency": 35,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "wedding-season"
+              }
+            ]
     }
   },
   {
@@ -381,7 +437,63 @@ export const creativeArtisanProfiles: Archetype[] = [
                               "Drone Photography"
                     ]
           }
-]
+],
+        skills: [
+              {
+                "id": "skill-1785233050766-0",
+                "name": "Lighting Large Spaces",
+                "currentProficiency": 70,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "annual-report"
+              },
+              {
+                "id": "skill-1785233050766-1",
+                "name": "Technical Understanding",
+                "currentProficiency": 43,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "annual-report"
+              },
+              {
+                "id": "skill-1785233050766-2",
+                "name": "Curating",
+                "currentProficiency": 33,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Emotional resilience is the bedrock of all your other ambitions.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050766-3",
+                "name": "Print Production",
+                "currentProficiency": 63,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "annual-report"
+              },
+              {
+                "id": "skill-1785233050766-4",
+                "name": "Contract Negotiation",
+                "currentProficiency": 58,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Emotional resilience is the bedrock of all your other ambitions.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050766-5",
+                "name": "Drone Photography",
+                "currentProficiency": 79,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "annual-report"
+              }
+            ]
     }
   },
   {
@@ -589,7 +701,63 @@ export const creativeArtisanProfiles: Archetype[] = [
                               "E-commerce"
                     ]
           }
-]
+],
+        skills: [
+              {
+                "id": "skill-1785233050801-0",
+                "name": "UI/UX Design",
+                "currentProficiency": 59,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "typography-course"
+              },
+              {
+                "id": "skill-1785233050801-1",
+                "name": "Creative Direction",
+                "currentProficiency": 30,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "A quiet, powerful capability that protects you from burnout.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050801-2",
+                "name": "Brand Strategy",
+                "currentProficiency": 42,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "brand-identity"
+              },
+              {
+                "id": "skill-1785233050801-3",
+                "name": "Visual Identity",
+                "currentProficiency": 31,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "typography-course"
+              },
+              {
+                "id": "skill-1785233050801-4",
+                "name": "Type Design",
+                "currentProficiency": 65,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "brand-identity"
+              },
+              {
+                "id": "skill-1785233050801-5",
+                "name": "E-commerce",
+                "currentProficiency": 71,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "typography-course"
+              }
+            ]
     }
   },
   {
@@ -774,7 +942,63 @@ export const creativeArtisanProfiles: Archetype[] = [
                               "Long-form Content"
                     ]
           }
-]
+],
+        skills: [
+              {
+                "id": "skill-1785233050862-0",
+                "name": "Copywriting",
+                "currentProficiency": 55,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "api-docs"
+              },
+              {
+                "id": "skill-1785233050862-1",
+                "name": "Tech Journalism",
+                "currentProficiency": 57,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "True leadership starts from within. Nurture this carefully.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050862-2",
+                "name": "Technical Writing",
+                "currentProficiency": 55,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "api-docs"
+              },
+              {
+                "id": "skill-1785233050862-3",
+                "name": "Markdown",
+                "currentProficiency": 65,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "A quiet, powerful capability that protects you from burnout.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050862-4",
+                "name": "Ghostwriting",
+                "currentProficiency": 42,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "api-docs"
+              },
+              {
+                "id": "skill-1785233050862-5",
+                "name": "Long-form Content",
+                "currentProficiency": 52,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Your mental bandwidth depends on mastering this soft skill.",
+                "ambitionId": null
+              }
+            ]
     }
   },
   {
@@ -959,7 +1183,63 @@ export const creativeArtisanProfiles: Archetype[] = [
                               "Under-pressure Coding"
                     ]
           }
-]
+],
+        skills: [
+              {
+                "id": "skill-1785233050903-0",
+                "name": "Game Design",
+                "currentProficiency": 41,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "vertical-slice"
+              },
+              {
+                "id": "skill-1785233050903-1",
+                "name": "C# / Unity",
+                "currentProficiency": 32,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "vertical-slice"
+              },
+              {
+                "id": "skill-1785233050903-2",
+                "name": "Open Source",
+                "currentProficiency": 31,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Emotional resilience is the bedrock of all your other ambitions.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050903-3",
+                "name": "Community Management",
+                "currentProficiency": 77,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Emotional resilience is the bedrock of all your other ambitions.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050903-4",
+                "name": "Rapid Prototyping",
+                "currentProficiency": 54,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "True leadership starts from within. Nurture this carefully.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050903-5",
+                "name": "Under-pressure Coding",
+                "currentProficiency": 43,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "vertical-slice"
+              }
+            ]
     }
   }
 ];

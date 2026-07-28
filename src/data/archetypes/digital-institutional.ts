@@ -96,7 +96,36 @@ export const digitalInstitutionalProfiles: Archetype[] = [
       voids: [
         { id: "v1", title: "Feature Creep Compromises", impact: "high", engagedCount: 0, maxAllowed: 0, description: "Saying yes to a feature without strategic alignment." },
         { id: "v2", title: "Analysis Paralysis", impact: "medium", engagedCount: 0, maxAllowed: 0, description: "Over-analyzing data instead of shipping and learning." }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233050968-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 68,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "True leadership starts from within. Nurture this carefully.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050968-1",
+                "name": "Time Management",
+                "currentProficiency": 45,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "pm-mentorship"
+              },
+              {
+                "id": "skill-1785233050968-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 40,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "pm-mentorship"
+              }
+            ]
     }
   },
   {
@@ -253,7 +282,63 @@ export const digitalInstitutionalProfiles: Archetype[] = [
                               "Identity Management"
                     ]
           }
-]
+],
+        skills: [
+              {
+                "id": "skill-1785233050985-0",
+                "name": "Penetration Testing",
+                "currentProficiency": 36,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "sec-audit"
+              },
+              {
+                "id": "skill-1785233050985-1",
+                "name": "Reverse Engineering",
+                "currentProficiency": 39,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "sec-audit"
+              },
+              {
+                "id": "skill-1785233050985-2",
+                "name": "Security Architecture",
+                "currentProficiency": 78,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "sec-audit"
+              },
+              {
+                "id": "skill-1785233050985-3",
+                "name": "Risk Management",
+                "currentProficiency": 39,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "cert-oscp"
+              },
+              {
+                "id": "skill-1785233050985-4",
+                "name": "Zero Trust",
+                "currentProficiency": 45,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Emotional resilience is the bedrock of all your other ambitions.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050985-5",
+                "name": "Identity Management",
+                "currentProficiency": 69,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "sec-audit"
+              }
+            ]
     }
   },
   {
@@ -350,7 +435,36 @@ export const digitalInstitutionalProfiles: Archetype[] = [
       voids: [
         { id: "v1", title: "Manual Config Changes", impact: "high", engagedCount: 0, maxAllowed: 0, description: "Making manual changes via AWS Console instead of Terraform." },
         { id: "v2", title: "Ignoring Alert Fatigue", impact: "medium", engagedCount: 0, maxAllowed: 0, description: "Dismissing alerts without investigating the root cause." }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233050999-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 55,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "k8s-migration"
+              },
+              {
+                "id": "skill-1785233050999-1",
+                "name": "Time Management",
+                "currentProficiency": 64,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "k8s-migration"
+              },
+              {
+                "id": "skill-1785233050999-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 60,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "infra-as-code"
+              }
+            ]
     }
   },
   {
@@ -447,7 +561,36 @@ export const digitalInstitutionalProfiles: Archetype[] = [
       voids: [
         { id: "v1", title: "Skipping the Fine Print", impact: "high", engagedCount: 0, maxAllowed: 0, description: "Relying on associates without personal review of critical clauses." },
         { id: "v2", title: "Emotional Negotiation", impact: "medium", engagedCount: 0, maxAllowed: 0, description: "Letting opposing counsel's tactics disrupt objective analysis." }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233051014-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 69,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "partner-track"
+              },
+              {
+                "id": "skill-1785233051014-1",
+                "name": "Time Management",
+                "currentProficiency": 59,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "partner-track"
+              },
+              {
+                "id": "skill-1785233051014-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 45,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "A quiet, powerful capability that protects you from burnout.",
+                "ambitionId": null
+              }
+            ]
     }
   },
   {
@@ -544,7 +687,36 @@ export const digitalInstitutionalProfiles: Archetype[] = [
       voids: [
         { id: "v1", title: "Ignoring Recovery Metrics", impact: "high", engagedCount: 0, maxAllowed: 0, description: "Pushing athletes when HRV indicates overtraining." },
         { id: "v2", title: "Cookie-Cutter Programming", impact: "medium", engagedCount: 0, maxAllowed: 0, description: "Failing to individualize workouts for specific athlete needs." }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233051028-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 79,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "biomechanics-course"
+              },
+              {
+                "id": "skill-1785233051028-1",
+                "name": "Time Management",
+                "currentProficiency": 69,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "olympic-prep"
+              },
+              {
+                "id": "skill-1785233051028-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 39,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "True leadership starts from within. Nurture this carefully.",
+                "ambitionId": null
+              }
+            ]
     }
   },
   {
@@ -641,7 +813,36 @@ export const digitalInstitutionalProfiles: Archetype[] = [
       voids: [
         { id: "v1", title: "Ignoring Micro-Climates", impact: "high", engagedCount: 0, maxAllowed: 0, description: "Applying regional data blindly without field-specific context." },
         { id: "v2", title: "Over-relying on Synthetics", impact: "medium", engagedCount: 0, maxAllowed: 0, description: "Recommending chemical solutions instead of addressing soil health." }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233051045-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 40,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "yield-opt"
+              },
+              {
+                "id": "skill-1785233051045-1",
+                "name": "Time Management",
+                "currentProficiency": 34,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "yield-opt"
+              },
+              {
+                "id": "skill-1785233051045-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 69,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "regen-ag"
+              }
+            ]
     }
   },
   {
@@ -738,7 +939,36 @@ export const digitalInstitutionalProfiles: Archetype[] = [
       voids: [
         { id: "v1", title: "Underestimating Soft Costs", impact: "high", engagedCount: 0, maxAllowed: 0, description: "Failing to properly budget for permits, legal, and architectural fees." },
         { id: "v2", title: "Ignoring Community Backlash", impact: "medium", engagedCount: 0, maxAllowed: 0, description: "Pushing forward without addressing local neighborhood concerns." }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233051067-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 62,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "green-cert"
+              },
+              {
+                "id": "skill-1785233051067-1",
+                "name": "Time Management",
+                "currentProficiency": 61,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Emotional resilience is the bedrock of all your other ambitions.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233051067-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 61,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "True leadership starts from within. Nurture this carefully.",
+                "ambitionId": null
+              }
+            ]
     }
   }
 ];

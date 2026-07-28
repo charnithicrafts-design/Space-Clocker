@@ -148,7 +148,36 @@ export const heavyBuilderProfiles: Archetype[] = [
           engagedCount: 8,
           maxAllowed: 0
         }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233051087-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 61,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Your mental bandwidth depends on mastering this soft skill.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233051087-1",
+                "name": "Time Management",
+                "currentProficiency": 43,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "amb-marcus-2"
+              },
+              {
+                "id": "skill-1785233051087-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 40,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Your mental bandwidth depends on mastering this soft skill.",
+                "ambitionId": null
+              }
+            ]
     }
   },
   {
@@ -278,7 +307,36 @@ export const heavyBuilderProfiles: Archetype[] = [
           engagedCount: 15,
           maxAllowed: 0
         }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233051096-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 78,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "amb-tariq-1"
+              },
+              {
+                "id": "skill-1785233051096-1",
+                "name": "Time Management",
+                "currentProficiency": 59,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "amb-tariq-1"
+              },
+              {
+                "id": "skill-1785233051096-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 75,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "amb-tariq-1"
+              }
+            ]
     }
   },
   {
@@ -407,7 +465,36 @@ export const heavyBuilderProfiles: Archetype[] = [
           engagedCount: 12,
           maxAllowed: 0
         }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233051104-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 75,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "A quiet, powerful capability that protects you from burnout.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233051104-1",
+                "name": "Time Management",
+                "currentProficiency": 50,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Emotional resilience is the bedrock of all your other ambitions.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233051104-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 38,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "amb-david-1"
+              }
+            ]
     }
   },
   {
@@ -536,7 +623,36 @@ export const heavyBuilderProfiles: Archetype[] = [
           engagedCount: 7,
           maxAllowed: 0
         }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233051112-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 79,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "amb-elena-1"
+              },
+              {
+                "id": "skill-1785233051112-1",
+                "name": "Time Management",
+                "currentProficiency": 58,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "amb-elena-1"
+              },
+              {
+                "id": "skill-1785233051112-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 55,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "amb-elena-1"
+              }
+            ]
     }
   },
   {
@@ -666,7 +782,36 @@ export const heavyBuilderProfiles: Archetype[] = [
           engagedCount: 16,
           maxAllowed: 0
         }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233051120-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 70,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "A quiet, powerful capability that protects you from burnout.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233051120-1",
+                "name": "Time Management",
+                "currentProficiency": 31,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "amb-sam-1"
+              },
+              {
+                "id": "skill-1785233051120-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 61,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "amb-sam-1"
+              }
+            ]
     }
   }
 ];

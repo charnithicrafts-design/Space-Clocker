@@ -199,7 +199,63 @@ export const businessOwnerProfiles: Archetype[] = [
                               "Marketing"
                     ]
           }
-]
+],
+        skills: [
+              {
+                "id": "skill-1785233050563-0",
+                "name": "Customer Experience",
+                "currentProficiency": 66,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "launch-skincare-line"
+              },
+              {
+                "id": "skill-1785233050563-1",
+                "name": "Brand Management",
+                "currentProficiency": 69,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "open-second-location"
+              },
+              {
+                "id": "skill-1785233050563-2",
+                "name": "Business Scaling",
+                "currentProficiency": 41,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "open-second-location"
+              },
+              {
+                "id": "skill-1785233050563-3",
+                "name": "Financial Planning",
+                "currentProficiency": 52,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "launch-skincare-line"
+              },
+              {
+                "id": "skill-1785233050563-4",
+                "name": "Product Development",
+                "currentProficiency": 40,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "ambitionId": "open-second-location"
+              },
+              {
+                "id": "skill-1785233050563-5",
+                "name": "Marketing",
+                "currentProficiency": 73,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "open-second-location"
+              }
+            ]
     }
   },
   {
@@ -399,7 +455,63 @@ export const businessOwnerProfiles: Archetype[] = [
                               "Plating Aesthetics"
                     ]
           }
-]
+],
+        skills: [
+              {
+                "id": "skill-1785233050608-0",
+                "name": "Culinary Arts",
+                "currentProficiency": 66,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Your mental bandwidth depends on mastering this soft skill.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050608-1",
+                "name": "Consistency",
+                "currentProficiency": 72,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Your mental bandwidth depends on mastering this soft skill.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050608-2",
+                "name": "Expansion Strategy",
+                "currentProficiency": 34,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "michelin-star"
+              },
+              {
+                "id": "skill-1785233050608-3",
+                "name": "Menu Design",
+                "currentProficiency": 31,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "A quiet, powerful capability that protects you from burnout.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050608-4",
+                "name": "PR",
+                "currentProficiency": 73,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "A quiet, powerful capability that protects you from burnout.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050608-5",
+                "name": "Plating Aesthetics",
+                "currentProficiency": 40,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "michelin-star"
+              }
+            ]
     }
   },
   {
@@ -599,7 +711,63 @@ export const businessOwnerProfiles: Archetype[] = [
                               "Campaign Execution"
                     ]
           }
-]
+],
+        skills: [
+              {
+                "id": "skill-1785233050644-0",
+                "name": "Social Media Marketing",
+                "currentProficiency": 30,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "A quiet, powerful capability that protects you from burnout.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050644-1",
+                "name": "Community Building",
+                "currentProficiency": 33,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "hit-1m-arr"
+              },
+              {
+                "id": "skill-1785233050644-2",
+                "name": "Negotiation",
+                "currentProficiency": 33,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "hit-1m-arr"
+              },
+              {
+                "id": "skill-1785233050644-3",
+                "name": "B2B Sales",
+                "currentProficiency": 33,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "hit-1m-arr"
+              },
+              {
+                "id": "skill-1785233050644-4",
+                "name": "Inventory Management",
+                "currentProficiency": 35,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "hit-1m-arr"
+              },
+              {
+                "id": "skill-1785233050644-5",
+                "name": "Campaign Execution",
+                "currentProficiency": 32,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "intl-shipping"
+              }
+            ]
     }
   },
   {
@@ -753,7 +921,36 @@ export const businessOwnerProfiles: Archetype[] = [
           engagedCount: 0,
           maxAllowed: 0
         }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233050690-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 60,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Your mental bandwidth depends on mastering this soft skill.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050690-1",
+                "name": "Time Management",
+                "currentProficiency": 35,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "True leadership starts from within. Nurture this carefully.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-1785233050690-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 37,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "city-green-space"
+              }
+            ]
     }
   },
   {
@@ -907,7 +1104,36 @@ export const businessOwnerProfiles: Archetype[] = [
           engagedCount: 0,
           maxAllowed: 0
         }
-      ]
+      ],
+        skills: [
+              {
+                "id": "skill-1785233050711-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 45,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "vogue-weddings"
+              },
+              {
+                "id": "skill-1785233050711-1",
+                "name": "Time Management",
+                "currentProficiency": 79,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "destination-exclusive"
+              },
+              {
+                "id": "skill-1785233050711-2",
+                "name": "Deep Work Focus",
+                "currentProficiency": 75,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "ambitionId": "vogue-weddings"
+              }
+            ]
     }
   }
 ];
