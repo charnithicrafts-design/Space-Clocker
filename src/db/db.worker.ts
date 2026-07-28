@@ -251,18 +251,32 @@ export const api = {
                   console.error('[Worker] Purge failed:', purgeError);
                   break; // Proceed to next candidate
                 }
-              } else {
-                console.warn(`[Worker] Non-retryable initialization error at ${candidatePath}:`, e);
-                break; // Break the while loop to try next candidate
+                } else {
+                  console.warn(`[Worker] Non-retryable initialization error at ${candidatePath}:`, e);
+                  break; // Break the while loop to try next candidate
+                }
               }
             }
-          }
 
-          if (candidateSuccess && db) {
-            try {
-              await this.setup();
-              console.log(`[Worker] PGlite initialization and setup successful at: ${candidatePath}`);
-              storagePath = candidatePath;
+            if (candidateSuccess && db) {
+              try {
+                await this.setup();
+                
+                // Fix demo data completed_at for simulations so they appear on the heat-map
+                const prefRes = await db.query('SELECT is_simulation FROM preferences WHERE id = 1');
+                const isSim = prefRes.rows[0]?.is_simulation;
+                if (isSim) {
+                  try {
+                    await db.exec(`
+                      UPDATE tasks 
+                      SET completed_at = TO_CHAR(CURRENT_DATE - (FLOOR(RANDOM() * 30) || ' days')::interval, 'YYYY-MM-DD')
+                      WHERE completed = true AND completed_at IS NULL;
+                    `);
+                  } catch(e) {}
+                }
+
+                console.log(`[Worker] PGlite initialization and setup successful at: ${candidatePath}`);
+                storagePath = candidatePath;
               initSuccess = true;
               break;
             } catch (setupError) {
