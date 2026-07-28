@@ -921,6 +921,45 @@ export const api = {
     };
   },
 
+  async getCognitiveSync() {
+    if (initializing) await initializing;
+    if (!db) throw new Error('Database not initialized');
+
+    // Positive points: Tasks completed in last 7 days
+    const positiveRes = await db.query(`
+      SELECT COUNT(*) as count 
+      FROM tasks 
+      WHERE completed = true AND is_void = false AND completed_at IS NOT NULL
+        AND completed_at::timestamp > CURRENT_DATE - INTERVAL '7 days'
+    `);
+    const positiveTasks = Number(positiveRes.rows[0]?.count || 0);
+
+    // Negative points: Voids engaged in last 7 days
+    const negativeRes = await db.query(`
+      SELECT COUNT(*) as count 
+      FROM tasks 
+      WHERE completed = true AND is_void = true AND completed_at IS NOT NULL
+        AND completed_at::timestamp > CURRENT_DATE - INTERVAL '7 days'
+    `);
+    const voidTasks = Number(negativeRes.rows[0]?.count || 0);
+
+    // Calculate score (Base 50, +5 per task, -10 per void)
+    let score = 50 + (positiveTasks * 5) - (voidTasks * 10);
+    if (score > 100) score = 100;
+    if (score < 0) score = 0;
+
+    let auraState = 'neutral';
+    if (score >= 80) auraState = 'aligned';
+    else if (score <= 40) auraState = 'destabilized';
+
+    return {
+      score,
+      auraState,
+      positiveTasks,
+      voidTasks
+    };
+  },
+
   async exportToJson(): Promise<Uint8Array> {
     if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');

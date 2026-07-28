@@ -1,12 +1,18 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
+import { useAnalyticsStore } from '../../store/useAnalyticsStore';
 import { Award, Zap, ShieldCheck, Target, Clock, CalendarDays, Brain, Star } from 'lucide-react';
 import { XP_PER_LEVEL } from '../../constants';
 
 const ProfileDashboard = () => {
-  const { profile, tasks, ambitions, stats, history, cognitiveState } = useTrackStore();
+  const { profile, tasks, ambitions, stats, history } = useTrackStore();
+  const { cognitiveSync: cognitiveState, fetchCognitiveSync } = useAnalyticsStore();
   const [isScoreVisible, setIsScoreVisible] = useState(false);
+
+  useEffect(() => {
+    fetchCognitiveSync();
+  }, [fetchCognitiveSync]);
 
   // Handle ambient audio lifecycle
   useEffect(() => {
@@ -119,7 +125,7 @@ const ProfileDashboard = () => {
             {/* Sync Score Overlay */}
             {cognitiveState && (
               <div className={`absolute inset-0 bg-surface-highest/80 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-300 ${isScoreVisible ? 'opacity-100' : 'opacity-0 md:group-hover:opacity-100'}`}>
-                <span className="text-3xl font-black text-primary font-display">{cognitiveState.syncScore}</span>
+                <span className="text-3xl font-black text-primary font-display">{cognitiveState.score}</span>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Sync Score</span>
               </div>
             )}
