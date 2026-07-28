@@ -199,58 +199,121 @@ export const creativeArtisanProfiles: Archetype[] = [
 ],
         skills: [
               {
-                "id": "skill-1785233050745-0",
-                "name": "Editorial Photography",
-                "currentProficiency": 37,
+                "id": "skill-p-1785233785602-0",
+                "name": "Stress Regulation",
+                "currentProficiency": 76,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Master your nervous system to maintain clarity under pressure.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785602-1",
+                "name": "Growth Mindset",
+                "currentProficiency": 30,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "View every failure as data. Adapt and iterate continuously.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785602-2",
+                "name": "Time Management",
+                "currentProficiency": 45,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Protect your focus. The Void thrives on chaotic scheduling.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785602-3",
+                "name": "Radical Candor",
+                "currentProficiency": 35,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Deliver hard truths with genuine care.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785602-4",
+                "name": "Strategic Empathy",
+                "currentProficiency": 46,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Understanding others' motivations will unlock new collaborative pathways.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785602-5",
+                "name": "Active Listening",
+                "currentProficiency": 31,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "True leadership requires hearing what isn't said.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785602-6",
+                "name": "Emotional Resilience",
+                "currentProficiency": 70,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "The bedrock of your ambition. Nurture your capacity to bounce back.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-a-1785233785602-7",
+                "name": "Advanced Wedding Season Tactics 1",
+                "currentProficiency": 50,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "wedding-season"
+              },
+              {
+                "id": "skill-a-1785233785602-8",
+                "name": "Advanced Wedding Season Tactics 2",
+                "currentProficiency": 63,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "wedding-season"
+              },
+              {
+                "id": "skill-a-1785233785602-9",
+                "name": "Advanced Wedding Season Tactics 3",
+                "currentProficiency": 41,
                 "targetProficiency": 100,
                 "type": "ambition",
                 "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
-                "ambitionId": "portfolio-update"
+                "ambitionId": "wedding-season"
               },
               {
-                "id": "skill-1785233050745-1",
-                "name": "Networking",
-                "currentProficiency": 33,
-                "targetProficiency": 100,
-                "type": "personal",
-                "recommendation": "A quiet, powerful capability that protects you from burnout.",
-                "ambitionId": null
-              },
-              {
-                "id": "skill-1785233050745-2",
-                "name": "Gear Optimization",
-                "currentProficiency": 47,
-                "targetProficiency": 100,
-                "type": "personal",
-                "recommendation": "A quiet, powerful capability that protects you from burnout.",
-                "ambitionId": null
-              },
-              {
-                "id": "skill-1785233050745-3",
-                "name": "Adaptability",
-                "currentProficiency": 73,
+                "id": "skill-a-1785233785602-10",
+                "name": "Advanced Portfolio Update Tactics 1",
+                "currentProficiency": 27,
                 "targetProficiency": 100,
                 "type": "ambition",
                 "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
                 "ambitionId": "portfolio-update"
               },
               {
-                "id": "skill-1785233050745-4",
-                "name": "Location Scouting",
-                "currentProficiency": 69,
+                "id": "skill-a-1785233785602-11",
+                "name": "Advanced Portfolio Update Tactics 2",
+                "currentProficiency": 75,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors for this ambition. Keep your focus sharp.",
+                "ambitionId": "portfolio-update"
+              },
+              {
+                "id": "skill-a-1785233785602-12",
+                "name": "Advanced Portfolio Update Tactics 3",
+                "currentProficiency": 60,
                 "targetProficiency": 100,
                 "type": "ambition",
                 "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
-                "ambitionId": "wedding-season"
-              },
-              {
-                "id": "skill-1785233050745-5",
-                "name": "Commercial Photography",
-                "currentProficiency": 35,
-                "targetProficiency": 100,
-                "type": "ambition",
-                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
-                "ambitionId": "wedding-season"
+                "ambitionId": "portfolio-update"
               }
             ]
     }
@@ -440,57 +503,93 @@ export const creativeArtisanProfiles: Archetype[] = [
 ],
         skills: [
               {
-                "id": "skill-1785233050766-0",
-                "name": "Lighting Large Spaces",
-                "currentProficiency": 70,
-                "targetProficiency": 100,
-                "type": "ambition",
-                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
-                "ambitionId": "annual-report"
-              },
-              {
-                "id": "skill-1785233050766-1",
-                "name": "Technical Understanding",
-                "currentProficiency": 43,
-                "targetProficiency": 100,
-                "type": "ambition",
-                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
-                "ambitionId": "annual-report"
-              },
-              {
-                "id": "skill-1785233050766-2",
-                "name": "Curating",
-                "currentProficiency": 33,
-                "targetProficiency": 100,
-                "type": "personal",
-                "recommendation": "Emotional resilience is the bedrock of all your other ambitions.",
-                "ambitionId": null
-              },
-              {
-                "id": "skill-1785233050766-3",
-                "name": "Print Production",
-                "currentProficiency": 63,
-                "targetProficiency": 100,
-                "type": "ambition",
-                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
-                "ambitionId": "annual-report"
-              },
-              {
-                "id": "skill-1785233050766-4",
-                "name": "Contract Negotiation",
+                "id": "skill-p-1785233785665-0",
+                "name": "Time Management",
                 "currentProficiency": 58,
                 "targetProficiency": 100,
                 "type": "personal",
-                "recommendation": "Emotional resilience is the bedrock of all your other ambitions.",
+                "recommendation": "Protect your focus. The Void thrives on chaotic scheduling.",
                 "ambitionId": null
               },
               {
-                "id": "skill-1785233050766-5",
-                "name": "Drone Photography",
-                "currentProficiency": 79,
+                "id": "skill-p-1785233785665-1",
+                "name": "Cognitive Flexibility",
+                "currentProficiency": 67,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "The ability to pivot your thinking when the paradigm shifts.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785665-2",
+                "name": "Growth Mindset",
+                "currentProficiency": 35,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "View every failure as data. Adapt and iterate continuously.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785665-3",
+                "name": "Radical Candor",
+                "currentProficiency": 78,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Deliver hard truths with genuine care.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785665-4",
+                "name": "Active Listening",
+                "currentProficiency": 45,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "True leadership requires hearing what isn't said.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785665-5",
+                "name": "Stress Regulation",
+                "currentProficiency": 41,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Master your nervous system to maintain clarity under pressure.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785665-6",
+                "name": "Emotional Resilience",
+                "currentProficiency": 74,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "The bedrock of your ambition. Nurture your capacity to bounce back.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-a-1785233785665-7",
+                "name": "Advanced Annual Report Tactics 1",
+                "currentProficiency": 38,
                 "targetProficiency": 100,
                 "type": "ambition",
-                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "annual-report"
+              },
+              {
+                "id": "skill-a-1785233785665-8",
+                "name": "Advanced Annual Report Tactics 2",
+                "currentProficiency": 47,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "annual-report"
+              },
+              {
+                "id": "skill-a-1785233785665-9",
+                "name": "Advanced Annual Report Tactics 3",
+                "currentProficiency": 62,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
                 "ambitionId": "annual-report"
               }
             ]
@@ -704,57 +803,120 @@ export const creativeArtisanProfiles: Archetype[] = [
 ],
         skills: [
               {
-                "id": "skill-1785233050801-0",
-                "name": "UI/UX Design",
-                "currentProficiency": 59,
-                "targetProficiency": 100,
-                "type": "ambition",
-                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
-                "ambitionId": "typography-course"
-              },
-              {
-                "id": "skill-1785233050801-1",
-                "name": "Creative Direction",
-                "currentProficiency": 30,
+                "id": "skill-p-1785233785706-0",
+                "name": "Emotional Resilience",
+                "currentProficiency": 56,
                 "targetProficiency": 100,
                 "type": "personal",
-                "recommendation": "A quiet, powerful capability that protects you from burnout.",
+                "recommendation": "The bedrock of your ambition. Nurture your capacity to bounce back.",
                 "ambitionId": null
               },
               {
-                "id": "skill-1785233050801-2",
-                "name": "Brand Strategy",
-                "currentProficiency": 42,
+                "id": "skill-p-1785233785706-1",
+                "name": "Cognitive Flexibility",
+                "currentProficiency": 69,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "The ability to pivot your thinking when the paradigm shifts.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785706-2",
+                "name": "Time Management",
+                "currentProficiency": 45,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Protect your focus. The Void thrives on chaotic scheduling.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785706-3",
+                "name": "Stress Regulation",
+                "currentProficiency": 46,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Master your nervous system to maintain clarity under pressure.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785706-4",
+                "name": "Deep Work Focus",
+                "currentProficiency": 36,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Your most valuable asset in a distracted world. Cultivate extended flow states.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785706-5",
+                "name": "Strategic Empathy",
+                "currentProficiency": 56,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Understanding others' motivations will unlock new collaborative pathways.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785706-6",
+                "name": "Growth Mindset",
+                "currentProficiency": 73,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "View every failure as data. Adapt and iterate continuously.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-a-1785233785706-7",
+                "name": "Advanced Brand Identity Tactics 1",
+                "currentProficiency": 73,
                 "targetProficiency": 100,
                 "type": "ambition",
-                "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
                 "ambitionId": "brand-identity"
               },
               {
-                "id": "skill-1785233050801-3",
-                "name": "Visual Identity",
-                "currentProficiency": 31,
+                "id": "skill-a-1785233785706-8",
+                "name": "Advanced Brand Identity Tactics 2",
+                "currentProficiency": 41,
                 "targetProficiency": 100,
                 "type": "ambition",
-                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
+                "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
+                "ambitionId": "brand-identity"
+              },
+              {
+                "id": "skill-a-1785233785706-9",
+                "name": "Advanced Brand Identity Tactics 3",
+                "currentProficiency": 40,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "brand-identity"
+              },
+              {
+                "id": "skill-a-1785233785706-10",
+                "name": "Advanced Typography Course Tactics 1",
+                "currentProficiency": 38,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors for this ambition. Keep your focus sharp.",
                 "ambitionId": "typography-course"
               },
               {
-                "id": "skill-1785233050801-4",
-                "name": "Type Design",
-                "currentProficiency": 65,
-                "targetProficiency": 100,
-                "type": "ambition",
-                "recommendation": "Mastery of this skill will open unforeseen doors. Keep your focus sharp.",
-                "ambitionId": "brand-identity"
-              },
-              {
-                "id": "skill-1785233050801-5",
-                "name": "E-commerce",
-                "currentProficiency": 71,
+                "id": "skill-a-1785233785706-11",
+                "name": "Advanced Typography Course Tactics 2",
+                "currentProficiency": 26,
                 "targetProficiency": 100,
                 "type": "ambition",
                 "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
+                "ambitionId": "typography-course"
+              },
+              {
+                "id": "skill-a-1785233785706-12",
+                "name": "Advanced Typography Course Tactics 3",
+                "currentProficiency": 34,
+                "targetProficiency": 100,
+                "type": "ambition",
+                "recommendation": "Mastery of this skill will open unforeseen doors for this ambition. Keep your focus sharp.",
                 "ambitionId": "typography-course"
               }
             ]
@@ -945,58 +1107,94 @@ export const creativeArtisanProfiles: Archetype[] = [
 ],
         skills: [
               {
-                "id": "skill-1785233050862-0",
-                "name": "Copywriting",
-                "currentProficiency": 55,
+                "id": "skill-p-1785233785834-0",
+                "name": "Time Management",
+                "currentProficiency": 31,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Protect your focus. The Void thrives on chaotic scheduling.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785834-1",
+                "name": "Strategic Empathy",
+                "currentProficiency": 44,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Understanding others' motivations will unlock new collaborative pathways.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785834-2",
+                "name": "Emotional Resilience",
+                "currentProficiency": 52,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "The bedrock of your ambition. Nurture your capacity to bounce back.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785834-3",
+                "name": "Deep Work Focus",
+                "currentProficiency": 77,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Your most valuable asset in a distracted world. Cultivate extended flow states.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785834-4",
+                "name": "Stress Regulation",
+                "currentProficiency": 78,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Master your nervous system to maintain clarity under pressure.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785834-5",
+                "name": "Active Listening",
+                "currentProficiency": 38,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "True leadership requires hearing what isn't said.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785834-6",
+                "name": "Cognitive Flexibility",
+                "currentProficiency": 69,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "The ability to pivot your thinking when the paradigm shifts.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-a-1785233785834-7",
+                "name": "Advanced Api Docs Tactics 1",
+                "currentProficiency": 71,
                 "targetProficiency": 100,
                 "type": "ambition",
                 "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
                 "ambitionId": "api-docs"
               },
               {
-                "id": "skill-1785233050862-1",
-                "name": "Tech Journalism",
-                "currentProficiency": 57,
-                "targetProficiency": 100,
-                "type": "personal",
-                "recommendation": "True leadership starts from within. Nurture this carefully.",
-                "ambitionId": null
-              },
-              {
-                "id": "skill-1785233050862-2",
-                "name": "Technical Writing",
-                "currentProficiency": 55,
-                "targetProficiency": 100,
-                "type": "ambition",
-                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
-                "ambitionId": "api-docs"
-              },
-              {
-                "id": "skill-1785233050862-3",
-                "name": "Markdown",
-                "currentProficiency": 65,
-                "targetProficiency": 100,
-                "type": "personal",
-                "recommendation": "A quiet, powerful capability that protects you from burnout.",
-                "ambitionId": null
-              },
-              {
-                "id": "skill-1785233050862-4",
-                "name": "Ghostwriting",
-                "currentProficiency": 42,
+                "id": "skill-a-1785233785834-8",
+                "name": "Advanced Api Docs Tactics 2",
+                "currentProficiency": 61,
                 "targetProficiency": 100,
                 "type": "ambition",
                 "recommendation": "A crucial node in your skill tree. Protect your time to develop it.",
                 "ambitionId": "api-docs"
               },
               {
-                "id": "skill-1785233050862-5",
-                "name": "Long-form Content",
-                "currentProficiency": 52,
+                "id": "skill-a-1785233785834-9",
+                "name": "Advanced Api Docs Tactics 3",
+                "currentProficiency": 42,
                 "targetProficiency": 100,
-                "type": "personal",
-                "recommendation": "Your mental bandwidth depends on mastering this soft skill.",
-                "ambitionId": null
+                "type": "ambition",
+                "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
+                "ambitionId": "api-docs"
               }
             ]
     }
@@ -1186,54 +1384,90 @@ export const creativeArtisanProfiles: Archetype[] = [
 ],
         skills: [
               {
-                "id": "skill-1785233050903-0",
-                "name": "Game Design",
-                "currentProficiency": 41,
+                "id": "skill-p-1785233785898-0",
+                "name": "Active Listening",
+                "currentProficiency": 55,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "True leadership requires hearing what isn't said.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785898-1",
+                "name": "Deep Work Focus",
+                "currentProficiency": 50,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Your most valuable asset in a distracted world. Cultivate extended flow states.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785898-2",
+                "name": "Radical Candor",
+                "currentProficiency": 67,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Deliver hard truths with genuine care.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785898-3",
+                "name": "Growth Mindset",
+                "currentProficiency": 76,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "View every failure as data. Adapt and iterate continuously.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785898-4",
+                "name": "Cognitive Flexibility",
+                "currentProficiency": 75,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "The ability to pivot your thinking when the paradigm shifts.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785898-5",
+                "name": "Time Management",
+                "currentProficiency": 79,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Protect your focus. The Void thrives on chaotic scheduling.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-p-1785233785898-6",
+                "name": "Stress Regulation",
+                "currentProficiency": 39,
+                "targetProficiency": 100,
+                "type": "personal",
+                "recommendation": "Master your nervous system to maintain clarity under pressure.",
+                "ambitionId": null
+              },
+              {
+                "id": "skill-a-1785233785898-7",
+                "name": "Advanced Vertical Slice Tactics 1",
+                "currentProficiency": 56,
                 "targetProficiency": 100,
                 "type": "ambition",
                 "recommendation": "Your dedication here is rewiring your potential. Don't lose momentum.",
                 "ambitionId": "vertical-slice"
               },
               {
-                "id": "skill-1785233050903-1",
-                "name": "C# / Unity",
-                "currentProficiency": 32,
+                "id": "skill-a-1785233785898-8",
+                "name": "Advanced Vertical Slice Tactics 2",
+                "currentProficiency": 25,
                 "targetProficiency": 100,
                 "type": "ambition",
-                "recommendation": "The Void will try to distract you from this, but the payoff is immense.",
+                "recommendation": "Mastery of this skill will open unforeseen doors for this ambition. Keep your focus sharp.",
                 "ambitionId": "vertical-slice"
               },
               {
-                "id": "skill-1785233050903-2",
-                "name": "Open Source",
-                "currentProficiency": 31,
-                "targetProficiency": 100,
-                "type": "personal",
-                "recommendation": "Emotional resilience is the bedrock of all your other ambitions.",
-                "ambitionId": null
-              },
-              {
-                "id": "skill-1785233050903-3",
-                "name": "Community Management",
-                "currentProficiency": 77,
-                "targetProficiency": 100,
-                "type": "personal",
-                "recommendation": "Emotional resilience is the bedrock of all your other ambitions.",
-                "ambitionId": null
-              },
-              {
-                "id": "skill-1785233050903-4",
-                "name": "Rapid Prototyping",
-                "currentProficiency": 54,
-                "targetProficiency": 100,
-                "type": "personal",
-                "recommendation": "True leadership starts from within. Nurture this carefully.",
-                "ambitionId": null
-              },
-              {
-                "id": "skill-1785233050903-5",
-                "name": "Under-pressure Coding",
-                "currentProficiency": 43,
+                "id": "skill-a-1785233785898-9",
+                "name": "Advanced Vertical Slice Tactics 3",
+                "currentProficiency": 67,
                 "targetProficiency": 100,
                 "type": "ambition",
                 "recommendation": "An essential pillar of your trajectory. Cultivate it daily.",
