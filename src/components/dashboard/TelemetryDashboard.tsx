@@ -86,12 +86,12 @@ export const TelemetryDashboard: React.FC = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={voidBreachStats.hourlyBreaches} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                  <XAxis dataKey="hour" stroke="rgba(255,255,255,0.3)" fontSize={10} tickFormatter={(h) => \`\${h}:00\`} />
+                  <XAxis dataKey="hour" stroke="rgba(255,255,255,0.3)" fontSize={10} tickFormatter={(h) => `${h}:00`} />
                   <YAxis stroke="rgba(255,255,255,0.3)" fontSize={10} />
                   <RechartsTooltip 
                     contentStyle={{ backgroundColor: 'var(--color-surface-high)', borderColor: 'var(--color-error)', borderRadius: '12px' }}
                     itemStyle={{ color: 'var(--color-error)' }}
-                    labelFormatter={(h) => \`\${h}:00 - \${Number(h)+1}:00\`}
+                    labelFormatter={(h) => `${h}:00 - ${Number(h)+1}:00`}
                   />
                   <Bar dataKey="breaches" fill="var(--color-error)" radius={[4, 4, 0, 0]} />
                 </BarChart>
