@@ -10,7 +10,7 @@ export const generateHistoricalTasks = (
   const now = new Date();
   
   for (let i = 0; i < count; i++) {
-    const daysAgo = Math.floor(Math.random() * 365); 
+    const daysAgo = Math.floor(Math.random() * 1095); // up to 3 years
     const taskDate = new Date(now);
     taskDate.setDate(now.getDate() - daysAgo);
     
