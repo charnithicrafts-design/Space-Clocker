@@ -744,6 +744,30 @@ export const api = {
         }
       }
 
+      // Auto-extract skills if none provided in demo data
+      if (!payload.skills || payload.skills.length === 0) {
+        payload.skills = [];
+        const skillNames = new Set<string>();
+        if (payload.history) {
+          payload.history.forEach((h: any) => {
+            if (Array.isArray(h.skills)) {
+              h.skills.forEach((s: string) => skillNames.add(s));
+            }
+          });
+        }
+        let skillIdx = 0;
+        skillNames.forEach(name => {
+          payload.skills.push({
+            id: `skill-auto-${skillIdx++}-${Date.now()}`,
+            name,
+            currentProficiency: 30 + Math.floor(Math.random() * 65), // 30-95 random proficiency
+            targetProficiency: 100,
+            type: 'personal',
+            recommendation: 'Demonstrated through historical milestones.'
+          });
+        });
+      }
+
       // 5. Other Collections (Chunked by 50)
       const collections = [
         { key: 'voids', table: 'void_tasks', query: 'INSERT INTO void_tasks (id, text, impact, engaged_count, max_allowed) VALUES ($1, $2, $3, $4, $5)', map: (v: any) => [v.id, v.text || v.title || '', v.impact || 'low', v.engagedCount ?? v.engaged_count ?? 0, v.maxAllowed ?? v.max_allowed ?? 3] },
