@@ -828,12 +828,90 @@ export const api = {
     return true;
   },
 
+  async getTelemetry(days: number) {
+    if (initializing) await initializing;
+    if (!db) throw new Error('Database not initialized');
+
+    // 1. Heatmap (tasks completed per day)
+    const heatmapRes = await db.query(`
+      WITH RECURSIVE dates AS (
+        SELECT CURRENT_DATE as d
+        UNION ALL
+        SELECT (d - INTERVAL '1 day')::date FROM dates WHERE d > CURRENT_DATE - ($1 || ' days')::interval
+      )
+      SELECT 
+        TO_CHAR(dates.d, 'YYYY-MM-DD') as date,
+        COUNT(t.id)::int as count
+      FROM dates
+      LEFT JOIN tasks t ON t.completed_at IS NOT NULL AND TO_CHAR(t.completed_at::timestamp, 'YYYY-MM-DD') = TO_CHAR(dates.d, 'YYYY-MM-DD') AND t.completed = true AND t.is_void = false
+      GROUP BY dates.d
+      ORDER BY dates.d ASC
+    `, [days - 1]);
+
+    // 2. Void breaches (void tasks completed per day)
+    const voidRes = await db.query(`
+      WITH RECURSIVE dates AS (
+        SELECT CURRENT_DATE as d
+        UNION ALL
+        SELECT (d - INTERVAL '1 day')::date FROM dates WHERE d > CURRENT_DATE - ($1 || ' days')::interval
+      )
+      SELECT 
+        TO_CHAR(dates.d, 'YYYY-MM-DD') as date,
+        COUNT(t.id)::int as count
+      FROM dates
+      LEFT JOIN tasks t ON t.completed_at IS NOT NULL AND TO_CHAR(t.completed_at::timestamp, 'YYYY-MM-DD') = TO_CHAR(dates.d, 'YYYY-MM-DD') AND t.completed = true AND t.is_void = true
+      GROUP BY dates.d
+      ORDER BY dates.d ASC
+    `, [days - 1]);
+
+    // 3. Profile XP and Level
+    const profileRes = await db.query(`SELECT xp, level FROM profile WHERE id = 1`);
+    const currentXp = profileRes.rows[0]?.xp || 0;
+    const currentLevel = profileRes.rows[0]?.level || 1;
+
+    return {
+      heatmap: heatmapRes.rows,
+      voidBreaches: voidRes.rows,
+      currentXp,
+      currentLevel
+    };
+  },
+
+  async getVoidBreachStats() {
+    if (initializing) await initializing;
+    if (!db) throw new Error('Database not initialized');
+    
+    // Aggregate by hour of day for completed void tasks to see vulnerabilities
+    const result = await db.query(`
+      SELECT 
+        EXTRACT(HOUR FROM completed_at::timestamp)::int as hour,
+        COUNT(*)::int as breaches
+      FROM tasks 
+      WHERE is_void = true AND completed = true AND completed_at IS NOT NULL
+      GROUP BY EXTRACT(HOUR FROM completed_at::timestamp)
+      ORDER BY hour ASC
+    `);
+
+    // Also get the top void tasks
+    const topVoids = await db.query(`
+      SELECT text as name, engaged_count as count, impact
+      FROM void_tasks
+      WHERE engaged_count > 0
+      ORDER BY engaged_count DESC
+      LIMIT 5
+    `);
+
+    return {
+      hourlyBreaches: result.rows,
+      topVoids: topVoids.rows
+    };
+  },
+
   async exportToJson(): Promise<Uint8Array> {
     if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
     return await exportToJson(db);
   },
-
   async importFromJson(compressedData: Uint8Array): Promise<void> {
     if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');

@@ -6,6 +6,7 @@ import { Plus, Zap, Rocket, AlertTriangle, ChevronRight, CheckCircle2, Target } 
 import { SoundManager } from '../../utils/SoundManager';
 import CommandModal from '../layout/CommandModal';
 import StellarTimeline from './StellarTimeline';
+import { TelemetryDashboard } from './TelemetryDashboard';
 
 const MomentumEngine = () => {
   const { profile, ambitions, addAmbition, preferences, engageBlueprint } = useTrackStore();
@@ -229,6 +230,11 @@ const MomentumEngine = () => {
           </p>
         </div>
       </section>
+
+      {/* Telemetry Dashboard */}
+      <div className="mb-12">
+        <TelemetryDashboard />
+      </div>
 
       {/* Stellar History */}
       <StellarTimeline />
