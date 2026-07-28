@@ -172,7 +172,7 @@ const LandingPage: React.FC = () => {
             className="space-y-8"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-secondary/30 bg-secondary/10 text-secondary text-xs font-bold uppercase tracking-widest backdrop-blur-md">
-              <Zap size={14} /> Space-Clocker v1.9.0 is Live
+              <Zap size={14} /> Space-Clocker v1.10.0 is Live
             </div>
             <h1 className="text-6xl lg:text-8xl font-display font-black leading-[1.1] tracking-tighter">
               Clock In Your <br />
