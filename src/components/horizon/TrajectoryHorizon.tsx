@@ -2,14 +2,15 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   LineChart, Line, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, 
-  AreaChart, Area
+  AreaChart, Area, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+  RadialBarChart, RadialBar, Legend
 } from 'recharts';
 import { useAnalyticsStore } from '../../store/useAnalyticsStore';
-import { ShieldAlert, Telescope, HeartPulse, Activity } from 'lucide-react';
+import { ShieldAlert, Telescope, HeartPulse, Activity, Target, Zap } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 
 const TrajectoryHorizon: React.FC = () => {
-  const { timeframe, setTimeframe, telemetry, isLoading, fetchTelemetry } = useAnalyticsStore();
+  const { timeframe, setTimeframe, telemetry, voidBreachStats, isLoading, fetchTelemetry } = useAnalyticsStore();
 
   useEffect(() => {
     fetchTelemetry();
@@ -55,6 +56,24 @@ const TrajectoryHorizon: React.FC = () => {
   const chartData = formatData();
   const totalFocus = telemetry.heatmap.reduce((sum, d) => sum + d.count, 0);
   const totalDecay = telemetry.voidBreaches.reduce((sum, d) => sum + d.count, 0);
+
+  // Radar Chart Data for Temporal Vulnerability
+  const radarData = voidBreachStats?.hourlyBreaches.map(d => {
+    const hourLabel = d.hour === 0 ? '12AM' : d.hour < 12 ? `${d.hour}AM` : d.hour === 12 ? '12PM' : `${d.hour - 12}PM`;
+    return {
+      time: hourLabel,
+      breaches: d.breaches,
+      fullMark: Math.max(...(voidBreachStats.hourlyBreaches.map(b => b.breaches))) || 1
+    };
+  }) || [];
+
+  // XP Radial Data
+  const xpData = [{
+    name: 'XP',
+    uv: telemetry.currentXp % 1000,
+    pv: 1000,
+    fill: '#10b981'
+  }];
 
   // Eleanor's Empathetic Analysis
   const getEmpatheticMessage = () => {
@@ -185,6 +204,81 @@ const TrajectoryHorizon: React.FC = () => {
                   <Line type="monotone" dataKey="decay" stroke="#e879f9" strokeWidth={2} dot={false} activeDot={{ r: 4, fill: '#e879f9', stroke: '#fff' }} />
                 </LineChart>
               </ResponsiveContainer>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Phase 2 Additions: Temporal Radar & XP Burn-up */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-12">
+          
+          {/* Temporal Vulnerability Radar */}
+          <div className="glass-panel border border-magenta/20 p-6 rounded-3xl flex flex-col gap-6 relative overflow-hidden">
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-magenta/10 rounded-full blur-[50px] pointer-events-none" />
+            <div className="flex items-center justify-between z-10">
+              <h3 className="text-sm font-black text-magenta uppercase tracking-widest flex items-center gap-2">
+                <Target size={16} />
+                Temporal Vulnerability
+              </h3>
+            </div>
+            <p className="text-xs text-on-surface-variant leading-relaxed opacity-80 z-10">
+              Analysis of your daily orbital decay. Identifies the specific hours you are most susceptible to the Void.
+            </p>
+            
+            <div className="flex-1 w-full mt-2 min-h-[250px] z-10">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
+                  <PolarGrid stroke="rgba(217, 70, 239, 0.2)" />
+                  <PolarAngleAxis dataKey="time" tick={{ fill: '#9ca3af', fontSize: 10 }} />
+                  <PolarRadiusAxis angle={30} domain={[0, 'dataMax']} tick={false} axisLine={false} />
+                  <Radar name="Breaches" dataKey="breaches" stroke="#d946ef" strokeWidth={2} fill="#d946ef" fillOpacity={0.3} />
+                  <RechartsTooltip 
+                    contentStyle={{ backgroundColor: 'rgba(17, 24, 39, 0.9)', borderColor: 'rgba(217, 70, 239, 0.3)', borderRadius: '12px', color: '#fff' }}
+                    itemStyle={{ color: '#e879f9', fontSize: '12px', fontWeight: 'bold' }}
+                    labelStyle={{ color: '#9ca3af', fontSize: '10px' }}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* XP Burn-up / Reactor Status */}
+          <div className="glass-panel border border-emerald-500/20 bg-emerald-500/5 p-6 rounded-3xl flex flex-col gap-6 relative overflow-hidden shadow-[inset_0_0_40px_rgba(16,185,129,0.05)]">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none" />
+            <div className="flex items-center justify-between z-10">
+              <h3 className="text-sm font-black text-emerald-400 uppercase tracking-widest flex items-center gap-2">
+                <Zap size={16} />
+                Reactor Core (XP)
+              </h3>
+              <div className="text-right">
+                <div className="text-2xl font-mono font-black text-emerald-400">LVL {telemetry.currentLevel}</div>
+                <div className="text-[10px] text-emerald-400/60 font-black tracking-widest">{telemetry.currentXp.toLocaleString()} XP TOTAL</div>
+              </div>
+            </div>
+            
+            <div className="flex-1 flex flex-col items-center justify-center relative z-10 min-h-[250px]">
+              <div className="w-48 h-48 relative">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadialBarChart 
+                    cx="50%" cy="50%" 
+                    innerRadius="70%" outerRadius="100%" 
+                    barSize={12} data={xpData}
+                    startAngle={180} endAngle={0}
+                  >
+                    <RadialBar
+                      background={{ fill: 'rgba(16, 185, 129, 0.1)' }}
+                      dataKey="uv"
+                      cornerRadius={10}
+                    />
+                  </RadialBarChart>
+                </ResponsiveContainer>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center mt-4">
+                  <span className="text-3xl font-black text-emerald-400 font-mono tracking-tighter">
+                    {Math.round(((telemetry.currentXp % 1000) / 1000) * 100)}%
+                  </span>
+                  <span className="text-[10px] uppercase tracking-widest text-emerald-400/60 font-bold mt-1">To Next Level</span>
+                </div>
+              </div>
             </div>
           </div>
 
