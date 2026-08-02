@@ -30,10 +30,12 @@ describe('db.worker getTelemetry', () => {
     // Get telemetry for the last 30 days
     const telemetry = await api.getTelemetry(30);
 
-    // Heatmap should contain entries for today, yesterday, and 10 days ago (30 days window).
-    // The 40 days ago entry should be excluded.
-    // The uncompleted task should be excluded.
-    expect(telemetry.heatmap.length).toBe(3);
+    // Heatmap returns a continuous 30-day series for Recharts.
+    expect(telemetry.heatmap.length).toBe(30);
+
+    // Filter non-zero days (today, yesterday, 10 days ago)
+    const nonZeroHeatmap = telemetry.heatmap.filter((h: any) => Number(h.count) > 0);
+    expect(nonZeroHeatmap.length).toBe(3);
 
     const todayDate = new Date().toISOString().split('T')[0];
     const todayData = telemetry.heatmap.find((h: any) => h.date === todayDate);
@@ -54,8 +56,10 @@ describe('db.worker getTelemetry', () => {
 
     const telemetry = await api.getTelemetry(30);
 
-    // Should only count the 2 failures within 30 days
-    expect(telemetry.voidBreaches.length).toBe(2);
+    // Should return 30-day series, with 2 non-zero failure days within 30 days
+    expect(telemetry.voidBreaches.length).toBe(30);
+    const nonZeroVoids = telemetry.voidBreaches.filter((v: any) => Number(v.count) > 0);
+    expect(nonZeroVoids.length).toBe(2);
 
     const todayDate = new Date().toISOString().split('T')[0];
     const todayData = telemetry.voidBreaches.find((v: any) => v.date === todayDate);

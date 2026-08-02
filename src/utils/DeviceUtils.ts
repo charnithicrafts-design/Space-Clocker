@@ -13,14 +13,20 @@ export interface DeviceInfo {
  * Retrieves or generates a unique, persistent Device ID for the current browser session.
  */
 export function getOrCreateDeviceId(): string {
-  if (typeof window === 'undefined') return 'unknown-device';
-  
-  let deviceId = localStorage.getItem('space_clocker_device_id');
-  if (!deviceId) {
-    deviceId = `dev-${Math.random().toString(36).substring(2, 10)}-${Date.now().toString(36)}`;
-    localStorage.setItem('space_clocker_device_id', deviceId);
+  if (typeof window === 'undefined' || typeof localStorage === 'undefined' || !localStorage) {
+    return 'unknown-device';
   }
-  return deviceId;
+  
+  try {
+    let deviceId = localStorage.getItem('space_clocker_device_id');
+    if (!deviceId) {
+      deviceId = `dev-${Math.random().toString(36).substring(2, 10)}-${Date.now().toString(36)}`;
+      localStorage.setItem('space_clocker_device_id', deviceId);
+    }
+    return deviceId;
+  } catch {
+    return 'unknown-device';
+  }
 }
 
 /**
