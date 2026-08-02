@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Rocket, Brain, Shield, ArrowRight, Zap, Orbit, Star, Activity, Target, Calendar } from 'lucide-react';
+import { Rocket, Brain, Shield, ArrowRight, Zap, Orbit, Star, Activity, Target, Calendar, BookOpen, Code2, HeartHandshake } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 
 // --- Particle Background ---
@@ -282,6 +282,81 @@ const LandingPage: React.FC = () => {
               </motion.div>
             ))}
           </div>
+
+          {/* User Guide Invite Banner */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="glass-panel border border-primary/30 rounded-[2.5rem] p-10 lg:p-14 bg-gradient-to-br from-primary/10 via-surface-high/40 to-transparent relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8"
+          >
+            <div className="space-y-4 max-w-2xl text-center md:text-left">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary px-3.5 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+                <BookOpen size={14} /> User Operations & Flight Manual
+              </div>
+              <h3 className="text-3xl lg:text-4xl font-display font-black text-white">
+                Want to know how to clock in your mental space?
+              </h3>
+              <p className="text-white/70 text-sm leading-relaxed font-light">
+                Explore our interactive step-by-step User Guide whenever you want. Learn how to decompose ambitions, manage daily flight plans, inject 3-year historical telemetry, and recalibrate without guilt.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                SoundManager.playPop();
+                navigate('/docs');
+              }}
+              className="px-8 py-4 rounded-2xl bg-primary text-on-primary font-bold text-sm uppercase tracking-widest hover:bg-primary-container transition-all flex items-center gap-3 shrink-0 shadow-[0_0_25px_rgba(0,242,255,0.3)] hover:scale-105 cursor-pointer border-none"
+            >
+              <span>Read User Guide</span>
+              <ArrowRight size={18} />
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Contributor & Volunteer Call to Action Section */}
+      <section className="py-24 px-6 relative z-10 border-t border-white/5 bg-[#06080F]">
+        <div className="max-w-5xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="glass-panel border border-secondary/30 rounded-[2.5rem] p-10 lg:p-14 bg-gradient-to-br from-secondary/10 via-surface-high/40 to-transparent text-center space-y-8 relative overflow-hidden"
+          >
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-secondary px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/20">
+              <HeartHandshake size={16} /> Join The Space-Clocker Mission
+            </div>
+            <h2 className="text-3xl lg:text-5xl font-display font-black text-white leading-tight">
+              Build a historic, life-shaping digital application.
+            </h2>
+            <p className="text-white/70 text-base max-w-2xl mx-auto leading-relaxed font-light">
+              Space-Clocker warmly welcomes volunteers, open-source contributors, and developers ready to join our crew. Participate in shaping local-first WASM architecture, pair-program with our AI agents, and empower minds worldwide.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+              <button
+                onClick={() => {
+                  SoundManager.playPop();
+                  navigate('/docs');
+                }}
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-secondary text-white font-bold text-sm uppercase tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(255,84,77,0.3)] hover:scale-105 cursor-pointer border-none"
+              >
+                <Code2 size={18} />
+                <span>Developer Onboarding</span>
+              </button>
+              <a
+                href="https://github.com/charnithicrafts-design/Space-Clocker"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => SoundManager.playPop()}
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/10 text-white border border-white/20 font-bold text-sm uppercase tracking-widest hover:bg-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer no-underline"
+              >
+                <span>GitHub Repository</span>
+                <ArrowRight size={16} />
+              </a>
+            </div>
+          </motion.div>
         </div>
       </section>
 
