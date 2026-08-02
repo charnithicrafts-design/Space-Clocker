@@ -4,7 +4,6 @@ import { MemoryRouter } from 'react-router-dom';
 import { describe, it, expect, vi } from 'vitest';
 import DocsHub from './DocsHub';
 
-// Mock SoundManager
 vi.mock('../../utils/SoundManager', () => ({
   SoundManager: {
     playPop: vi.fn(),
@@ -12,7 +11,7 @@ vi.mock('../../utils/SoundManager', () => ({
   }
 }));
 
-describe('DocsHub In-App Documentation Component', () => {
+describe('DocsHub Progressive Chapter Documentation Reader', () => {
   const renderDocs = () => {
     return render(
       <MemoryRouter>
@@ -21,34 +20,31 @@ describe('DocsHub In-App Documentation Component', () => {
     );
   };
 
-  it('renders the Documentation Hub title and default User Guide tab', () => {
+  it('renders Documentation Hub header and initial Chapter 1 by default', () => {
     renderDocs();
 
     expect(screen.getByText('Space-Clocker Manuals')).toBeInTheDocument();
-    expect(screen.getByText('Clocking In Your Mental Space')).toBeInTheDocument();
-    expect(screen.getByText('1. Clock In Your Mental Space')).toBeInTheDocument();
-    expect(screen.getByText('2. Adding & Scheduling Daily Tasks')).toBeInTheDocument();
+    expect(screen.getByText('1. Clocking In Your Mental Space')).toBeInTheDocument();
+    expect(screen.getByText(/Core Axiom/i)).toBeInTheDocument();
   });
 
-  it('switches to Developer Guide tab when clicked', async () => {
+  it('navigates through chapters sequentially using pagination buttons', async () => {
     renderDocs();
 
-    const devTabBtn = screen.getByRole('button', { name: /Developer Guide/i });
+    // Click Chapter 2 button
+    const nextBtns = screen.getAllByRole('button', { name: /2\. Orbit Daily Flight Planning/i });
+    fireEvent.click(nextBtns[0]);
+
+    expect(await screen.findByText('Step-by-Step Flight Planning')).toBeInTheDocument();
+  });
+
+  it('switches to Developer Manual tab and displays environment setup', async () => {
+    renderDocs();
+
+    const devTabBtn = screen.getByRole('button', { name: /Developer Manual/i });
     fireEvent.click(devTabBtn);
 
-    expect(await screen.findByText('Developer Onboarding & AI Collaboration')).toBeInTheDocument();
-    expect(screen.getByText('1. Environment Setup & Prerequisites')).toBeInTheDocument();
-    expect(screen.getByText('2. Local-First WASM Architecture')).toBeInTheDocument();
-    expect(screen.getByText('4. AI CLI (Antigravity / AGY) & Agent Team Collaboration')).toBeInTheDocument();
-  });
-
-  it('filters guide cards when typing into the search input', () => {
-    renderDocs();
-
-    const searchInput = screen.getByPlaceholderText('Search guides...');
-    fireEvent.change(searchInput, { target: { value: 'Recalibrate' } });
-
-    expect(screen.getByText('6. Void Protocol & [⚡ Recalibrate]')).toBeInTheDocument();
-    expect(screen.queryByText('2. Adding & Scheduling Daily Tasks')).not.toBeInTheDocument();
+    expect(await screen.findByText('1. Environment Setup & Prerequisites')).toBeInTheDocument();
+    expect(screen.getByText('Terminal Onboarding Steps')).toBeInTheDocument();
   });
 });

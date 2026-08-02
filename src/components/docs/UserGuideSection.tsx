@@ -1,182 +1,320 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Clock, 
-  Target, 
-  Zap, 
-  ShieldAlert, 
-  Award, 
   Sparkles, 
+  Clock, 
+  History, 
+  Target, 
+  Award, 
+  Zap, 
   CheckCircle2, 
-  Layers, 
-  History,
+  ArrowRight, 
+  ArrowLeft,
   ChevronRight,
   BookOpen,
-  ArrowRight
+  Info,
+  ShieldAlert
 } from 'lucide-react';
+import { SoundManager } from '../../utils/SoundManager';
 
 interface UserGuideProps {
-  searchQuery: string;
+  selectedChapterId: string;
+  onSelectChapter: (id: string) => void;
 }
 
-export const UserGuideSection: React.FC<UserGuideProps> = ({ searchQuery }) => {
-  const [activeStep, setActiveStep] = useState<number>(0);
+export interface UserChapter {
+  id: string;
+  icon: any;
+  badge: string;
+  title: string;
+  subtitle: string;
+  color: string;
+  content: React.ReactNode;
+}
 
-  const guideCards = [
+export const USER_CHAPTERS: { id: string; title: string; icon: any }[] = [
+  { id: 'mental-space', title: '1. Clocking Your Mental Space', icon: Sparkles },
+  { id: 'adding-tasks', title: '2. Orbit Daily Flight Planning', icon: Clock },
+  { id: 'history-telemetry', title: '3. 3-Year Telemetry & Profiles', icon: History },
+  { id: 'ambitions-milestones', title: '4. Decomposing Ambitions', icon: Target },
+  { id: 'achievements-xp', title: '5. Achievements & Rank Ascension', icon: Award },
+  { id: 'void-recalibrate', title: '6. Void Protocol & [⚡ Recalibrate]', icon: Zap }
+];
+
+export const UserGuideSection: React.FC<UserGuideProps> = ({ selectedChapterId, onSelectChapter }) => {
+  const currentIndex = USER_CHAPTERS.findIndex(c => c.id === selectedChapterId);
+  const activeIndex = currentIndex !== -1 ? currentIndex : 0;
+
+  const chapters: UserChapter[] = [
     {
       id: 'mental-space',
       icon: Sparkles,
-      color: 'text-primary',
-      borderColor: 'border-primary/30',
       badge: 'Core Philosophy',
-      title: '1. Clock In Your Mental Space',
-      summary: 'Space-Clocker is not a rigid productivity tracker. It is a sanctuary to sync your internal clocking sense with your real-life goals.',
-      details: [
-        'Clocking Sense: Declaratively committing your mental space to what matters today.',
-        'Completion Sense: The deep satisfaction of moving your trajectory forward without anxiety or burnout.',
-        'Empathy Engine: Reframing distraction as natural "Gravity Wells" rather than moral failures.'
-      ]
+      title: '1. Clocking In Your Mental Space',
+      subtitle: 'Understanding the shift from rigid productivity tracking to authentic mental space alignment.',
+      color: 'text-primary',
+      content: (
+        <div className="space-y-6 text-on-surface-variant text-base leading-relaxed">
+          <div className="p-6 rounded-2xl bg-primary/10 border border-primary/20 text-white font-medium space-y-2">
+            <div className="text-xs uppercase font-black tracking-widest text-primary flex items-center gap-2">
+              <Sparkles size={16} /> Core Axiom
+            </div>
+            <p className="text-lg font-display font-bold">
+              "Space-Clocker is an application to clock in your mental space. You sync (clock in) your ambitions in your mental space with your internal clocking sense. Space-Clocker will caress you from your clocking sense to your completion sense."
+            </p>
+          </div>
+
+          <h3 className="text-xl font-bold text-white tracking-tight pt-2">The Two Pillars of Space-Clocker</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+            <div className="p-5 rounded-2xl bg-surface-high/40 border border-outline-variant/30 space-y-2">
+              <h4 className="font-bold text-primary text-base flex items-center gap-2">
+                <Clock size={18} /> Internal Clocking Sense
+              </h4>
+              <p className="text-sm">
+                Declaratively acknowledging your true mental bandwidth each morning. You set intentions based on real energy, not unrealistic to-do lists.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-surface-high/40 border border-outline-variant/30 space-y-2">
+              <h4 className="font-bold text-secondary text-base flex items-center gap-2">
+                <Award size={18} /> Completion Sense
+              </h4>
+              <p className="text-sm">
+                Experiencing the deep psychological satisfaction of advancing your 1 to 3-year life trajectory without guilt, anxiety, or burnout.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-surface-high/20 border border-outline-variant/20 flex items-start gap-3">
+            <Info size={20} className="text-secondary shrink-0 mt-0.5" />
+            <p className="text-sm">
+              <strong className="text-white">Empathy First:</strong> Distractions and low-energy days are recognized as natural <em>Gravity Wells</em>. The application provides tools to gently realign your trajectory rather than penalizing you.
+            </p>
+          </div>
+        </div>
+      )
     },
     {
       id: 'adding-tasks',
       icon: Clock,
+      badge: 'Orbit Sector',
+      title: '2. Orbit Daily Flight Planning',
+      subtitle: 'How to declare intentions, assign time slots, and manage your daily mission backlog.',
       color: 'text-secondary',
-      borderColor: 'border-secondary/30',
-      badge: 'Orbit Operations',
-      title: '2. Adding & Scheduling Daily Tasks',
-      summary: 'Navigate to Orbit to define your daily mission parameters and schedule your flight plan.',
-      details: [
-        'Click "+ Add Task" or press Enter in the mission input field.',
-        'Assign a time slot (e.g. 09:00) and weightage (XP reward density).',
-        'Use the Stasis Backlog for intentions you want to hold for future flight plans.'
-      ]
+      content: (
+        <div className="space-y-6 text-on-surface-variant text-base leading-relaxed">
+          <p>
+            The <strong>Orbit Sector</strong> is your daily flight deck. Here, you align short-term actions with your macroscopic ambitions.
+          </p>
+
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold text-white tracking-tight">Step-by-Step Flight Planning</h3>
+            
+            <div className="space-y-3">
+              <div className="p-4 rounded-2xl bg-surface-high/30 border border-outline-variant/30 flex items-start gap-4">
+                <div className="w-8 h-8 rounded-full bg-primary/20 text-primary font-bold flex items-center justify-center shrink-0">1</div>
+                <div>
+                  <h4 className="font-bold text-white text-base">Declare Your Mission Input</h4>
+                  <p className="text-sm mt-1">Navigate to <strong>Orbit</strong>, type your intention into the mission input bar (e.g., <em>"Review AWS VPC Architecture Rules"</em>), and press Enter.</p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-surface-high/30 border border-outline-variant/30 flex items-start gap-4">
+                <div className="w-8 h-8 rounded-full bg-secondary/20 text-secondary font-bold flex items-center justify-center shrink-0">2</div>
+                <div>
+                  <h4 className="font-bold text-white text-base">Assign Time Slot & Weightage</h4>
+                  <p className="text-sm mt-1">Select a planned execution time (e.g. 10:00 AM) and assign XP density. Heavier tasks yield greater Resonance XP rewards.</p>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-surface-high/30 border border-outline-variant/30 flex items-start gap-4">
+                <div className="w-8 h-8 rounded-full bg-tertiary/20 text-tertiary font-bold flex items-center justify-center shrink-0">3</div>
+                <div>
+                  <h4 className="font-bold text-white text-base">Stasis Backlog Management</h4>
+                  <p className="text-sm mt-1">If your day gets overcrowded, drag or send tasks into the <strong>Stasis Backlog</strong> to hold them safely for upcoming flight plans.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
     },
     {
-      id: 'history-injection',
+      id: 'history-telemetry',
       icon: History,
+      badge: 'Trajectory Telemetry',
+      title: '3. 3-Year Telemetry & Grounded Profiles',
+      subtitle: 'Exploring continuous 1,095-day historical task data and professional archetypes.',
       color: 'text-tertiary',
-      borderColor: 'border-tertiary/30',
-      badge: 'Telemetry & Demo Data',
-      title: '3. Historical Telemetry & Demo Profiles',
-      summary: 'Populate up to 3 years (1,095 days) of realistic history to test-drive your Trajectory Horizon.',
-      details: [
-        'Explore 35 Grounded Professional Profiles (Neurosurgeon, Data Artisan, Heavy Builder).',
-        'Each profile generates 3-year historical task telemetry automatically.',
-        'View continuous momentum trends in Horizon without starting from scratch.'
-      ]
+      content: (
+        <div className="space-y-6 text-on-surface-variant text-base leading-relaxed">
+          <p>
+            Space-Clocker includes <strong>35 Grounded Professional Archetypes</strong> (e.g., Neurosurgeon, Heavy Builder, Data Artisan, Clinical Trial Director) pre-populated with realistic historical telemetry.
+          </p>
+
+          <div className="p-6 rounded-2xl bg-surface-high/30 border border-outline-variant/30 space-y-4">
+            <h3 className="text-xl font-bold text-white tracking-tight">How Telemetry Spreads Across 3 Years</h3>
+            <ul className="space-y-2 text-sm list-disc pl-5">
+              <li><strong>Continuous Date Series:</strong> Telemetry metrics aggregate completed tasks and void resistance events across a continuous 7-day, 30-day, and 1,095-day (3-year) window.</li>
+              <li><strong>Stellar History SQL Engine:</strong> Historical records are stored inside PGlite WASM database table <code className="text-primary bg-surface-lowest px-1.5 py-0.5 rounded">stellar_history</code>.</li>
+              <li><strong>Testing Your Horizon:</strong> You can load any professional archetype from the Identity Matrix (`/identity`) to immediately inspect 3-year radar chart projections.</li>
+            </ul>
+          </div>
+        </div>
+      )
     },
     {
       id: 'ambitions-milestones',
       icon: Target,
-      color: 'text-accent',
-      borderColor: 'border-accent/30',
       badge: 'Nebula Sector',
       title: '4. Decomposing Ambitions & Milestones',
-      summary: 'Architect 1 to 3-year macro-ambitions in Nebula and split them into achievable milestones.',
-      details: [
-        'Create a Macro-Ambition (e.g., "Master Cloud Architecture & AWS Specialization").',
-        'Add Stellar Milestones with target completion deadlines.',
-        'Split milestones into concrete sub-tasks that flow directly into your daily Orbit scheduler.'
-      ]
+      subtitle: 'Architecting long-term goals into stellar milestones and sub-task flight plans.',
+      color: 'text-accent',
+      content: (
+        <div className="space-y-6 text-on-surface-variant text-base leading-relaxed">
+          <p>
+            In the <strong>Nebula Sector</strong>, you break down intimidating multi-year ambitions into manageable flight plans.
+          </p>
+
+          <div className="p-6 rounded-2xl bg-surface-high/30 border border-outline-variant/30 space-y-4">
+            <h3 className="text-xl font-bold text-white tracking-tight">Decomposition Workflow</h3>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center gap-3"><CheckCircle2 size={16} className="text-accent shrink-0" /> <span><strong>Create Ambition:</strong> Define a macro-goal (e.g. <em>"AWS Cloud Specialist Specialization"</em>).</span></div>
+              <div className="flex items-center gap-3"><CheckCircle2 size={16} className="text-accent shrink-0" /> <span><strong>Add Milestones:</strong> Define target milestones (e.g. <em>"Pass Solutions Architect Associate Exam"</em>).</span></div>
+              <div className="flex items-center gap-3"><CheckCircle2 size={16} className="text-accent shrink-0" /> <span><strong>Split Milestone Tasks:</strong> Click <em>"+ Add Task to Milestone"</em>. Sub-tasks carry full milestone mapping (`ambitionId` + `milestoneId`).</span></div>
+            </div>
+          </div>
+        </div>
+      )
     },
     {
-      id: 'achievements-leveling',
+      id: 'achievements-xp',
       icon: Award,
-      color: 'text-amber-400',
-      borderColor: 'border-amber-400/30',
       badge: 'Resonance Engine',
       title: '5. Achievement, XP & Rank Ascension',
-      summary: 'Earn Resonance XP as you complete tasks and watch your Rank Ascend.',
-      details: [
-        'Task Completions grant XP based on task weightage (10 to 50 XP).',
-        'Accumulating XP unlocks Rank Ascensions (Level Up modal with audio fanfare).',
-        'Your overall Space Science Level reflects your long-term consistency.'
-      ]
+      subtitle: 'How completing daily missions builds your Space Science Rank.',
+      color: 'text-amber-400',
+      content: (
+        <div className="space-y-6 text-on-surface-variant text-base leading-relaxed">
+          <p>
+            Every task completed in Orbit or Nebula feeds your overall <strong>Resonance XP</strong>.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-5 rounded-2xl bg-surface-high/40 border border-outline-variant/30 space-y-2">
+              <h4 className="font-bold text-amber-400 text-base">XP Calculation</h4>
+              <p className="text-sm">
+                Standard tasks award <strong>+10 to +50 XP</strong> based on complexity and weightage. Completing entire milestones awards bonus Resonance XP.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-surface-high/40 border border-outline-variant/30 space-y-2">
+              <h4 className="font-bold text-primary text-base">Rank Ascension Modal</h4>
+              <p className="text-sm">
+                Reaching 100% XP triggers the <strong>Rank Ascended!</strong> celebration modal with custom audio feedback, elevating your Space Science Level.
+              </p>
+            </div>
+          </div>
+        </div>
+      )
     },
     {
       id: 'void-recalibrate',
       icon: Zap,
-      color: 'text-fuchsia-400',
-      borderColor: 'border-fuchsia-400/30',
       badge: 'Realignment',
       title: '6. Void Protocol & [⚡ Recalibrate]',
-      summary: 'Acknowledge mental drift gently and realign past-due tasks back to today without guilt.',
-      details: [
-        'Orbital Decay: Past-due tasks tilt slightly and dim to signal lost momentum.',
-        'Click [⚡ Recalibrate]: Immediately moves any decayed task to today\'s active Orbit with positive audio feedback.',
-        'Void Protocol: Set boundaries around major distractions and monitor your resistance score.'
-      ]
+      subtitle: 'Gentle realignment tools to recover momentum when flight plans drift.',
+      color: 'text-fuchsia-400',
+      content: (
+        <div className="space-y-6 text-on-surface-variant text-base leading-relaxed">
+          <div className="p-6 rounded-2xl bg-fuchsia-950/30 border border-fuchsia-500/30 space-y-3">
+            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+              <Zap size={20} className="text-fuchsia-400" /> The [⚡ Recalibrate] Protocol
+            </h3>
+            <p className="text-sm">
+              When tasks pass their planned date without completion, Orbit displays them with a subtle orbital tilt and dim glow to signal lost momentum.
+            </p>
+            <p className="text-sm font-semibold text-white">
+              Clicking <strong>[⚡ Recalibrate]</strong> immediately moves all past-due tasks (both standalone and milestone sub-tasks) to today's active Orbit, playing a positive audio sound to welcome you back into flow.
+            </p>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-surface-high/30 border border-outline-variant/30 space-y-2">
+            <h4 className="font-bold text-white text-base">Void Protocol Boundaries</h4>
+            <p className="text-sm">
+              Log major distractions (e.g. social media spirals) into the <strong>Void Protocol</strong>. The engine tracks your resistance score and helps you lock out bad habits without shame.
+            </p>
+          </div>
+        </div>
+      )
     }
   ];
 
-  const filteredCards = guideCards.filter(card => 
-    !searchQuery || 
-    card.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    card.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    card.details.some(d => d.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const currentChapter = chapters[activeIndex];
 
   return (
     <div className="space-y-8">
-      {/* Header Banner */}
-      <div className="glass-panel p-8 rounded-3xl border border-primary/20 bg-surface-high/30 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl -z-10" />
-        <div className="flex items-center gap-3 text-secondary text-xs font-bold uppercase tracking-widest mb-2">
-          <BookOpen size={16} /> User Operations & Flight Manual
-        </div>
-        <h2 className="text-3xl font-display font-black text-white uppercase tracking-tight">
-          Clocking In Your Mental Space
-        </h2>
-        <p className="text-on-surface-variant text-sm max-w-2xl mt-2 leading-relaxed">
-          From your clocking sense to your completion sense. Learn how to architect ambitions, manage daily flight plans, and recalibrate without guilt.
-        </p>
-      </div>
+      {/* Chapter Reader Container */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentChapter.id}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.2 }}
+          className="glass-panel border border-outline-variant/40 p-8 lg:p-12 rounded-[2.5rem] space-y-8 bg-surface-high/20 relative overflow-hidden"
+        >
+          {/* Header Banner */}
+          <div className="space-y-3 border-b border-outline-variant/30 pb-6">
+            <div className="flex items-center gap-3">
+              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-surface-high border border-outline-variant/40 ${currentChapter.color}`}>
+                {currentChapter.badge}
+              </span>
+              <span className="text-xs text-on-surface-variant font-mono">Chapter {activeIndex + 1} of {USER_CHAPTERS.length}</span>
+            </div>
+            <h2 className="text-3xl lg:text-4xl font-display font-black text-white uppercase tracking-tight">
+              {currentChapter.title}
+            </h2>
+            <p className="text-on-surface-variant text-base font-light">
+              {currentChapter.subtitle}
+            </p>
+          </div>
 
-      {/* Guide Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {filteredCards.map((card, idx) => {
-          const Icon = card.icon;
-          const isSelected = activeStep === idx;
+          {/* Chapter Body Content */}
+          <div>
+            {currentChapter.content}
+          </div>
 
-          return (
-            <motion.div
-              key={card.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.05 }}
-              onClick={() => setActiveStep(idx)}
-              className={`glass-panel border p-6 rounded-3xl transition-all cursor-pointer group relative overflow-hidden ${
-                isSelected ? `${card.borderColor} bg-surface-high/60 shadow-[0_0_25px_rgba(var(--color-primary-rgb),0.15)]` : 'border-outline-variant/40 hover:border-outline-variant hover:bg-surface-high/20'
-              }`}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className={`p-3 rounded-2xl bg-surface-low border border-outline-variant/30 ${card.color}`}>
-                  <Icon size={24} />
-                </div>
-                <span className="text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-surface-high border border-outline-variant/40 text-on-surface-variant">
-                  {card.badge}
-                </span>
-              </div>
+          {/* Pagination Controls */}
+          <div className="flex items-center justify-between pt-8 border-t border-outline-variant/30">
+            {activeIndex > 0 ? (
+              <button
+                onClick={() => {
+                  SoundManager.playPop();
+                  onSelectChapter(USER_CHAPTERS[activeIndex - 1].id);
+                }}
+                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-surface-high text-white text-xs font-bold uppercase tracking-wider hover:bg-surface-high/80 border border-outline-variant/30 transition-all cursor-pointer"
+              >
+                <ArrowLeft size={16} />
+                <span>{USER_CHAPTERS[activeIndex - 1].title}</span>
+              </button>
+            ) : <div />}
 
-              <h3 className="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors flex items-center gap-2">
-                {card.title}
-              </h3>
-              <p className="text-xs text-on-surface-variant leading-relaxed mb-4">
-                {card.summary}
-              </p>
-
-              <div className="space-y-2 pt-3 border-t border-outline-variant/20">
-                {card.details.map((detail, dIdx) => (
-                  <div key={dIdx} className="flex items-start gap-2 text-[11px] text-on-surface-variant">
-                    <CheckCircle2 size={12} className={`${card.color} shrink-0 mt-0.5`} />
-                    <span>{detail}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
+            {activeIndex < USER_CHAPTERS.length - 1 ? (
+              <button
+                onClick={() => {
+                  SoundManager.playPop();
+                  onSelectChapter(USER_CHAPTERS[activeIndex + 1].id);
+                }}
+                className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary text-on-primary text-xs font-black uppercase tracking-widest hover:bg-primary-container transition-all cursor-pointer border-none shadow-[0_0_20px_rgba(0,242,255,0.3)]"
+              >
+                <span>{USER_CHAPTERS[activeIndex + 1].title}</span>
+                <ArrowRight size={16} />
+              </button>
+            ) : <div />}
+          </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };
