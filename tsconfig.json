@@ -23,5 +23,14 @@
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": [
+    "src",
+    "tests"
+  ],
+  "exclude": [
+    "scratch",
+    "node_modules",
+    "dist"
+  ]
 }

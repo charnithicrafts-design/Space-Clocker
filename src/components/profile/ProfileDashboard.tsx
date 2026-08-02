@@ -17,8 +17,9 @@ const ProfileDashboard = () => {
   // Handle ambient audio lifecycle
   useEffect(() => {
     if (cognitiveState?.auraState) {
+      const soundMode = cognitiveState.auraState === 'aligned' ? 'Flow' : cognitiveState.auraState === 'destabilized' ? 'Clouded' : 'Standard';
       import('../../utils/SoundManager').then(({ SoundManager }) => {
-        SoundManager.setAuraAmbient(cognitiveState.auraState);
+        SoundManager.setAuraAmbient(soundMode);
       });
     }
 
@@ -72,8 +73,8 @@ const ProfileDashboard = () => {
   const auraMsg = useMemo(() => {
     if (!cognitiveState) return 'Establishing Neural Baseline...';
     switch (cognitiveState.auraState) {
-      case 'Flow': return 'Neural pathways highly aligned. Flow state achieved.';
-      case 'Clouded': return 'Momentum destabilized. Re-calibrate in the Nebula.';
+      case 'aligned': return 'Neural pathways highly aligned. Flow state achieved.';
+      case 'destabilized': return 'Momentum destabilized. Re-calibrate in the Nebula.';
       default: return 'Trajectory stable. Standard operations ongoing.';
     }
   }, [cognitiveState]);
@@ -81,8 +82,8 @@ const ProfileDashboard = () => {
   // Pulse animation variants based on sync score
   const pulseDuration = useMemo(() => {
     if (!cognitiveState) return 3;
-    if (cognitiveState.auraState === 'Flow') return 1.5;
-    if (cognitiveState.auraState === 'Clouded') return 0.5; // Erratic fast pulse
+    if (cognitiveState.auraState === 'aligned') return 1.5;
+    if (cognitiveState.auraState === 'destabilized') return 0.5; // Erratic fast pulse
     return 3; // Slow stable pulse
   }, [cognitiveState]);
 

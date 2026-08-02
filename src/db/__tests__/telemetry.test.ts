@@ -41,7 +41,7 @@ describe('db.worker getTelemetry', () => {
     const todayData = telemetry.heatmap.find((h: any) => h.date === todayDate);
     
     expect(todayData).toBeDefined();
-    expect(Number(todayData.count)).toBe(2);
+    expect(Number((todayData as any)?.count)).toBe(2);
   });
 
   it('should correctly aggregate Gravity Well (Void) data', async () => {
@@ -65,7 +65,7 @@ describe('db.worker getTelemetry', () => {
     const todayData = telemetry.voidBreaches.find((v: any) => v.date === todayDate);
     
     expect(todayData).toBeDefined();
-    expect(Number(todayData.count)).toBe(1);
+    expect(Number((todayData as any)?.count)).toBe(1);
   });
 
   it('should return current XP and Level from profile', async () => {

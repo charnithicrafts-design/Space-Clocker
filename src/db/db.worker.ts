@@ -264,7 +264,7 @@ export const api = {
                 
                 // Fix demo data completed_at for simulations so they appear on the heat-map
                 const prefRes = await db.query('SELECT is_simulation FROM preferences WHERE id = 1');
-                const isSim = prefRes.rows[0]?.is_simulation;
+                const isSim = (prefRes.rows[0] as any)?.is_simulation;
                 if (isSim) {
                   try {
                     await db.exec(`
@@ -873,8 +873,8 @@ export const api = {
 
     // 3. Profile XP and Level
     const profileRes = await db.query(`SELECT xp, level FROM profile WHERE id = 1`);
-    const currentXp = profileRes.rows[0]?.xp || 0;
-    const currentLevel = profileRes.rows[0]?.level || 1;
+    const currentXp = (profileRes.rows[0] as any)?.xp || 0;
+    const currentLevel = (profileRes.rows[0] as any)?.level || 1;
 
     return {
       heatmap: heatmapRes.rows,
@@ -925,7 +925,7 @@ export const api = {
       WHERE completed = true AND is_void = false AND completed_at IS NOT NULL
         AND completed_at::timestamp > CURRENT_DATE - INTERVAL '7 days'
     `);
-    const positiveTasks = Number(positiveRes.rows[0]?.count || 0);
+    const positiveTasks = Number((positiveRes.rows[0] as any)?.count || 0);
 
     // Negative points: Voids engaged in last 7 days
     const negativeRes = await db.query(`
@@ -934,7 +934,7 @@ export const api = {
       WHERE completed = true AND is_void = true AND completed_at IS NOT NULL
         AND completed_at::timestamp > CURRENT_DATE - INTERVAL '7 days'
     `);
-    const voidTasks = Number(negativeRes.rows[0]?.count || 0);
+    const voidTasks = Number((negativeRes.rows[0] as any)?.count || 0);
 
     // Calculate score (Base 50, +5 per task, -10 per void)
     let score = 50 + (positiveTasks * 5) - (voidTasks * 10);
