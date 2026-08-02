@@ -20,6 +20,9 @@ vi.mock('../../utils/SoundManager', () => ({
     playPop: vi.fn(),
     playThud: vi.fn(),
     playSwell: vi.fn(),
+    playSyncSuccess: vi.fn(),
+    playLevelUp: vi.fn(),
+    playMilestoneComplete: vi.fn(),
   }
 }));
 
@@ -85,6 +88,12 @@ describe('OrbitScheduler', () => {
       skills: []
     });
     vi.stubGlobal('confirm', vi.fn().mockReturnValue(true));
+    vi.stubGlobal('localStorage', {
+      getItem: vi.fn().mockReturnValue(null),
+      setItem: vi.fn(),
+      clear: vi.fn(),
+      removeItem: vi.fn(),
+    });
   });
 
   it('renders daily mission log with active tasks', () => {
@@ -189,5 +198,95 @@ describe('OrbitScheduler', () => {
 
     // Assert
     expect(mockUpdateTask).toHaveBeenCalledWith('task-1', expect.objectContaining({ time: '09:00' }));
+  });
+
+  it('recalibrates/carries forward a standalone task to today', async () => {
+    const mockUpdateTaskLocal = vi.fn();
+    (useTrackStore as any).mockReturnValue({
+      tasks: [{
+        id: 'backlog-task-1',
+        time: '10:00',
+        title: 'Overdue Standalone Mission',
+        completed: false,
+        horizon: 'daily',
+        plannedDate: '2026-01-01' // Past date -> decayed
+      }],
+      addTask: mockAddTask,
+      toggleTask: mockToggleTask,
+      deleteTask: mockDeleteTask,
+      updateTask: mockUpdateTaskLocal,
+      updateTaskDate: mockUpdateTaskDate,
+      updateMilestoneTask: vi.fn(),
+      deleteMilestoneTask: vi.fn(),
+      profile: mockProfile,
+      preferences: mockPreferences,
+      ambitions: [],
+      skills: []
+    });
+
+    render(<OrbitScheduler />);
+    
+    // Switch to Stasis Backlog tab
+    const backlogTab = screen.getByRole('button', { name: /stasis backlog/i });
+    await act(async () => {
+      fireEvent.click(backlogTab);
+    });
+
+    // Click Recalibrate button
+    const recalibrateBtn = screen.getByRole('button', { name: /recalibrate/i });
+    await act(async () => {
+      fireEvent.click(recalibrateBtn);
+    });
+
+    expect(mockUpdateTaskLocal).toHaveBeenCalledWith('backlog-task-1', { plannedDate: today });
+  });
+
+  it('recalibrates/carries forward a milestone task with correct ambitionId and milestoneId', async () => {
+    const mockUpdateMilestoneTask = vi.fn();
+    const mockAmbitions = [{
+      id: 'amb-1',
+      title: 'AWS Certification',
+      milestones: [{
+        id: 'ms-100',
+        title: 'Practice Exams',
+        tasks: [{
+          id: 'ms-task-1',
+          title: 'Complete Exam 1',
+          completed: false,
+          plannedDate: '2026-01-01' // Past date -> decayed
+        }]
+      }]
+    }];
+
+    (useTrackStore as any).mockReturnValue({
+      tasks: [],
+      addTask: mockAddTask,
+      toggleTask: mockToggleTask,
+      deleteTask: mockDeleteTask,
+      updateTask: mockUpdateTask,
+      updateTaskDate: mockUpdateTaskDate,
+      updateMilestoneTask: mockUpdateMilestoneTask,
+      deleteMilestoneTask: vi.fn(),
+      profile: mockProfile,
+      preferences: mockPreferences,
+      ambitions: mockAmbitions,
+      skills: []
+    });
+
+    render(<OrbitScheduler />);
+    
+    // Switch to Stasis Backlog tab
+    const backlogTab = screen.getByRole('button', { name: /stasis backlog/i });
+    await act(async () => {
+      fireEvent.click(backlogTab);
+    });
+
+    // Click Recalibrate button for the milestone task
+    const recalibrateBtn = screen.getByRole('button', { name: /recalibrate/i });
+    await act(async () => {
+      fireEvent.click(recalibrateBtn);
+    });
+
+    expect(mockUpdateMilestoneTask).toHaveBeenCalledWith('amb-1', 'ms-100', 'ms-task-1', { plannedDate: today });
   });
 });

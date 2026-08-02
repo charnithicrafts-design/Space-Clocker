@@ -66,7 +66,7 @@ const OrbitScheduler = () => {
 
   // Consolidate all tasks (standalone + milestone tasks)
   const allTasks = useMemo(() => {
-    const milestoneTasks = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks));
+    const milestoneTasks = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id, milestoneId: m.id }))));
     return [...tasks, ...milestoneTasks];
   }, [tasks, ambitions]);
 
@@ -147,11 +147,18 @@ const OrbitScheduler = () => {
     setNewDeadline('');
   };
 
+  // Helper to lookup milestone task with proper ambitionId and milestoneId
+  const getMilestoneTask = useCallback((id: string) => {
+    return ambitions
+      .flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id, milestoneId: m.id }))))
+      .find(t => t.id === id);
+  }, [ambitions]);
+
   const handleToggle = async (id: string) => {
-    const milestoneTask = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id })) )).find(t => t.id === id);
+    const milestoneTask = getMilestoneTask(id);
     
     if (milestoneTask) {
-      await toggleMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId!, id);
+      await toggleMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId, id);
       if (isPro && !milestoneTask.completed) {
         setReflectionType('daily-summary');
         setIsReflectionOpen(true);
@@ -168,10 +175,10 @@ const OrbitScheduler = () => {
 
   const handleCarryForward = async (id: string) => {
     const today = getTodayLocalISO();
-    const milestoneTask = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id })) )).find(t => t.id === id);
+    const milestoneTask = getMilestoneTask(id);
     
     if (milestoneTask) {
-      await updateMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId!, id, { plannedDate: today });
+      await updateMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId, id, { plannedDate: today });
     } else {
       await updateTask(id, { plannedDate: today });
     }
@@ -202,10 +209,10 @@ const OrbitScheduler = () => {
       deadline: editDeadline || undefined,
     };
 
-    const milestoneTask = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id })) )).find(t => t.id === editingTaskId);
+    const milestoneTask = getMilestoneTask(editingTaskId);
 
     if (milestoneTask) {
-      await updateMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId!, editingTaskId, updates);
+      await updateMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId, editingTaskId, updates);
     } else {
       await updateTask(editingTaskId, updates);
     }
@@ -221,20 +228,20 @@ const OrbitScheduler = () => {
       return;
     }
     SoundManager.playThud();
-    const milestoneTask = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id })) )).find(t => t.id === id);
+    const milestoneTask = getMilestoneTask(id);
     if (milestoneTask) {
-      deleteMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId!, id);
+      deleteMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId, id);
     } else {
       deleteTask(id);
     }
-  }, [deleteTask, deleteMilestoneTask, ambitions, preferences.confirmDelete]);
+  }, [deleteTask, deleteMilestoneTask, getMilestoneTask, preferences.confirmDelete]);
 
   const handleDeleteConfirm = async () => {
     if (deleteTaskId) {
       SoundManager.playThud();
-      const milestoneTask = ambitions.flatMap(a => a.milestones.flatMap(m => m.tasks.map(t => ({ ...t, ambitionId: a.id })) )).find(t => t.id === deleteTaskId);
+      const milestoneTask = getMilestoneTask(deleteTaskId);
       if (milestoneTask) {
-        await deleteMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId!, deleteTaskId);
+        await deleteMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId, deleteTaskId);
       } else {
         await deleteTask(deleteTaskId);
       }
