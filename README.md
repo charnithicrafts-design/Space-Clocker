@@ -1,25 +1,57 @@
-# Space Clocker
+# Space-Clocker 🚀
 
-## Run Locally
+> **Space-Clocker is an application to clock in your mental space. You sync (clock in) your ambitions in your mental space with your internal clocking sense. Space-Clocker will caress you from your clocking sense to your completion sense.**
 
-**Prerequisites:**  Node.js
+- 🌐 **Landing Page:** [spaceclocker.com](https://spaceclocker.com)
+- 🌌 **Enter the Application:** [app.spaceclocker.com](https://app.spaceclocker.com)
 
+---
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## ✦ The Journey of Alignment
 
-## 🛠 Product Architecture (Developer Context)
+```
+  [ Internal Clocking Sense ] ──( Sync Ambitions )──> [ Orbit / Nebula ] ──( Caress & Realign )──> [ Completion Sense ]
+```
 
-### 🚀 Momentum & Resonance Systems
-Space-Clocker employs a dual-layered gamification architecture designed for deep goal alignment:
+When you step into Space-Clocker, you are applying yourself in a dedicated sanctuary:
+- **Sync Your Ambitions:** Clock in what truly matters to your real-life trajectory across 1 to 3-year horizons.
+- **Gentle Realignment:** Rest and drift are recognized as *Gravity Wells*. The `[⚡ Recalibrate]` protocol gently pulls past intentions back into today's flight plan without guilt.
+- **Constellation of Skills:** Watch your technical domain mastery and personal soft resilience illuminate your radar chart as bright, navigating stars.
 
-- **Global Space Science Level:** Tracked in the `profile` table. It represents the user's overall proficiency and consistency. Achievement points (XP) are accrued from all task completions.
-- **Trajectory Resonance Energy:** Tracked per-ambition in the `ambitions` table. This allows users to visualize their focus on specific high-level goals. Resonance is fueled specifically by tasks linked to that ambition's milestones.
+---
 
-### 🧩 Core Components
-- **Stellar Scheduler:** Found in `src/utils/StellarScheduler.ts`, this utility handles temporal conflict detection and orbital density analysis.
-- **Chronos Backup:** Integrated via PGlite's binary dump/restore capabilities in `src/db/client.ts`.
-- **Neural Link:** A custom synchronization layer with Google Drive for cross-device trajectory continuity.
+## 🌌 The Four Sectors
+
+### ⚡ Orbit — Daily Flight Deck
+Clock in your day. Align daily intentions with your current energy, manage your Stasis Backlog, practice the Void Protocol to set boundaries against distraction, and click `[⚡ Recalibrate]` when momentum drifts.
+
+### 🌌 Nebula — Milestone Architect
+Decompose 1 to 3-year macro-ambitions into stellar milestones and sub-intentions. See your long-term trajectory unfold naturally.
+
+### 💎 Stellar Matrix — Skill Constellation
+Your capabilities rendered as an expanding radar chart. High-proficiency skills shine as bright stars while balancing hard technical mastery with personal emotional resilience.
+
+### 🔭 Horizon — Telemetry & Reflection
+Deep space telemetry across 7, 30, and 365 days. Features **Eleanor's Log**—an empathetic intelligence box that listens to your velocity and reminds you when it's time to rest.
+
+---
+
+## 🛠️ Local Development Setup
+
+```bash
+# 1. Clone repo & install dependencies
+git clone https://github.com/charnithicrafts-design/Space-Clocker.git
+cd Space-Clocker
+npm install
+
+# 2. Configure Environment (Optional)
+echo "GEMINI_API_KEY=your_key_here" > .env.local
+
+# 3. Launch Local Server
+npm run dev
+```
+
+---
+
+*From your clocking sense to your completion sense.*  
+**— The Space-Clocker Team**
