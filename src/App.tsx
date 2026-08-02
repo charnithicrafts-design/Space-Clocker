@@ -17,6 +17,7 @@ import SyncConflictModal from './components/reflection/SyncConflictModal';
 import OnboardingTour from './components/layout/OnboardingTour';
 import IdentitySelectionMatrix from './components/onboarding/IdentitySelectionMatrix';
 import LandingPage from './components/marketing/LandingPage';
+import DocsHub from './components/docs/DocsHub';
 import UpdateModal from './components/layout/UpdateModal';
 import CriticalUpdateBanner from './components/layout/CriticalUpdateBanner';
 import { VoidEventHorizon } from './components/void-protocol/VoidEventHorizon';
@@ -353,6 +354,8 @@ const AppContent = () => {
           <Route path="/transmission/share" element={<SharedTransmission />} />
           <Route path="/settings" element={<SettingsDashboard />} />
           <Route path="/profile" element={<ProfileDashboard />} />
+          <Route path="/docs" element={<DocsHub />} />
+          <Route path="/docs/*" element={<DocsHub />} />
           <Route path="/identity" element={<IdentitySelectionMatrix />} />
           <Route path="/about" element={<LandingPage />} />
           <Route path="/landing" element={<LandingPage />} />

@@ -14,7 +14,8 @@ import {
   Menu,
   Zap,
   Box,
-  Info
+  Info,
+  BookOpen
 } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
@@ -74,6 +75,7 @@ const Navigation = () => {
   ];
 
   const communicationLinks = [
+    { to: '/docs', icon: BookOpen, label: 'Docs', color: 'text-accent' },
     { to: '/transmission', icon: Signal, label: 'Transmission', color: 'text-primary', badge: 'SOON' },
   ];
 
