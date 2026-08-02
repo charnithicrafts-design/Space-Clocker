@@ -18,6 +18,7 @@ import OnboardingTour from './components/layout/OnboardingTour';
 import IdentitySelectionMatrix from './components/onboarding/IdentitySelectionMatrix';
 import LandingPage from './components/marketing/LandingPage';
 import DocsHub from './components/docs/DocsHub';
+import NotFoundPage from './components/common/NotFoundPage';
 import UpdateModal from './components/layout/UpdateModal';
 import CriticalUpdateBanner from './components/layout/CriticalUpdateBanner';
 import { VoidEventHorizon } from './components/void-protocol/VoidEventHorizon';
@@ -48,7 +49,15 @@ const AppContent = () => {
   const [dbError, setDbError] = useState<any>(null);
   const startupInitiated = useRef(false);
 
+  const isMarketingDomain = window.location.hostname === 'spaceclocker.com' || window.location.hostname === 'www.spaceclocker.com';
+  const isPublicRoute = ['/about', '/landing', '/docs'].some(p => pathname.startsWith(p)) || (isMarketingDomain && pathname === '/');
+
   useEffect(() => {
+    if (isPublicRoute) {
+      setDbStatus('ready');
+      return;
+    }
+
     if (startupInitiated.current) return;
     startupInitiated.current = true;
 
@@ -81,7 +90,7 @@ const AppContent = () => {
       }
     };
     startup();
-  }, [initialize, checkSync, oracleConfig.syncEnabled]);
+  }, [initialize, checkSync, oracleConfig.syncEnabled, isPublicRoute]);
 
   useEffect(() => {
     if (dbStatus !== 'ready' || profile?.level === undefined) return;
@@ -119,8 +128,6 @@ const AppContent = () => {
     localStorage.setItem('hasSeenOnboarding', 'true');
     setShowOnboarding(false);
   };
-
-  const isMarketingDomain = window.location.hostname === 'spaceclocker.com' || window.location.hostname === 'www.spaceclocker.com';
 
   if (isMarketingDomain && (pathname === '/' || pathname === '/about')) {
     return (
@@ -359,6 +366,7 @@ const AppContent = () => {
           <Route path="/identity" element={<IdentitySelectionMatrix />} />
           <Route path="/about" element={<LandingPage />} />
           <Route path="/landing" element={<LandingPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
 

@@ -340,7 +340,7 @@ const LandingPage: React.FC = () => {
                   SoundManager.playPop();
                   navigate('/docs');
                 }}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-secondary text-white font-bold text-sm uppercase tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(255,84,77,0.3)] hover:scale-105 cursor-pointer border-none"
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-secondary text-surface-lowest font-black text-sm uppercase tracking-widest hover:bg-secondary/90 transition-all flex items-center justify-center gap-3 shadow-[0_0_25px_rgba(255,84,77,0.4)] hover:scale-105 cursor-pointer border-none"
               >
                 <Code2 size={18} />
                 <span>Developer Onboarding</span>
