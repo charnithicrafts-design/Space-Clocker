@@ -25,7 +25,7 @@ describe('DocsHub Progressive Chapter Documentation Reader', () => {
 
     expect(screen.getByText('Space-Clocker Manuals')).toBeInTheDocument();
     expect(screen.getByText('1. Clocking In Your Mental Space')).toBeInTheDocument();
-    expect(screen.getByText(/Core Axiom/i)).toBeInTheDocument();
+    expect(screen.getByText(/Our Core Belief/i)).toBeInTheDocument();
   });
 
   it('navigates through chapters sequentially using pagination buttons', async () => {
@@ -35,7 +35,7 @@ describe('DocsHub Progressive Chapter Documentation Reader', () => {
     const nextBtns = screen.getAllByRole('button', { name: /2\. Orbit Daily Flight Planning/i });
     fireEvent.click(nextBtns[0]);
 
-    expect(await screen.findByText('Step-by-Step Flight Planning')).toBeInTheDocument();
+    expect(await screen.findByText('Simple 3-Step Daily Routine')).toBeInTheDocument();
   });
 
   it('switches to Developer Manual tab and displays environment setup', async () => {
@@ -44,7 +44,7 @@ describe('DocsHub Progressive Chapter Documentation Reader', () => {
     const devTabBtn = screen.getByRole('button', { name: /Developer Manual/i });
     fireEvent.click(devTabBtn);
 
-    expect(await screen.findByText('1. Environment Setup & Prerequisites')).toBeInTheDocument();
-    expect(screen.getByText('Terminal Onboarding Steps')).toBeInTheDocument();
+    expect(await screen.findByText('1. Quickstart in 3 Simple Steps')).toBeInTheDocument();
+    expect(screen.getByText('Clone the Repository')).toBeInTheDocument();
   });
 });

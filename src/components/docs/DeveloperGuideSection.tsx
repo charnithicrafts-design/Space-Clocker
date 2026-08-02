@@ -12,7 +12,8 @@ import {
   ShieldCheck, 
   ArrowRight, 
   ArrowLeft,
-  Code2
+  Code2,
+  Sparkles
 } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 
@@ -31,10 +32,10 @@ export interface DevChapter {
 }
 
 export const DEV_CHAPTERS: { id: string; title: string; icon: any }[] = [
-  { id: 'quickstart', title: '1. Environment & Setup', icon: Terminal },
-  { id: 'wasm-architecture', title: '2. PGlite WASM Architecture', icon: Cpu },
-  { id: 'git-workflow', title: '3. Branching & Quality Gates', icon: GitBranch },
-  { id: 'ai-collaboration', title: '4. AI CLI (AGY) & Agent Team', icon: Bot }
+  { id: 'quickstart', title: '1. Quickstart in 3 Steps', icon: Terminal },
+  { id: 'wasm-architecture', title: '2. How Space-Clocker Works', icon: Cpu },
+  { id: 'git-workflow', title: '3. Making Your First Feature', icon: GitBranch },
+  { id: 'ai-collaboration', title: '4. Pair-Programming with AI', icon: Bot }
 ];
 
 export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapterId, onSelectChapter }) => {
@@ -50,81 +51,86 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
   };
 
   const teamAgents = [
-    { name: 'Winston 📐', role: 'System Architect', area: 'PGlite WASM, Comlink Worker RPC & State Slices' },
-    { name: 'Sally 🎨', role: 'UX & Visual Lead', area: 'Glassmorphism, Tailwind v4 Theme & Layouts' },
-    { name: 'Eleanor 🌿', role: 'Empathy Strategist', area: 'Eleanor\'s Log, Gravity Wells & Tone' },
-    { name: 'Amelia 💻', role: 'Lead Developer', area: 'Component Logic & Feature Story Execution' },
-    { name: 'Murat 🛡️', role: 'QA Engineer', area: 'Vitest Unit Suite & Data Integrity Gates' },
-    { name: 'John 🚀', role: 'Product Manager', area: 'PRD Requirements & Version Release Notes' }
+    { name: 'Winston 📐', role: 'System Architect', area: 'PGlite WASM Database, Worker RPC & State Slices' },
+    { name: 'Sally 🎨', role: 'UX & Design Specialist', area: 'Glassmorphic Styling, Tailwind v4 & Responsive Layouts' },
+    { name: 'Eleanor 🌿', role: 'Human Experience', area: 'Eleanor\'s Log, Gravity Wells & Mindful Copywriting' },
+    { name: 'Amelia 💻', role: 'Lead Developer', area: 'React Components, Story Specs & Bug Fixes' },
+    { name: 'Murat 🛡️', role: 'QA Test Architect', area: 'Vitest Unit Suites & Data Integrity Quality Gates' },
+    { name: 'John 🚀', role: 'Product Manager', area: 'Feature PRDs & Version Release Notes' }
   ];
 
   const chapters: DevChapter[] = [
     {
       id: 'quickstart',
       badge: 'Quickstart',
-      title: '1. Environment Setup & Prerequisites',
-      subtitle: 'How to install, configure environment keys, and spin up the local dev environment.',
+      title: '1. Quickstart in 3 Simple Steps',
+      subtitle: 'How to clone the codebase, install dependencies, and launch your local dev server.',
       color: 'text-primary',
       content: (
         <div className="space-y-6 text-on-surface-variant text-base leading-relaxed">
-          <div className="p-4 rounded-2xl bg-surface-high/40 border border-outline-variant/30 text-sm">
-            <span className="font-bold text-white">System Prerequisites:</span> Node.js &gt;= 20.0.0, npm &gt;= 10.0.0.
-          </div>
+          <p className="text-white font-medium">
+            Welcome to Space-Clocker! Setting up your local development environment takes less than 2 minutes.
+          </p>
 
           <div className="space-y-4">
-            <h3 className="text-xl font-bold text-white tracking-tight">Terminal Onboarding Steps</h3>
-            
-            <div className="space-y-4">
-              {/* Step 1 */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-white text-sm">Step 1: Clone Repository</h4>
-                  <button 
-                    onClick={() => copyToClipboard('git clone https://github.com/charnithicrafts-design/Space-Clocker.git && cd Space-Clocker', 'clone')}
-                    className="flex items-center gap-1.5 text-xs text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-lg hover:bg-primary/20 transition-all cursor-pointer"
-                  >
-                    {copiedCode === 'clone' ? <Check size={14} /> : <Copy size={14} />}
-                    <span>{copiedCode === 'clone' ? 'Copied!' : 'Copy'}</span>
-                  </button>
-                </div>
-                <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs text-primary">
-                  git clone https://github.com/charnithicrafts-design/Space-Clocker.git<br/>
-                  cd Space-Clocker
-                </div>
+            {/* Step 1 */}
+            <div className="p-5 rounded-2xl bg-surface-high/30 border border-outline-variant/30 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="font-bold text-white text-base flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-primary text-on-primary text-xs font-black flex items-center justify-center">1</span>
+                  <span>Clone the Repository</span>
+                </h4>
+                <button 
+                  onClick={() => copyToClipboard('git clone https://github.com/charnithicrafts-design/Space-Clocker.git && cd Space-Clocker', 'clone')}
+                  className="flex items-center gap-1.5 text-xs text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-lg hover:bg-primary/20 transition-all cursor-pointer font-bold"
+                >
+                  {copiedCode === 'clone' ? <Check size={14} /> : <Copy size={14} />}
+                  <span>{copiedCode === 'clone' ? 'Copied!' : 'Copy Command'}</span>
+                </button>
               </div>
-
-              {/* Step 2 */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-white text-sm">Step 2: Install Dependencies</h4>
-                  <button 
-                    onClick={() => copyToClipboard('npm install', 'install')}
-                    className="flex items-center gap-1.5 text-xs text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-lg hover:bg-primary/20 transition-all cursor-pointer"
-                  >
-                    {copiedCode === 'install' ? <Check size={14} /> : <Copy size={14} />}
-                    <span>{copiedCode === 'install' ? 'Copied!' : 'Copy'}</span>
-                  </button>
-                </div>
-                <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs text-primary">
-                  npm install
-                </div>
+              <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs text-primary">
+                git clone https://github.com/charnithicrafts-design/Space-Clocker.git<br/>
+                cd Space-Clocker
               </div>
+            </div>
 
-              {/* Step 3 */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-white text-sm">Step 3: Launch Local Dev Server (http://localhost:3000)</h4>
-                  <button 
-                    onClick={() => copyToClipboard('npm run dev', 'dev')}
-                    className="flex items-center gap-1.5 text-xs text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-lg hover:bg-primary/20 transition-all cursor-pointer"
-                  >
-                    {copiedCode === 'dev' ? <Check size={14} /> : <Copy size={14} />}
-                    <span>{copiedCode === 'dev' ? 'Copied!' : 'Copy'}</span>
-                  </button>
-                </div>
-                <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs text-primary">
-                  npm run dev
-                </div>
+            {/* Step 2 */}
+            <div className="p-5 rounded-2xl bg-surface-high/30 border border-outline-variant/30 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="font-bold text-white text-base flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-secondary text-white text-xs font-black flex items-center justify-center">2</span>
+                  <span>Install Dependencies</span>
+                </h4>
+                <button 
+                  onClick={() => copyToClipboard('npm install', 'install')}
+                  className="flex items-center gap-1.5 text-xs text-secondary bg-secondary/10 border border-secondary/20 px-3 py-1 rounded-lg hover:bg-secondary/20 transition-all cursor-pointer font-bold"
+                >
+                  {copiedCode === 'install' ? <Check size={14} /> : <Copy size={14} />}
+                  <span>{copiedCode === 'install' ? 'Copied!' : 'Copy Command'}</span>
+                </button>
+              </div>
+              <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs text-secondary">
+                npm install
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="p-5 rounded-2xl bg-surface-high/30 border border-outline-variant/30 space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="font-bold text-white text-base flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-tertiary text-on-tertiary text-xs font-black flex items-center justify-center">3</span>
+                  <span>Launch Dev Server (http://localhost:3000)</span>
+                </h4>
+                <button 
+                  onClick={() => copyToClipboard('npm run dev', 'dev')}
+                  className="flex items-center gap-1.5 text-xs text-tertiary bg-tertiary/10 border border-tertiary/20 px-3 py-1 rounded-lg hover:bg-tertiary/20 transition-all cursor-pointer font-bold"
+                >
+                  {copiedCode === 'dev' ? <Check size={14} /> : <Copy size={14} />}
+                  <span>{copiedCode === 'dev' ? 'Copied!' : 'Copy Command'}</span>
+                </button>
+              </div>
+              <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs text-tertiary">
+                npm run dev
               </div>
             </div>
           </div>
@@ -133,32 +139,32 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
     },
     {
       id: 'wasm-architecture',
-      badge: 'Architecture',
-      title: '2. Local-First PGlite WASM Architecture',
-      subtitle: 'Understanding thread isolation, Comlink RPC worker proxy, and OPFS storage.',
+      badge: 'Architecture Made Simple',
+      title: '2. How Space-Clocker Works (Local-First WASM)',
+      subtitle: 'Why our database runs inside a Web Worker so the app stays lightning-fast.',
       color: 'text-secondary',
       content: (
         <div className="space-y-6 text-on-surface-variant text-base leading-relaxed">
           <p>
-            Space-Clocker uses <strong>PGlite (Postgres-in-WASM)</strong> running inside a dedicated Web Worker thread to ensure zero UI frame drops during complex telemetry aggregations.
+            Space-Clocker is a <strong>local-first application</strong>. Your data lives inside a real PostgreSQL database running right inside your browser via WebAssembly (PGlite).
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
             <div className="p-4 rounded-2xl bg-surface-high/40 border border-outline-variant/30 space-y-2">
               <div className="font-bold text-primary flex items-center gap-2 text-sm">
-                <Layers size={16} /> 1. React 19 UI
+                <Layers size={16} /> 1. React 19 UI Thread
               </div>
               <p className="text-on-surface-variant">
-                Components invoke store actions (`useTrackStore`). Public pages skip DB boot to conserve memory.
+                Renders screen components smoothly. Public pages skip database initialization to keep page loads instant.
               </p>
             </div>
 
             <div className="p-4 rounded-2xl bg-surface-high/40 border border-outline-variant/30 space-y-2">
               <div className="font-bold text-secondary flex items-center gap-2 text-sm">
-                <Workflow size={16} /> 2. Comlink RPC Bridge
+                <Workflow size={16} /> 2. Comlink Bridge
               </div>
               <p className="text-on-surface-variant">
-                `src/db/client.ts` proxies async SQL queries to worker thread over MessageChannel.
+                Passes SQL queries between the user interface and the background worker thread without freezing animations.
               </p>
             </div>
 
@@ -167,7 +173,7 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
                 <Cpu size={16} /> 3. PGlite WASM Worker
               </div>
               <p className="text-on-surface-variant">
-                `src/db/db.worker.ts` executes raw PostgreSQL SQL queries with OPFS file system persistence.
+                Executes PostgreSQL SQL queries in the background and saves data persistently in OPFS browser storage.
               </p>
             </div>
           </div>
@@ -176,26 +182,32 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
     },
     {
       id: 'git-workflow',
-      badge: 'Quality Gates',
-      title: '3. Branching & Quality Gates',
-      subtitle: 'Branch conventions, conventional commits, and pre-submission test verification.',
+      badge: 'Branching & Quality',
+      title: '3. Making Your First Feature & Quality Check',
+      subtitle: 'How to create a feature branch, write conventional commits, and run tests.',
       color: 'text-tertiary',
       content: (
         <div className="space-y-6 text-on-surface-variant text-base leading-relaxed">
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-white tracking-tight">Branching & Conventional Commits</h3>
-            <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs text-on-surface-variant space-y-1.5">
+          <div className="space-y-3">
+            <h3 className="text-xl font-bold text-white tracking-tight">Feature Branching & Commits</h3>
+            <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs space-y-2 text-on-surface-variant">
               <div><span className="text-primary font-bold">git checkout -b feat/orbit-recalibrate-audio</span></div>
-              <div><span className="text-primary font-bold">git commit -m "feat(orbit): add recalibrate audio trigger"</span></div>
-              <div><span className="text-primary font-bold">git commit -m "fix(worker): resolve COALESCE date aggregation"</span></div>
+              <div><span className="text-primary font-bold">git commit -m "feat(orbit): add audio sound on recalibrate click"</span></div>
             </div>
           </div>
 
           <div className="p-5 rounded-2xl bg-surface-high/30 border border-outline-variant/30 space-y-3">
-            <h3 className="text-xl font-bold text-white tracking-tight">Pre-Submission Quality Gates</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center gap-2"><ShieldCheck size={16} className="text-success shrink-0" /> <span><strong>Typecheck:</strong> Run <code className="text-primary bg-surface-lowest px-1.5 py-0.5 rounded">npm run lint</code> (tsc --noEmit must pass with 0 errors).</span></div>
-              <div className="flex items-center gap-2"><ShieldCheck size={16} className="text-success shrink-0" /> <span><strong>Unit Suite:</strong> Run <code className="text-primary bg-surface-lowest px-1.5 py-0.5 rounded">npm run test</code> (all Vitest suites must pass).</span></div>
+            <h3 className="text-xl font-bold text-white tracking-tight">Pre-Submission Quality Gate</h3>
+            <p className="text-sm">Before submitting your pull request, run these two commands:</p>
+            <div className="space-y-2 text-xs font-mono">
+              <div className="p-3 rounded-xl bg-surface-lowest border border-outline-variant/20 flex items-center justify-between">
+                <span>npm run lint <span className="text-on-surface-variant font-sans">(Verify zero TypeScript errors)</span></span>
+                <ShieldCheck size={16} className="text-success" />
+              </div>
+              <div className="p-3 rounded-xl bg-surface-lowest border border-outline-variant/20 flex items-center justify-between">
+                <span>npm run test <span className="text-on-surface-variant font-sans">(Verify all Vitest suites pass)</span></span>
+                <ShieldCheck size={16} className="text-success" />
+              </div>
             </div>
           </div>
         </div>
@@ -203,14 +215,14 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
     },
     {
       id: 'ai-collaboration',
-      badge: 'AI Autonomous Team',
-      title: '4. AI CLI (AGY) & Agent Team Collaboration',
-      subtitle: 'How to pair-program with our specialized AI agents using Antigravity CLI.',
+      badge: 'AI Agents',
+      title: '4. Pair-Programming with AI Agents & AGY CLI',
+      subtitle: 'Meet your specialized AI team and learn common Antigravity CLI commands.',
       color: 'text-accent',
       content: (
         <div className="space-y-6 text-on-surface-variant text-base leading-relaxed">
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-white tracking-tight">Specialized Agent Team Roster</h3>
+          <div className="space-y-3">
+            <h3 className="text-xl font-bold text-white tracking-tight">Meet Your Specialized AI Agent Team</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {teamAgents.map((agent, aIdx) => (
                 <div key={aIdx} className="p-3 rounded-xl bg-surface-high/40 border border-outline-variant/30 space-y-1 text-xs">
@@ -225,12 +237,11 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
           </div>
 
           <div className="p-5 rounded-2xl bg-surface-high/30 border border-outline-variant/30 space-y-3">
-            <h3 className="text-xl font-bold text-white tracking-tight">Common Antigravity (AGY) Slash Commands</h3>
+            <h3 className="text-xl font-bold text-white tracking-tight">Antigravity (AGY) Slash Commands</h3>
             <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs space-y-2 text-on-surface-variant">
-              <div><span className="text-primary font-bold">/plan</span> — Initiate structured planning mode before code changes.</div>
-              <div><span className="text-secondary font-bold">/schedule</span> — Set recurring timers or one-shot reminders for background tasks.</div>
-              <div><span className="text-tertiary font-bold">/grill-me</span> — Conduct interactive interview to resolve design decisions.</div>
-              <div><span className="text-accent font-bold">/learn</span> — Persist project rules into `GEMINI.md`.</div>
+              <div><span className="text-primary font-bold">/plan</span> — Triggers structured design planning before writing code.</div>
+              <div><span className="text-secondary font-bold">/schedule</span> — Sets non-blocking timers or recurring background checks.</div>
+              <div><span className="text-tertiary font-bold">/grill-me</span> — Initiates an interactive interview to align on design decisions.</div>
             </div>
           </div>
         </div>
