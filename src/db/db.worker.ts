@@ -847,12 +847,12 @@ export const api = {
         TO_CHAR(dates.d, 'YYYY-MM-DD') as date,
         COUNT(t.id)::int as count
       FROM dates
-      LEFT JOIN tasks t ON t.completed_at IS NOT NULL AND TO_CHAR(t.completed_at::timestamp, 'YYYY-MM-DD') = TO_CHAR(dates.d, 'YYYY-MM-DD') AND t.completed = true AND t.is_void = false
+      LEFT JOIN tasks t ON COALESCE(TO_CHAR(t.completed_at::timestamp, 'YYYY-MM-DD'), t.planned_date) = TO_CHAR(dates.d, 'YYYY-MM-DD') AND t.completed = true AND (t.is_void = false OR t.is_void IS NULL)
       GROUP BY dates.d
       ORDER BY dates.d ASC
     `, [days - 1]);
 
-    // 2. Void breaches (void tasks completed per day)
+    // 2. Void breaches (void tasks completed per day + stellar_history failures)
     const voidRes = await db.query(`
       WITH RECURSIVE dates AS (
         SELECT CURRENT_DATE as d
@@ -861,9 +861,12 @@ export const api = {
       )
       SELECT 
         TO_CHAR(dates.d, 'YYYY-MM-DD') as date,
-        COUNT(t.id)::int as count
+        (
+          COUNT(t.id) + 
+          COALESCE((SELECT COUNT(h.id) FROM stellar_history h WHERE (h.type = 'failure' OR h.category = 'distraction') AND h.date = TO_CHAR(dates.d, 'YYYY-MM-DD')), 0)
+        )::int as count
       FROM dates
-      LEFT JOIN tasks t ON t.completed_at IS NOT NULL AND TO_CHAR(t.completed_at::timestamp, 'YYYY-MM-DD') = TO_CHAR(dates.d, 'YYYY-MM-DD') AND t.completed = true AND t.is_void = true
+      LEFT JOIN tasks t ON COALESCE(TO_CHAR(t.completed_at::timestamp, 'YYYY-MM-DD'), t.planned_date) = TO_CHAR(dates.d, 'YYYY-MM-DD') AND t.completed = true AND t.is_void = true
       GROUP BY dates.d
       ORDER BY dates.d ASC
     `, [days - 1]);
