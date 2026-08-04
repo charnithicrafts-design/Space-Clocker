@@ -351,9 +351,9 @@ const CalendarShell = () => {
             exit={{ opacity: 0, y: -20 }}
             className="space-y-6"
           >
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            <div className="flex overflow-x-auto pb-8 gap-6 custom-scrollbar snap-x snap-mandatory">
               {weeklyData.map((week, idx) => (
-                <div key={idx} className="glass-panel border border-outline-variant rounded-3xl p-6 space-y-4 min-h-[400px]">
+                <div key={idx} className="glass-panel border border-outline-variant rounded-3xl p-6 space-y-4 min-h-[400px] w-full md:w-[320px] shrink-0 snap-start">
                   <div className="text-center pb-4 border-b border-outline-variant/30">
                     <div className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-1">Week {idx + 1}</div>
                     <div className="text-xs font-bold text-primary">
