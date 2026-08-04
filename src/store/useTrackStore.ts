@@ -23,6 +23,7 @@ export interface Task {
   completedAt?: string;
   ambitionId?: string;
   milestoneId?: string;
+  recalibratedCount?: number;
 }
 
 export interface Milestone {
@@ -1276,7 +1277,8 @@ export const useTrackStore = create<TrackStore>()(
           isVoid: t.is_void === 1 || t.is_void === true,
           completedAt: t.completed_at,
           ambitionId: t.ambition_id,
-          milestoneId: t.milestone_id
+          milestoneId: t.milestone_id,
+          recalibratedCount: t.recalibrated_count || 0
         };
         
         if (t.milestone_id) {

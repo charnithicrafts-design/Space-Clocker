@@ -73,7 +73,8 @@ CREATE TABLE IF NOT EXISTS tasks (
   horizon TEXT DEFAULT 'daily',
   planned_date TEXT,
   is_void BOOLEAN DEFAULT false,
-  completed_at TEXT
+  completed_at TEXT,
+  recalibrated_count INTEGER DEFAULT 0
 );
 
 -- Support Collections

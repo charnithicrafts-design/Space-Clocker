@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { endOfWeek, parseISO, format } from 'date-fns';
 import { useTrackStore, Task } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 import { analyzeSchedule, ScheduleAnomaly } from '../../utils/StellarScheduler';
@@ -118,8 +119,11 @@ const OrbitScheduler = () => {
           const deadlineDate = t.deadline.split('T')[0];
           return deadlineDate === selectedDate;
         }
-        // 3. Weekly tasks should be shown for the selected date
-        if (t.horizon === 'weekly' && isCorrectDate) return true;
+        // 3. Weekly tasks should be shown if selected date falls in their active week window
+        if (t.horizon === 'weekly' && t.plannedDate) {
+          const weekEnd = format(endOfWeek(parseISO(t.plannedDate), { weekStartsOn: 0 }), 'yyyy-MM-dd');
+          return selectedDate >= t.plannedDate && selectedDate <= weekEnd;
+        }
         return false;
       }
 
@@ -177,10 +181,14 @@ const OrbitScheduler = () => {
     const today = getTodayLocalISO();
     const milestoneTask = getMilestoneTask(id);
     
+    const task = allTasks.find(t => t.id === id);
+    if (!task) return;
+    const newCount = (task.recalibratedCount || 0) + 1;
+    
     if (milestoneTask) {
-      await updateMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId, id, { plannedDate: today });
+      await updateMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId, id, { plannedDate: today, recalibratedCount: newCount });
     } else {
-      await updateTask(id, { plannedDate: today });
+      await updateTask(id, { plannedDate: today, recalibratedCount: newCount });
     }
     SoundManager.playPop();
   };
@@ -608,6 +616,11 @@ const OrbitScheduler = () => {
                               {task.title}
                             </div>
                             {task.completed && <ShieldCheck className="text-success shrink-0" size={18} />}
+                            {activeHorizon === 'backlog' && task.horizon === 'weekly' && (
+                              <span className="text-[8px] font-black uppercase tracking-widest bg-secondary/20 text-secondary border border-secondary/30 px-1.5 py-0.5 rounded ml-2">
+                                WEEKLY
+                              </span>
+                            )}
                           </div>
                           
                           {(task.plannedDate || (isPro && task.deadline)) && (

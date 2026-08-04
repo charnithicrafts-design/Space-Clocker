@@ -318,6 +318,11 @@ const CalendarShell = () => {
                             <div className="flex justify-between items-start gap-2 mb-1">
                               <div className={`text-xs font-bold truncate ${task.completed ? 'line-through text-on-surface-variant' : 'text-white'}`}>
                                 {task.title}
+                                {task.recalibratedCount ? (
+                                  <span className="ml-2 inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 px-1.5 py-0.5 rounded align-middle">
+                                    <Zap size={8} /> Recalibrated x{task.recalibratedCount}
+                                  </span>
+                                ) : null}
                               </div>
                               {renderStatusIndicator(status)}
                             </div>
@@ -369,7 +374,14 @@ const CalendarShell = () => {
                       const status = getTaskStatus(task);
                       return (
                         <div key={task.id} className={`p-3 rounded-xl text-[10px] font-bold border flex flex-col gap-2 ${task.completed ? 'bg-success/10 border-success/20 text-success/70' : 'bg-surface-high border-outline-variant text-white'}`}>
-                          <div className="truncate">{task.title}</div>
+                          <div className="truncate">
+                            {task.title}
+                            {task.recalibratedCount ? (
+                              <span className="ml-1 inline-flex items-center gap-0.5 text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 px-1 py-0.5 rounded align-middle">
+                                <Zap size={8} /> x{task.recalibratedCount}
+                              </span>
+                            ) : null}
+                          </div>
                           <div className="flex justify-between items-center opacity-80">
                             <span>{task.time || '00:00'}</span>
                             {renderStatusIndicator(status)}

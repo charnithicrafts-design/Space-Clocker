@@ -85,5 +85,14 @@ export const MIGRATIONS: Migration[] = [
         ALTER TABLE preferences ADD COLUMN IF NOT EXISTS is_simulation BOOLEAN DEFAULT false;
       `);
     }
+  },
+  {
+    version: 6,
+    name: 'add_recalibrated_count',
+    run: async (tx) => {
+      await tx.exec(`
+        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS recalibrated_count INTEGER DEFAULT 0;
+      `);
+    }
   }
 ];

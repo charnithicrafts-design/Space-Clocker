@@ -238,7 +238,7 @@ describe('OrbitScheduler', () => {
       fireEvent.click(recalibrateBtn);
     });
 
-    expect(mockUpdateTaskLocal).toHaveBeenCalledWith('backlog-task-1', { plannedDate: today });
+    expect(mockUpdateTaskLocal).toHaveBeenCalledWith('backlog-task-1', { plannedDate: today, recalibratedCount: 1 });
   });
 
   it('recalibrates/carries forward a milestone task with correct ambitionId and milestoneId', async () => {
@@ -287,6 +287,6 @@ describe('OrbitScheduler', () => {
       fireEvent.click(recalibrateBtn);
     });
 
-    expect(mockUpdateMilestoneTask).toHaveBeenCalledWith('amb-1', 'ms-100', 'ms-task-1', { plannedDate: today });
+    expect(mockUpdateMilestoneTask).toHaveBeenCalledWith('amb-1', 'ms-100', 'ms-task-1', { plannedDate: today, recalibratedCount: 1 });
   });
 });
