@@ -37,11 +37,11 @@ describe('db.worker getTelemetry', () => {
     const nonZeroHeatmap = telemetry.heatmap.filter((h: any) => Number(h.count) > 0);
     expect(nonZeroHeatmap.length).toBe(3);
 
-    const todayDate = new Date().toISOString().split('T')[0];
+    const todayDate = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0];
     const todayData = telemetry.heatmap.find((h: any) => h.date === todayDate);
     
     expect(todayData).toBeDefined();
-    expect(Number((todayData as any)?.count)).toBe(2);
+    console.log("HEATMAP:", JSON.stringify(telemetry.heatmap, null, 2)); expect(Number((todayData as any)?.count)).toBe(2);
   });
 
   it('should correctly aggregate Gravity Well (Void) data', async () => {
@@ -61,7 +61,7 @@ describe('db.worker getTelemetry', () => {
     const nonZeroVoids = telemetry.voidBreaches.filter((v: any) => Number(v.count) > 0);
     expect(nonZeroVoids.length).toBe(2);
 
-    const todayDate = new Date().toISOString().split('T')[0];
+    const todayDate = new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0];
     const todayData = telemetry.voidBreaches.find((v: any) => v.date === todayDate);
     
     expect(todayData).toBeDefined();
