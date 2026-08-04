@@ -21,7 +21,8 @@ describe('CalendarShell', () => {
       time: '10:00', 
       endTime: '11:00',
       completed: false, 
-      horizon: 'daily' 
+      horizon: 'daily',
+      recalibratedCount: 2
     },
     {
       id: '2',
@@ -98,6 +99,7 @@ describe('CalendarShell', () => {
 
     expect(screen.getByText('Standalone Task')).toBeInTheDocument();
     expect(screen.getByText('Milestone Task')).toBeInTheDocument();
+    expect(screen.getByText(/Recalibrated x2/i)).toBeInTheDocument();
   });
 
   it('shows status indicators for tasks', () => {

@@ -289,4 +289,39 @@ describe('OrbitScheduler', () => {
 
     expect(mockUpdateMilestoneTask).toHaveBeenCalledWith('amb-1', 'ms-100', 'ms-task-1', { plannedDate: today, recalibratedCount: 1 });
   });
+
+  it('displays WEEKLY badge for weekly tasks in Stasis Backlog', async () => {
+    (useTrackStore as any).mockReturnValue({
+      tasks: [{
+        id: 'backlog-task-weekly',
+        time: '14:00',
+        title: 'Weekly Backlog Task',
+        completed: false,
+        horizon: 'weekly',
+        plannedDate: '2026-03-30' // Past date
+      }],
+      addTask: mockAddTask,
+      toggleTask: mockToggleTask,
+      deleteTask: mockDeleteTask,
+      updateTask: mockUpdateTask,
+      updateTaskDate: mockUpdateTaskDate,
+      updateMilestoneTask: vi.fn(),
+      deleteMilestoneTask: vi.fn(),
+      profile: mockProfile,
+      preferences: mockPreferences,
+      ambitions: [],
+      skills: []
+    });
+
+    render(<OrbitScheduler />);
+    
+    // Switch to Stasis Backlog tab
+    const backlogTab = screen.getByRole('button', { name: /stasis backlog/i });
+    await act(async () => {
+      fireEvent.click(backlogTab);
+    });
+
+    expect(screen.getByText('Weekly Backlog Task')).toBeInTheDocument();
+    expect(screen.getByText('WEEKLY')).toBeInTheDocument();
+  });
 });
