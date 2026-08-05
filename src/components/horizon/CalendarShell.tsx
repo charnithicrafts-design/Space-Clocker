@@ -374,14 +374,23 @@ const CalendarShell = () => {
                       const status = getTaskStatus(task);
                       return (
                         <div key={task.id} className={`p-3 rounded-xl text-[10px] font-bold border flex flex-col gap-2 ${task.completed ? 'bg-success/10 border-success/20 text-success/70' : 'bg-surface-high border-outline-variant text-white'}`}>
-                          <div className="truncate">
+                          <div className="truncate mb-1 text-white">
                             {task.title}
-                            {task.recalibratedCount ? (
-                              <span className="ml-1 inline-flex items-center gap-0.5 text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 px-1 py-0.5 rounded align-middle">
-                                <Zap size={8} /> x{task.recalibratedCount}
-                              </span>
-                            ) : null}
                           </div>
+                          {(task.recalibratedCount || task.horizon === 'weekly') ? (
+                            <div className="flex flex-wrap items-center gap-2 mb-1">
+                              {task.horizon === 'weekly' && (
+                                <span className="inline-flex items-center text-[8px] font-black uppercase tracking-widest bg-secondary/20 text-secondary border border-secondary/30 px-1.5 py-0.5 rounded">
+                                  WEEKLY
+                                </span>
+                              )}
+                              {task.recalibratedCount ? (
+                                <span className="inline-flex items-center gap-0.5 text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 px-1 py-0.5 rounded">
+                                  <Zap size={8} /> x{task.recalibratedCount}
+                                </span>
+                              ) : null}
+                            </div>
+                          ) : null}
                           <div className="flex justify-between items-center opacity-80">
                             <span>{task.time || '00:00'}</span>
                             {renderStatusIndicator(status)}

@@ -616,12 +616,22 @@ const OrbitScheduler = () => {
                               {task.title}
                             </div>
                             {task.completed && <ShieldCheck className="text-success shrink-0" size={18} />}
-                            {activeHorizon === 'backlog' && task.horizon === 'weekly' && (
-                              <span className="text-[8px] font-black uppercase tracking-widest bg-secondary/20 text-secondary border border-secondary/30 px-1.5 py-0.5 rounded ml-2">
-                                WEEKLY
-                              </span>
-                            )}
                           </div>
+                          
+                          {(task.recalibratedCount || (activeHorizon === 'backlog' && task.horizon === 'weekly')) && (
+                            <div className="flex flex-wrap items-center gap-2 mt-1.5 mb-1.5">
+                              {activeHorizon === 'backlog' && task.horizon === 'weekly' && (
+                                <span className="text-[8px] font-black uppercase tracking-widest bg-secondary/20 text-secondary border border-secondary/30 px-1.5 py-0.5 rounded">
+                                  WEEKLY
+                                </span>
+                              )}
+                              {task.recalibratedCount ? (
+                                <span className="inline-flex items-center gap-0.5 text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 px-1 py-0.5 rounded">
+                                  <Zap size={8} /> x{task.recalibratedCount}
+                                </span>
+                              ) : null}
+                            </div>
+                          )}
                           
                           {(task.plannedDate || (isPro && task.deadline)) && (
                             <div className="flex flex-wrap items-center gap-3 mt-1.5">
