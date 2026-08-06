@@ -184,11 +184,20 @@ const OrbitScheduler = () => {
     const task = allTasks.find(t => t.id === id);
     if (!task) return;
     const newCount = (task.recalibratedCount || 0) + 1;
+    const newRecalibrationDates = [...(task.recalibrationDates || []), today];
     
     if (milestoneTask) {
-      await updateMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId, id, { plannedDate: today, recalibratedCount: newCount });
+      await updateMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId, id, { 
+        plannedDate: today, 
+        recalibratedCount: newCount,
+        recalibrationDates: newRecalibrationDates 
+      });
     } else {
-      await updateTask(id, { plannedDate: today, recalibratedCount: newCount });
+      await updateTask(id, { 
+        plannedDate: today, 
+        recalibratedCount: newCount,
+        recalibrationDates: newRecalibrationDates 
+      });
     }
     SoundManager.playPop();
   };

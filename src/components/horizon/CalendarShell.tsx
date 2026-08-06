@@ -48,6 +48,7 @@ const CalendarShell = () => {
   const [horizon, setHorizon] = useState<Horizon>('daily');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   // Consolidate all tasks (standalone + milestone tasks)
   const allTasks = useMemo(() => {
@@ -312,16 +313,28 @@ const CalendarShell = () => {
                     selectedDayTasks.sort((a,b) => (a.time || '').localeCompare(b.time || '')).map(task => {
                       const status = getTaskStatus(task);
                       return (
-                        <div key={task.id} className="p-4 rounded-2xl bg-surface-high border border-outline-variant flex gap-4 items-start group hover:border-primary/30 transition-colors">
+                        <div 
+                          key={task.id} 
+                          onClick={() => setSelectedTask(task)}
+                          className="p-4 rounded-2xl bg-surface-high border border-outline-variant flex gap-4 items-start group hover:border-primary/50 cursor-pointer transition-colors"
+                        >
                           <div className="text-[10px] font-mono text-primary font-bold pt-0.5">{task.time || '00:00'}</div>
                           <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-start gap-2 mb-1">
                               <div className={`text-xs font-bold truncate ${task.completed ? 'line-through text-on-surface-variant' : 'text-white'}`}>
                                 {task.title}
                                 {task.recalibratedCount ? (
-                                  <span className="ml-2 inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 px-1.5 py-0.5 rounded align-middle">
-                                    <Zap size={8} /> Recalibrated x{task.recalibratedCount}
-                                  </span>
+                                  <div className="flex flex-wrap items-center gap-2 mt-1">
+                                    <span className="inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 px-1.5 py-0.5 rounded align-middle">
+                                      <Zap size={8} /> Recalibrated x{task.recalibratedCount}
+                                    </span>
+                                    {task.createdAt && (
+                                      <span className="text-[8px] font-black uppercase tracking-widest text-on-surface-variant flex items-center gap-1">
+                                        <CalendarIcon size={8} />
+                                        Created: {new Date(task.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                      </span>
+                                    )}
+                                  </div>
                                 ) : null}
                               </div>
                               {renderStatusIndicator(status)}
@@ -373,22 +386,25 @@ const CalendarShell = () => {
                     {week.tasks.map(task => {
                       const status = getTaskStatus(task);
                       return (
-                        <div key={task.id} className={`p-3 rounded-xl text-[10px] font-bold border flex flex-col gap-2 ${task.completed ? 'bg-success/10 border-success/20 text-success/70' : 'bg-surface-high border-outline-variant text-white'}`}>
+                        <div 
+                          key={task.id} 
+                          onClick={() => setSelectedTask(task)}
+                          className={`p-3 rounded-xl text-[10px] font-bold border flex flex-col gap-2 cursor-pointer hover:border-primary/50 transition-colors ${task.completed ? 'bg-success/10 border-success/20 text-success/70' : 'bg-surface-high border-outline-variant text-white'}`}
+                        >
                           <div className="truncate mb-1 text-white">
                             {task.title}
                           </div>
-                          {(task.recalibratedCount || task.horizon === 'weekly') ? (
+                          {task.recalibratedCount ? (
                             <div className="flex flex-wrap items-center gap-2 mb-1">
-                              {task.horizon === 'weekly' && (
-                                <span className="inline-flex items-center text-[8px] font-black uppercase tracking-widest bg-secondary/20 text-secondary border border-secondary/30 px-1.5 py-0.5 rounded">
-                                  WEEKLY
+                              <span className="inline-flex items-center gap-0.5 text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 px-1 py-0.5 rounded">
+                                <Zap size={8} /> x{task.recalibratedCount}
+                              </span>
+                              {task.createdAt && (
+                                <span className="text-[8px] font-black uppercase tracking-widest text-on-surface-variant flex items-center gap-1">
+                                  <CalendarIcon size={8} />
+                                  {new Date(task.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                 </span>
                               )}
-                              {task.recalibratedCount ? (
-                                <span className="inline-flex items-center gap-0.5 text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 px-1 py-0.5 rounded">
-                                  <Zap size={8} /> x{task.recalibratedCount}
-                                </span>
-                              ) : null}
                             </div>
                           ) : null}
                           <div className="flex justify-between items-center opacity-80">
@@ -605,6 +621,79 @@ const CalendarShell = () => {
             </div>
 
             <InternshipScheduler />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {selectedTask && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
+            onClick={() => setSelectedTask(null)}
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-surface-high border border-outline-variant rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-primary mb-2 flex items-center gap-2">
+                    <Target size={12} /> Mission Brief
+                  </div>
+                  <h3 className="text-xl font-bold text-white leading-tight">{selectedTask.title}</h3>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 bg-background/50 p-4 rounded-2xl border border-outline-variant/30">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant">Created On</span>
+                    <span className="text-sm font-bold text-white flex items-center gap-2">
+                      <CalendarIcon size={14} className="text-primary" />
+                      {selectedTask.createdAt ? new Date(selectedTask.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown Origin'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 bg-background/50 p-4 rounded-2xl border border-outline-variant/30">
+                  <div className="flex flex-col gap-1 w-full">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
+                      Recalibration History
+                      {selectedTask.recalibratedCount ? (
+                        <span className="bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded ml-auto text-[8px]">
+                          x{selectedTask.recalibratedCount}
+                        </span>
+                      ) : null}
+                    </span>
+                    <div className="text-xs font-bold text-white mt-2 space-y-2">
+                      {selectedTask.recalibrationDates && selectedTask.recalibrationDates.length > 0 ? (
+                        selectedTask.recalibrationDates.map((date, idx) => (
+                          <div key={idx} className="flex items-center gap-2 text-on-surface-variant bg-surface-high p-2 rounded-xl border border-outline-variant/50">
+                            <Zap size={10} className="text-amber-500" />
+                            {new Date(date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                          </div>
+                        ))
+                      ) : (
+                        <span className="text-on-surface-variant italic">No recalibrations recorded.</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                className="w-full p-4 rounded-2xl bg-primary text-on-primary font-black uppercase tracking-widest text-xs hover:bg-primary/90 transition-colors"
+                onClick={() => setSelectedTask(null)}
+              >
+                Acknowledge
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

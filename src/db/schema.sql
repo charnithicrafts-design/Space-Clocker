@@ -74,7 +74,9 @@ CREATE TABLE IF NOT EXISTS tasks (
   planned_date TEXT,
   is_void BOOLEAN DEFAULT false,
   completed_at TEXT,
-  recalibrated_count INTEGER DEFAULT 0
+  recalibrated_count INTEGER DEFAULT 0,
+  created_at TEXT,
+  recalibration_dates TEXT DEFAULT '[]'
 );
 
 -- Support Collections

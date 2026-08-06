@@ -94,5 +94,16 @@ export const MIGRATIONS: Migration[] = [
         ALTER TABLE tasks ADD COLUMN IF NOT EXISTS recalibrated_count INTEGER DEFAULT 0;
       `);
     }
+  },
+  {
+    version: 7,
+    name: 'add_recalibration_dates_and_created_at',
+    run: async (tx) => {
+      await tx.exec(`
+        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS created_at TEXT;
+        ALTER TABLE tasks ADD COLUMN IF NOT EXISTS recalibration_dates TEXT DEFAULT '[]';
+        UPDATE tasks SET created_at = planned_date WHERE created_at IS NULL;
+      `);
+    }
   }
 ];

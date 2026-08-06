@@ -24,6 +24,8 @@ export interface Task {
   ambitionId?: string;
   milestoneId?: string;
   recalibratedCount?: number;
+  createdAt?: string;
+  recalibrationDates?: string[];
 }
 
 export interface Milestone {
@@ -521,6 +523,8 @@ export const useTrackStore = create<TrackStore>()(
       if (updates.deadline !== undefined) await db.query(`UPDATE tasks SET deadline = $1 WHERE id = $2`, [updates.deadline, taskId]);
       if (updates.weightage !== undefined) await db.query(`UPDATE tasks SET weightage = $1 WHERE id = $2`, [updates.weightage, taskId]);
       if (updates.plannedDate !== undefined) await db.query(`UPDATE tasks SET planned_date = $1 WHERE id = $2`, [updates.plannedDate, taskId]);
+      if (updates.recalibratedCount !== undefined) await db.query(`UPDATE tasks SET recalibrated_count = $1 WHERE id = $2`, [updates.recalibratedCount, taskId]);
+      if (updates.recalibrationDates !== undefined) await db.query(`UPDATE tasks SET recalibration_dates = $1 WHERE id = $2`, [JSON.stringify(updates.recalibrationDates), taskId]);
       
       set((state) => ({
         tasks: state.tasks.map((t) => t.id === taskId ? { ...t, ...updates } : t)
@@ -860,6 +864,8 @@ export const useTrackStore = create<TrackStore>()(
       if (updates.weightage !== undefined) await db.query(`UPDATE tasks SET weightage = $1 WHERE id = $2`, [updates.weightage, taskId]);
       if (updates.horizon !== undefined) await db.query(`UPDATE tasks SET horizon = $1 WHERE id = $2`, [updates.horizon, taskId]);
       if (updates.plannedDate !== undefined) await db.query(`UPDATE tasks SET planned_date = $1 WHERE id = $2`, [updates.plannedDate, taskId]);
+      if (updates.recalibratedCount !== undefined) await db.query(`UPDATE tasks SET recalibrated_count = $1 WHERE id = $2`, [updates.recalibratedCount, taskId]);
+      if (updates.recalibrationDates !== undefined) await db.query(`UPDATE tasks SET recalibration_dates = $1 WHERE id = $2`, [JSON.stringify(updates.recalibrationDates), taskId]);
 
       set((state) => ({
         ambitions: state.ambitions.map((a) => a.id === ambitionId ? { ...a, milestones: a.milestones.map((m) => m.id === milestoneId ? { ...m, tasks: m.tasks.map((t) => t.id === taskId ? { ...t, ...updates } : t) } : m) } : a)
@@ -1278,7 +1284,9 @@ export const useTrackStore = create<TrackStore>()(
           completedAt: t.completed_at,
           ambitionId: t.ambition_id,
           milestoneId: t.milestone_id,
-          recalibratedCount: t.recalibrated_count || 0
+          recalibratedCount: t.recalibrated_count || 0,
+          createdAt: t.created_at,
+          recalibrationDates: t.recalibration_dates ? (typeof t.recalibration_dates === 'string' ? JSON.parse(t.recalibration_dates) : t.recalibration_dates) : []
         };
         
         if (t.milestone_id) {
