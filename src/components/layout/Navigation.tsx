@@ -59,7 +59,14 @@ const Navigation = () => {
   const { syncStatus, oracleConfig } = useTrackStore();
   const [isHubOpen, setIsHubOpen] = useState(false);
 
-  if (['/about', '/identity', '/landing'].includes(pathname) || pathname.startsWith('/docs')) return null;
+  const KNOWN_APP_ROUTES = [
+    '/', '/nebula', '/orbit', '/timeline', '/horizon', 
+    '/skills', '/oracle', '/transmission', '/settings', 
+    '/profile', '/identity'
+  ];
+  const isKnownAppRoute = KNOWN_APP_ROUTES.some(p => pathname === p || pathname.startsWith(p + '/'));
+
+  if (['/about', '/identity', '/landing'].includes(pathname) || pathname.startsWith('/docs') || !isKnownAppRoute) return null;
   
   const tacticalLinks = [
     { to: '/', icon: LayoutDashboard, label: 'Momentum', color: 'text-primary' },

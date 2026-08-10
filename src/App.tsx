@@ -50,7 +50,19 @@ const AppContent = () => {
   const startupInitiated = useRef(false);
 
   const isMarketingDomain = window.location.hostname === 'spaceclocker.com' || window.location.hostname === 'www.spaceclocker.com';
-  const isPublicRoute = ['/about', '/landing', '/docs'].some(p => pathname.startsWith(p)) || (isMarketingDomain && pathname === '/');
+  
+  const KNOWN_APP_ROUTES = [
+    '/', '/nebula', '/orbit', '/timeline', '/horizon', 
+    '/skills', '/oracle', '/transmission', '/settings', 
+    '/profile', '/identity'
+  ];
+  
+  const isKnownAppRoute = KNOWN_APP_ROUTES.some(p => pathname === p || pathname.startsWith(p + '/'));
+  
+  const isPublicRoute = 
+    ['/about', '/landing', '/docs'].some(p => pathname.startsWith(p)) || 
+    (isMarketingDomain && pathname === '/') || 
+    !isKnownAppRoute;
 
   useEffect(() => {
     if (isPublicRoute) {
