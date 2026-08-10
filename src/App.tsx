@@ -72,6 +72,9 @@ const AppContent = () => {
 
     if (startupInitiated.current) return;
     startupInitiated.current = true;
+    
+    // Explicitly reset the status to loading when transitioning back to an app route
+    setDbStatus('loading');
 
     const startup = async () => {
       try {
@@ -164,7 +167,10 @@ const AppContent = () => {
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   const isSecure = window.isSecureContext;
 
-  if (dbStatus === 'loading') {
+  // STRICT BARRIER: Ensure we show the loading screen if we need the DB and it hasn't finished initializing
+  const isDbLoading = !isPublicRoute && (!startupInitiated.current || dbStatus === 'loading');
+
+  if (isDbLoading) {
     return (
       <div style={{ 
         height: '100vh', 
