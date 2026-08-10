@@ -186,15 +186,27 @@ const OrbitScheduler = () => {
     const newCount = (task.recalibratedCount || 0) + 1;
     const newRecalibrationDates = [...(task.recalibrationDates || []), today];
     
+    let newDeadline = task.deadline;
+    if (task.deadline) {
+      const dt = new Date(task.deadline);
+      if (dt.getTime() < Date.now()) {
+        const todayEnd = new Date();
+        todayEnd.setHours(23, 59, 59, 999);
+        newDeadline = format(todayEnd, "yyyy-MM-dd'T'HH:mm");
+      }
+    }
+    
     if (milestoneTask) {
       await updateMilestoneTask(milestoneTask.ambitionId, milestoneTask.milestoneId, id, { 
         plannedDate: today, 
+        deadline: newDeadline,
         recalibratedCount: newCount,
         recalibrationDates: newRecalibrationDates 
       });
     } else {
       await updateTask(id, { 
         plannedDate: today, 
+        deadline: newDeadline,
         recalibratedCount: newCount,
         recalibrationDates: newRecalibrationDates 
       });
@@ -499,10 +511,10 @@ const OrbitScheduler = () => {
                 return (
                   <motion.div 
                     key={task.id}
-                    layout
+                    layout="position"
                     initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0, x: isOrbitalDecay ? 10 : 0, rotate: isOrbitalDecay ? -0.5 : 0 }}
-                    className={`glass-panel border p-5 rounded-3xl flex flex-col gap-4 transition-all group relative hover:z-30 focus-within:z-30 ${task.completed ? 'opacity-50 grayscale-[0.8]' : 'hover:border-primary/50'} ${task.isVoid ? 'border-error/30 bg-error/5' : 'border-outline-variant'} ${hasError ? 'border-error/50 ring-1 ring-error/20 shadow-[0_0_15px_rgba(var(--color-error-rgb),0.1)]' : ''} ${isDeadlineCritical && !isOrbitalDecay ? 'border-error shadow-[0_0_15px_rgba(var(--color-error-rgb),0.2)]' : ''} ${isOrbitalDecay ? 'grayscale-[0.6] opacity-80 border-outline-variant/30 bg-surface-highest/10' : ''}`}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`glass-panel border p-5 rounded-3xl flex flex-col gap-4 transition-all duration-300 group relative hover:z-30 focus-within:z-30 ${task.completed ? 'opacity-50 grayscale-[0.8]' : 'hover:border-primary/50'} ${task.isVoid ? 'border-error/30 bg-error/5' : 'border-outline-variant'} ${hasError ? 'border-error/50 ring-1 ring-error/20 shadow-[0_0_15px_rgba(var(--color-error-rgb),0.1)]' : ''} ${isDeadlineCritical && !isOrbitalDecay ? 'border-error shadow-[0_0_15px_rgba(var(--color-error-rgb),0.2)]' : ''} ${isOrbitalDecay ? 'grayscale-[0.6] opacity-80 border-outline-variant/30 bg-surface-highest/10 translate-x-2 -rotate-1' : 'translate-x-0 rotate-0'}`}
                   >
                     {editingTaskId === task.id ? (
                       <form 
@@ -517,7 +529,6 @@ const OrbitScheduler = () => {
                             className="w-full bg-surface-low px-3 py-2 rounded-xl border border-outline-variant focus:border-primary focus:outline-none text-xs text-white"
                             value={editTitle}
                             onChange={(e) => setEditTitle(e.target.value)}
-                            onBlur={() => handleSaveTaskEdit()}
                             onKeyDown={(e) => e.key === 'Escape' && setEditingTaskId(null)}
                           />
                         </div>
@@ -532,7 +543,6 @@ const OrbitScheduler = () => {
                                 className="bg-transparent text-xs font-mono text-white focus:outline-none w-full" 
                                 value={editTime} 
                                 onChange={e => setEditTime(e.target.value)} 
-                                onBlur={() => handleSaveTaskEdit()} 
                               />
                             </div>
                           </div>
@@ -545,7 +555,6 @@ const OrbitScheduler = () => {
                                 className="bg-transparent text-xs font-mono text-white focus:outline-none w-full" 
                                 value={editEndTime} 
                                 onChange={e => setEditEndTime(e.target.value)} 
-                                onBlur={() => handleSaveTaskEdit()} 
                               />
                             </div>
                           </div>
@@ -561,7 +570,6 @@ const OrbitScheduler = () => {
                                 className="bg-transparent text-xs font-mono text-white focus:outline-none w-full uppercase" 
                                 value={editDate} 
                                 onChange={e => setEditDate(e.target.value)} 
-                                onBlur={() => handleSaveTaskEdit()} 
                               />
                             </div>
                           </div>
@@ -574,7 +582,6 @@ const OrbitScheduler = () => {
                                 className="bg-transparent text-xs font-mono text-white focus:outline-none w-full" 
                                 value={editDeadline} 
                                 onChange={e => setEditDeadline(e.target.value)} 
-                                onBlur={() => handleSaveTaskEdit()} 
                               />
                             </div>
                           </div>
