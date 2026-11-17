@@ -1,24 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navigation from './components/layout/Navigation';
-import MomentumEngine from './components/dashboard/MomentumEngine';
-import NebulaMap from './components/nebula/NebulaMap';
-import OrbitScheduler from './components/orbit/OrbitScheduler';
-import CalendarShell from './components/horizon/CalendarShell';
-import TrajectoryHorizon from './components/horizon/TrajectoryHorizon';
-import SkillsMatrix from './components/skills/SkillsMatrix';
-import { OracleDashboard } from './components/oracle/OracleDashboard';
-import SettingsDashboard from './components/settings/SettingsDashboard';
-import AboutPage from './components/about/AboutPage';
-import ProfileDashboard from './components/profile/ProfileDashboard';
-import TransmissionDashboard from './components/transmission/TransmissionDashboard';
-import SharedTransmission from './components/transmission/SharedTransmission';
 import SyncConflictModal from './components/reflection/SyncConflictModal';
 import OnboardingTour from './components/layout/OnboardingTour';
-import IdentitySelectionMatrix from './components/onboarding/IdentitySelectionMatrix';
-import LandingPage from './components/marketing/LandingPage';
-import DocsHub from './components/docs/DocsHub';
-import NotFoundPage from './components/common/NotFoundPage';
 import UpdateModal from './components/layout/UpdateModal';
 import CriticalUpdateBanner from './components/layout/CriticalUpdateBanner';
 import { VoidEventHorizon } from './components/void-protocol/VoidEventHorizon';
@@ -28,8 +12,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Award } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { initDb } from './db/init';
-import { migrateFromZustand } from './db/migrate';
 import { purgeDatabase } from './db/client';
+
+// Lazy-loaded screen modules for code-splitting and rapid initial load
+const MomentumEngine = React.lazy(() => import('./components/dashboard/MomentumEngine'));
+const NebulaMap = React.lazy(() => import('./components/nebula/NebulaMap'));
+const OrbitScheduler = React.lazy(() => import('./components/orbit/OrbitScheduler'));
+const CalendarShell = React.lazy(() => import('./components/horizon/CalendarShell'));
+const TrajectoryHorizon = React.lazy(() => import('./components/horizon/TrajectoryHorizon'));
+const SkillsMatrix = React.lazy(() => import('./components/skills/SkillsMatrix'));
+const OracleDashboard = React.lazy(() => import('./components/oracle/OracleDashboard').then(m => ({ default: m.OracleDashboard })));
+const SettingsDashboard = React.lazy(() => import('./components/settings/SettingsDashboard'));
+const ProfileDashboard = React.lazy(() => import('./components/profile/ProfileDashboard'));
+const TransmissionDashboard = React.lazy(() => import('./components/transmission/TransmissionDashboard'));
+const SharedTransmission = React.lazy(() => import('./components/transmission/SharedTransmission'));
+const IdentitySelectionMatrix = React.lazy(() => import('./components/onboarding/IdentitySelectionMatrix'));
+const LandingPage = React.lazy(() => import('./components/marketing/LandingPage'));
+const DocsHub = React.lazy(() => import('./components/docs/DocsHub'));
+const NotFoundPage = React.lazy(() => import('./components/common/NotFoundPage'));
+
+const ScreenLoader = () => (
+  <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4 p-8">
+    <div className="w-8 h-8 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-on-surface-variant animate-pulse">
+      Calibrating Sector...
+    </span>
+  </div>
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -81,6 +90,7 @@ const AppContent = () => {
         console.log('[System] Initiating neural link...');
         await initDb();
         console.log('[System] Database online.');
+        const { migrateFromZustand } = await import('./db/migrate');
         await migrateFromZustand();
         console.log('[System] Neural pathways synchronized.');
         await initialize();
@@ -367,25 +377,27 @@ const AppContent = () => {
       <SupernovaEffect />
 
       <main className="pb-24 lg:pb-0">
-        <Routes>
-          <Route path="/" element={<MomentumEngine />} />
-          <Route path="/nebula" element={<NebulaMap />} />
-          <Route path="/orbit" element={<OrbitScheduler />} />
-          <Route path="/timeline" element={<CalendarShell />} />
-          <Route path="/horizon" element={<TrajectoryHorizon />} />
-          <Route path="/skills" element={<SkillsMatrix />} />
-          <Route path="/oracle" element={<OracleDashboard onClose={() => window.history.back()} />} />
-          <Route path="/transmission" element={<TransmissionDashboard />} />
-          <Route path="/transmission/share" element={<SharedTransmission />} />
-          <Route path="/settings" element={<SettingsDashboard />} />
-          <Route path="/profile" element={<ProfileDashboard />} />
-          <Route path="/docs" element={<DocsHub />} />
-          <Route path="/docs/*" element={<DocsHub />} />
-          <Route path="/identity" element={<IdentitySelectionMatrix />} />
-          <Route path="/about" element={<LandingPage />} />
-          <Route path="/landing" element={<LandingPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <Suspense fallback={<ScreenLoader />}>
+          <Routes>
+            <Route path="/" element={<MomentumEngine />} />
+            <Route path="/nebula" element={<NebulaMap />} />
+            <Route path="/orbit" element={<OrbitScheduler />} />
+            <Route path="/timeline" element={<CalendarShell />} />
+            <Route path="/horizon" element={<TrajectoryHorizon />} />
+            <Route path="/skills" element={<SkillsMatrix />} />
+            <Route path="/oracle" element={<OracleDashboard onClose={() => window.history.back()} />} />
+            <Route path="/transmission" element={<TransmissionDashboard />} />
+            <Route path="/transmission/share" element={<SharedTransmission />} />
+            <Route path="/settings" element={<SettingsDashboard />} />
+            <Route path="/profile" element={<ProfileDashboard />} />
+            <Route path="/docs" element={<DocsHub />} />
+            <Route path="/docs/*" element={<DocsHub />} />
+            <Route path="/identity" element={<IdentitySelectionMatrix />} />
+            <Route path="/about" element={<LandingPage />} />
+            <Route path="/landing" element={<LandingPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
       </main>
 
       <SyncConflictModal 

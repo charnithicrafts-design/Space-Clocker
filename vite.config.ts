@@ -64,6 +64,8 @@ export default defineConfig(({mode}) => {
             'react-vendor': ['react', 'react-dom', 'react-router-dom'],
             'ui-vendor': ['framer-motion', 'motion', 'lucide-react', 'clsx', 'tailwind-merge'],
             'db-vendor': ['@electric-sql/pglite'],
+            'charts-vendor': ['recharts'],
+            'date-vendor': ['date-fns'],
           },
         },
       },
