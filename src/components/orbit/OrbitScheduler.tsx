@@ -370,54 +370,62 @@ const OrbitScheduler = () => {
                 </div>
               </section>
             ) : (
-              <section className="glass-panel border border-outline-variant p-6 rounded-3xl space-y-4">
+              <section className="glass-panel border border-outline-variant p-4 sm:p-6 rounded-2xl sm:rounded-3xl space-y-3 sm:space-y-4">
                 <h3 className="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em] flex items-center gap-2">
                   <Plus size={14} className="text-primary" />
                   Initialize New {activeHorizon === 'weekly' ? 'Weekly Milestone' : 'Daily Parameter'}
                 </h3>
-                <form onSubmit={handleSubmit} className="flex flex-wrap gap-3">
+                <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-2.5 sm:gap-3 items-stretch md:items-center">
                   <input 
-                    className="flex-1 min-w-[300px] bg-surface-high px-6 py-4 rounded-2xl border border-outline-variant focus:border-primary focus:outline-none text-sm transition-all"
+                    className="w-full md:flex-1 min-w-0 bg-surface-high px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl border border-outline-variant focus:border-primary focus:outline-none text-xs sm:text-sm transition-all"
                     placeholder={activeHorizon === 'weekly' ? "Define a weekly resonance milestone..." : "Define the next mission parameter..."}
                     value={newTask}
                     onChange={(e) => setNewTask(e.target.value)}
                   />
-                  <div className="flex gap-2">
-                    <div className="flex flex-wrap items-center gap-4">
-                      <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
-                        <Clock size={14} className="text-on-surface-variant" />
+                  <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                      <div className="bg-surface-high border border-outline-variant py-1.5 px-2.5 sm:px-3 rounded-xl flex items-center gap-1.5" title="Mission Entry Time">
+                        <Clock size={13} className="text-on-surface-variant shrink-0" />
                         <input 
                           type="time"
-                          className="bg-transparent text-xs font-mono focus:outline-none"
+                          aria-label="Mission Entry Time"
+                          className="bg-transparent text-[11px] sm:text-xs font-mono focus:outline-none text-white cursor-pointer"
                           value={newTime}
                           onChange={(e) => setNewTime(e.target.value)}
                         />
                       </div>
                       
-                      <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
-                        <Timer size={14} className="text-on-surface-variant" />
+                      <div className="bg-surface-high border border-outline-variant py-1.5 px-2.5 sm:px-3 rounded-xl flex items-center gap-1.5" title="Mission Descent Time">
+                        <Timer size={13} className="text-on-surface-variant shrink-0" />
                         <input 
                           type="time"
-                          className="bg-transparent text-xs font-mono focus:outline-none"
+                          aria-label="Mission Descent Time"
+                          className="bg-transparent text-[11px] sm:text-xs font-mono focus:outline-none text-white cursor-pointer"
                           value={newEndTime}
                           onChange={(e) => setNewEndTime(e.target.value)}
                         />
                       </div>
-                      <div className="bg-surface-high border border-outline-variant p-2 rounded-2xl flex items-center gap-2 px-4">
-                        <AlertTriangle size={14} className="text-error" />
+                      <div className="bg-surface-high border border-outline-variant py-1.5 px-2.5 sm:px-3 rounded-xl flex items-center gap-1.5" title="Mission Deadline">
+                        <AlertTriangle size={13} className="text-error shrink-0" />
                         <input 
                           type="datetime-local"
-                          className="bg-transparent text-[10px] font-mono focus:outline-none w-32"
+                          aria-label="Mission Deadline"
+                          className="bg-transparent text-[10px] sm:text-[11px] font-mono focus:outline-none text-white cursor-pointer w-28 sm:w-32"
                           value={newDeadline}
                           onChange={(e) => setNewDeadline(e.target.value)}
                         />
                       </div>
                     </div>
+
+                    <button 
+                      type="submit" 
+                      aria-label="Add task" 
+                      className="px-4 py-2 sm:px-6 sm:py-2.5 bg-primary-container text-on-primary rounded-xl sm:rounded-2xl text-xs font-black uppercase tracking-widest hover:shadow-[0_0_20px_rgba(var(--color-primary-container-rgb),0.4)] transition-all flex items-center justify-center gap-1.5 shrink-0 ml-auto sm:ml-0"
+                    >
+                      <Plus size={16} />
+                      <span>Uplink</span>
+                    </button>
                   </div>
-                  <button type="submit" aria-label="Add task" className="px-8 py-4 bg-primary-container text-on-primary rounded-2xl font-black uppercase tracking-widest hover:shadow-[0_0_25px_rgba(var(--color-primary-container-rgb),0.4)] transition-all flex items-center gap-2">
-                    <Plus size={20} />
-                    Uplink
-                  </button>
                 </form>
               </section>
             )}
