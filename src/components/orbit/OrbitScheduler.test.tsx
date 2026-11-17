@@ -193,7 +193,11 @@ describe('OrbitScheduler', () => {
     // Act
     await act(async () => {
       fireEvent.change(timeInput, { target: { value: '09:00' } });
-      fireEvent.blur(timeInput);
+    });
+
+    const saveButton = screen.getByRole('button', { name: /save/i });
+    await act(async () => {
+      fireEvent.click(saveButton);
     });
 
     // Assert
