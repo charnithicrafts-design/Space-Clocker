@@ -4,10 +4,38 @@ import { useTrackStore, Skill } from '../../store/useTrackStore';
 import { Brain, Target, Info, ChevronRight, Plus, Trash2, Edit3, Check, X, User, Globe } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 
+const formatSkillLabel = (name: string): string[] => {
+  if (name.includes(' & ')) {
+    return name.split(' & ');
+  }
+  if (name.length <= 13) {
+    return [name];
+  }
+  const words = name.split(' ');
+  if (words.length === 1) return [name];
+
+  const lines: string[] = [];
+  let currentLine = '';
+  for (const word of words) {
+    if (!currentLine) {
+      currentLine = word;
+    } else if ((currentLine + ' ' + word).length <= 14) {
+      currentLine += ' ' + word;
+    } else {
+      lines.push(currentLine);
+      currentLine = word;
+    }
+  }
+  if (currentLine) lines.push(currentLine);
+  return lines;
+};
+
 const RadarChart = ({ skills, showTarget }: { skills: Skill[], showTarget: boolean }) => {
-  const size = 400;
-  const center = size / 2;
-  const radius = size * 0.3;
+  const width = 520;
+  const height = 440;
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const radius = 115;
   
   // Radar chart needs at least 3 points to look like a polygon
   const displaySkills = skills.length >= 3 ? skills : [
@@ -28,8 +56,8 @@ const RadarChart = ({ skills, showTarget }: { skills: Skill[], showTarget: boole
     const angle = index * angleStep - Math.PI / 2;
     const r = (value / 100) * radius;
     return {
-      x: center + r * Math.cos(angle),
-      y: center + r * Math.sin(angle),
+      x: centerX + r * Math.cos(angle),
+      y: centerY + r * Math.sin(angle),
     };
   };
 
@@ -46,14 +74,17 @@ const RadarChart = ({ skills, showTarget }: { skills: Skill[], showTarget: boole
     }).join(' '), [displaySkills]);
 
   return (
-    <div className="relative flex justify-center items-center">
-      <svg width={size} height={size} className="drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+    <div className="relative flex justify-center items-center w-full px-2 overflow-visible">
+      <svg 
+        viewBox={`0 0 ${width} ${height}`} 
+        className="w-full max-w-[460px] md:max-w-[500px] h-auto overflow-visible drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+      >
         {/* Grid Circles */}
         {[20, 40, 60, 80, 100].map((tick) => (
           <circle
             key={tick}
-            cx={center}
-            cy={center}
+            cx={centerX}
+            cy={centerY}
             r={(tick / 100) * radius}
             fill="none"
             stroke="white"
@@ -68,8 +99,8 @@ const RadarChart = ({ skills, showTarget }: { skills: Skill[], showTarget: boole
           return (
             <line
               key={i}
-              x1={center}
-              y1={center}
+              x1={centerX}
+              y1={centerY}
               x2={x}
               y2={y}
               stroke="white"
@@ -81,16 +112,23 @@ const RadarChart = ({ skills, showTarget }: { skills: Skill[], showTarget: boole
 
         {/* Labels */}
         {displaySkills.map((s, i) => {
-          const { x, y } = getCoordinates(120, i);
-          const nameLines = s.name.split(' & ');
+          const { x, y } = getCoordinates(118, i);
+          const nameLines = formatSkillLabel(s.name);
           
           // Dynamic text anchor based on position
           let textAnchor = "middle";
-          if (x < center - 20) textAnchor = "end";
-          else if (x > center + 20) textAnchor = "start";
+          if (x < centerX - 25) textAnchor = "end";
+          else if (x > centerX + 25) textAnchor = "start";
 
-          // Vertical adjustment
-          const dy = y < center - 20 ? -5 : y > center + 20 ? 15 : 5;
+          // Vertical adjustment considering line count
+          let dy = 4;
+          if (y < centerY - 25) {
+            dy = -(nameLines.length - 1) * 11 - 6;
+          } else if (y > centerY + 25) {
+            dy = 14;
+          } else {
+            dy = -((nameLines.length - 1) * 11) / 2 + 4;
+          }
 
           return (
             <text
@@ -98,10 +136,10 @@ const RadarChart = ({ skills, showTarget }: { skills: Skill[], showTarget: boole
               x={x}
               y={y + dy}
               textAnchor={textAnchor}
-              className="fill-on-surface-variant text-[10px] font-black tracking-tight uppercase"
+              className="fill-on-surface-variant text-[9px] sm:text-[10px] font-black tracking-tight uppercase"
             >
               {nameLines.map((line: string, idx: number) => (
-                <tspan key={idx} x={x} dy={idx === 0 ? 0 : 10}>{line}</tspan>
+                <tspan key={idx} x={x} dy={idx === 0 ? 0 : 11}>{line}</tspan>
               ))}
             </text>
           );
@@ -454,7 +492,7 @@ const SkillsMatrix = () => {
       </header>
 
       {/* Category Navigation */}
-      <div className="flex flex-wrap gap-2 p-1 bg-surface-high/50 rounded-2xl border border-outline-variant w-fit">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2 p-1 bg-surface-high/50 rounded-2xl border border-outline-variant w-fit max-w-full">
         {categories.map((cat) => {
           const isActive = selectedCategoryId === cat.id;
           const Icon = cat.icon;
@@ -462,7 +500,7 @@ const SkillsMatrix = () => {
             <button
               key={cat.id}
               onClick={() => { setSelectedCategoryId(cat.id); setIsAdding(false); SoundManager.playPop(); }}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all relative ${isActive ? 'text-white' : 'text-on-surface-variant hover:text-white'}`}
+              className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all relative ${isActive ? 'text-white' : 'text-on-surface-variant hover:text-white'}`}
             >
               {isActive && (
                 <motion.div
