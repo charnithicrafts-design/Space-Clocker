@@ -39,7 +39,7 @@ const NavLink: React.FC<NavLinkProps> = ({ to, icon: Icon, label, active, color 
     onClick={() => SoundManager.playPop()}
     aria-current={active ? 'page' : undefined}
     aria-label={`${label} sector`}
-    className={`flex items-center gap-3 h-11 px-3 rounded-xl transition-all relative group focus-visible:ring-2 focus-visible:ring-primary outline-none touch-target-compact ${active ? 'bg-surface-high text-white shadow-lg' : 'text-on-surface-variant hover:text-white hover:bg-surface-low'}`}
+    className={`w-full flex items-center gap-3 h-11 px-3 rounded-xl transition-all relative group focus-visible:ring-2 focus-visible:ring-primary outline-none touch-target-compact ${active ? 'bg-surface-high text-white shadow-lg' : 'text-on-surface-variant hover:text-white hover:bg-surface-low'}`}
   >
     {active && (
       <motion.div 
@@ -147,47 +147,18 @@ const Navigation = () => {
 
       {/* Desktop Nav */}
       <nav className="hidden lg:flex fixed top-6 left-6 w-72 h-[calc(100vh-48px)] glass-panel rounded-3xl border border-outline-variant flex-col p-6 gap-8 z-50 overflow-hidden shadow-2xl" aria-label="Desktop navigation">
-        <div className="flex items-center justify-between px-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30" aria-hidden="true">
-              <Box className="text-primary" size={24} />
-            </div>
-            <h1 className="type-title-3 font-display font-black text-white uppercase tracking-tighter leading-none">
-              Space<br/><span className="text-primary">Clocker</span>
-            </h1>
+        <div className="flex items-center gap-3 px-3">
+          <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30" aria-hidden="true">
+            <Box className="text-primary" size={24} />
           </div>
-
-          <button
-            type="button"
-            onClick={() => {
-              SoundManager.playPop();
-              toggleVocabularyMode();
-            }}
-            aria-label={`Switch to ${isPeopleMode ? 'Original' : 'People'} Mode`}
-            title={`Active: ${isPeopleMode ? 'People Mode' : 'Original Mode'} - Click to switch`}
-            className={`touch-target-compact px-2.5 py-1 rounded-xl border flex items-center gap-1.5 transition-all text-xs font-mono font-bold ${
-              isPeopleMode 
-                ? 'bg-secondary/15 border-secondary/40 text-secondary hover:bg-secondary/25' 
-                : 'bg-primary/15 border-primary/40 text-primary hover:bg-primary/25'
-            }`}
-          >
-            {isPeopleMode ? (
-              <>
-                <Users size={13} className="shrink-0" />
-                <span className="type-overline normal-case tracking-normal">People</span>
-              </>
-            ) : (
-              <>
-                <Rocket size={13} className="shrink-0" />
-                <span className="type-overline normal-case tracking-normal">Original</span>
-              </>
-            )}
-          </button>
+          <h1 className="type-title-3 font-display font-black text-white uppercase tracking-tighter leading-none">
+            Space<br/><span className="text-primary">Clocker</span>
+          </h1>
         </div>
 
         <div className="flex flex-col gap-6 flex-1 overflow-y-auto no-scrollbar pr-2">
           {/* Tactical Sector */}
-          <section className="space-y-1.5" aria-labelledby="tactical-heading">
+          <section className="flex flex-col space-y-1.5" aria-labelledby="tactical-heading">
             <h2 id="tactical-heading" className="px-3 type-overline text-on-surface-variant mb-2">{t('navTactical')}</h2>
             {tacticalLinks.map((link) => (
               <NavLink key={link.to} {...link} active={pathname === link.to} />
@@ -195,7 +166,7 @@ const Navigation = () => {
           </section>
 
           {/* Strategic Sector */}
-          <section className="space-y-1.5" aria-labelledby="strategic-heading">
+          <section className="flex flex-col space-y-1.5" aria-labelledby="strategic-heading">
             <h2 id="strategic-heading" className="px-3 type-overline text-on-surface-variant mb-2">{t('navStrategic')}</h2>
             {strategicLinks.map((link) => (
               <NavLink key={link.to} {...link} active={pathname === link.to} />
@@ -203,7 +174,7 @@ const Navigation = () => {
           </section>
 
           {/* Communications Sector */}
-          <section className="space-y-1.5" aria-labelledby="communications-heading">
+          <section className="flex flex-col space-y-1.5" aria-labelledby="communications-heading">
             <h2 id="communications-heading" className="px-3 type-overline text-on-surface-variant mb-2">{t('navCommunications')}</h2>
             {communicationLinks.map((link) => (
               <NavLink key={link.to} {...link} active={pathname === link.to} />
@@ -211,7 +182,7 @@ const Navigation = () => {
           </section>
         </div>
 
-        <div className="space-y-4 pt-6 border-t border-outline-variant">
+        <div className="space-y-3 pt-4 border-t border-outline-variant">
           {/* Sync Status Overlay */}
           {oracleConfig.syncEnabled && (
             <div className="px-3.5 py-3 bg-surface-low rounded-2xl border border-outline-variant/30 flex items-center gap-3 group">
@@ -231,6 +202,37 @@ const Navigation = () => {
               </div>
             </div>
           )}
+
+          {/* Mode Switcher: Right above Settings on Sidebar */}
+          <button
+            type="button"
+            onClick={() => {
+              SoundManager.playPop();
+              toggleVocabularyMode();
+            }}
+            aria-label={`Switch to ${isPeopleMode ? 'Original' : 'People'} Mode`}
+            title={`Active: ${isPeopleMode ? 'People Mode' : 'Original Mode'} - Click to switch`}
+            className="w-full h-11 px-3 rounded-xl bg-surface-low hover:bg-surface-high border border-outline-variant/40 hover:border-outline-variant flex items-center justify-between transition-all group outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <div className="flex items-center gap-3">
+              <div className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
+                isPeopleMode ? 'bg-secondary/20 text-secondary' : 'bg-primary/20 text-primary'
+              }`}>
+                {isPeopleMode ? <Users size={14} /> : <Rocket size={14} />}
+              </div>
+              <span className="type-overline text-white normal-case font-bold tracking-tight">
+                {isPeopleMode ? 'People Mode' : 'Original Mode'}
+              </span>
+            </div>
+
+            <span className={`type-telemetry-micro font-mono px-2 py-0.5 rounded-md border text-[10px] font-semibold ${
+              isPeopleMode
+                ? 'bg-secondary/15 text-secondary border-secondary/30'
+                : 'bg-primary/15 text-primary border-primary/30'
+            }`}>
+              {isPeopleMode ? 'People' : 'Original'}
+            </span>
+          </button>
 
           <NavLink 
             to="/settings" 

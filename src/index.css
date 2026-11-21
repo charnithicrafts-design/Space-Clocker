@@ -68,16 +68,10 @@ body[data-aura="Clouded"] {
   .touch-target {
     min-height: 48px;
     min-width: 48px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
   }
   .touch-target-compact {
     min-height: 44px;
     min-width: 44px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
   }
 
   /* Card Spatial Standards */
