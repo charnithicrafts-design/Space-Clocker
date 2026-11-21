@@ -13,7 +13,8 @@ import {
   ArrowRight, 
   ArrowLeft,
   Code2,
-  Sparkles
+  Sparkles,
+  Users
 } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 
@@ -53,7 +54,8 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
   const teamAgents = [
     { name: 'Winston 📐', role: 'System Architect', area: 'PGlite WASM Database, Worker RPC & State Slices' },
     { name: 'Sally 🎨', role: 'UX & Design Specialist', area: 'Glassmorphic Styling, Tailwind v4 & Responsive Layouts' },
-    { name: 'Eleanor 🌿', role: 'Human Experience', area: 'Eleanor\'s Log, Gravity Wells & Mindful Copywriting' },
+    { name: 'Eleanor 🌿', role: 'Human Experience & Empathy', area: 'People Mode Architecture, Eleanor\'s Log & Gentle Recalibration' },
+    { name: 'Chloe 📜', role: 'Brand & Storytelling', area: 'Mission Narrative, Landing Experience & Cultural Voice' },
     { name: 'Amelia 💻', role: 'Lead Developer', area: 'React Components, Story Specs & Bug Fixes' },
     { name: 'Murat 🛡️', role: 'QA Test Architect', area: 'Vitest Unit Suites & Data Integrity Quality Gates' },
     { name: 'John 🚀', role: 'Product Manager', area: 'Feature PRDs & Version Release Notes' }
@@ -149,10 +151,10 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
             Space-Clocker is a <strong>local-first application</strong>. Your data lives inside a real PostgreSQL database running right inside your browser via WebAssembly (PGlite).
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
             <div className="p-4 rounded-2xl bg-surface-high/40 border border-outline-variant/30 space-y-2">
               <div className="font-bold text-primary flex items-center gap-2 text-sm">
-                <Layers size={16} /> 1. React 19 UI Thread
+                <Layers size={16} /> 1. React 19 UI
               </div>
               <p className="text-on-surface-variant">
                 Renders screen components smoothly. Public pages skip database initialization to keep page loads instant.
@@ -164,16 +166,25 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
                 <Workflow size={16} /> 2. Comlink Bridge
               </div>
               <p className="text-on-surface-variant">
-                Passes SQL queries between the user interface and the background worker thread without freezing animations.
+                Passes SQL queries between UI and worker thread asynchronously without freezing animations.
               </p>
             </div>
 
             <div className="p-4 rounded-2xl bg-surface-high/40 border border-outline-variant/30 space-y-2">
               <div className="font-bold text-tertiary flex items-center gap-2 text-sm">
-                <Cpu size={16} /> 3. PGlite WASM Worker
+                <Cpu size={16} /> 3. PGlite WASM
               </div>
               <p className="text-on-surface-variant">
-                Executes PostgreSQL SQL queries in the background and saves data persistently in OPFS browser storage.
+                Executes PostgreSQL queries in background thread and saves persistently in OPFS browser storage.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-surface-high/40 border border-outline-variant/30 space-y-2">
+              <div className="font-bold text-accent flex items-center gap-2 text-sm">
+                <Users size={16} /> 4. Vocabulary Engine
+              </div>
+              <p className="text-on-surface-variant">
+                Presentation decoupling via <code>useVocabulary()</code>. Dynamically toggles Cosmic & Everyday terms with zero schema changes.
               </p>
             </div>
           </div>

@@ -15,7 +15,8 @@ import {
   ShieldAlert,
   Compass,
   Smile,
-  HeartHandshake
+  HeartHandshake,
+  Users
 } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 
@@ -95,6 +96,64 @@ export const UserGuideSection: React.FC<UserGuideProps> = ({ selectedChapterId, 
               <strong className="text-white font-bold block mb-1">Rest Without Guilt (Gravity Wells)</strong>
               When life happens or energy dips, Space-Clocker treats delays as natural <em>Gravity Wells</em>—not failures. You always have one-click recalibration to gently bring past intentions into today.
             </div>
+          </div>
+
+          {/* People Mode vs Original Mode Rosetta Stone */}
+          <div className="p-6 rounded-3xl bg-surface-high/30 border border-outline-variant/30 space-y-4">
+            <div className="flex items-center gap-2 text-white font-bold text-lg">
+              <Users size={22} className="text-secondary" />
+              <span>Choose Your Mental Frequency: Original vs. People Mode</span>
+            </div>
+            <p className="text-sm">
+              We believe great productivity belongs to everyone. While deep sci-fi telemetry fuels many of our users, others prefer straightforward, everyday clarity. With our dual-mode vocabulary engine, you can switch between <strong>Original Mode</strong> and <strong>People Mode</strong> at any moment with a single click—right above <em>App Settings</em> on the desktop sidebar, or inside <em>System Config</em>.
+            </p>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-outline-variant/30 text-white/50 font-mono uppercase tracking-wider">
+                    <th className="py-2.5 px-3">Category</th>
+                    <th className="py-2.5 px-3 text-primary">Original Mode</th>
+                    <th className="py-2.5 px-3 text-secondary">People Mode</th>
+                    <th className="py-2.5 px-3">What It Means</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-outline-variant/20">
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-white">Daily Planning</td>
+                    <td className="py-2.5 px-3 font-mono text-primary">Orbit / Flight Deck</td>
+                    <td className="py-2.5 px-3 font-medium text-secondary">Today's Tasks</td>
+                    <td className="py-2.5 px-3 text-on-surface-variant">Your manageable daily to-do items</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-white">Life Roadmap</td>
+                    <td className="py-2.5 px-3 font-mono text-primary">Nebula / Sector</td>
+                    <td className="py-2.5 px-3 font-medium text-secondary">Ambitions & Goals</td>
+                    <td className="py-2.5 px-3 text-on-surface-variant">Long-term vision decomposed into milestones</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-white">Overview</td>
+                    <td className="py-2.5 px-3 font-mono text-primary">Momentum Engine</td>
+                    <td className="py-2.5 px-3 font-medium text-secondary">Progress Engine</td>
+                    <td className="py-2.5 px-3 text-on-surface-variant">Your high-level trajectory & velocity</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-white">Anti-Distraction</td>
+                    <td className="py-2.5 px-3 font-mono text-primary">Void Protocol</td>
+                    <td className="py-2.5 px-3 font-medium text-secondary">Countermeasures</td>
+                    <td className="py-2.5 px-3 text-on-surface-variant">Habits and temptations you choose to avoid</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2.5 px-3 font-semibold text-white">Synchronization</td>
+                    <td className="py-2.5 px-3 font-mono text-primary">Quantum Telemetry</td>
+                    <td className="py-2.5 px-3 font-medium text-secondary">Cloud Backup & Sync</td>
+                    <td className="py-2.5 px-3 text-on-surface-variant">Encrypted, peer-safe local-first backups</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-on-surface-variant italic">
+              Your tasks, milestones, logs, and database remain 100% untouched when switching modes. Only the terminology transforms.
+            </p>
           </div>
         </div>
       )

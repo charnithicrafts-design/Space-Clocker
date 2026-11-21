@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Rocket, Brain, Shield, ArrowRight, Zap, Orbit, Star, Activity, Target, Calendar, BookOpen, Code2, HeartHandshake } from 'lucide-react';
+import { Rocket, Brain, Shield, ArrowRight, Zap, Orbit, Star, Activity, Target, Calendar, BookOpen, Code2, HeartHandshake, Users } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 
 // --- Particle Background ---
@@ -119,6 +119,7 @@ const LandingPage: React.FC = () => {
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [previewMode, setPreviewMode] = useState<'original' | 'people'>('people');
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -172,7 +173,7 @@ const LandingPage: React.FC = () => {
             className="space-y-8"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-secondary/30 bg-secondary/10 text-secondary text-xs font-bold uppercase tracking-widest backdrop-blur-md">
-              <Zap size={14} /> Space-Clocker v1.11.0 is Live — 76% Lighter & Faster
+              <Zap size={14} /> Space-Clocker v1.11.1 is Live — Now with People Mode & Harmonious Spatial Grid
             </div>
             <h1 className="text-6xl lg:text-8xl font-display font-black leading-[1.1] tracking-tighter">
               Clock In Your <br />
@@ -282,6 +283,122 @@ const LandingPage: React.FC = () => {
               </motion.div>
             ))}
           </div>
+
+          {/* Interactive Vocabulary Mode Showcase Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="glass-panel border border-white/10 rounded-[2.5rem] p-8 lg:p-12 bg-gradient-to-br from-surface-high/60 via-surface-high/20 to-transparent relative overflow-hidden space-y-8"
+          >
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/5">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-secondary px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20">
+                  <Users size={14} /> Built For Everyone
+                </div>
+                <h3 className="text-3xl font-display font-black text-white">
+                  Two Ways to Fly: Cosmic Telemetry or Everyday Clarity
+                </h3>
+                <p className="text-white/60 text-sm max-w-xl font-light">
+                  Whether you love high-concept sci-fi immersion or clean, direct terminology, Space-Clocker adapts to your mental rhythm with zero compromises.
+                </p>
+              </div>
+
+              {/* Mode Toggle Switch */}
+              <div className="flex items-center p-1.5 rounded-2xl bg-surface-lowest border border-white/10 self-start md:self-auto shrink-0 shadow-inner">
+                <button
+                  onClick={() => {
+                    SoundManager.playPop();
+                    setPreviewMode('original');
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                    previewMode === 'original'
+                      ? 'bg-primary text-[#06080F] shadow-[0_0_15px_rgba(0,242,255,0.4)]'
+                      : 'text-white/50 hover:text-white'
+                  }`}
+                >
+                  <Rocket size={14} />
+                  <span>Original Mode</span>
+                </button>
+                <button
+                  onClick={() => {
+                    SoundManager.playPop();
+                    setPreviewMode('people');
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                    previewMode === 'people'
+                      ? 'bg-secondary text-white shadow-[0_0_15px_rgba(255,84,77,0.4)]'
+                      : 'text-white/50 hover:text-white'
+                  }`}
+                >
+                  <Users size={14} />
+                  <span>People Mode</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Live Comparative Rosetta Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+              {[
+                {
+                  area: 'Long-Term Goals',
+                  original: 'Nebula Architect',
+                  people: 'Ambitions & Goals',
+                  desc: 'Multi-year milestones'
+                },
+                {
+                  area: 'Daily Planning',
+                  original: 'Orbit Scheduler',
+                  people: 'Today\'s Tasks',
+                  desc: 'Zero-anxiety checklist'
+                },
+                {
+                  area: 'Overview & Velocity',
+                  original: 'Momentum Engine',
+                  people: 'Progress Dashboard',
+                  desc: 'High-level momentum'
+                },
+                {
+                  area: 'Anti-Habit Shield',
+                  original: 'Void Protocol',
+                  people: 'Countermeasures',
+                  desc: 'Habits to steer clear of'
+                },
+                {
+                  area: 'Persistence',
+                  original: 'Quantum Telemetry',
+                  people: 'Cloud Backup & Sync',
+                  desc: 'Local-first security'
+                }
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className="p-4 rounded-2xl bg-surface-lowest/70 border border-white/5 space-y-2 hover:border-primary/30 transition-all"
+                >
+                  <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest block">
+                    {item.area}
+                  </span>
+                  <div className="text-base font-bold text-white flex items-center gap-1.5">
+                    <AnimatePresence mode="wait">
+                      <motion.span
+                        key={previewMode}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -4 }}
+                        transition={{ duration: 0.15 }}
+                        className={previewMode === 'original' ? 'text-primary' : 'text-secondary'}
+                      >
+                        {previewMode === 'original' ? item.original : item.people}
+                      </motion.span>
+                    </AnimatePresence>
+                  </div>
+                  <p className="text-white/50 text-[11px] leading-snug">
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
 
           {/* User Guide Invite Banner */}
           <motion.div 
