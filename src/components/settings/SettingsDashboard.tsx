@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { CURRENT_APP_VERSION } from '../../constants';
-import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor, Copy } from 'lucide-react';
+import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor, Copy, History } from 'lucide-react';
 import { dbProxy } from '../../db/client';
 import { syncService } from '../../services/SyncService';
 import { SoundManager } from '../../utils/SoundManager';
 import { getTodayLocalISO } from '../../utils/DateTimeUtils';
 import SyncPaywallModal from './SyncPaywallModal';
+import VersionHistoryModal from './VersionHistoryModal';
 import { getOrCreateDeviceId } from '../../utils/DeviceUtils';
 import { useSession } from '../../lib/auth-client';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +25,7 @@ const SettingsDashboard = () => {
   const [isDumping, setIsDumping] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [showUpToDate, setShowUpToDate] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [isPaywallOpen, setIsPaywallOpen] = useState(() => {
     return new URLSearchParams(window.location.search).get('sync_auth_success') === '1';
   });
@@ -231,6 +233,7 @@ const SettingsDashboard = () => {
       </header>
 
       <SyncPaywallModal isOpen={isPaywallOpen} onClose={() => setIsPaywallOpen(false)} />
+      <VersionHistoryModal isOpen={showVersionHistory} onClose={() => setShowVersionHistory(false)} />
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
@@ -581,9 +584,22 @@ const SettingsDashboard = () => {
         </section>
 
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
-          <div className="flex items-center gap-3 border-b border-outline-variant pb-4 mb-4">
-            <Cpu className="text-primary" />
-            <h3 className="font-display font-bold text-xl">System Manifest</h3>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-outline-variant pb-4 mb-4">
+            <div className="flex items-center gap-3">
+              <Cpu className="text-primary" />
+              <h3 className="font-display font-bold text-xl">System Manifest</h3>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                SoundManager.playPop();
+                setShowVersionHistory(true);
+              }}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-high border border-outline-variant hover:border-secondary hover:text-secondary text-on-surface-variant transition-all font-mono text-xs font-bold touch-target-compact"
+            >
+              <History size={15} />
+              <span>Version Details</span>
+            </button>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -598,6 +614,18 @@ const SettingsDashboard = () => {
           </div>
 
           <div className="space-y-3">
+            <button 
+              type="button"
+              onClick={() => {
+                SoundManager.playPop();
+                setShowVersionHistory(true);
+              }}
+              className="w-full flex items-center justify-center gap-2 p-3 sm:p-4 rounded-2xl bg-surface-high/60 hover:bg-surface-high border border-outline-variant hover:border-secondary transition-all font-bold text-xs uppercase tracking-[0.2em] text-on-surface touch-target-compact group"
+            >
+              <History size={16} className="text-secondary group-hover:scale-110 transition-transform" />
+              <span>Version Details & Changelog</span>
+            </button>
+
             <AnimatePresence mode="wait">
               {showUpToDate ? (
                 <motion.div

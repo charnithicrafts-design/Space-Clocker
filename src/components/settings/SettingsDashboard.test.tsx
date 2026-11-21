@@ -321,4 +321,50 @@ describe('SettingsDashboard', () => {
       callbackURL: expect.any(String)
     });
   });
+
+  it('opens version details modal and allows easy pagination through release logs', async () => {
+    (useTrackStore as any).mockReturnValue({
+      ...mockInitialState
+    });
+
+    renderWithRouter(<SettingsDashboard />);
+    
+    // Find Version Details button
+    const versionDetailsBtns = screen.getAllByRole('button', { name: /Version Details/i });
+    expect(versionDetailsBtns.length).toBeGreaterThan(0);
+
+    await act(async () => {
+      fireEvent.click(versionDetailsBtns[0]);
+    });
+
+    // Modal should be open
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText('Space-Clocker System Manifest & Historical Trajectory Log')).toBeInTheDocument();
+    expect(screen.getByText(/Page 1 of/i)).toBeInTheDocument();
+
+    // Check pagination
+    const nextBtn = screen.getByRole('button', { name: /Next Page/i });
+    expect(nextBtn).toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.click(nextBtn);
+    });
+
+    expect(screen.getByText(/Page 2 of/i)).toBeInTheDocument();
+
+    // Prev button test
+    const prevBtn = screen.getByRole('button', { name: /Previous Page/i });
+    await act(async () => {
+      fireEvent.click(prevBtn);
+    });
+    expect(screen.getByText(/Page 1 of/i)).toBeInTheDocument();
+
+    // Close modal
+    const closeBtn = screen.getByRole('button', { name: /Close Version History/i });
+    await act(async () => {
+      fireEvent.click(closeBtn);
+    });
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
 });
