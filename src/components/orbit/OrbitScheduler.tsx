@@ -25,10 +25,10 @@ const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
       />
     </svg>
     <div className="absolute inset-0 flex flex-col items-center justify-center">
-      <div className="text-xl font-black text-white">{Math.round(percentage)}%</div>
-      <div className="text-[8px] font-bold text-on-surface-variant uppercase tracking-widest">Sync</div>
+      <div className="type-telemetry-lg text-white">{Math.round(percentage)}%</div>
+      <div className="type-overline text-on-surface-variant">Sync</div>
     </div>
-    <div className="absolute -top-4 -right-4 bg-primary text-on-primary text-[8px] font-black px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-widest">
+    <div className="absolute -top-4 -right-4 bg-primary text-on-primary type-overline px-2 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
       Orbital Lock
     </div>
   </div>
@@ -291,22 +291,22 @@ const OrbitScheduler = () => {
       <header className="mb-8 relative">
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Orbit Protocol {isPro ? '(Professional)' : '(Standard)'}</h2>
-            <h1 className="text-4xl font-display font-black text-primary uppercase">Mission Control</h1>
-            <p className="text-on-surface-variant max-w-lg">Synchronize your planetary rotation with stellar objectives.</p>
+            <h2 className="text-secondary type-overline">Orbit Protocol {isPro ? '(Professional)' : '(Standard)'}</h2>
+            <h1 className="type-display text-primary uppercase">Mission Control</h1>
+            <p className="type-body text-on-surface-variant max-w-lg mt-1">Synchronize your planetary rotation with stellar objectives.</p>
           </div>
           <div className="flex flex-col items-end gap-2">
-            <div className="bg-surface-high border border-outline-variant p-3 rounded-2xl flex items-center gap-3 shadow-lg">
+            <div className="bg-surface-high border border-outline-variant px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-lg">
               <Zap className="text-primary-container" size={20} />
               <div className="text-right">
-                <div className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Resonance</div>
-                <div className="text-sm font-black text-primary">{profile.xp} XP</div>
+                <div className="type-overline text-on-surface-variant">Resonance</div>
+                <div className="type-telemetry-base text-primary">{profile.xp} XP</div>
               </div>
             </div>
             {isPro && (
               <button 
                 onClick={() => { setReflectionType('daily-summary'); setIsReflectionOpen(true); }}
-                className="flex items-center gap-2 p-2 px-4 rounded-xl border border-secondary/30 text-secondary hover:bg-secondary/10 transition-colors text-[10px] font-black uppercase tracking-widest glass-panel"
+                className="flex items-center gap-2 h-10 px-4 rounded-xl border border-secondary/30 text-secondary hover:bg-secondary/10 transition-colors type-overline glass-panel touch-target-compact"
               >
                 <BrainCircuit size={14} />
                 Neural Reflection
@@ -320,11 +320,11 @@ const OrbitScheduler = () => {
         <OrbitSubNav active={activeHorizon} onChange={(h) => { setActiveHorizon(h); setBacklogPage(1); }} />
         
         {activeHorizon !== 'void' && activeHorizon !== 'backlog' && (
-          <div className="flex items-center gap-3 glass-panel p-2 px-4 rounded-2xl border border-outline-variant mb-8 animate-in fade-in slide-in-from-right-4 duration-500">
+          <div className="flex items-center gap-3 glass-panel h-10 px-4 rounded-2xl border border-outline-variant mb-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <Calendar size={16} className="text-primary" />
             <input 
               type="date"
-              className="bg-transparent text-sm font-bold font-mono focus:outline-none uppercase"
+              className="bg-transparent text-sm type-telemetry-base focus:outline-none uppercase"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
             />
@@ -352,17 +352,17 @@ const OrbitScheduler = () => {
             className="space-y-8"
           >
             {activeHorizon === 'backlog' ? (
-              <section className="glass-panel border border-outline-variant p-6 rounded-3xl space-y-4">
+              <section className="glass-panel card-standard border border-outline-variant space-y-4">
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                  <h3 className="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em] flex items-center gap-2">
+                  <h3 className="type-overline text-on-surface-variant flex items-center gap-2">
                     <Archive size={14} className="text-tertiary" />
                     Stasis Backlog
                   </h3>
-                  <div className="flex items-center gap-2 bg-surface-high border border-outline-variant p-2 px-4 rounded-2xl w-full sm:w-auto">
+                  <div className="flex items-center gap-2 bg-surface-high border border-outline-variant h-10 px-4 rounded-xl w-full sm:w-auto">
                     <Search size={14} className="text-on-surface-variant" />
                     <input 
                       placeholder="Search backlog..."
-                      className="bg-transparent text-xs focus:outline-none w-full"
+                      className="bg-transparent type-body text-xs focus:outline-none w-full"
                       value={backlogSearch}
                       onChange={(e) => { setBacklogSearch(e.target.value); setBacklogPage(1); }}
                     />
@@ -370,47 +370,47 @@ const OrbitScheduler = () => {
                 </div>
               </section>
             ) : (
-              <section className="glass-panel border border-outline-variant p-4 sm:p-6 rounded-2xl sm:rounded-3xl space-y-3 sm:space-y-4">
-                <h3 className="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em] flex items-center gap-2">
+              <section className="glass-panel card-standard border border-outline-variant space-y-4">
+                <h3 className="type-overline text-on-surface-variant flex items-center gap-2">
                   <Plus size={14} className="text-primary" />
                   Initialize New {activeHorizon === 'weekly' ? 'Weekly Milestone' : 'Daily Parameter'}
                 </h3>
-                <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-2.5 sm:gap-3 items-stretch md:items-center">
+                <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
                   <input 
-                    className="w-full md:flex-1 min-w-0 bg-surface-high px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl border border-outline-variant focus:border-primary focus:outline-none text-xs sm:text-sm transition-all"
+                    className="w-full md:flex-1 min-w-0 h-10 sm:h-12 bg-surface-high px-4 rounded-xl sm:rounded-2xl border border-outline-variant focus:border-primary focus:outline-none type-body text-white transition-all"
                     placeholder={activeHorizon === 'weekly' ? "Define a weekly resonance milestone..." : "Define the next mission parameter..."}
                     value={newTask}
                     onChange={(e) => setNewTask(e.target.value)}
                   />
                   <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2">
-                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                      <div className="bg-surface-high border border-outline-variant py-1.5 px-2.5 sm:px-3 rounded-xl flex items-center gap-1.5" title="Mission Entry Time">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <div className="h-10 bg-surface-high border border-outline-variant px-3 rounded-xl flex items-center gap-2" title="Mission Entry Time">
                         <Clock size={13} className="text-on-surface-variant shrink-0" />
                         <input 
                           type="time"
                           aria-label="Mission Entry Time"
-                          className="bg-transparent text-[11px] sm:text-xs font-mono focus:outline-none text-white cursor-pointer"
+                          className="bg-transparent type-telemetry-base text-xs focus:outline-none text-white cursor-pointer"
                           value={newTime}
                           onChange={(e) => setNewTime(e.target.value)}
                         />
                       </div>
                       
-                      <div className="bg-surface-high border border-outline-variant py-1.5 px-2.5 sm:px-3 rounded-xl flex items-center gap-1.5" title="Mission Descent Time">
+                      <div className="h-10 bg-surface-high border border-outline-variant px-3 rounded-xl flex items-center gap-2" title="Mission Descent Time">
                         <Timer size={13} className="text-on-surface-variant shrink-0" />
                         <input 
                           type="time"
                           aria-label="Mission Descent Time"
-                          className="bg-transparent text-[11px] sm:text-xs font-mono focus:outline-none text-white cursor-pointer"
+                          className="bg-transparent type-telemetry-base text-xs focus:outline-none text-white cursor-pointer"
                           value={newEndTime}
                           onChange={(e) => setNewEndTime(e.target.value)}
                         />
                       </div>
-                      <div className="bg-surface-high border border-outline-variant py-1.5 px-2.5 sm:px-3 rounded-xl flex items-center gap-1.5" title="Mission Deadline">
+                      <div className="h-10 bg-surface-high border border-outline-variant px-3 rounded-xl flex items-center gap-2" title="Mission Deadline">
                         <AlertTriangle size={13} className="text-error shrink-0" />
                         <input 
                           type="datetime-local"
                           aria-label="Mission Deadline"
-                          className="bg-transparent text-[10px] sm:text-[11px] font-mono focus:outline-none text-white cursor-pointer w-28 sm:w-32"
+                          className="bg-transparent type-telemetry-base text-xs focus:outline-none text-white cursor-pointer w-28 sm:w-32"
                           value={newDeadline}
                           onChange={(e) => setNewDeadline(e.target.value)}
                         />
@@ -420,7 +420,7 @@ const OrbitScheduler = () => {
                     <button 
                       type="submit" 
                       aria-label="Add task" 
-                      className="px-4 py-2 sm:px-6 sm:py-2.5 bg-primary-container text-on-primary rounded-xl sm:rounded-2xl text-xs font-black uppercase tracking-widest hover:shadow-[0_0_20px_rgba(var(--color-primary-container-rgb),0.4)] transition-all flex items-center justify-center gap-1.5 shrink-0 ml-auto sm:ml-0"
+                      className="h-10 sm:h-12 px-6 bg-primary-container text-on-primary-container rounded-xl sm:rounded-2xl type-overline hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] transition-all flex items-center justify-center gap-2 shrink-0 ml-auto sm:ml-0 touch-target-compact"
                     >
                       <Plus size={16} />
                       <span>Uplink</span>
@@ -522,19 +522,19 @@ const OrbitScheduler = () => {
                     layout="position"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`glass-panel border p-5 rounded-3xl flex flex-col gap-4 transition-all duration-300 group relative hover:z-30 focus-within:z-30 ${task.completed ? 'opacity-50 grayscale-[0.8]' : 'hover:border-primary/50'} ${task.isVoid ? 'border-error/30 bg-error/5' : 'border-outline-variant'} ${hasError ? 'border-error/50 ring-1 ring-error/20 shadow-[0_0_15px_rgba(var(--color-error-rgb),0.1)]' : ''} ${isDeadlineCritical && !isOrbitalDecay ? 'border-error shadow-[0_0_15px_rgba(var(--color-error-rgb),0.2)]' : ''} ${isOrbitalDecay ? 'grayscale-[0.6] opacity-80 border-outline-variant/30 bg-surface-highest/10 translate-x-2 -rotate-1' : 'translate-x-0 rotate-0'}`}
+                    className={`glass-panel card-standard border flex flex-col gap-4 transition-all duration-300 group relative hover:z-30 focus-within:z-30 ${task.completed ? 'opacity-50 grayscale-[0.8]' : 'hover:border-primary/50'} ${task.isVoid ? 'border-error/30 bg-error/5' : 'border-outline-variant'} ${hasError ? 'border-error/50 ring-1 ring-error/20 shadow-[0_0_15px_rgba(var(--color-error-rgb),0.1)]' : ''} ${isDeadlineCritical && !isOrbitalDecay ? 'border-error shadow-[0_0_15px_rgba(var(--color-error-rgb),0.2)]' : ''} ${isOrbitalDecay ? 'grayscale-[0.6] opacity-80 border-outline-variant/30 bg-surface-highest/10 translate-x-2 -rotate-1' : 'translate-x-0 rotate-0'}`}
                   >
                     {editingTaskId === task.id ? (
                       <form 
                         onSubmit={handleSaveTaskEdit} 
-                        className="w-full flex flex-col gap-3 p-4 bg-surface-high/20 rounded-2xl" 
+                        className="w-full flex flex-col gap-4 p-4 bg-surface-high/20 rounded-2xl" 
                         onClick={e => e.stopPropagation()}
                       >
-                        <div className="flex flex-col gap-1">
-                          <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Parameter Title</label>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="type-overline text-on-surface-variant">Parameter Title</label>
                           <input 
                             autoFocus
-                            className="w-full bg-surface-low px-3 py-2 rounded-xl border border-outline-variant focus:border-primary focus:outline-none text-xs text-white"
+                            className="w-full h-10 bg-surface-low px-3 rounded-xl border border-outline-variant focus:border-primary focus:outline-none type-body text-xs text-white"
                             value={editTitle}
                             onChange={(e) => setEditTitle(e.target.value)}
                             onKeyDown={(e) => e.key === 'Escape' && setEditingTaskId(null)}
@@ -542,25 +542,25 @@ const OrbitScheduler = () => {
                         </div>
                         
                         <div className="grid grid-cols-2 gap-3">
-                          <div className="flex flex-col gap-1">
-                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Entry</label>
-                            <div className="flex items-center gap-2 bg-surface-low px-3 py-2 rounded-xl border border-outline-variant">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="type-overline text-on-surface-variant">Entry</label>
+                            <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-outline-variant">
                               <Clock size={12} className="text-primary" />
                               <input 
                                 type="time" 
-                                className="bg-transparent text-xs font-mono text-white focus:outline-none w-full" 
+                                className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none w-full" 
                                 value={editTime} 
                                 onChange={e => setEditTime(e.target.value)} 
                               />
                             </div>
                           </div>
-                          <div className="flex flex-col gap-1">
-                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Descent</label>
-                            <div className="flex items-center gap-2 bg-surface-low px-3 py-2 rounded-xl border border-outline-variant">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="type-overline text-on-surface-variant">Descent</label>
+                            <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-outline-variant">
                               <Timer size={12} className="text-secondary" />
                               <input 
                                 type="time" 
-                                className="bg-transparent text-xs font-mono text-white focus:outline-none w-full" 
+                                className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none w-full" 
                                 value={editEndTime} 
                                 onChange={e => setEditEndTime(e.target.value)} 
                               />
@@ -569,25 +569,25 @@ const OrbitScheduler = () => {
                         </div>
 
                         <div className="grid grid-cols-2 gap-3">
-                          <div className="flex flex-col gap-1">
-                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Mission Date</label>
-                            <div className="flex items-center gap-2 bg-surface-low px-3 py-2 rounded-xl border border-outline-variant">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="type-overline text-on-surface-variant">Mission Date</label>
+                            <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-outline-variant">
                               <Calendar size={12} className="text-primary-container" />
                               <input 
                                 type="date" 
-                                className="bg-transparent text-xs font-mono text-white focus:outline-none w-full uppercase" 
+                                className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none w-full uppercase" 
                                 value={editDate} 
                                 onChange={e => setEditDate(e.target.value)} 
                               />
                             </div>
                           </div>
-                          <div className="flex flex-col gap-1">
-                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest text-error">Deadline Lock</label>
-                            <div className="flex items-center gap-2 bg-surface-low px-3 py-2 rounded-xl border border-error/30">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="type-overline text-error">Deadline Lock</label>
+                            <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-error/30">
                               <AlertTriangle size={12} className="text-error" />
                               <input 
                                 type="datetime-local" 
-                                className="bg-transparent text-xs font-mono text-white focus:outline-none w-full" 
+                                className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none w-full" 
                                 value={editDeadline} 
                                 onChange={e => setEditDeadline(e.target.value)} 
                               />
@@ -595,17 +595,17 @@ const OrbitScheduler = () => {
                           </div>
                         </div>
 
-                        <div className="flex justify-end gap-2 mt-2">
+                        <div className="flex justify-end gap-3 mt-1">
                           <button 
                             type="button" 
                             onClick={() => setEditingTaskId(null)} 
-                            className="p-2 px-4 rounded-xl text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-white"
+                            className="h-9 px-4 rounded-xl type-overline text-on-surface-variant hover:text-white touch-target-compact"
                           >
                             Cancel
                           </button>
                           <button 
                             type="submit" 
-                            className="p-2 px-4 bg-primary text-on-primary rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2"
+                            className="h-9 px-4 bg-primary text-on-primary rounded-xl type-overline flex items-center gap-2 touch-target-compact"
                           >
                             <Check size={12} />
                             Save
@@ -613,18 +613,18 @@ const OrbitScheduler = () => {
                         </div>
                       </form>
                     ) : (
-                      <div className="flex flex-wrap items-center gap-6">
+                      <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                         <div className="flex flex-col items-center gap-1">
-                          <div className="text-[10px] font-black text-on-surface-variant uppercase tracking-tighter">Entry</div>
-                          <div className="font-mono bg-surface-high text-primary-container text-xs w-20 p-2 rounded-xl text-center border border-outline-variant/30">
+                          <div className="type-overline text-on-surface-variant">Entry</div>
+                          <div className="type-telemetry-base text-xs text-primary-container bg-surface-high w-20 h-9 flex items-center justify-center rounded-xl border border-outline-variant/30">
                             {task.time}
                           </div>
                         </div>
 
                         {isPro && task.endTime && (
                           <div className="flex flex-col items-center gap-1">
-                            <div className="text-[10px] font-black text-on-surface-variant uppercase tracking-tighter">Descent</div>
-                            <div className="font-mono bg-surface-high text-secondary text-xs w-20 p-2 rounded-xl text-center border border-outline-variant/30">
+                            <div className="type-overline text-on-surface-variant">Descent</div>
+                            <div className="type-telemetry-base text-xs text-secondary bg-surface-high w-20 h-9 flex items-center justify-center rounded-xl border border-outline-variant/30">
                               {task.endTime}
                             </div>
                           </div>
@@ -633,7 +633,7 @@ const OrbitScheduler = () => {
                         <div className="flex-1 min-w-[200px]">
                           <div className="flex items-center gap-3">
                             <div 
-                              className={`text-base font-bold break-words whitespace-normal cursor-pointer transition-all flex-1 ${task.completed ? 'line-through text-on-surface-variant italic' : 'text-white hover:text-primary'}`}
+                              className={`type-headline text-base break-words whitespace-normal cursor-pointer transition-all flex-1 ${task.completed ? 'line-through text-on-surface-variant italic' : 'text-white hover:text-primary'}`}
                               onClick={() => handleToggle(task.id)}
                               onDoubleClick={() => startEditingTask(task)}
                             >
@@ -645,12 +645,12 @@ const OrbitScheduler = () => {
                           {(task.recalibratedCount || (activeHorizon === 'backlog' && task.horizon === 'weekly')) && (
                             <div className="flex flex-wrap items-center gap-2 mt-1.5 mb-1.5">
                               {activeHorizon === 'backlog' && task.horizon === 'weekly' && (
-                                <span className="text-[8px] font-black uppercase tracking-widest bg-secondary/20 text-secondary border border-secondary/30 px-1.5 py-0.5 rounded">
+                                <span className="type-overline bg-secondary/20 text-secondary border border-secondary/30 px-2 py-0.5 rounded-md">
                                   WEEKLY
                                 </span>
                               )}
                               {task.recalibratedCount ? (
-                                <span className="inline-flex items-center gap-0.5 text-[8px] font-black uppercase tracking-widest bg-amber-500/20 text-amber-500 border border-amber-500/30 px-1 py-0.5 rounded">
+                                <span className="type-overline inline-flex items-center gap-1 bg-amber-500/20 text-amber-500 border border-amber-500/30 px-2 py-0.5 rounded-md">
                                   <Zap size={8} /> x{task.recalibratedCount}
                                 </span>
                               ) : null}
@@ -660,13 +660,13 @@ const OrbitScheduler = () => {
                           {(task.plannedDate || (isPro && task.deadline)) && (
                             <div className="flex flex-wrap items-center gap-3 mt-1.5">
                               {task.plannedDate && (
-                                <div className="flex items-center gap-1 text-[9px] font-black text-on-surface-variant uppercase tracking-widest">
+                                <div className="type-telemetry-micro flex items-center gap-1 text-on-surface-variant">
                                   <Calendar size={10} className="text-primary-container" />
                                   {task.plannedDate}
                                 </div>
                               )}
                               {isPro && task.deadline && (
-                                <div className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-1 ${isDeadlineCritical ? 'text-error animate-pulse' : 'text-on-surface-variant'}`}>
+                                <div className={`type-telemetry-micro flex items-center gap-1 ${isDeadlineCritical ? 'text-error animate-pulse' : 'text-on-surface-variant'}`}>
                                   <AlertTriangle size={10} className={isDeadlineCritical ? 'text-error' : 'text-on-surface-variant'} />
                                   Deadline: {new Date(task.deadline).toLocaleString([], { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' })}
                                   {isDeadlineCritical && " - CRITICAL GRAVITY"}
@@ -683,7 +683,7 @@ const OrbitScheduler = () => {
                                 SoundManager.playSyncSuccess();
                                 handleCarryForward(task.id);
                               }}
-                              className="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-500 border border-amber-500/30 flex items-center gap-2 hover:bg-amber-500 hover:text-black transition-all text-[10px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(245,158,11,0.2)]"
+                              className="h-9 px-3.5 rounded-xl bg-amber-500/20 text-amber-500 border border-amber-500/30 flex items-center gap-2 hover:bg-amber-500 hover:text-black transition-all type-overline shadow-[0_0_15px_rgba(245,158,11,0.2)] touch-target-compact"
                             >
                               <Zap size={12} />
                               Recalibrate
@@ -693,7 +693,7 @@ const OrbitScheduler = () => {
                             <button
                               title="Carry Forward to Today"
                               onClick={() => handleCarryForward(task.id)}
-                              className="w-8 h-8 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center hover:bg-tertiary hover:text-on-tertiary transition-colors"
+                              className="touch-target-compact w-9 h-9 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center hover:bg-tertiary hover:text-on-tertiary transition-colors"
                             >
                               <ArrowRightCircle size={16} />
                             </button>
@@ -802,14 +802,14 @@ const OrbitScheduler = () => {
                 {/* Header */}
                 <div className="flex justify-between items-start border-b border-outline-variant/30 pb-4">
                   <div>
-                    <span className="text-[10px] px-3.5 py-1 bg-secondary/15 border border-secondary/20 rounded-full text-secondary font-mono tracking-widest uppercase">
+                    <span className="type-overline px-3.5 py-1 bg-secondary/15 border border-secondary/20 rounded-full text-secondary">
                       Transmission Preview (Alpha)
                     </span>
-                    <h2 className="text-2xl font-display font-black text-white uppercase tracking-tight mt-3">
+                    <h2 className="type-title-2 text-white uppercase mt-3">
                       Telemetry Session Brief
                     </h2>
                   </div>
-                  <div className="text-right font-mono text-[9px] text-on-surface-variant space-y-1">
+                  <div className="text-right type-telemetry-micro text-on-surface-variant space-y-1">
                     <div>SECURE LINK STABLE</div>
                     <div className="text-secondary font-bold">TX-2026-DAILY-INIT</div>
                   </div>
@@ -819,7 +819,7 @@ const OrbitScheduler = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* PDA Narrative */}
                   <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-2 col-span-1 md:col-span-2">
-                    <div className="text-[9px] font-black uppercase text-secondary tracking-widest">PDA Narrative Summary</div>
+                    <div className="type-overline text-secondary">PDA Narrative Summary</div>
                     <p className="text-xs text-on-surface leading-relaxed font-mono">
                       {`"Orbit initialized successfully. Technical workspace synchronized on Chrome desktop. Core trajectories active: ${ambitions.filter(a => a.progress < 100).slice(0, 2).map(a => a.title).join(' & ') || 'General Path'}. Logging daily parameters with ${allTasks.filter(t => t.completed && t.plannedDate === getTodayLocalISO()).length > 0 ? 'optimal' : 'baseline'} resonance efficiency. Standing by for next rotation cycle."`}
                     </p>
@@ -827,7 +827,7 @@ const OrbitScheduler = () => {
 
                   {/* Accomplished Parameters */}
                   <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-3">
-                    <div className="text-[9px] font-black uppercase text-primary-container tracking-widest">Accomplished Parameters</div>
+                    <div className="type-overline text-primary-container">Accomplished Parameters</div>
                     <div className="space-y-2">
                       {(() => {
                         const completedToday = allTasks.filter(t => t.completed && t.plannedDate === getTodayLocalISO());
@@ -838,7 +838,7 @@ const OrbitScheduler = () => {
                           <div key={task.id} className="flex items-center gap-2 text-xs text-white">
                             <ShieldCheck size={14} className="text-success shrink-0" />
                             <span className="truncate">{task.title}</span>
-                            <span className="text-[9px] font-mono text-secondary-container bg-secondary-container/10 px-1.5 py-0.5 rounded ml-auto">{(task as any).weightage || 10} XP</span>
+                            <span className="type-telemetry-micro text-secondary-container bg-secondary-container/10 px-1.5 py-0.5 rounded ml-auto">{(task as any).weightage || 10} XP</span>
                           </div>
                         ));
                       })()}
@@ -847,7 +847,7 @@ const OrbitScheduler = () => {
 
                   {/* Skills Calibration Delta */}
                   <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-3">
-                    <div className="text-[9px] font-black uppercase text-secondary tracking-widest">Skills Calibration Delta</div>
+                    <div className="type-overline text-secondary">Skills Calibration Delta</div>
                     <div className="space-y-2">
                       {(() => {
                         if (skills && skills.length > 0) {
@@ -875,7 +875,7 @@ const OrbitScheduler = () => {
                 {/* Footer notes */}
                 <div className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center gap-3">
                   <Info size={16} className="text-primary shrink-0" />
-                  <p className="text-[10px] text-on-surface-variant uppercase tracking-wide leading-relaxed">
+                  <p className="type-overline text-on-surface-variant normal-case leading-relaxed">
                     This structured readout is formatted and ready. Sharing this transmission with your mentor ensures continuous feedback and rapid alignment.
                   </p>
                 </div>
@@ -889,7 +889,7 @@ const OrbitScheduler = () => {
                       SoundManager.playPop();
                       setTimeout(() => setCopiedLink(false), 2000);
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 border border-secondary text-secondary px-6 py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-secondary/15 transition-all cursor-pointer bg-transparent outline-none"
+                    className="flex-1 h-12 flex items-center justify-center gap-2 border border-secondary text-secondary px-6 rounded-2xl type-overline hover:bg-secondary/15 transition-all cursor-pointer bg-transparent outline-none touch-target"
                   >
                     {copiedLink ? <Check size={16} className="text-success" /> : <Share2 size={16} />}
                     <span>{copiedLink ? 'Link Copied!' : 'Copy Mentor Share Link'}</span>
@@ -900,7 +900,7 @@ const OrbitScheduler = () => {
                       setShowTransmissionPreview(false);
                       SoundManager.playSyncSuccess();
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 bg-secondary text-on-secondary px-6 py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-secondary/80 transition-all cursor-pointer shadow-lg hover:shadow-secondary/20 border-none outline-none"
+                    className="flex-1 h-12 flex items-center justify-center gap-2 bg-secondary text-on-secondary px-6 rounded-2xl type-overline hover:bg-secondary/80 transition-all cursor-pointer shadow-lg hover:shadow-secondary/20 border-none outline-none touch-target"
                   >
                     <Send size={16} />
                     <span>Establish Uplink & Finish</span>
