@@ -150,7 +150,7 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
             <form onSubmit={saveMilestoneEdit} className="flex-1" onClick={e => e.stopPropagation()}>
               <input 
                 autoFocus
-                className="w-full bg-surface-high p-1 rounded border border-primary font-bold text-white focus:outline-none"
+                className="w-full bg-surface-high px-3 py-1.5 rounded-xl border border-primary font-bold text-white focus:outline-none type-headline"
                 value={editMilestoneTitle}
                 onChange={(e) => setEditMilestoneTitle(e.target.value)}
                 onBlur={() => saveMilestoneEdit()}
@@ -159,7 +159,7 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
             </form>
           ) : (
             <div className="flex items-center gap-2 group">
-              <span className="font-bold text-white">{milestone.title}</span>
+              <span className="type-title-3 font-bold text-white">{milestone.title}</span>
               <div className="ml-auto lg:opacity-0 lg:group-hover:opacity-100 transition-all">
                 <ActionMenu 
                   actions={[
@@ -172,7 +172,7 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
           )}
         </div>
         <div className="flex items-center gap-4">
-            <span className="text-sm font-mono text-secondary">{completedTasks.toString().padStart(2, '0')}/{totalTasks.toString().padStart(2, '0')}</span>
+            <span className="type-telemetry-base text-secondary font-mono">{completedTasks.toString().padStart(2, '0')}/{totalTasks.toString().padStart(2, '0')}</span>
             <ChevronDown size={20} className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </div>
       </div>
@@ -197,10 +197,10 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
                     {task.completed ? <CheckCircle size={16} className="text-primary-container" /> : <Circle size={16} className="text-on-surface-variant group-hover:text-primary transition-colors" />}
                     
                     {editingTaskId === task.id ? (
-                      <form onSubmit={saveTaskEdit} className="flex-1 flex flex-col gap-3 p-3 bg-surface-high rounded-2xl border border-primary/50" onClick={e => e.stopPropagation()}>
+                      <form onSubmit={saveTaskEdit} className="flex-1 flex flex-col gap-3 p-4 bg-surface-high rounded-2xl border border-primary/50" onClick={e => e.stopPropagation()}>
                         <input 
                           autoFocus
-                          className="w-full bg-transparent border-b border-primary/30 py-1 font-bold text-white focus:outline-none focus:border-primary"
+                          className="w-full bg-transparent border-b border-primary/30 py-1 font-bold text-white focus:outline-none focus:border-primary type-headline"
                           value={editTaskTitle}
                           onChange={(e) => setEditTaskTitle(e.target.value)}
                           onBlur={() => saveTaskEdit()}
@@ -208,56 +208,56 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
                         />
                         <div className="grid grid-cols-2 gap-3">
                           <div className="flex flex-col gap-1">
-                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Entry</label>
-                            <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
+                            <label className="type-overline text-on-surface-variant">Entry</label>
+                            <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-outline-variant">
                               <Clock size={12} className="text-primary" />
-                              <input type="time" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskTime} onChange={e => setEditTaskTime(e.target.value)} onBlur={() => saveTaskEdit()} />
+                              <input type="time" className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none" value={editTaskTime} onChange={e => setEditTaskTime(e.target.value)} onBlur={() => saveTaskEdit()} />
                             </div>
                           </div>
                           <div className="flex flex-col gap-1">
-                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Descent</label>
-                            <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
+                            <label className="type-overline text-on-surface-variant">Descent</label>
+                            <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-outline-variant">
                               <Timer size={12} className="text-secondary" />
-                              <input type="time" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskEndTime} onChange={e => setEditTaskEndTime(e.target.value)} onBlur={() => saveTaskEdit()} />
+                              <input type="time" className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none" value={editTaskEndTime} onChange={e => setEditTaskEndTime(e.target.value)} onBlur={() => saveTaskEdit()} />
                             </div>
                           </div>
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <div className="flex flex-col gap-1">
-                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Mission Date</label>
-                            <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
+                            <label className="type-overline text-on-surface-variant">Mission Date</label>
+                            <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-outline-variant">
                               <Calendar size={12} className="text-primary-container" />
-                              <input type="date" className="bg-transparent text-[10px] font-mono text-white focus:outline-none uppercase" value={editTaskDate} onChange={e => setEditTaskDate(e.target.value)} onBlur={() => saveTaskEdit()} />
+                              <input type="date" className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none uppercase" value={editTaskDate} onChange={e => setEditTaskDate(e.target.value)} onBlur={() => saveTaskEdit()} />
                             </div>
                           </div>
                           <div className="flex flex-col gap-1">
-                            <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest text-error">Deadline Lock</label>
-                            <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-error/30">
+                            <label className="type-overline text-error">Deadline Lock</label>
+                            <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-error/30">
                               <AlertTriangle size={12} className="text-error" />
-                              <input type="datetime-local" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={editTaskDeadline} onChange={e => setEditTaskDeadline(e.target.value)} onBlur={() => saveTaskEdit()} />
+                              <input type="datetime-local" className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none" value={editTaskDeadline} onChange={e => setEditTaskDeadline(e.target.value)} onBlur={() => saveTaskEdit()} />
                             </div>
                           </div>
                         </div>
                         <div className="flex justify-end gap-2 mt-2">
-                          <button type="button" onClick={() => setEditingTaskId(null)} className="px-3 py-1 text-[10px] font-black text-on-surface-variant uppercase">Cancel</button>
-                          <button type="submit" className="px-4 py-1 bg-primary text-on-primary rounded-lg text-[10px] font-black uppercase">Save Parameters</button>
+                          <button type="button" onClick={() => setEditingTaskId(null)} className="h-9 px-3 text-xs type-overline text-on-surface-variant touch-target-compact">Cancel</button>
+                          <button type="submit" className="h-9 px-4 bg-primary text-on-primary rounded-xl type-overline touch-target-compact">Save Parameters</button>
                         </div>
                       </form>
                     ) : (
                       <div className="flex flex-col">
-                        <span className={`text-sm font-bold ${task.completed ? "line-through text-on-surface-variant" : "text-white group-hover:text-primary-container transition-colors"}`}>
+                        <span className={`type-headline text-sm font-bold ${task.completed ? "line-through text-on-surface-variant" : "text-white group-hover:text-primary-container transition-colors"}`}>
                           {task.title}
                         </span>
                         <div className="flex gap-3 mt-1">
-                           <div className="flex items-center gap-1 text-[9px] font-mono text-on-surface-variant">
+                           <div className="flex items-center gap-1 type-telemetry-micro text-on-surface-variant font-mono">
                              <Clock size={10} /> {task.time || '09:00'}
                            </div>
                            {task.deadline && (
-                             <div className="flex items-center gap-1 text-[9px] font-mono text-error/70">
+                             <div className="flex items-center gap-1 type-telemetry-micro text-error/70 font-mono">
                                <AlertTriangle size={10} /> {new Date(task.deadline).toLocaleDateString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                              </div>
                            )}
-                           <div className="flex items-center gap-1 text-[9px] font-mono text-on-surface-variant/60 uppercase">
+                           <div className="flex items-center gap-1 type-telemetry-micro text-on-surface-variant/60 font-mono uppercase">
                              <Calendar size={10} /> {task.plannedDate || 'Undated'}
                            </div>
                         </div>
@@ -282,7 +282,7 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
             {!isAddingTask ? (
               <button 
                 onClick={(e) => { e.stopPropagation(); setIsAddingTask(true); }}
-                className="flex items-center gap-2 py-2 text-xs font-bold text-primary hover:text-primary-container transition-colors mt-2"
+                className="flex items-center gap-2 py-2 type-overline text-primary hover:text-primary-container transition-colors mt-2"
               >
                 <Plus size={14} />
                 <span>SPLIT INTO NEW TASK</span>
@@ -292,45 +292,45 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
                 <div className="flex gap-2">
                   <input 
                     autoFocus
-                    className="flex-1 bg-surface-high p-3 rounded-xl border border-outline-variant text-xs focus:outline-none focus:border-primary text-white"
+                    className="flex-1 bg-surface-high h-10 px-3 rounded-xl border border-outline-variant text-xs focus:outline-none focus:border-primary text-white type-body"
                     placeholder="Sub-task title..."
                     value={newTaskTitle}
                     onChange={(e) => setNewTaskTitle(e.target.value)}
                   />
-                  <button type="submit" className="p-3 bg-primary-container text-on-primary rounded-xl shrink-0">
+                  <button type="submit" className="h-10 px-4 bg-primary-container text-on-primary rounded-xl shrink-0 flex items-center justify-center touch-target-compact">
                     <Send size={16} />
                   </button>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1">
-                    <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Entry Time</label>
-                    <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
+                    <label className="type-overline text-on-surface-variant">Entry Time</label>
+                    <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-outline-variant">
                       <Clock size={12} className="text-primary" />
-                      <input type="time" className="bg-transparent text-[10px] font-mono text-white focus:outline-none" value={newTime} onChange={e => setNewTime(e.target.value)} />
+                      <input type="time" className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none" value={newTime} onChange={e => setNewTime(e.target.value)} />
                     </div>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest">Planned Date</label>
-                    <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-outline-variant">
+                    <label className="type-overline text-on-surface-variant">Planned Date</label>
+                    <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-outline-variant">
                       <Calendar size={12} className="text-secondary" />
-                      <input type="date" className="bg-transparent text-[10px] font-mono text-white focus:outline-none uppercase" value={newDate} onChange={e => setNewDate(e.target.value)} />
+                      <input type="date" className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none uppercase" value={newDate} onChange={e => setNewDate(e.target.value)} />
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest text-error">Deadline Protocol (Optional)</label>
-                  <div className="flex items-center gap-2 bg-surface-low p-2 rounded-xl border border-error/20">
+                  <label className="type-overline text-error">Deadline Protocol (Optional)</label>
+                  <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-error/20">
                     <AlertTriangle size={12} className="text-error" />
-                    <input type="datetime-local" className="bg-transparent text-[10px] font-mono text-white focus:outline-none w-full" value={newDeadline} onChange={e => setNewDeadline(e.target.value)} />
+                    <input type="datetime-local" className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none w-full" value={newDeadline} onChange={e => setNewDeadline(e.target.value)} />
                   </div>
                 </div>
 
                 <button 
                   type="button" 
                   onClick={() => setIsAddingTask(false)}
-                  className="text-center text-[10px] font-black text-on-surface-variant uppercase py-1 hover:text-white transition-colors"
+                  className="text-center type-overline text-on-surface-variant py-1.5 hover:text-white transition-colors"
                 >
                   Cancel Uplink
                 </button>
@@ -362,26 +362,26 @@ const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: 
 };
 
 const NextMilestoneCard = () => (
-  <div className="glass-panel border border-outline-variant p-6 rounded-3xl h-full flex flex-col justify-between relative overflow-hidden group hover:border-primary-container transition-colors">
+  <div className="glass-panel card-standard border border-outline-variant rounded-2xl sm:rounded-3xl h-full flex flex-col justify-between relative overflow-hidden group hover:border-primary-container transition-colors">
     <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
       <Clock size={120} />
     </div>
     <div>
-      <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">NEXT MILESTONE</h3>
+      <h3 className="type-overline text-on-surface-variant mb-1">NEXT MILESTONE</h3>
     </div>
     <div>
-      <div className="text-primary-container font-mono text-sm mb-1">In 4 hours</div>
-      <div className="text-2xl font-bold text-white">System Sync</div>
+      <div className="type-telemetry-base text-primary-container mb-1">In 4 hours</div>
+      <div className="type-title-2 font-bold text-white">System Sync</div>
     </div>
   </div>
 );
 
 const ComputeRelayCard = () => (
-  <div className="glass-panel border border-outline-variant p-6 rounded-3xl h-full bg-gradient-to-br from-secondary/20 to-transparent flex flex-col justify-between">
+  <div className="glass-panel card-standard border border-outline-variant rounded-2xl sm:rounded-3xl h-full bg-gradient-to-br from-secondary/20 to-transparent flex flex-col justify-between">
     <Cpu className="text-secondary" size={32} />
     <div>
-      <h3 className="text-xl font-bold text-white mb-1">Compute<br/>Relay</h3>
-      <div className="w-full h-1 bg-surface-high mt-4 rounded-full overflow-hidden">
+      <h3 className="type-title-2 font-bold text-white mb-1">Compute<br/>Relay</h3>
+      <div className="w-full h-1.5 bg-surface-high mt-4 rounded-full overflow-hidden">
         <div className="h-full bg-secondary w-2/3" />
       </div>
     </div>
@@ -437,7 +437,7 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
 
   return (
     <motion.div 
-      className={`glass-panel border-2 rounded-3xl mb-6 relative overflow-hidden transition-colors ${isPriority ? 'border-primary-container p-8' : 'border-outline-variant p-6 hover:border-primary/50'}`}
+      className={`glass-panel border-2 rounded-2xl sm:rounded-3xl mb-6 relative overflow-hidden transition-colors ${isPriority ? 'border-primary-container card-standard sm:card-spacious' : 'border-outline-variant card-standard hover:border-primary/50'}`}
       initial={isPriority ? { y: 20, opacity: 0 } : { opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
     >
@@ -452,7 +452,7 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
             </div>
           )}
           <div className="flex-1">
-            <span className="text-primary-container text-xs font-bold uppercase tracking-widest">
+            <span className="type-overline text-primary-container">
               {isPriority ? 'Priority Zero' : 'Secondary Ambition'}
             </span>
             
@@ -460,7 +460,7 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
               <form onSubmit={saveAmbitionEdit} className="mt-1" onClick={e => e.stopPropagation()}>
                 <input 
                   autoFocus
-                  className={`w-full bg-surface-high p-2 rounded-xl border border-primary font-display font-bold text-white focus:outline-none ${isPriority ? 'text-2xl' : 'text-lg'}`}
+                  className={`w-full bg-surface-high p-2 rounded-xl border border-primary font-display font-bold text-white focus:outline-none ${isPriority ? 'type-title-1' : 'type-title-2'}`}
                   value={editAmbitionTitle}
                   onChange={(e) => setEditAmbitionTitle(e.target.value)}
                   onBlur={() => saveAmbitionEdit()}
@@ -469,7 +469,7 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
               </form>
             ) : (
               <div className="flex items-center gap-3 group/title">
-                <h1 className={`${isPriority ? 'text-2xl' : 'text-lg'} font-display font-bold text-white mt-1`}>{ambition.title}</h1>
+                <h1 className={`${isPriority ? 'type-title-1' : 'type-title-2'} font-display font-bold text-white mt-1`}>{ambition.title}</h1>
                 <div className="mt-1 lg:opacity-0 lg:group-hover/title:opacity-100 transition-all">
                   <ActionMenu 
                     actions={[
@@ -482,14 +482,14 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
             )}
             
             {!isPriority && !isOpen && (
-              <p className="text-xs text-on-surface-variant">
+              <p className="type-body text-xs text-on-surface-variant">
                 {(ambition.milestones || []).length} Milestones • {(ambition.milestones || []).filter((m: any) => m.status === 'pending').length} Pending
               </p>
             )}
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className={`${isPriority ? 'w-16 h-16 text-xl' : 'w-10 h-10 text-xs'} rounded-full border-2 border-primary-container flex items-center justify-center font-bold text-primary`}>
+          <div className={`${isPriority ? 'w-16 h-16 type-title-3' : 'w-10 h-10 type-telemetry-micro'} rounded-full border-2 border-primary-container flex items-center justify-center font-bold text-primary`}>
             {ambition.progress}%
           </div>
           {!isPriority && (
@@ -513,27 +513,27 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
             {!isAddingMilestone ? (
               <button 
                 onClick={() => setIsAddingMilestone(true)}
-                className="w-full glass-panel border border-dashed border-outline-variant p-4 rounded-2xl flex items-center justify-center gap-2 text-on-surface-variant hover:text-primary hover:border-primary/50 transition-colors group"
+                className="w-full h-12 glass-panel border border-dashed border-outline-variant px-4 rounded-2xl flex items-center justify-center gap-2 type-overline text-on-surface-variant hover:text-primary hover:border-primary/50 transition-colors group touch-target"
               >
-                <Plus size={20} className="group-hover:rotate-90 transition-transform" />
-                <span className="font-bold tracking-tight uppercase text-xs">Deconstruct into new milestone</span>
+                <Plus size={18} className="group-hover:rotate-90 transition-transform" />
+                <span>Deconstruct into new milestone</span>
               </button>
             ) : (
               <form onSubmit={handleAddMilestone} className="flex gap-2 p-2">
                 <input 
                   autoFocus
-                  className="flex-1 bg-surface-high p-3 rounded-xl border border-primary focus:outline-none text-sm text-white"
+                  className="flex-1 bg-surface-high h-10 px-4 rounded-xl border border-primary focus:outline-none type-body text-sm text-white"
                   placeholder="Milestone title..."
                   value={newMilestoneTitle}
                   onChange={(e) => setNewMilestoneTitle(e.target.value)}
                 />
-                <button type="submit" className="p-3 bg-primary-container text-on-primary rounded-xl">
-                  <Send size={18} />
+                <button type="submit" className="h-10 px-4 bg-primary-container text-on-primary rounded-xl shrink-0 flex items-center justify-center touch-target-compact">
+                  <Send size={16} />
                 </button>
                 <button 
                   type="button" 
                   onClick={() => setIsAddingMilestone(false)}
-                  className="p-3 text-on-surface-variant hover:text-white text-xs font-bold"
+                  className="h-10 px-4 text-on-surface-variant hover:text-white type-overline touch-target-compact"
                 >
                   CANCEL
                 </button>
@@ -564,37 +564,37 @@ const NebulaMap = () => {
   };
 
   return (
-    <div className="p-6 lg:pl-80 space-y-8 bg-surface-lowest min-h-screen text-white pb-24">
+    <div className="p-6 lg:pl-80 space-y-8 bg-surface-lowest min-h-screen text-white pb-32">
       <header className="mb-8 flex justify-between items-end">
         <div>
-          <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Architect Mode</h2>
-          <h1 className="text-4xl font-display font-black text-primary text-glow-primary">The Nebula Map</h1>
-          <p className="text-on-surface-variant">Deconstruct your ambitions into stellar milestones.</p>
+          <h2 className="text-secondary type-overline">Architect Mode</h2>
+          <h1 className="type-display text-primary text-glow-primary uppercase">The Nebula Map</h1>
+          <p className="type-body text-on-surface-variant mt-1">Deconstruct your ambitions into stellar milestones.</p>
         </div>
         
         <motion.button 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 bg-primary-container text-on-primary px-6 py-3 rounded-2xl font-bold hover:shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.3)] transition-all group border-2 border-primary/20"
+          className="flex items-center gap-2 bg-primary-container text-on-primary-container h-12 px-6 rounded-2xl type-overline hover:shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.3)] transition-all group border-2 border-primary/20 touch-target"
         >
-          <Rocket size={20} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
+          <Rocket size={18} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
           <span>LAUNCH TRAJECTORY</span>
         </motion.button>
       </header>
       
       {ambitions.length === 0 ? (
-        <div className="glass-panel border-2 border-dashed border-outline-variant rounded-[3.5rem] p-24 flex flex-col items-center justify-center text-center space-y-8 transition-all hover:border-primary/30 group">
-          <div className="w-28 h-28 bg-surface-high/50 rounded-full flex items-center justify-center text-on-surface-variant opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500">
-            <Rocket size={56} />
+        <div className="glass-panel border-2 border-dashed border-outline-variant card-spacious rounded-3xl p-12 sm:p-24 flex flex-col items-center justify-center text-center space-y-6 transition-all hover:border-primary/30 group">
+          <div className="w-24 h-24 bg-surface-high/50 rounded-full flex items-center justify-center text-on-surface-variant opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500">
+            <Rocket size={48} />
           </div>
           <div>
-            <h2 className="text-3xl font-display font-black text-white uppercase tracking-tighter">Nebula Silent</h2>
-            <p className="text-on-surface-variant max-w-md mt-3 leading-relaxed">Your mission log is empty. Initiate your first orbital trajectory to begin deconstructing complex objectives into actionable steps.</p>
+            <h2 className="type-title-1 text-white uppercase">Nebula Silent</h2>
+            <p className="type-body text-on-surface-variant max-w-md mt-2 leading-relaxed">Your mission log is empty. Initiate your first orbital trajectory to begin deconstructing complex objectives into actionable steps.</p>
           </div>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="bg-primary/10 text-primary px-8 py-4 rounded-2xl font-black uppercase tracking-[0.2em] text-xs border border-primary/20 hover:bg-primary hover:text-on-primary transition-all"
+            className="bg-primary/10 text-primary h-12 px-8 rounded-2xl type-overline border border-primary/20 hover:bg-primary hover:text-on-primary transition-all touch-target"
           >
             INITIATE FIRST LAUNCH
           </button>
