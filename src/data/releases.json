@@ -1,5 +1,19 @@
 [
   {
+    "version": "1.11.1",
+    "date": "2026-11-21",
+    "transmission": "📐 Harmonious 8pt Spatial Grid, Ergonomic Touch Targets & Interactive Version Details Modal.",
+    "title": "Harmonious Spatial Grid & Interactive Version History",
+    "details": [
+      "Harmonious 8pt Spatial Grid: Unified layout dimensions, gutters, and card padding across Orbit Scheduler, Nebula Map, Dashboard, and Navigation into a cohesive 8pt proportional grid for a distraction-free visual rhythm.",
+      "Ergonomic Touch Targets: Upgraded buttons, sub-navigation tabs, and interactive controls to minimum 44px (and 36px compact) touch targets, eliminating misclicks and ensuring effortless one-handed mobile navigation.",
+      "Interactive Version Details Modal: Added a dedicated Version Details modal in System Manifest featuring easy 2-release-per-page pagination, active version badges, keyboard navigation (Esc, Left/Right arrows), and audio feedback.",
+      "High-Precision Monospace Telemetry: Integrated JetBrains Mono typography tokens for codebases, schemas, timestamps, and metrics, ensuring effortless legibility during long focus sessions.",
+      "Responsive Navigation Shell: Calibrated desktop link heights (44px) and mobile navigation bar heights (64px) with safe-area padding for a modern, native-feeling app shell across all screen sizes."
+    ],
+    "type": "patch"
+  },
+  {
     "version": "1.11.0",
     "date": "2026-11-17",
     "transmission": "⚡ Stellar Velocity: 76% App Size Reduction, Mobile Precision & DocsHub.",
