@@ -94,26 +94,6 @@ const Navigation = () => {
     <>
       <CommandHub isOpen={isHubOpen} onClose={() => setIsHubOpen(false)} />
 
-      {/* Mobile Vocabulary Quick-Toggle */}
-      <div className="lg:hidden fixed top-4 right-4 z-40">
-        <button
-          type="button"
-          onClick={() => {
-            SoundManager.playPop();
-            toggleVocabularyMode();
-          }}
-          aria-label={`Switch to ${isPeopleMode ? 'Original' : 'People'} Mode`}
-          className={`touch-target-compact px-3 py-1.5 rounded-full border backdrop-blur-md flex items-center gap-1.5 shadow-lg text-xs font-mono font-bold transition-all ${
-            isPeopleMode
-              ? 'bg-secondary/20 border-secondary/40 text-secondary'
-              : 'bg-primary/20 border-primary/40 text-primary'
-          }`}
-        >
-          {isPeopleMode ? <Users size={13} /> : <Rocket size={13} />}
-          <span className="type-overline normal-case tracking-normal">{isPeopleMode ? 'People' : 'Original'}</span>
-        </button>
-      </div>
-
       {/* Mobile Nav */}
       <nav className="lg:hidden fixed bottom-6 left-6 right-6 z-50" aria-label="Mobile navigation">
         <div className="h-16 glass-panel rounded-3xl border border-outline-variant flex justify-around items-center px-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
