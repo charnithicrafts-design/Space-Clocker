@@ -36,7 +36,7 @@ const NavLink: React.FC<NavLinkProps> = ({ to, icon: Icon, label, active, color 
     onClick={() => SoundManager.playPop()}
     aria-current={active ? 'page' : undefined}
     aria-label={`${label} sector`}
-    className={`flex items-center gap-3 p-3 rounded-xl transition-all relative group focus-visible:ring-2 focus-visible:ring-primary outline-none ${active ? 'bg-surface-high text-white shadow-lg' : 'text-on-surface-variant hover:text-white hover:bg-surface-low'}`}
+    className={`flex items-center gap-3 h-11 px-3 rounded-xl transition-all relative group focus-visible:ring-2 focus-visible:ring-primary outline-none touch-target-compact ${active ? 'bg-surface-high text-white shadow-lg' : 'text-on-surface-variant hover:text-white hover:bg-surface-low'}`}
   >
     {active && (
       <motion.div 
@@ -45,9 +45,9 @@ const NavLink: React.FC<NavLinkProps> = ({ to, icon: Icon, label, active, color 
       />
     )}
     <Icon size={20} className={active ? color : 'group-hover:scale-110 transition-transform'} aria-hidden="true" />
-    <span className="hidden lg:flex items-center gap-2 font-bold text-xs uppercase tracking-widest flex-1">
+    <span className="hidden lg:flex items-center gap-2 type-overline flex-1">
       {label}
-      {badge && <span className="text-[8px] bg-secondary/20 text-secondary border border-secondary/30 px-1.5 py-0.5 rounded-md ml-auto">{badge}</span>}
+      {badge && <span className="type-overline bg-secondary/20 text-secondary border border-secondary/30 px-2 py-0.5 rounded-md ml-auto">{badge}</span>}
     </span>
   </Link>
 );
@@ -92,31 +92,31 @@ const Navigation = () => {
 
       {/* Mobile Nav */}
       <nav className="lg:hidden fixed bottom-6 left-6 right-6 z-50" aria-label="Mobile navigation">
-        <div className="glass-panel rounded-3xl border border-outline-variant flex justify-around items-center p-2 px-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-          <Link to="/" aria-label="Momentum sector" className={`p-3 rounded-2xl ${pathname === '/' ? 'text-primary bg-primary/10' : 'text-on-surface-variant'}`}>
-            <LayoutDashboard size={24} aria-hidden="true" />
+        <div className="h-16 glass-panel rounded-3xl border border-outline-variant flex justify-around items-center px-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+          <Link to="/" aria-label="Momentum sector" className={`touch-target-compact p-2 rounded-2xl ${pathname === '/' ? 'text-primary bg-primary/10' : 'text-on-surface-variant'}`}>
+            <LayoutDashboard size={22} aria-hidden="true" />
           </Link>
-          <Link to="/orbit" aria-label="Orbit sector" className={`p-3 rounded-2xl ${pathname === '/orbit' ? 'text-secondary bg-secondary/10' : 'text-on-surface-variant'}`}>
-            <Clock size={24} aria-hidden="true" />
+          <Link to="/orbit" aria-label="Orbit sector" className={`touch-target-compact p-2 rounded-2xl ${pathname === '/orbit' ? 'text-secondary bg-secondary/10' : 'text-on-surface-variant'}`}>
+            <Clock size={22} aria-hidden="true" />
           </Link>
           
           {/* Command Hub Trigger */}
           <button 
             onClick={() => { setIsHubOpen(true); SoundManager.playSwell(); }}
             aria-label="Open Command Hub"
-            className="w-14 h-14 bg-primary text-on-primary rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.4)] active:scale-90 transition-all -translate-y-4 border-4 border-surface-lowest focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+            className="w-14 h-14 bg-primary text-on-primary rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.4)] active:scale-90 transition-all -translate-y-4 border-4 border-surface-lowest focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none touch-target"
           >
             <Zap size={28} aria-hidden="true" />
           </button>
 
-          <Link to="/timeline" aria-label="Timeline sector" className={`p-3 rounded-2xl ${pathname === '/timeline' ? 'text-primary-container bg-primary-container/10' : 'text-on-surface-variant'}`}>
-            <CalendarDays size={24} aria-hidden="true" />
+          <Link to="/timeline" aria-label="Timeline sector" className={`touch-target-compact p-2 rounded-2xl ${pathname === '/timeline' ? 'text-primary-container bg-primary-container/10' : 'text-on-surface-variant'}`}>
+            <CalendarDays size={22} aria-hidden="true" />
           </Link>
-          <Link to="/profile" aria-label="Profile sector" className={`p-3 rounded-2xl ${pathname === '/profile' ? 'text-tertiary bg-tertiary/10' : 'text-on-surface-variant'}`}>
-            <UserCircle size={24} aria-hidden="true" />
+          <Link to="/profile" aria-label="Profile sector" className={`touch-target-compact p-2 rounded-2xl ${pathname === '/profile' ? 'text-tertiary bg-tertiary/10' : 'text-on-surface-variant'}`}>
+            <UserCircle size={22} aria-hidden="true" />
           </Link>
-          <Link to="/settings" aria-label="System Config" className={`p-3 rounded-2xl ${pathname === '/settings' ? 'text-on-surface-variant bg-surface-high' : 'text-on-surface-variant'}`}>
-            <Settings size={24} aria-hidden="true" />
+          <Link to="/settings" aria-label="System Config" className={`touch-target-compact p-2 rounded-2xl ${pathname === '/settings' ? 'text-on-surface-variant bg-surface-high' : 'text-on-surface-variant'}`}>
+            <Settings size={22} aria-hidden="true" />
           </Link>
         </div>
       </nav>
@@ -127,41 +127,41 @@ const Navigation = () => {
           <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30" aria-hidden="true">
             <Box className="text-primary" size={24} />
           </div>
-          <h1 className="font-display text-xl font-black text-white uppercase tracking-tighter leading-none">
+          <h1 className="type-title-3 font-display font-black text-white uppercase tracking-tighter leading-none">
             Space<br/><span className="text-primary">Clocker</span>
           </h1>
         </div>
 
         <div className="flex flex-col gap-6 flex-1 overflow-y-auto no-scrollbar pr-2">
           {/* Tactical Sector */}
-          <section className="space-y-2" aria-labelledby="tactical-heading">
-            <h2 id="tactical-heading" className="px-3 text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-3">Tactical Sector</h2>
+          <section className="space-y-1.5" aria-labelledby="tactical-heading">
+            <h2 id="tactical-heading" className="px-3 type-overline text-on-surface-variant mb-2">Tactical Sector</h2>
             {tacticalLinks.map((link) => (
               <NavLink key={link.to} {...link} active={pathname === link.to} />
             ))}
           </section>
 
           {/* Strategic Sector */}
-          <section className="space-y-2" aria-labelledby="strategic-heading">
-            <h2 id="strategic-heading" className="px-3 text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-3">Strategic Sector</h2>
+          <section className="space-y-1.5" aria-labelledby="strategic-heading">
+            <h2 id="strategic-heading" className="px-3 type-overline text-on-surface-variant mb-2">Strategic Sector</h2>
             {strategicLinks.map((link) => (
               <NavLink key={link.to} {...link} active={pathname === link.to} />
             ))}
           </section>
 
           {/* Communications Sector */}
-          <section className="space-y-2" aria-labelledby="communications-heading">
-            <h2 id="communications-heading" className="px-3 text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-3">Communications</h2>
+          <section className="space-y-1.5" aria-labelledby="communications-heading">
+            <h2 id="communications-heading" className="px-3 type-overline text-on-surface-variant mb-2">Communications</h2>
             {communicationLinks.map((link) => (
               <NavLink key={link.to} {...link} active={pathname === link.to} />
             ))}
           </section>
         </div>
 
-        <div className="space-y-6 pt-6 border-t border-outline-variant">
+        <div className="space-y-4 pt-6 border-t border-outline-variant">
           {/* Sync Status Overlay */}
           {oracleConfig.syncEnabled && (
-            <div className="px-3 py-4 bg-surface-low rounded-2xl border border-outline-variant/30 flex items-center gap-3 group">
+            <div className="px-3.5 py-3 bg-surface-low rounded-2xl border border-outline-variant/30 flex items-center gap-3 group">
               <div className={`relative ${syncStatus.isSyncing ? 'animate-spin' : ''}`}>
                 <Globe size={18} className={syncStatus.error ? 'text-error' : 'text-secondary'} />
                 {syncStatus.isSyncing && (
@@ -169,11 +169,11 @@ const Navigation = () => {
                 )}
               </div>
               <div className="flex-1 overflow-hidden">
-                <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant truncate">
+                <p className="type-overline text-on-surface-variant truncate">
                   {syncStatus.isSyncing ? 'Uplinking...' : (syncStatus.error ? 'Comms Error' : 'Comms Active')}
                 </p>
                 {syncStatus.lastSyncedAt && !syncStatus.error && !syncStatus.isSyncing && (
-                  <p className="text-[8px] text-success/70 font-mono uppercase">Telemetry OK</p>
+                  <p className="type-telemetry-micro text-success/80 font-mono uppercase">Telemetry OK</p>
                 )}
               </div>
             </div>
