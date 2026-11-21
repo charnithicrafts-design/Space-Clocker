@@ -21,7 +21,7 @@ const MomentumEngine = () => {
   const completionRate = totalMilestones > 0 ? Math.round((completedMilestones / totalMilestones) * 100) : 0;
 
   return (
-    <div className="p-6 lg:pl-80 space-y-6 bg-surface-lowest min-h-screen">
+    <div className="p-6 lg:pl-80 space-y-8 bg-surface-lowest min-h-screen pb-32">
       {/* Simulation Banner */}
       {preferences?.isSimulation && (
         <motion.div 
@@ -35,8 +35,8 @@ const MomentumEngine = () => {
               <Zap size={20} />
             </div>
             <div>
-              <h3 className="text-sm font-black text-white uppercase tracking-widest leading-none mb-1">Mentor Blueprint Active</h3>
-              <p className="text-[10px] text-on-surface-variant uppercase tracking-wider">You are observing a simulated historical trajectory.</p>
+              <h3 className="type-headline text-white uppercase mb-1">Mentor Blueprint Active</h3>
+              <p className="type-overline text-on-surface-variant normal-case">You are observing a simulated historical trajectory.</p>
             </div>
           </div>
           <button
@@ -47,7 +47,7 @@ const MomentumEngine = () => {
                 SoundManager.playSyncSuccess();
               }
             }}
-            className="relative z-10 whitespace-nowrap bg-primary text-on-primary px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-container transition-all shadow-lg hover:shadow-primary/30 active:scale-95"
+            className="relative z-10 whitespace-nowrap bg-primary text-on-primary h-10 px-5 rounded-xl type-overline hover:bg-primary-container transition-all shadow-lg hover:shadow-primary/30 active:scale-95 touch-target-compact"
           >
             Initiate My Ascent
           </button>
@@ -57,15 +57,15 @@ const MomentumEngine = () => {
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">Space Science Level</h2>
+          <h2 className="text-secondary type-overline">Space Science Level</h2>
           <div className="flex items-center gap-4">
-            <h1 className="text-4xl font-display font-black text-primary uppercase tracking-tighter">
+            <h1 className="type-display text-primary uppercase">
               Momentum Rank: LVL {profile.level}
             </h1>
             {preferences?.isSimulation && (
               <button
                 onClick={() => useTrackStore.getState().setShowSupernova(true)}
-                className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-widest border border-amber-500/30 hover:bg-amber-500 hover:text-black transition-all"
+                className="px-3 py-1 rounded-full bg-amber-500/20 text-amber-500 type-overline border border-amber-500/30 hover:bg-amber-500 hover:text-black transition-all"
                 title="Test Supernova Effect"
               >
                 Trigger Supernova
@@ -77,10 +77,10 @@ const MomentumEngine = () => {
       </header>
 
       {/* Global Momentum Level Resonance */}
-      <div className="space-y-1 mb-8">
+      <div className="space-y-1.5 mb-8">
         <div className="flex justify-between items-end">
-          <div className="text-xs font-mono text-on-surface-variant uppercase tracking-widest">Global Momentum Resonance: {profile.xp} / 1000 XP</div>
-          <div className="text-sm text-primary-container font-mono">+{Math.round((profile.xp / 1000) * 100)}%</div>
+          <div className="type-overline text-on-surface-variant">Global Momentum Resonance: {profile.xp} / 1000 XP</div>
+          <div className="type-telemetry-base text-primary-container">+{Math.round((profile.xp / 1000) * 100)}%</div>
         </div>
         <div className="w-full h-2 bg-surface-high rounded-full overflow-hidden border border-outline-variant/30">
           <motion.div 
@@ -90,7 +90,7 @@ const MomentumEngine = () => {
             transition={{ duration: 1, ease: "easeOut" }} 
           />
         </div>
-        <p className="text-xs text-on-surface-variant font-mono uppercase">Next Ranking Shift In {1000 - profile.xp} XP</p>
+        <p className="type-telemetry-micro text-on-surface-variant uppercase">Next Ranking Shift In {1000 - profile.xp} XP</p>
       </div>
 
       {/* Active Quest: Map your first Milestone */}
@@ -98,21 +98,21 @@ const MomentumEngine = () => {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="p-6 rounded-3xl border-2 border-primary-container/40 bg-primary/10 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.2)] mb-8"
+          className="card-standard rounded-3xl border-2 border-primary-container/40 bg-primary/10 flex flex-col md:flex-row items-center gap-6 shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.2)] mb-8"
         >
           <div className="w-16 h-16 rounded-2xl bg-primary-container/20 text-primary flex items-center justify-center border border-primary/20 shrink-0">
             <Target size={32} className="animate-pulse" />
           </div>
           <div className="space-y-1 text-center md:text-left flex-1">
-            <h3 className="text-lg font-black text-white uppercase tracking-wider">Active Quest: Map your first Milestone</h3>
-            <p className="text-xs text-on-surface-variant leading-relaxed">
+            <h3 className="type-title-3 text-white uppercase">Active Quest: Map your first Milestone</h3>
+            <p className="type-body text-xs text-on-surface-variant leading-relaxed">
               Establish a target in your Nebula Architect mode. Logging your first action towards it triggers an immediate system XP burst!
             </p>
           </div>
           <Link 
             to="/nebula" 
             onClick={() => SoundManager.playSwell()}
-            className="bg-primary text-on-primary px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary-container transition-colors shadow-lg hover:shadow-primary/20 flex items-center gap-2 cursor-pointer"
+            className="bg-primary text-on-primary h-10 px-6 rounded-xl type-overline hover:bg-primary-container transition-colors shadow-lg hover:shadow-primary/20 flex items-center gap-2 cursor-pointer touch-target-compact"
           >
             Open Nebula Map <ChevronRight size={16} />
           </Link>
@@ -121,11 +121,11 @@ const MomentumEngine = () => {
 
       {/* Macro Ambitions */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold text-white uppercase tracking-wider flex items-center gap-2">
+        <h2 className="type-title-2 text-white uppercase flex items-center gap-2">
             <Rocket size={20} className="text-secondary" />
             Macro Ambitions (Trajectories)
         </h2>
-        <div className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] bg-secondary/10 px-3 py-1 rounded-full border border-secondary/20">
+        <div className="type-overline text-secondary bg-secondary/10 px-3 py-1 rounded-full border border-secondary/20">
             Resonance Tracking Active
         </div>
       </div>
@@ -137,22 +137,22 @@ const MomentumEngine = () => {
           const isFullyCompleted = totalInAmbition > 0 && completedInAmbition === totalInAmbition;
 
           return (
-            <div key={ambition.id} className={`glass-panel border-2 p-6 rounded-3xl nebula-shadow group transition-all duration-500 ${isFullyCompleted ? 'border-success/30 bg-success/5' : 'border-outline-variant hover:border-primary/30'}`}>
+            <div key={ambition.id} className={`glass-panel card-standard border-2 rounded-2xl sm:rounded-3xl nebula-shadow group transition-all duration-500 ${isFullyCompleted ? 'border-success/30 bg-success/5' : 'border-outline-variant hover:border-primary/30'}`}>
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className={`font-bold text-lg transition-colors ${isFullyCompleted ? 'text-success' : 'text-white group-hover:text-primary'}`}>
+                  <h3 className={`type-title-3 font-bold transition-colors ${isFullyCompleted ? 'text-success' : 'text-white group-hover:text-primary'}`}>
                     {ambition.title}
                   </h3>
                   <div className="flex items-center gap-2 mt-1">
-                    <p className="text-[10px] text-on-surface-variant uppercase font-black tracking-widest">Trajectory Resonance</p>
-                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold flex items-center gap-1 ${isFullyCompleted ? 'bg-success/20 text-success' : 'bg-surface-high text-secondary-container'}`}>
+                    <p className="type-overline text-on-surface-variant">Trajectory Resonance</p>
+                    <span className={`type-overline px-2 py-0.5 rounded-md font-bold flex items-center gap-1 ${isFullyCompleted ? 'bg-success/20 text-success' : 'bg-surface-high text-secondary-container'}`}>
                         {isFullyCompleted && <CheckCircle2 size={10} />}
                         {completedInAmbition}/{totalInAmbition} MILESTONES
                     </span>
                   </div>
                 </div>
                 <div className="flex flex-col items-end">
-                  <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-[10px] font-black transition-all ${isFullyCompleted ? 'border-success text-success shadow-[0_0_10px_rgba(var(--color-success-rgb),0.3)]' : 'border-primary-container text-primary'}`}>
+                  <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center type-telemetry-micro font-bold transition-all ${isFullyCompleted ? 'border-success text-success shadow-[0_0_10px_rgba(var(--color-success-rgb),0.3)]' : 'border-primary-container text-primary'}`}>
                     {ambition.progress}%
                   </div>
                 </div>
@@ -160,7 +160,7 @@ const MomentumEngine = () => {
 
               {/* Individual Ambition Resonance Bar */}
               <div className="space-y-2">
-                  <div className="flex justify-between text-[9px] font-mono uppercase">
+                  <div className="flex justify-between type-telemetry-micro uppercase font-mono">
                       <span className="text-on-surface-variant">Resonance Energy</span>
                       <span className={isFullyCompleted ? 'text-success' : 'text-primary-container'}>
                         {isFullyCompleted ? 'MAX CAPACITY' : `${ambition.xp % 500} / 500 XP`}
@@ -174,11 +174,11 @@ const MomentumEngine = () => {
                       />
                   </div>
                   <div className="flex justify-between items-center">
-                    <div className="text-[8px] text-on-surface-variant uppercase tracking-tighter">
+                    <div className="type-overline text-on-surface-variant normal-case">
                         Resonance Phase {Math.floor(ambition.xp / 500) + 1}
                     </div>
                     {isFullyCompleted && (
-                        <div className="text-[8px] text-success font-black uppercase tracking-widest animate-pulse">
+                        <div className="type-overline text-success font-black animate-pulse">
                             Stationary Orbit Achieved
                         </div>
                     )}
@@ -192,31 +192,31 @@ const MomentumEngine = () => {
       {/* Widgets & Anomalies */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="grid grid-cols-2 gap-4">
-          <div className="glass-panel p-6 rounded-2xl flex flex-col justify-between border border-outline-variant/30 hover:border-primary/20 transition-all">
+          <div className="glass-panel card-standard rounded-2xl flex flex-col justify-between border border-outline-variant/30 hover:border-primary/20 transition-all">
             <Rocket className="text-primary-container" size={24} />
             <div>
-                <div className="text-3xl font-black text-white leading-none">{ambitions.length < 10 ? `0${ambitions.length}` : ambitions.length}</div>
-                <div className="text-[10px] text-on-surface-variant uppercase font-black tracking-widest mt-1">Active Trajectories</div>
+                <div className="type-telemetry-lg text-white font-mono leading-none">{ambitions.length < 10 ? `0${ambitions.length}` : ambitions.length}</div>
+                <div className="type-overline text-on-surface-variant mt-1.5">Active Trajectories</div>
             </div>
           </div>
-          <div className="glass-panel p-6 rounded-2xl flex flex-col justify-between border border-outline-variant/30 hover:border-secondary/20 transition-all">
+          <div className="glass-panel card-standard rounded-2xl flex flex-col justify-between border border-outline-variant/30 hover:border-secondary/20 transition-all">
             <CheckCircle2 className="text-secondary" size={24} />
             <div>
-                <div className="text-3xl font-black text-white leading-none">
+                <div className="type-telemetry-lg text-white font-mono leading-none">
                     {completedMilestones < 10 ? `0${completedMilestones}` : completedMilestones}
                 </div>
-                <div className="text-[10px] text-on-surface-variant uppercase font-black tracking-widest mt-1">Milestones Cleared</div>
+                <div className="type-overline text-on-surface-variant mt-1.5">Milestones Cleared</div>
             </div>
           </div>
         </div>
         
-        <div className="glass-panel p-6 rounded-2xl border-l-4 border-l-primary flex flex-col justify-between">
+        <div className="glass-panel card-standard rounded-2xl border-l-4 border-l-primary flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2 text-primary">
                 <Zap size={18} />
-                <h3 className="font-bold uppercase text-xs tracking-widest">Mission Completion Index</h3>
+                <h3 className="type-overline text-primary tracking-widest">Mission Completion Index</h3>
             </div>
-            <div className="text-xl font-black text-white font-mono">{completionRate}%</div>
+            <div className="type-telemetry-lg text-white font-mono">{completionRate}%</div>
           </div>
           <div className="w-full h-1.5 bg-surface-high rounded-full overflow-hidden mb-4">
             <motion.div 
@@ -225,7 +225,7 @@ const MomentumEngine = () => {
                 animate={{ width: `${completionRate}%` }}
             />
           </div>
-          <p className="text-[10px] text-on-surface-variant leading-relaxed uppercase font-medium">
+          <p className="type-body text-xs text-on-surface-variant leading-relaxed">
             System analysis indicates {completionRate}% efficiency across all active orbital trajectories. Standing by for further mission updates.
           </p>
         </div>
