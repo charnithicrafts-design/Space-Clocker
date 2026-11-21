@@ -76,7 +76,8 @@ describe('SettingsDashboard', () => {
     },
     preferences: {
       uiMode: 'simple',
-      confirmDelete: true
+      confirmDelete: true,
+      vocabularyMode: 'original'
     },
     syncStatus: {
       isSyncing: false,
@@ -366,5 +367,27 @@ describe('SettingsDashboard', () => {
     });
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('allows switching between Original Mode and People Mode with instant feedback', async () => {
+    (useTrackStore as any).mockReturnValue({
+      ...mockInitialState,
+      preferences: {
+        ...mockInitialState.preferences,
+        vocabularyMode: 'original'
+      }
+    });
+
+    renderWithRouter(<SettingsDashboard />);
+
+    expect(screen.getByText('Language & Terminology Mode')).toBeInTheDocument();
+    expect(screen.getByText('Active: Original Mode')).toBeInTheDocument();
+
+    const peopleBtn = screen.getByRole('button', { name: /People Mode/i });
+    await act(async () => {
+      fireEvent.click(peopleBtn);
+    });
+
+    expect(mockUpdatePreferences).toHaveBeenCalledWith({ vocabularyMode: 'people' });
   });
 });

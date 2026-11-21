@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Clock, Layers, ShieldAlert, Archive } from 'lucide-react';
+import { useVocabulary } from '../../utils/vocabulary';
 
 export type OrbitHorizon = 'daily' | 'weekly' | 'backlog' | 'void';
 
@@ -10,11 +11,13 @@ interface OrbitSubNavProps {
 }
 
 const OrbitSubNav: React.FC<OrbitSubNavProps> = ({ active, onChange }) => {
+  const { isPeopleMode } = useVocabulary();
+
   const tabs: { id: OrbitHorizon; label: string; icon: any; color: string }[] = [
-    { id: 'daily', label: 'Daily Mission', icon: Clock, color: 'text-primary' },
-    { id: 'weekly', label: 'Weekly Resonance', icon: Layers, color: 'text-secondary' },
-    { id: 'backlog', label: 'Stasis Backlog', icon: Archive, color: 'text-tertiary' },
-    { id: 'void', label: 'Void Protocol', icon: ShieldAlert, color: 'text-error' },
+    { id: 'daily', label: isPeopleMode ? 'Daily Tasks' : 'Daily Mission', icon: Clock, color: 'text-primary' },
+    { id: 'weekly', label: isPeopleMode ? 'Weekly Goals' : 'Weekly Resonance', icon: Layers, color: 'text-secondary' },
+    { id: 'backlog', label: isPeopleMode ? 'Backlog' : 'Stasis Backlog', icon: Archive, color: 'text-tertiary' },
+    { id: 'void', label: isPeopleMode ? 'Habits to Avoid' : 'Void Protocol', icon: ShieldAlert, color: 'text-error' },
   ];
 
   return (

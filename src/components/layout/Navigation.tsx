@@ -15,10 +15,13 @@ import {
   Zap,
   Box,
   Info,
-  BookOpen
+  BookOpen,
+  Rocket,
+  Users
 } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
+import { useVocabulary } from '../../utils/vocabulary';
 import CommandHub from './CommandHub';
 
 interface NavLinkProps {
@@ -57,6 +60,7 @@ import { motion } from 'framer-motion';
 const Navigation = () => {
   const { pathname } = useLocation();
   const { syncStatus, oracleConfig } = useTrackStore();
+  const { t, isPeopleMode, toggleVocabularyMode } = useVocabulary();
   const [isHubOpen, setIsHubOpen] = useState(false);
 
   const KNOWN_APP_ROUTES = [
@@ -69,26 +73,46 @@ const Navigation = () => {
   if (['/about', '/identity', '/landing'].includes(pathname) || pathname.startsWith('/docs') || !isKnownAppRoute) return null;
   
   const tacticalLinks = [
-    { to: '/', icon: LayoutDashboard, label: 'Momentum', color: 'text-primary' },
-    { to: '/orbit', icon: Clock, label: 'Orbit', color: 'text-secondary' },
+    { to: '/', icon: LayoutDashboard, label: t('navMomentum'), color: 'text-primary' },
+    { to: '/orbit', icon: Clock, label: t('navOrbit'), color: 'text-secondary' },
   ];
 
   const strategicLinks = [
-    { to: '/nebula', icon: Target, label: 'Nebula', color: 'text-magenta' },
-    { to: '/timeline', icon: CalendarDays, label: 'Timeline', color: 'text-primary-container' },
-    { to: '/skills', icon: Brain, label: 'Skills', color: 'text-success' },
-    { to: '/profile', icon: UserCircle, label: 'Profile', color: 'text-tertiary' },
-    { to: '/horizon', icon: Telescope, label: 'Horizon', color: 'text-error' },
+    { to: '/nebula', icon: Target, label: t('navNebula'), color: 'text-magenta' },
+    { to: '/timeline', icon: CalendarDays, label: t('navTimeline'), color: 'text-primary-container' },
+    { to: '/skills', icon: Brain, label: t('navSkills'), color: 'text-success' },
+    { to: '/profile', icon: UserCircle, label: t('navProfile'), color: 'text-tertiary' },
+    { to: '/horizon', icon: Telescope, label: t('navHorizon'), color: 'text-error' },
   ];
 
   const communicationLinks = [
-    { to: '/docs', icon: BookOpen, label: 'Docs', color: 'text-accent' },
-    { to: '/transmission', icon: Signal, label: 'Transmission', color: 'text-primary', badge: 'SOON' },
+    { to: '/docs', icon: BookOpen, label: t('navDocs'), color: 'text-accent' },
+    { to: '/transmission', icon: Signal, label: t('navTransmission'), color: 'text-primary', badge: 'SOON' },
   ];
 
   return (
     <>
       <CommandHub isOpen={isHubOpen} onClose={() => setIsHubOpen(false)} />
+
+      {/* Mobile Vocabulary Quick-Toggle */}
+      <div className="lg:hidden fixed top-4 right-4 z-40">
+        <button
+          type="button"
+          onClick={() => {
+            SoundManager.playPop();
+            toggleVocabularyMode();
+          }}
+          aria-label={`Switch to ${isPeopleMode ? 'Original' : 'People'} Mode`}
+          className={`touch-target-compact px-3 py-1.5 rounded-full border backdrop-blur-md flex items-center gap-1.5 shadow-lg text-xs font-mono font-bold transition-all ${
+            isPeopleMode
+              ? 'bg-secondary/20 border-secondary/40 text-secondary'
+              : 'bg-primary/20 border-primary/40 text-primary'
+          }`}
+        >
+          {isPeopleMode ? <Users size={13} /> : <Rocket size={13} />}
+          <span className="type-overline normal-case tracking-normal">{isPeopleMode ? 'People' : 'Original'}</span>
+        </button>
+      </div>
 
       {/* Mobile Nav */}
       <nav className="lg:hidden fixed bottom-6 left-6 right-6 z-50" aria-label="Mobile navigation">
@@ -123,19 +147,48 @@ const Navigation = () => {
 
       {/* Desktop Nav */}
       <nav className="hidden lg:flex fixed top-6 left-6 w-72 h-[calc(100vh-48px)] glass-panel rounded-3xl border border-outline-variant flex-col p-6 gap-8 z-50 overflow-hidden shadow-2xl" aria-label="Desktop navigation">
-        <div className="flex items-center gap-3 px-3">
-          <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30" aria-hidden="true">
-            <Box className="text-primary" size={24} />
+        <div className="flex items-center justify-between px-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30" aria-hidden="true">
+              <Box className="text-primary" size={24} />
+            </div>
+            <h1 className="type-title-3 font-display font-black text-white uppercase tracking-tighter leading-none">
+              Space<br/><span className="text-primary">Clocker</span>
+            </h1>
           </div>
-          <h1 className="type-title-3 font-display font-black text-white uppercase tracking-tighter leading-none">
-            Space<br/><span className="text-primary">Clocker</span>
-          </h1>
+
+          <button
+            type="button"
+            onClick={() => {
+              SoundManager.playPop();
+              toggleVocabularyMode();
+            }}
+            aria-label={`Switch to ${isPeopleMode ? 'Original' : 'People'} Mode`}
+            title={`Active: ${isPeopleMode ? 'People Mode' : 'Original Mode'} - Click to switch`}
+            className={`touch-target-compact px-2.5 py-1 rounded-xl border flex items-center gap-1.5 transition-all text-xs font-mono font-bold ${
+              isPeopleMode 
+                ? 'bg-secondary/15 border-secondary/40 text-secondary hover:bg-secondary/25' 
+                : 'bg-primary/15 border-primary/40 text-primary hover:bg-primary/25'
+            }`}
+          >
+            {isPeopleMode ? (
+              <>
+                <Users size={13} className="shrink-0" />
+                <span className="type-overline normal-case tracking-normal">People</span>
+              </>
+            ) : (
+              <>
+                <Rocket size={13} className="shrink-0" />
+                <span className="type-overline normal-case tracking-normal">Original</span>
+              </>
+            )}
+          </button>
         </div>
 
         <div className="flex flex-col gap-6 flex-1 overflow-y-auto no-scrollbar pr-2">
           {/* Tactical Sector */}
           <section className="space-y-1.5" aria-labelledby="tactical-heading">
-            <h2 id="tactical-heading" className="px-3 type-overline text-on-surface-variant mb-2">Tactical Sector</h2>
+            <h2 id="tactical-heading" className="px-3 type-overline text-on-surface-variant mb-2">{t('navTactical')}</h2>
             {tacticalLinks.map((link) => (
               <NavLink key={link.to} {...link} active={pathname === link.to} />
             ))}
@@ -143,7 +196,7 @@ const Navigation = () => {
 
           {/* Strategic Sector */}
           <section className="space-y-1.5" aria-labelledby="strategic-heading">
-            <h2 id="strategic-heading" className="px-3 type-overline text-on-surface-variant mb-2">Strategic Sector</h2>
+            <h2 id="strategic-heading" className="px-3 type-overline text-on-surface-variant mb-2">{t('navStrategic')}</h2>
             {strategicLinks.map((link) => (
               <NavLink key={link.to} {...link} active={pathname === link.to} />
             ))}
@@ -151,7 +204,7 @@ const Navigation = () => {
 
           {/* Communications Sector */}
           <section className="space-y-1.5" aria-labelledby="communications-heading">
-            <h2 id="communications-heading" className="px-3 type-overline text-on-surface-variant mb-2">Communications</h2>
+            <h2 id="communications-heading" className="px-3 type-overline text-on-surface-variant mb-2">{t('navCommunications')}</h2>
             {communicationLinks.map((link) => (
               <NavLink key={link.to} {...link} active={pathname === link.to} />
             ))}
@@ -182,7 +235,7 @@ const Navigation = () => {
           <NavLink 
             to="/settings" 
             icon={Settings} 
-            label="System Config" 
+            label={t('navSettings')} 
             active={pathname === '/settings'}
             color="text-on-surface-variant"
           />

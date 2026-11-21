@@ -112,6 +112,7 @@ export interface Preferences {
   confirmDelete: boolean;
   uiMode: 'simple' | 'professional' | 'void' | 'nebula' | 'stellar';
   isSimulation?: boolean;
+  vocabularyMode?: 'original' | 'people';
 }
 
 export interface Transmission {
@@ -268,7 +269,8 @@ export const useTrackStore = create<TrackStore>()(
     preferences: {
       confirmDelete: true,
       uiMode: 'simple',
-      isSimulation: false
+      isSimulation: false,
+      vocabularyMode: 'original'
     },
     syncStatus: {
       isSyncing: false,
@@ -1194,7 +1196,8 @@ export const useTrackStore = create<TrackStore>()(
           preferences: {
             confirmDelete: prefsRes.rows[0]?.confirmDelete ?? true,
             uiMode: prefsRes.rows[0]?.uiMode || 'simple',
-            isSimulation: prefsRes.rows[0]?.isSimulation ?? false
+            isSimulation: prefsRes.rows[0]?.isSimulation ?? false,
+            vocabularyMode: 'original'
           },
           stats: statsRes.rows[0] || get().stats,
           oracleConfig: oracleRes.rows[0] ? { 

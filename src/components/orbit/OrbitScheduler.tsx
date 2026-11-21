@@ -11,6 +11,7 @@ import OrbitSubNav, { OrbitHorizon } from './OrbitSubNav';
 import VoidList from '../void-protocol/VoidList';
 import ConfirmModal from '../layout/ConfirmModal';
 import { ActionMenu } from '../layout/ActionMenu';
+import { useVocabulary } from '../../utils/vocabulary';
 
 
 const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
@@ -64,6 +65,7 @@ const OrbitScheduler = () => {
   const BACKLOG_ITEMS_PER_PAGE = 5;
 
   const isPro = preferences.uiMode === 'professional';
+  const { t, isPeopleMode } = useVocabulary();
 
   // Consolidate all tasks (standalone + milestone tasks)
   const allTasks = useMemo(() => {
@@ -291,9 +293,11 @@ const OrbitScheduler = () => {
       <header className="mb-8 relative">
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-secondary type-overline">Orbit Protocol {isPro ? '(Professional)' : '(Standard)'}</h2>
-            <h1 className="type-display text-primary uppercase">Mission Control</h1>
-            <p className="type-body text-on-surface-variant max-w-lg mt-1">Synchronize your planetary rotation with stellar objectives.</p>
+            <h2 className="text-secondary type-overline">{isPeopleMode ? 'Daily Tasks' : 'Orbit Protocol'} {isPro ? '(Professional)' : '(Standard)'}</h2>
+            <h1 className="type-display text-primary uppercase">{isPeopleMode ? "Today's Tasks" : 'Mission Control'}</h1>
+            <p className="type-body text-on-surface-variant max-w-lg mt-1">
+              {isPeopleMode ? 'Organize and complete your tasks for today.' : 'Synchronize your planetary rotation with stellar objectives.'}
+            </p>
           </div>
           <div className="flex flex-col items-end gap-2">
             <div className="bg-surface-high border border-outline-variant px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-lg">
@@ -423,7 +427,7 @@ const OrbitScheduler = () => {
                       className="h-10 sm:h-12 px-6 bg-primary-container text-on-primary-container rounded-xl sm:rounded-2xl type-overline hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] transition-all flex items-center justify-center gap-2 shrink-0 ml-auto sm:ml-0 touch-target-compact"
                     >
                       <Plus size={16} />
-                      <span>Uplink</span>
+                      <span>{isPeopleMode ? 'Add Task' : 'Uplink'}</span>
                     </button>
                   </div>
                 </form>

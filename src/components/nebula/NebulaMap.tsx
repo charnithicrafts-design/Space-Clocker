@@ -6,8 +6,8 @@ import { SoundManager } from '../../utils/SoundManager';
 import { getTodayLocalISO } from '../../utils/DateTimeUtils';
 import CommandModal from '../layout/CommandModal';
 import ConfirmModal from '../layout/ConfirmModal';
-
 import { ActionMenu } from '../layout/ActionMenu';
+import { useVocabulary } from '../../utils/vocabulary';
 
 const MilestoneCard = ({ milestone, ambitionId }: { milestone: any; ambitionId: string; key?: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -557,6 +557,7 @@ const AmbitionCard = ({ ambition, isPriority }: { ambition: any; isPriority?: bo
 
 const NebulaMap = () => {
   const { ambitions, addAmbition } = useTrackStore();
+  const { t, isPeopleMode } = useVocabulary();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLaunch = async (title: string) => {
@@ -567,9 +568,11 @@ const NebulaMap = () => {
     <div className="p-6 lg:pl-80 space-y-8 bg-surface-lowest min-h-screen text-white pb-32">
       <header className="mb-8 flex justify-between items-end">
         <div>
-          <h2 className="text-secondary type-overline">Architect Mode</h2>
-          <h1 className="type-display text-primary text-glow-primary uppercase">The Nebula Map</h1>
-          <p className="type-body text-on-surface-variant mt-1">Deconstruct your ambitions into stellar milestones.</p>
+          <h2 className="text-secondary type-overline">{isPeopleMode ? 'Goals & Ambitions' : 'Architect Mode'}</h2>
+          <h1 className="type-display text-primary text-glow-primary uppercase">{isPeopleMode ? 'Goals Map' : 'The Nebula Map'}</h1>
+          <p className="type-body text-on-surface-variant mt-1">
+            {isPeopleMode ? 'Deconstruct your goals into manageable milestones.' : 'Deconstruct your ambitions into stellar milestones.'}
+          </p>
         </div>
         
         <motion.button 
@@ -579,7 +582,7 @@ const NebulaMap = () => {
           className="flex items-center gap-2 bg-primary-container text-on-primary-container h-12 px-6 rounded-2xl type-overline hover:shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.3)] transition-all group border-2 border-primary/20 touch-target"
         >
           <Rocket size={18} className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform" />
-          <span>LAUNCH TRAJECTORY</span>
+          <span>{isPeopleMode ? 'CREATE NEW GOAL' : 'LAUNCH TRAJECTORY'}</span>
         </motion.button>
       </header>
       

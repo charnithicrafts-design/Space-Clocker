@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { CURRENT_APP_VERSION } from '../../constants';
-import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor, Copy, History } from 'lucide-react';
+import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor, Copy, History, Rocket, Users, Sparkles } from 'lucide-react';
 import { dbProxy } from '../../db/client';
 import { syncService } from '../../services/SyncService';
 import { SoundManager } from '../../utils/SoundManager';
@@ -12,11 +12,13 @@ import VersionHistoryModal from './VersionHistoryModal';
 import { getOrCreateDeviceId } from '../../utils/DeviceUtils';
 import { useSession } from '../../lib/auth-client';
 import { useNavigate } from 'react-router-dom';
+import { useVocabulary } from '../../utils/vocabulary';
 
 const SettingsDashboard = () => {
   const navigate = useNavigate();
   const store = useTrackStore();
   const { profile, oracleConfig, preferences, syncStatus, devices, updateProfile, updateOracleConfig, updatePreferences, importData, initialize, setSyncStatus, disconnectDevice } = store;
+  const { t, isPeopleMode, setVocabularyMode } = useVocabulary();
 
   const [localProfile, setLocalProfile] = useState(profile);
   const [localOracle, setLocalOracle] = useState(oracleConfig);
@@ -227,9 +229,11 @@ const SettingsDashboard = () => {
   return (
     <div className="p-6 lg:pl-80 space-y-8 min-h-screen bg-surface-lowest text-white pb-32">
       <header className="mb-8">
-        <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">System Protocol</h2>
+        <h2 className="text-secondary text-sm font-bold tracking-widest uppercase">{t('settingsTitle')}</h2>
         <h1 className="text-4xl font-display font-black text-primary">Settings</h1>
-        <p className="text-on-surface-variant">Configure your trajectory and neural link.</p>
+        <p className="text-on-surface-variant">
+          {isPeopleMode ? 'Configure your preferences and cloud backup.' : 'Configure your trajectory and neural link.'}
+        </p>
       </header>
 
       <SyncPaywallModal isOpen={isPaywallOpen} onClose={() => setIsPaywallOpen(false)} />
@@ -239,7 +243,7 @@ const SettingsDashboard = () => {
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
           <div className="flex items-center gap-3 border-b border-outline-variant pb-4 mb-4">
             <User className="text-primary" />
-            <h3 className="font-display font-bold text-xl">Pilot Profile</h3>
+            <h3 className="font-display font-bold text-xl">{t('pilotProfile')}</h3>
           </div>
           <div className="space-y-4">
             <div>
@@ -308,19 +312,19 @@ const SettingsDashboard = () => {
         <section className="glass-panel border border-outline-variant p-8 rounded-3xl space-y-6">
           <div className="flex items-center gap-3 border-b border-outline-variant pb-4 mb-4">
             <Globe className="text-primary-container" />
-            <h3 className="font-display font-bold text-xl">Communication Array</h3>
+            <h3 className="font-display font-bold text-xl">{isPeopleMode ? 'Cloud Backup & Sync' : 'Communication Array'}</h3>
           </div>
           <div className="space-y-4">
             <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
               <Cloud size={14} className="text-secondary" />
-              Stellar Sync (Cloud)
+              {isPeopleMode ? 'Cloud Synchronization' : 'Stellar Sync (Cloud)'}
             </h4>
             <div className="p-4 rounded-2xl bg-surface-high border border-outline-variant space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h5 className="font-bold text-sm">Neural Link Status</h5>
+                  <h5 className="font-bold text-sm">{isPeopleMode ? 'Sync Status' : 'Neural Link Status'}</h5>
                   <p className="text-[10px] text-on-surface-variant uppercase tracking-tighter">
-                    {syncStatus.lastSyncedAt ? `Last Uplink: ${new Date(syncStatus.lastSyncedAt).toLocaleString()}` : 'Array Disconnected'}
+                    {syncStatus.lastSyncedAt ? `${isPeopleMode ? 'Last Synced' : 'Last Uplink'}: ${new Date(syncStatus.lastSyncedAt).toLocaleString()}` : (isPeopleMode ? 'Sync Disconnected' : 'Array Disconnected')}
                   </p>
                 </div>
                 <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${oracleConfig.syncEnabled ? 'bg-success/20 text-success border border-success/30' : 'bg-surface-low text-on-surface-variant border border-outline-variant'}`}>
@@ -527,6 +531,74 @@ const SettingsDashboard = () => {
             <h3 className="font-display font-bold text-xl">System Preferences</h3>
           </div>
           <div className="space-y-4">
+            {/* Language & Terminology Interface (Original vs People Mode) */}
+            <div className="p-5 rounded-2xl bg-surface-high border border-outline-variant space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h4 className="font-bold text-sm text-white flex items-center gap-2">
+                    <Sparkles size={16} className="text-secondary" />
+                    <span>Language & Terminology Mode</span>
+                  </h4>
+                  <p className="text-xs text-on-surface-variant">Choose how Space-Clocker speaks to you.</p>
+                </div>
+                <span className="type-telemetry-micro font-mono px-2.5 py-0.5 rounded-lg bg-surface-low border border-outline-variant text-on-surface-variant">
+                  Active: {localPrefs.vocabularyMode === 'people' ? 'People Mode' : 'Original Mode'}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  aria-label="Original Mode"
+                  aria-pressed={localPrefs.vocabularyMode !== 'people'}
+                  onClick={() => {
+                    SoundManager.playPop();
+                    const updated = { ...localPrefs, vocabularyMode: 'original' as const };
+                    setLocalPrefs(updated);
+                    setVocabularyMode('original');
+                  }}
+                  className={`p-4 rounded-xl border text-left transition-all relative ${
+                    localPrefs.vocabularyMode !== 'people'
+                      ? 'bg-primary/10 border-primary shadow-[0_0_15px_rgba(0,242,255,0.15)] ring-1 ring-primary'
+                      : 'bg-surface-low border-outline-variant/50 hover:border-outline-variant text-on-surface-variant'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1.5 text-primary font-bold text-xs uppercase tracking-wider font-mono">
+                    <Rocket size={14} />
+                    <span>Original Mode</span>
+                  </div>
+                  <p className="type-body-sm text-xs leading-relaxed text-on-surface-variant">
+                    Full space-themed immersion: Nebulae, Orbits, Countermeasures & Chronos Core.
+                  </p>
+                </button>
+
+                <button
+                  type="button"
+                  aria-label="People Mode"
+                  aria-pressed={localPrefs.vocabularyMode === 'people'}
+                  onClick={() => {
+                    SoundManager.playPop();
+                    const updated = { ...localPrefs, vocabularyMode: 'people' as const };
+                    setLocalPrefs(updated);
+                    setVocabularyMode('people');
+                  }}
+                  className={`p-4 rounded-xl border text-left transition-all relative ${
+                    localPrefs.vocabularyMode === 'people'
+                      ? 'bg-secondary/10 border-secondary shadow-[0_0_15px_rgba(180,136,255,0.15)] ring-1 ring-secondary'
+                      : 'bg-surface-low border-outline-variant/50 hover:border-outline-variant text-on-surface-variant'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1.5 text-secondary font-bold text-xs uppercase tracking-wider font-mono">
+                    <Users size={14} />
+                    <span>People Mode</span>
+                  </div>
+                  <p className="type-body-sm text-xs leading-relaxed text-on-surface-variant">
+                    Clear everyday productivity terms: Goals & Ambitions, Daily Tasks, Habits to Avoid & Cloud Sync.
+                  </p>
+                </button>
+              </div>
+            </div>
+
             <div className="flex items-center justify-between p-4 rounded-2xl bg-surface-high border border-outline-variant">
               <div>
                 <h4 className="font-bold text-sm">UI Strategy</h4>

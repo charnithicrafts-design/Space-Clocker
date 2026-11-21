@@ -7,9 +7,11 @@ import { SoundManager } from '../../utils/SoundManager';
 import CommandModal from '../layout/CommandModal';
 import StellarTimeline from './StellarTimeline';
 import { TelemetryDashboard } from './TelemetryDashboard';
+import { useVocabulary } from '../../utils/vocabulary';
 
 const MomentumEngine = () => {
   const { profile, ambitions, addAmbition, preferences, engageBlueprint } = useTrackStore();
+  const { t, isPeopleMode } = useVocabulary();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLaunchTrajectory = async (title: string) => {
@@ -57,10 +59,10 @@ const MomentumEngine = () => {
       {/* Header */}
       <header className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-secondary type-overline">Space Science Level</h2>
+          <h2 className="text-secondary type-overline">{isPeopleMode ? 'Focus & Growth Level' : 'Space Science Level'}</h2>
           <div className="flex items-center gap-4">
             <h1 className="type-display text-primary uppercase">
-              Momentum Rank: LVL {profile.level}
+              {isPeopleMode ? `Progress Rank: LVL ${profile.level}` : `Momentum Rank: LVL ${profile.level}`}
             </h1>
             {preferences?.isSimulation && (
               <button
@@ -79,7 +81,9 @@ const MomentumEngine = () => {
       {/* Global Momentum Level Resonance */}
       <div className="space-y-1.5 mb-8">
         <div className="flex justify-between items-end">
-          <div className="type-overline text-on-surface-variant">Global Momentum Resonance: {profile.xp} / 1000 XP</div>
+          <div className="type-overline text-on-surface-variant">
+            {isPeopleMode ? `Daily Focus Momentum: ${profile.xp} / 1000 XP` : `Global Momentum Resonance: ${profile.xp} / 1000 XP`}
+          </div>
           <div className="type-telemetry-base text-primary-container">+{Math.round((profile.xp / 1000) * 100)}%</div>
         </div>
         <div className="w-full h-2 bg-surface-high rounded-full overflow-hidden border border-outline-variant/30">
