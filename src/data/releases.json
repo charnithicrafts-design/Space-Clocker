@@ -1,5 +1,20 @@
 [
   {
+    "version": "1.11.2",
+    "date": "2026-11-22",
+    "transmission": "🎨 Three Aesthetic Modes, Living Glassmorphic Harmony & People-First Clarity.",
+    "title": "Three Visual Modes & Living Glassmorphic Atmosphere",
+    "details": [
+      "Three Aesthetic Modes: Introduced Cosmos (Futuristic HUD), Astronaut (NASA Technical Flight Deck), and Sunny Iris (Botanical Sanctuary matching Charnithi's launch poster) to suit every state of mind.",
+      "Living Glassmorphism: Completely replaced flat, opaque grey panels with dynamic theme-tinted glass surfaces (--glass-bg, --glass-border, --glass-glow) that catch light and eliminate murky visual clutter.",
+      "Dynamic Ambient Radial Glows: Added soft background glow orbs (--ambient-orb-1, --ambient-orb-2) that gently bleed through translucent frosted panels, creating organic depth and zero eye strain.",
+      "Sunny Iris Botanical Harmony: Handcrafted split-complementary color balance using royal purple velvet (#140726), golden sun actions (#DDB763), lavender structures (#D6C7F2), and sprout green task accents (#A2B960).",
+      "NASA Aerospace Discipline: Real-world spacewalk palette featuring vacuum black (#090807), high-visibility spacesuit ceramic (#E0DDD8), and luminous Earth orbital blue borders (#1D6291).",
+      "Sidebar Quick-Cycler: Positioned a seamless 1-click theme cycler with tactile audio feedback directly on the sidebar for effortless aesthetic transitions without leaving your flow."
+    ],
+    "type": "patch"
+  },
+  {
     "version": "1.11.1",
     "date": "2026-11-21",
     "transmission": "📐 Harmonious 8pt Spatial Grid, Ergonomic Touch Targets & Interactive Version Details Modal.",
