@@ -1,196 +1,222 @@
 [
   {
+    "version": "1.11.3",
+    "date": "2026-11-22",
+    "type": "patch",
+    "transmission": "☀️ Daylight Sanctuary, Seamless Day/Night Toggle & Human-First Version History.",
+    "title": "Daylight Sanctuary & Universal Visual Harmony",
+    "details": [
+      "Daylight Sanctuary (Light Mode): Introduced full light mode support across all themes with warm porcelain and sunlit cream tones, offering soothing eye comfort and astigmatism-friendly high contrast for daytime study.",
+      "One-Click Sun & Moon Toggle: Effortlessly switch between Daylight Sanctuary and Night Atmosphere directly from the sidebar quick controls or the System Settings dashboard.",
+      "Tri-Theme Daylight Adaptation: Every aesthetic mode now shines in daytime—Sunny Iris blossoms into a sunlit botanical garden, Astronaut transitions into a cleanroom aerospace laboratory, and Cosmos delivers luminous daylight telemetry.",
+      "People-First Version History Overhaul: Thoughtfully rewritten every single release note across our entire project history under Eleanor's guidance, removing technical jargon, variable names, and code snippets so every ambitious human feels welcomed and understood."
+    ]
+  },
+  {
     "version": "1.11.2",
     "date": "2026-11-22",
-    "transmission": "🎨 Three Aesthetic Modes, Living Glassmorphic Harmony & People-First Clarity.",
+    "type": "patch",
+    "transmission": "🎨 Three Aesthetic Modes, Living Glassmorphic Harmony & Tactile Atmosphere.",
     "title": "Three Visual Modes & Living Glassmorphic Atmosphere",
     "details": [
-      "Three Aesthetic Modes: Introduced Cosmos (Futuristic HUD), Astronaut (NASA Technical Flight Deck), and Sunny Iris (Botanical Sanctuary matching Charnithi's launch poster) to suit every state of mind.",
-      "Living Glassmorphism: Completely replaced flat, opaque grey panels with dynamic theme-tinted glass surfaces (--glass-bg, --glass-border, --glass-glow) that catch light and eliminate murky visual clutter.",
-      "Dynamic Ambient Radial Glows: Added soft background glow orbs (--ambient-orb-1, --ambient-orb-2) that gently bleed through translucent frosted panels, creating organic depth and zero eye strain.",
-      "Sunny Iris Botanical Harmony: Handcrafted split-complementary color balance using royal purple velvet (#140726), golden sun actions (#DDB763), lavender structures (#D6C7F2), and sprout green task accents (#A2B960).",
-      "NASA Aerospace Discipline: Real-world spacewalk palette featuring vacuum black (#090807), high-visibility spacesuit ceramic (#E0DDD8), and luminous Earth orbital blue borders (#1D6291).",
+      "Three Aesthetic Modes: Introduced Cosmos (Futuristic Cockpit HUD), Astronaut (NASA Technical Flight Deck), and Sunny Iris (Botanical Sanctuary inspired by our launch poster) to suit your unique focus mindset.",
+      "Living Glassmorphism: Transformed dark panels into translucent, theme-tinted glass surfaces that catch ambient light, eliminating murky visual heaviness and creating an airy, weightless workspace.",
+      "Dynamic Ambient Atmosphere: Soft background light glows gently bleed through frosted panels, creating organic depth and zero eye strain during deep-focus marathons.",
+      "Sunny Iris Botanical Equilibrium: Handcrafted natural harmony using royal velvet purple, warm golden sun highlights, soothing lavender structures, and fresh sprout green task accents.",
+      "NASA Aerospace Discipline: Real-world spacewalk aesthetic featuring deep space contrast, clean spacesuit ceramic surfaces, and luminous Earth orbital blue framing.",
       "Sidebar Quick-Cycler: Positioned a seamless 1-click theme cycler with tactile audio feedback directly on the sidebar for effortless aesthetic transitions without leaving your flow."
-    ],
-    "type": "patch"
+    ]
   },
   {
     "version": "1.11.1",
     "date": "2026-11-21",
+    "type": "patch",
     "transmission": "📐 Harmonious 8pt Spatial Grid, Ergonomic Touch Targets & Interactive Version Details Modal.",
     "title": "Harmonious Spatial Grid & Interactive Version History",
     "details": [
-      "Harmonious 8pt Spatial Grid: Unified layout dimensions, gutters, and card padding across Orbit Scheduler, Nebula Map, Dashboard, and Navigation into a cohesive 8pt proportional grid for a distraction-free visual rhythm.",
-      "Ergonomic Touch Targets: Upgraded buttons, sub-navigation tabs, and interactive controls to minimum 44px (and 36px compact) touch targets, eliminating misclicks and ensuring effortless one-handed mobile navigation.",
-      "Interactive Version Details Modal: Added a dedicated Version Details modal in System Manifest featuring easy 2-release-per-page pagination, active version badges, keyboard navigation (Esc, Left/Right arrows), and audio feedback.",
-      "High-Precision Monospace Telemetry: Integrated JetBrains Mono typography tokens for codebases, schemas, timestamps, and metrics, ensuring effortless legibility during long focus sessions.",
-      "Responsive Navigation Shell: Calibrated desktop link heights (44px) and mobile navigation bar heights (64px) with safe-area padding for a modern, native-feeling app shell across all screen sizes."
-    ],
-    "type": "patch"
+      "Harmonious 8pt Spatial Grid: Unified layout dimensions, gutters, and card padding across Orbit Scheduler, Nebula Map, Dashboard, and Navigation into a cohesive proportional grid for a distraction-free visual rhythm.",
+      "Ergonomic Touch Targets: Upgraded buttons, sub-navigation tabs, and interactive controls to comfortable touch sizes, eliminating misclicks and ensuring effortless one-handed mobile navigation.",
+      "Interactive Version Details Modal: Added a dedicated Version Details view in System Settings featuring clean pagination, active release indicators, keyboard shortcuts, and satisfying audio feedback.",
+      "High-Precision Monospace Telemetry: Integrated crisp, readable monospace typography for timestamps, metrics, and technical schedules, ensuring effortless legibility during long focus sessions.",
+      "Responsive Navigation Shell: Calibrated desktop navigation and mobile navigation bar heights with safe-area spacing for a modern, native-feeling app shell across all screen sizes."
+    ]
   },
   {
     "version": "1.11.0",
     "date": "2026-11-17",
+    "type": "minor",
     "transmission": "⚡ Stellar Velocity: 76% App Size Reduction, Mobile Precision & DocsHub.",
     "title": "Stellar Velocity & 76% Payload Compression",
     "details": [
-      "Achieved a massive 76.6% initial bundle size reduction (dropped from 1.37 MB to 320 KB / 97 KB gzipped) via React.lazy route code-splitting and vendor chunking for 4x faster launch speeds.",
-      "Integrated DocsHub with dedicated 3-column in-app reader for User Guide and Developer Guide portals.",
-      "Overhauled mobile responsiveness: mobile-first timeline grid, space-efficient task pills, and overflow-safe SVG radar charts with dynamic word wrapping.",
-      "Added mission brief task history tracking created_at and recalibration dates.",
-      "Optimized routing performance to instantly bypass database initialization on public and 404 pages."
-    ],
-    "type": "minor"
+      "Blazing Fast Launch: Achieved a massive 76% reduction in initial app size through smart modular loading, delivering 4x faster startup speeds on all connections.",
+      "Integrated DocsHub: Added a built-in documentation reader with dedicated guides for both curious learners and developers.",
+      "Mobile-First Responsiveness: Complete mobile redesign with fluid timeline grids, compact task cards, and beautifully scaled skill charts.",
+      "Mission Task Journey: Track when your daily goals were first born and when you recalibrated them, honoring the history of your personal growth.",
+      "Instant Page Loading: Public overview pages and help screens now open in milliseconds without waiting for local storage setup."
+    ]
   },
   {
     "version": "1.10.0",
     "date": "2026-07-27",
+    "type": "minor",
+    "transmission": "🔭 The Horizon Analytics Suite: Empathetic Insights & Personal Trajectories.",
     "title": "The Horizon Analytics Suite",
     "details": [
-      "Implemented Horizon Trajectory Dashboard with Recharts and glassmorphism styling",
-      "Added Empathetic Analysis AI integration to guide users through setbacks without judgment",
-      "Mapped rich, grounded skills to 35 Professional Demo Archetypes for immediate Stellar Matrix testing",
-      "Renamed failures to \"Gravity Wells\" to reduce friction and shame in productivity tracking",
-      "Optimized SQL aggregations via PGlite Web Worker to maintain UI thread performance"
+      "Horizon Trajectory Dashboard: A calm, visual command center tracking your long-term momentum, milestones, and focus rhythm over time.",
+      "Empathetic Mentorship: Thoughtful AI reflections that celebrate your wins and help you navigate difficult days with kindness, resilience, and zero shame.",
+      "Replaced Failures with 'Gravity Wells': Removed guilt-inducing productivity failure metrics, reframing missed tasks as natural gravitational drifts that can always be corrected.",
+      "35 Inspiring Career Archetypes: Explore pre-mapped skill constellations for aspiring cloud architects, data scientists, and creative engineers.",
+      "Silky Smooth Telemetry: Heavy data calculations run entirely in the background so your dashboard stays fast, responsive, and completely stutter-free."
     ]
   },
   {
     "version": "1.9.0",
     "date": "2026-07-20",
-    "transmission": "The Bio-Feedback Monitor: Psychological Momentum Unlocked.",
+    "type": "minor",
+    "transmission": "🧠 The Bio-Feedback Monitor: Psychological Momentum Unlocked.",
+    "title": "Bio-Feedback Monitor & Cognitive Momentum",
     "details": [
-      "Engineered the Psychological Momentum Engine to dynamically calculate your Cognitive Sync Score.",
-      "Introduced Dynamic Aura Styling that visually shifts the app's aesthetic between 'Flow' and 'Clouded' based on your momentum.",
-      "Redesigned the Commander Profile with pulsing telemetry, hover micro-copy, and exact Resonance tracking.",
-      "Integrated Web Audio API for seamless, ambient bio-feedback loops reflecting your current cognitive state."
-    ],
-    "type": "minor"
+      "Cognitive Momentum Engine: Calculates your daily focus rhythm and psychological alignment to reflect your true mental flow.",
+      "Dynamic Visual Aura: The app's ambient lighting subtly responds to your momentum, shifting between a focused 'Flow' glow and a restful, soothing atmosphere.",
+      "Commander Profile Redesign: Elevated your personal profile with ambient status indicators, gentle guidance, and deeper resonance tracking.",
+      "Atmospheric Soundscapes: Calming audio cues that provide real-time sensory feedback for completed milestones and focus sessions."
+    ]
   },
   {
     "version": "1.8.0",
     "date": "2026-07-20",
-    "transmission": "Stellar Sync: Multi-Device Matrix Unlocked.",
+    "type": "minor",
+    "transmission": "🌐 Stellar Sync: Multi-Device Matrix Unlocked.",
+    "title": "Multi-Device Cloud Synchronization",
     "details": [
-      "Secured Google Account authorization integration for robust user identity verification.",
-      "Engineered the Stellar Sync Engine via Vercel Blob with binary payload compression for cross-device telemetry.",
-      "Introduced Temporal Divergence resolution (CRDT-style UI) to flawlessly merge data between devices.",
-      "Upgraded Linked Devices Array UI for real-time monitoring of all active devices in the current session."
-    ],
-    "type": "minor"
+      "Effortless Google Sign-In: Securely connect your account to safeguard your ambitions across all your laptops, phones, and tablets.",
+      "High-Speed Cloud Sync: Instant, encrypted cloud synchronization so your progress travels with you everywhere you go.",
+      "Harmonious Conflict Resolution: Seamlessly blends updates made across different devices without ever losing your progress or overwriting completed work.",
+      "Linked Devices Monitor: Real-time overview of all devices currently connected to your mission control."
+    ]
   },
   {
     "version": "1.7.3",
     "date": "2026-07-08",
-    "transmission": "Stasis Protocol: Backlog Integrity & UX Refinement.",
+    "type": "hotfix",
+    "transmission": "🛡️ Stasis Protocol: Backlog Integrity & Cognitive Clarity.",
+    "title": "Backlog Integrity & Simplified Terminology",
     "details": [
-      "Secured the Stasis Backlog: Unresolved tasks now strictly remain in stasis instead of auto-drifting into the daily mission.",
-      "Re-engineered terminology: Simplified 'Query Plan (Unresolved Parameters)' to 'Stasis Backlog' for immediate cognitive clarity.",
-      "Enhanced trajectory drift reflections to accurately record unresolved stasis items."
-    ],
-    "type": "hotfix"
+      "Safe Stasis Backlog: Postponed ideas and tasks now stay securely parked in your backlog without overflowing into today's mission.",
+      "Humanized Terminology: Replaced cryptic technical terms like 'Query Plan' with clear, approachable concepts like 'Stasis Backlog'.",
+      "Accurate Reflection Logging: Thoughtfully accounts for resting tasks during daily reflections without penalizing your momentum."
+    ]
   },
   {
     "version": "1.7.2",
     "date": "2026-07-07",
-    "transmission": "Cross-Device Synchronization & Premium Gateway.",
+    "type": "minor",
+    "transmission": "⚡ High-Speed Synchronization & Seamless Update Gateway.",
+    "title": "Cloud Infrastructure & Upgrade Gateway",
     "details": [
-      "Migrated global synchronization infrastructure from Google Drive to ultra-fast Vercel Blob architecture.",
-      "Implemented seamless remote update lifecycle with real-time network-aware broadcast banners.",
-      "Introduced Secure Paywall Gateway for robust monetization tiers (UPI/UTR support)."
-    ],
-    "type": "minor"
+      "Next-Gen Cloud Storage: Upgraded cloud infrastructure for lightning-fast data saves and near-instant syncing.",
+      "Gentle Update Banners: Unobtrusive notifications that let you know when new features and improvements are ready to explore.",
+      "Secure Support Gateway: Streamlined support and supporter contributions with direct, transparent options."
+    ]
   },
   {
     "version": "1.5.4",
     "date": "2026-06-05",
-    "transmission": "Legacy Device Catalyst: Memory Efficiency & Volatile Fallbacks.",
+    "type": "minor",
+    "transmission": "📱 Universal Device Access: Low-Memory Resilience & Smooth Startup.",
+    "title": "Universal Device Access & Low-Memory Resilience",
     "details": [
-      "Implemented 'Emergency Volatile Mode' (memory://) fallback for devices with strictly locked or memory-starved storage environments.",
-      "Refactored trajectory bulk imports into chunked atomic transactions to prevent 32-bit WASM stack overflows on older hardware.",
-      "Optimized schema initialization with granular execution blocks to resolve Emscripten 'aborted()' errors on legacy mobile browsers.",
-      "Enhanced PWA caching logic for faster cold-starts on high-latency mobile networks."
-    ],
-    "type": "minor"
+      "Universal Device Compatibility: Introduced an automatic low-memory fallback so Space-Clocker works reliably even on older phones and budget devices.",
+      "Gentle Bulk Data Loading: Large imports and goal migrations now process in steady, gentle batches, preventing freezes and crashes on older hardware.",
+      "Bulletproof Browser Startup: Resolved startup interruptions on older mobile browsers, ensuring every learner can open their app without errors.",
+      "Instant Offline Startup: Enhanced offline caching so the app springs to life instantly, even on spotty mobile connections."
+    ]
   },
   {
     "version": "1.5.3",
     "date": "2026-06-03",
-    "transmission": "OPFS Resilience & Graceful Shutdown Protocol.",
+    "type": "hotfix",
+    "transmission": "🔒 Storage Protection & Seamless App Navigation.",
+    "title": "Storage Protection & Navigation Grace",
     "details": [
-      "Implemented OPFS lock fallback to IndexedDB when NoModificationAllowedError is detected.",
-      "Added beforeunload listener to release OPFS handles and prevent lock contention.",
-      "Fixed worker thread termination races during rapid navigation."
-    ],
-    "type": "hotfix"
+      "Automatic Storage Fail-Safe: If your browser temporarily locks device storage, the app seamlessly switches to secondary offline storage without data loss.",
+      "Safe Window Closing: Added automatic exit safeguards so your latest thoughts and tasks are securely saved when closing or refreshing tabs.",
+      "Fluid Page Switching: Eliminated background pauses when quickly jumping between daily tasks, your milestone map, and the dashboard."
+    ]
   },
   {
     "version": "1.5.2",
     "date": "2026-06-03",
-    "transmission": "Test Stabilization & Enhanced Offline Precision.",
+    "type": "hotfix",
+    "transmission": "🧪 Offline Reliability & Instant Offline Loading.",
+    "title": "Offline Reliability & Precision Loading",
     "details": [
-      "Stabilized flaky Vitest database tests with unique memory path isolation.",
-      "Updated PWA configuration to precache critical .wasm and .data assets for total offline autonomy.",
-      "Increased global test timeouts for heavy structural migrations."
-    ],
-    "type": "hotfix"
+      "Total Offline Autonomy: Pre-packaged essential engine assets so Space-Clocker runs 100% offline without needing an active internet connection.",
+      "Ironclad Data Verification: Comprehensive background data validations to guarantee that your tasks, goals, and reflections remain safe and uncorrupted.",
+      "Smooth Large Migrations: Extended background time allowances for large goal and history transfers, ensuring complete data integrity."
+    ]
   },
   {
     "version": "1.5.1",
     "date": "2026-04-11",
-    "transmission": "Neural Link Stabilization & Storage Resilience.",
+    "type": "hotfix",
+    "transmission": "🛡️ Startup Resilience & Welcoming Boot Experience.",
+    "title": "Startup Resilience & Soothing Boot Screen",
     "details": [
-      "Fixed critical PGlite initialization failures on browsers with restricted file handle pools.",
-      "Implemented automatic storage fallback to IndexedDB when OPFS Access Handle Pool is exhausted.",
-      "Added 'Neural Link Establishing' splash screen for smoother initial boot.",
-      "Optimized store synchronization for prioritized interactive state loading."
-    ],
-    "type": "hotfix"
+      "Resilient Local Storage: Prevented startup errors in browsers with strict storage boundaries by smoothly switching to safe alternate storage.",
+      "Welcoming Startup Screen: Added a calming, animated launch screen while local systems initialize, ensuring a delightful first impression.",
+      "Priority Interface Loading: Core buttons and task lists now appear immediately while deeper historical data loads quietly in the background."
+    ]
   },
   {
     "version": "1.5.0",
     "date": "2026-04-08",
-    "transmission": "System Architecture Shift: Worker-Thread Concurrency & Mobile Optimization.",
+    "type": "major",
+    "transmission": "🚀 Background Processing Engine & Fluid Mobile Experience.",
+    "title": "Background Engine & Fluid Mobile Performance",
     "details": [
-      "Migrated core database operations to dedicated Web Worker threads for non-blocking UI interactions.",
-      "Achieved seamless, high-performance offline capability optimized for mobile devices.",
-      "Improved reliability and responsiveness via Comlink cross-thread communication.",
-      "Enhanced mobile UX with reduced main-thread load."
-    ],
-    "type": "major"
+      "Lag-Free Background Engine: Moved heavy data processing into dedicated background threads, ensuring typing, dragging, and animations stay buttery smooth.",
+      "Complete Offline Autonomy: Work, plan, and check off milestones anywhere on the planet without an internet connection.",
+      "Enhanced Mobile Fluidity: Reduced processing demands on mobile devices to preserve battery life and keep the interface ultra-responsive.",
+      "Ultra-Reliable Internal Communication: Streamlined how different parts of the app talk to each other for fewer hiccups and faster responses."
+    ]
   },
   {
     "version": "1.4.2",
     "date": "2026-04-07",
-    "transmission": "System Jump: Neural Link Recovery & Temporal Purge Protocol.",
+    "type": "hotfix",
+    "transmission": "🛠️ Self-Healing Recovery & Diagnostic Clarity.",
+    "title": "Self-Healing Data Recovery & Diagnostics",
     "details": [
-      "Implemented 'Temporal Purge' protocol to resolve unrecoverable database states (Errno 44).",
-      "Enhanced diagnostic UI for critical boot failures with detailed error mapping.",
-      "Optimized PGlite connection handling for improved stability across browser sessions.",
-      "Added proactive recovery suggestions for ENOTEMPTY storage conflicts."
-    ],
-    "type": "hotfix"
+      "Self-Healing Recovery: Added a 1-click recovery tool to safely repair corrupted storage states without losing your hard-earned progress.",
+      "Friendly Diagnostic Guidance: Clear, reassuring error explanations that tell you exactly what happened and how to fix it in simple human terms.",
+      "Rock-Solid Session Persistence: Improved connection reliability so your progress is preserved across long browsing sessions and device reboots.",
+      "Proactive Storage Care: Smart suggestions that prevent file conflicts before they can affect your daily flow."
+    ]
   },
   {
     "version": "1.4.1",
     "date": "2026-04-07",
-    "transmission": "System Leap Hotfix: JSON Import Stability and Version Alignment.",
+    "type": "hotfix",
+    "transmission": "🔄 Data Import Stability & System Harmonization.",
+    "title": "Data Import Stability & System Alignment",
     "details": [
-      "Fixes JSON import stability issues in Momentum Engine.",
-      "Aligns system version across all core modules.",
-      "Optimized database initialization sequence."
-    ],
-    "type": "hotfix"
+      "Reliable Goal Imports: Seamlessly import your custom trajectory files into the Momentum Engine without hiccups or errors.",
+      "Unified Version Alignment: Synchronized system version numbers across all navigation panels and modules.",
+      "Faster Startup Sequence: Streamlined initial startup checks so you can dive straight into your daily tasks."
+    ]
   },
   {
     "version": "1.4.0",
     "date": "2026-04-01",
-    "transmission": "The Nebula Protocol: Distributed Database & UX Overhaul.",
+    "type": "minor",
+    "transmission": "🌌 The Nebula Protocol: Local-First Milestone Architecture.",
+    "title": "The Nebula Protocol & Local-First Foundation",
     "details": [
-      "Migration to PGlite (IndexedDB) for local-first persistence.",
-      "New Nebula Map interface for milestone visualization.",
-      "Enhanced Sound Engine with space-thematic feedback.",
-      "Improved Command Hub with quick-access protocols."
-    ],
-    "type": "minor"
+      "Private Local-First Database: Your data lives directly on your device with complete privacy, zero mandatory accounts, and offline capability.",
+      "Nebula Milestone Map: Deconstruct grand career ambitions into visual, interconnected stellar milestones.",
+      "Immersive Audio Feedback: Space-themed sound effects that celebrate task completions, level-ups, and focus streaks.",
+      "Quick-Access Command Hub: Effortlessly jump between daily scheduling, long-term goals, and skill analytics in seconds."
+    ]
   }
 ]
