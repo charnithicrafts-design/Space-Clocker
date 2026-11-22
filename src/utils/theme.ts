@@ -31,13 +31,13 @@ export const THEMES: Record<AppTheme, ThemeMeta> = {
       secondary: '#DAB9FF',
       tertiary: '#43F3DE',
       bg: '#0B0E14',
-      border: '#3A494B'
+      border: '#2D3844'
     }
   },
   astronaut: {
     id: 'astronaut',
     name: 'Astronaut (Aerospace)',
-    badge: 'NASA / Artemis Flight Deck',
+    badge: 'NASA Technical HUD',
     subtitle: 'Spacesuit Ceramic & Earth Orbital Blue',
     description: 'Authentic flight instrument styling with space vacuum black, thermal foil gold, and orbital ocean blue.',
     purpose: 'Grounded engineering precision inspired by Apollo and Artemis missions for disciplined, tactical execution.',
@@ -46,13 +46,13 @@ export const THEMES: Record<AppTheme, ThemeMeta> = {
       secondary: '#A0947E',
       tertiary: '#718FA7',
       bg: '#090807',
-      border: '#6F6856'
+      border: '#1D6291'
     }
   },
   'sunny-iris': {
     id: 'sunny-iris',
     name: 'Sunny Iris (Ease of Eye)',
-    badge: 'Botanical Sanctuary & Launch Heritage',
+    badge: 'Botanical Equilibrium & Launch Heritage',
     subtitle: 'Cosmic Royal Purple & Sunny Gold',
     description: 'Restorative botanical pastel palette inspired by wild spring irises and the Charnithi launch poster.',
     purpose: 'Zero eye fatigue for marathon sessions, wrapping your goals in calming lavender, golden sun, and sprout green.',
@@ -60,8 +60,8 @@ export const THEMES: Record<AppTheme, ThemeMeta> = {
       primary: '#DDB763',
       secondary: '#D6C7F2',
       tertiary: '#A2B960',
-      bg: '#150727',
-      border: '#522987'
+      bg: '#140726',
+      border: '#491F75'
     }
   }
 };

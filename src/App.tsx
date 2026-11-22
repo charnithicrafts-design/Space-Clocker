@@ -41,6 +41,19 @@ const ScreenLoader = () => (
   </div>
 );
 
+const AmbientThemeGlow = () => (
+  <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+    <div 
+      className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full blur-[140px] opacity-40 transition-all duration-700 pointer-events-none"
+      style={{ background: 'var(--ambient-orb-1, radial-gradient(circle, rgba(0,242,255,0.2) 0%, transparent 70%))' }}
+    />
+    <div 
+      className="absolute -bottom-[15%] -right-[10%] w-[55vw] h-[55vw] rounded-full blur-[140px] opacity-35 transition-all duration-700 pointer-events-none"
+      style={{ background: 'var(--ambient-orb-2, radial-gradient(circle, rgba(218,185,255,0.15) 0%, transparent 70%))' }}
+    />
+  </div>
+);
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -369,7 +382,8 @@ const AppContent = () => {
   }
 
   return (
-    <div className={`min-h-screen bg-surface-lowest text-on-surface ${updateAvailable && !showOnboarding ? 'pt-10' : ''}`}>
+    <div className={`min-h-screen bg-surface-lowest text-on-surface relative overflow-x-hidden ${updateAvailable && !showOnboarding ? 'pt-10' : ''}`}>
+      <AmbientThemeGlow />
       {!showOnboarding && <CriticalUpdateBanner />}
       <Navigation />
 
@@ -382,7 +396,7 @@ const AppContent = () => {
       <VoidEventHorizon />
       <SupernovaEffect />
 
-      <main className="pb-24 lg:pb-0">
+      <main className="pb-24 lg:pb-0 relative z-10">
         <Suspense fallback={<ScreenLoader />}>
           <Routes>
             <Route path="/" element={<MomentumEngine />} />

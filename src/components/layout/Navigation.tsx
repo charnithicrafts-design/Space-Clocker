@@ -129,7 +129,7 @@ const Navigation = () => {
       </nav>
 
       {/* Desktop Nav */}
-      <nav className="hidden lg:flex fixed top-6 left-6 w-72 h-[calc(100vh-48px)] glass-panel rounded-3xl border border-outline-variant flex-col p-6 gap-8 z-50 overflow-hidden shadow-2xl" aria-label="Desktop navigation">
+      <nav className="hidden lg:flex fixed top-6 left-6 w-72 h-[calc(100vh-48px)] glass-panel rounded-3xl flex-col p-6 gap-8 z-50 overflow-hidden shadow-2xl" aria-label="Desktop navigation">
         <div className="flex items-center gap-3 px-3">
           <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30" aria-hidden="true">
             <Box className="text-primary" size={24} />
