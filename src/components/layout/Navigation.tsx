@@ -133,8 +133,8 @@ const Navigation = () => {
       {/* Desktop Nav */}
       <nav className="hidden lg:flex fixed top-6 left-6 w-72 h-[calc(100vh-48px)] glass-panel rounded-3xl flex-col p-6 gap-8 z-50 overflow-hidden shadow-2xl" aria-label="Desktop navigation">
         <div className="flex items-center gap-3 px-3">
-          <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/30" aria-hidden="true">
-            <Box className="text-primary" size={24} />
+          <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg border border-white/20 shrink-0 bg-white" aria-hidden="true">
+            <img src="/favicon.svg" alt="Space-Clocker Sanctuary Emblem" className="w-full h-full object-contain" />
           </div>
           <h1 className="type-title-3 font-display font-black text-white uppercase tracking-tighter leading-none">
             Space<br/><span className="text-primary">Clocker</span>

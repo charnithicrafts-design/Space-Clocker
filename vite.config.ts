@@ -29,8 +29,8 @@ export default defineConfig(({mode}) => {
           name: 'Space-Clocker',
           short_name: 'SpaceClocker',
           description: 'High-fidelity space-themed productivity and skill-tracking application',
-          theme_color: '#0f172a',
-          background_color: '#0f172a',
+          theme_color: '#FFFFFF',
+          background_color: '#FFFFFF',
           display: 'standalone',
           icons: [
             {

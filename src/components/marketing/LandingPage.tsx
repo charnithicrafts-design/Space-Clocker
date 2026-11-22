@@ -155,7 +155,9 @@ const LandingPage: React.FC = () => {
       <nav className="fixed top-0 inset-x-0 z-50 border-b border-white/5 bg-[#06080F]/50 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Orbit className="text-primary animate-spin-slow" size={28} />
+            <div className="w-9 h-9 rounded-xl overflow-hidden shadow-md border border-white/20 shrink-0 bg-white">
+              <img src="/favicon.svg" alt="Space-Clocker Sanctuary Emblem" className="w-full h-full object-contain" />
+            </div>
             <span className="text-xl font-display font-black tracking-widest uppercase">Space-Clocker</span>
           </div>
           <button 

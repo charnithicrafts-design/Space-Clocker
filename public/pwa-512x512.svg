@@ -1,4 +1,68 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="100" fill="#0f172a"/>
-  <text x="256" y="330" font-family="Arial, sans-serif" font-size="250" font-weight="bold" fill="#38bdf8" text-anchor="middle">SC</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Sanctuary Gradients -->
+    <linearGradient id="sanctuaryBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F5F7FB"/>
+    </linearGradient>
+
+    <linearGradient id="irisOrbit" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2D1254"/>
+      <stop offset="50%" stop-color="#140726"/>
+      <stop offset="100%" stop-color="#491F75"/>
+    </linearGradient>
+
+    <linearGradient id="goldenSun" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5C469"/>
+      <stop offset="60%" stop-color="#DDB763"/>
+      <stop offset="100%" stop-color="#B88E34"/>
+    </linearGradient>
+
+    <linearGradient id="starIris" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E0A38"/>
+      <stop offset="100%" stop-color="#140726"/>
+    </linearGradient>
+
+    <!-- Gentle Elevation Shadow -->
+    <filter id="gentleElevation" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#140726" flood-opacity="0.10"/>
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#140726" flood-opacity="0.05"/>
+    </filter>
+  </defs>
+
+  <!-- Bright Clear Conscious White Background Card -->
+  <rect width="512" height="512" rx="115" fill="url(#sanctuaryBg)"/>
+  <rect x="2" y="2" width="508" height="508" rx="113" fill="none" stroke="#E6EAF2" stroke-width="3"/>
+
+  <!-- Sanctuary Celestial Icon Emblem -->
+  <g filter="url(#gentleElevation)">
+    <!-- Cardinal Timekeeping Marks (12, 3, 6, 9) -->
+    <circle cx="256" cy="98" r="5" fill="#DDB763"/>
+    <circle cx="414" cy="256" r="5" fill="#DDB763"/>
+    <circle cx="256" cy="414" r="5" fill="#DDB763"/>
+    <circle cx="98" cy="256" r="5" fill="#DDB763"/>
+
+    <!-- Outer Celestial Clocker Ring -->
+    <circle cx="256" cy="256" r="158" fill="none" stroke="#E6EAF2" stroke-width="4" stroke-dasharray="3 14" stroke-linecap="round"/>
+
+    <!-- Primary Dynamic Orbital Ring (Trajectory of Momentum) -->
+    <ellipse cx="256" cy="256" rx="176" ry="76" transform="rotate(-28 256 256)" 
+             fill="none" stroke="url(#irisOrbit)" stroke-width="22" stroke-linecap="round"/>
+
+    <!-- Radiant Guiding Star of Consciousness (4-Point Diamond Compass) -->
+    <path d="M 256 138 
+             C 256 200, 200 256, 138 256 
+             C 200 256, 256 312, 256 374 
+             C 256 312, 312 256, 374 256 
+             C 312 256, 256 200, 256 138 Z" 
+          fill="url(#starIris)"/>
+
+    <!-- Golden Sun Core (Conscious Energy) -->
+    <circle cx="256" cy="256" r="30" fill="url(#goldenSun)"/>
+    <circle cx="256" cy="256" r="12" fill="#FFFFFF"/>
+
+    <!-- Celestial Orbital Pearl (Active Milestone Satellite) -->
+    <circle cx="394" cy="182" r="19" fill="url(#goldenSun)"/>
+    <circle cx="394" cy="182" r="8" fill="#FFFFFF"/>
+  </g>
 </svg>
