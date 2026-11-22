@@ -164,7 +164,7 @@ export const UserGuideSection: React.FC<UserGuideProps> = ({ selectedChapterId, 
               <span>Three Visual Themes for Every State of Mind</span>
             </div>
             <p className="text-sm">
-              Your visual atmosphere directly shapes your cognitive rhythm. Space-Clocker provides three meticulously calibrated visual themes that you can switch anytime from the sidebar cycler or inside <em>System Config</em>:
+              The colors around you directly shape how calm and focused you feel. Space-Clocker provides three comfortable visual themes that you can switch anytime from the sidebar cycler or inside <em>System Config</em>:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
               <div className="p-4 rounded-2xl bg-surface-lowest/70 border border-outline-variant/30 space-y-2">

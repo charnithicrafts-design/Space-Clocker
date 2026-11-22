@@ -185,8 +185,12 @@ const LandingPage: React.FC = () => {
                 Mental Space.
               </span>
             </h1>
-            <p className="text-xl text-white/60 max-w-lg leading-relaxed font-light">
-              A productivity OS that synchronizes your mind with your internal clock. Turn your gut feeling into tangible momentum for ambitious projects, life goals, and relationships.
+            <p className="text-xl text-white/60 max-w-lg leading-relaxed font-light min-h-[4rem]">
+              {previewMode === 'people' ? (
+                <span>A gentle, distraction-free space to organize your day at your own natural pace. Turn your hopes and quiet intentions into steady, real-world progress for your studies, life goals, and personal growth.</span>
+              ) : (
+                <span>A personal focus OS that aligns your daily actions with your natural internal clock. Turn your gut feelings into tangible momentum for ambitious projects, life goals, and relationships.</span>
+              )}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <button 
@@ -248,9 +252,19 @@ const LandingPage: React.FC = () => {
       <section className="py-32 px-6 relative z-10 border-t border-white/5 bg-gradient-to-b from-[#06080F] to-[#0A0D16]">
         <div className="max-w-7xl mx-auto space-y-24">
           <div className="text-center space-y-6 max-w-3xl mx-auto">
-            <h2 className="text-4xl lg:text-5xl font-display font-black">Synchronize your mind. <br/><span className="text-secondary">Trust your internal clock.</span></h2>
+            <h2 className="text-4xl lg:text-5xl font-display font-black">
+              {previewMode === 'people' ? (
+                <>Calm your mind. <br/><span className="text-secondary">Work at your own natural rhythm.</span></>
+              ) : (
+                <>Synchronize your mind. <br/><span className="text-secondary">Trust your internal clock.</span></>
+              )}
+            </h2>
             <p className="text-lg text-white/60 leading-relaxed font-light">
-              Space-Clocker clocks you into your mental space. It bridges the gap between your gut feeling and your daily actions, ensuring you stay aligned with your life goals, romantic relationships, and financial independence.
+              {previewMode === 'people' ? (
+                "Space-Clocker gives you a peaceful sanctuary for your thoughts. It connects your honest feelings with your daily actions, helping you stay true to your studies, relationships, and financial independence."
+              ) : (
+                "Space-Clocker clocks you into your mental space. It bridges the gap between your gut feeling and your daily actions, ensuring you stay aligned with your life goals, romantic relationships, and financial independence."
+              )}
             </p>
           </div>
 
@@ -414,13 +428,17 @@ const LandingPage: React.FC = () => {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/5">
               <div className="space-y-2">
                 <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-                  <Palette size={14} /> Visual Atmospheres
+                  <Palette size={14} /> {previewMode === 'people' ? 'Comfortable Themes' : 'Visual Atmospheres'}
                 </div>
                 <h3 className="text-3xl font-display font-black text-white">
-                  Three Aesthetic Frequencies for Every Mind
+                  {previewMode === 'people' 
+                    ? 'Three Soothing Themes to Match Your Day' 
+                    : 'Three Aesthetic Frequencies for Every Mind'}
                 </h3>
                 <p className="text-white/60 text-sm max-w-xl font-light">
-                  Tailor your workspace to your cognitive energy. From high-voltage cyber-telemetry to authentic aerospace engineering and calming botanical pastels.
+                  {previewMode === 'people'
+                    ? 'Pick the look that feels easiest on your eyes. Whether you love a calm dark screen, a clean organized desk, or warm colors that prevent eye fatigue during long study sessions.'
+                    : 'Tailor your workspace to your cognitive energy. From high-voltage cyber-telemetry to authentic aerospace engineering and calming botanical pastels.'}
                 </p>
               </div>
 
@@ -469,17 +487,25 @@ const LandingPage: React.FC = () => {
                       borderColor: `${THEMES[previewTheme].colors.primary}40`
                     }}
                   >
-                    {THEMES[previewTheme].badge}
+                    {previewMode === 'people' 
+                      ? (THEMES[previewTheme].peopleBadge || THEMES[previewTheme].badge) 
+                      : THEMES[previewTheme].badge}
                   </span>
                   <span className="text-xs text-white/50 font-mono">
-                    {THEMES[previewTheme].subtitle}
+                    {previewMode === 'people' 
+                      ? (THEMES[previewTheme].peopleSubtitle || THEMES[previewTheme].subtitle) 
+                      : THEMES[previewTheme].subtitle}
                   </span>
                 </div>
                 <h4 className="text-2xl font-display font-black text-white">
-                  {THEMES[previewTheme].name}
+                  {previewMode === 'people' 
+                    ? (THEMES[previewTheme].peopleName || THEMES[previewTheme].name) 
+                    : THEMES[previewTheme].name}
                 </h4>
                 <p className="text-white/70 text-sm leading-relaxed font-light">
-                  {THEMES[previewTheme].purpose}
+                  {previewMode === 'people' 
+                    ? (THEMES[previewTheme].peoplePurpose || THEMES[previewTheme].purpose) 
+                    : THEMES[previewTheme].purpose}
                 </p>
               </div>
 
@@ -488,7 +514,7 @@ const LandingPage: React.FC = () => {
                 {/* Palette Swatches */}
                 <div className="p-4 rounded-xl bg-surface-lowest/80 border border-white/10 space-y-2">
                   <span className="text-[10px] font-mono uppercase tracking-widest text-white/50 block">
-                    Telemetry Palette
+                    {previewMode === 'people' ? 'Theme Colors' : 'Telemetry Palette'}
                   </span>
                   <div className="flex items-center gap-2">
                     {[
@@ -520,12 +546,14 @@ const LandingPage: React.FC = () => {
                   }}
                 >
                   <div className="flex items-center justify-between text-[10px] font-mono">
-                    <span style={{ color: THEMES[previewTheme].colors.primary }}>STATUS: NOMINAL</span>
+                    <span style={{ color: THEMES[previewTheme].colors.primary }}>
+                      {previewMode === 'people' ? 'TODAY: STEADY FLOW' : 'STATUS: NOMINAL'}
+                    </span>
                     <span style={{ color: THEMES[previewTheme].colors.secondary }}>94%</span>
                   </div>
                   <div className="font-bold text-sm text-white flex items-center gap-2">
                     <Sparkles size={14} style={{ color: THEMES[previewTheme].colors.primary }} />
-                    <span>Deep Work Orbit</span>
+                    <span>{previewMode === 'people' ? 'Daily Focus Sanctuary' : 'Deep Work Orbit'}</span>
                   </div>
                   <div className="w-full h-1.5 rounded-full overflow-hidden bg-white/10">
                     <div 

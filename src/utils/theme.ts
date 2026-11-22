@@ -10,6 +10,10 @@ export interface ThemeMeta {
   subtitle: string;
   description: string;
   purpose: string;
+  peopleName?: string;
+  peopleBadge?: string;
+  peopleSubtitle?: string;
+  peoplePurpose?: string;
   colors: {
     primary: string;
     secondary: string;
@@ -23,10 +27,14 @@ export const THEMES: Record<AppTheme, ThemeMeta> = {
   cosmos: {
     id: 'cosmos',
     name: 'Cosmos (Original)',
+    peopleName: 'Cosmos (Deep Night)',
     badge: 'Interstellar HUD',
+    peopleBadge: 'Night Focus',
     subtitle: 'Deep Obsidian & Electric Cyan',
+    peopleSubtitle: 'Deep dark background with gentle cyan glow',
     description: 'High-contrast futuristic cockpit telemetry with electric cyan rays and cosmic nebula violet.',
     purpose: 'Designed for deep focus, adrenaline, and high-octane motivation in dark environments.',
+    peoplePurpose: 'A calm, dark screen made for peaceful late-night study and distraction-free quiet hours.',
     colors: {
       primary: '#00F2FF',
       secondary: '#DAB9FF',
@@ -38,10 +46,14 @@ export const THEMES: Record<AppTheme, ThemeMeta> = {
   astronaut: {
     id: 'astronaut',
     name: 'Astronaut (Aerospace)',
+    peopleName: 'Astronaut (Crisp & Focused)',
     badge: 'NASA Technical HUD',
+    peopleBadge: 'Clean Workspace',
     subtitle: 'Spacesuit Ceramic & Earth Orbital Blue',
+    peopleSubtitle: 'Cleanroom grey & ocean blue',
     description: 'Authentic flight instrument styling with space vacuum black, thermal foil gold, and orbital ocean blue.',
     purpose: 'Grounded engineering precision inspired by Apollo and Artemis missions for disciplined, tactical execution.',
+    peoplePurpose: 'A neat, disciplined workspace inspired by real space missions, designed for anyone who loves an organized, clutter-free desk.',
     colors: {
       primary: '#1D6291',
       secondary: '#A0947E',
@@ -53,10 +65,14 @@ export const THEMES: Record<AppTheme, ThemeMeta> = {
   'sunny-iris': {
     id: 'sunny-iris',
     name: 'Sunny Iris (Ease of Eye)',
+    peopleName: 'Sunny Iris (Gentle Sanctuary)',
     badge: 'Botanical Equilibrium & Launch Heritage',
+    peopleBadge: 'Easy on the Eyes',
     subtitle: 'Cosmic Royal Purple & Sunny Gold',
+    peopleSubtitle: 'Warm royal purple & sunlit gold',
     description: 'Restorative botanical pastel palette inspired by wild spring irises and the Charnithi launch poster.',
     purpose: 'Zero eye fatigue for marathon sessions, wrapping your goals in calming lavender, golden sun, and sprout green.',
+    peoplePurpose: 'A soothing, warm color balance that eliminates eye strain during long hours of reading or working, wrapping your day in natural calm.',
     colors: {
       primary: '#DDB763',
       secondary: '#D6C7F2',
