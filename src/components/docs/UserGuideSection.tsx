@@ -16,7 +16,8 @@ import {
   Compass,
   Smile,
   HeartHandshake,
-  Users
+  Users,
+  Palette
 } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 
@@ -154,6 +155,60 @@ export const UserGuideSection: React.FC<UserGuideProps> = ({ selectedChapterId, 
             <p className="text-xs text-on-surface-variant italic">
               Your tasks, milestones, logs, and database remain 100% untouched when switching modes. Only the terminology transforms.
             </p>
+          </div>
+
+          {/* Three Visual Themes: Cosmos, Astronaut & Sunny Iris */}
+          <div className="p-6 rounded-3xl bg-surface-high/30 border border-outline-variant/30 space-y-4">
+            <div className="flex items-center gap-2 text-white font-bold text-lg">
+              <Palette size={22} className="text-primary" />
+              <span>Three Visual Themes for Every State of Mind</span>
+            </div>
+            <p className="text-sm">
+              Your visual atmosphere directly shapes your cognitive rhythm. Space-Clocker provides three meticulously calibrated visual themes that you can switch anytime from the sidebar cycler or inside <em>System Config</em>:
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+              <div className="p-4 rounded-2xl bg-surface-lowest/70 border border-outline-variant/30 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-mono">
+                    Interstellar HUD
+                  </span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#00F2FF]" />
+                </div>
+                <h4 className="font-bold text-white text-base">1. Cosmos (Original)</h4>
+                <p className="text-xs text-on-surface-variant leading-relaxed">
+                  <strong>Color Story:</strong> Deep space obsidian, electric cyan telemetry, and nebula violet.<br />
+                  <strong>Purpose:</strong> High-octane immersion and laser-sharp focus for technical workflows and night sessions.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-surface-lowest/70 border border-outline-variant/30 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
+                    NASA / Apollo
+                  </span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#1D6291]" />
+                </div>
+                <h4 className="font-bold text-white text-base">2. Astronaut (Aerospace)</h4>
+                <p className="text-xs text-on-surface-variant leading-relaxed">
+                  <strong>Color Story:</strong> Real-world spacewalk palette—vacuum black, spacesuit ceramic, Earth orbital blue, and thermal foil gold.<br />
+                  <strong>Purpose:</strong> Grounded engineering discipline and tactile mission control focus.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-surface-lowest/70 border border-outline-variant/30 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono">
+                    Botanical Ease of Eye
+                  </span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#DDB763]" />
+                </div>
+                <h4 className="font-bold text-white text-base">3. Sunny Iris (Sanctuary)</h4>
+                <p className="text-xs text-on-surface-variant leading-relaxed">
+                  <strong>Color Story:</strong> Charnithi launch poster royal purple, sunny golden iris throat, pastel lavender, and sprout green.<br />
+                  <strong>Purpose:</strong> Zero eye strain for marathon days, delivering soothing organic warmth and cognitive calm.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       )

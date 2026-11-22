@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Rocket, Brain, Shield, ArrowRight, Zap, Orbit, Star, Activity, Target, Calendar, BookOpen, Code2, HeartHandshake, Users } from 'lucide-react';
+import { Rocket, Brain, Shield, ArrowRight, Zap, Orbit, Star, Activity, Target, Calendar, BookOpen, Code2, HeartHandshake, Users, Palette, Sparkles } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
+import { THEMES, AppTheme } from '../../utils/theme';
 
 // --- Particle Background ---
 const ParticleBackground: React.FC = () => {
@@ -120,6 +121,7 @@ const LandingPage: React.FC = () => {
 
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [previewMode, setPreviewMode] = useState<'original' | 'people'>('people');
+  const [previewTheme, setPreviewTheme] = useState<AppTheme>('cosmos');
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -397,6 +399,143 @@ const LandingPage: React.FC = () => {
                   </p>
                 </div>
               ))}
+            </div>
+          </motion.div>
+
+          {/* Three Aesthetic Frequencies Showcase Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="glass-panel border border-white/10 rounded-[2.5rem] p-8 lg:p-12 bg-gradient-to-br from-surface-high/60 via-surface-high/20 to-transparent relative overflow-hidden space-y-8"
+          >
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/5">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                  <Palette size={14} /> Visual Atmospheres
+                </div>
+                <h3 className="text-3xl font-display font-black text-white">
+                  Three Aesthetic Frequencies for Every Mind
+                </h3>
+                <p className="text-white/60 text-sm max-w-xl font-light">
+                  Tailor your workspace to your cognitive energy. From high-voltage cyber-telemetry to authentic aerospace engineering and calming botanical pastels.
+                </p>
+              </div>
+
+              {/* 3-Theme Selector Switch */}
+              <div className="flex items-center p-1.5 rounded-2xl bg-surface-lowest border border-white/10 self-start md:self-auto shrink-0 shadow-inner gap-1">
+                {(['cosmos', 'astronaut', 'sunny-iris'] as AppTheme[]).map((themeKey) => {
+                  const tMeta = THEMES[themeKey];
+                  const isSelected = previewTheme === themeKey;
+                  return (
+                    <button
+                      key={themeKey}
+                      onClick={() => {
+                        SoundManager.playPop();
+                        setPreviewTheme(themeKey);
+                      }}
+                      className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-white/15 text-white shadow-md border border-white/20'
+                          : 'text-white/50 hover:text-white'
+                      }`}
+                      style={isSelected ? { borderColor: `${tMeta.colors.primary}60` } : {}}
+                    >
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: tMeta.colors.primary }} />
+                      <span>{tMeta.name.split(' ')[0]}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Active Theme Spotlight Banner */}
+            <div 
+              className="p-6 rounded-2xl border transition-all duration-300 relative overflow-hidden flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6"
+              style={{
+                backgroundColor: `${THEMES[previewTheme].colors.bg}80`,
+                borderColor: `${THEMES[previewTheme].colors.border}80`,
+              }}
+            >
+              <div className="space-y-3 max-w-xl">
+                <div className="flex items-center gap-2">
+                  <span 
+                    className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-0.5 rounded-full border"
+                    style={{ 
+                      color: THEMES[previewTheme].colors.primary, 
+                      backgroundColor: `${THEMES[previewTheme].colors.primary}15`,
+                      borderColor: `${THEMES[previewTheme].colors.primary}40`
+                    }}
+                  >
+                    {THEMES[previewTheme].badge}
+                  </span>
+                  <span className="text-xs text-white/50 font-mono">
+                    {THEMES[previewTheme].subtitle}
+                  </span>
+                </div>
+                <h4 className="text-2xl font-display font-black text-white">
+                  {THEMES[previewTheme].name}
+                </h4>
+                <p className="text-white/70 text-sm leading-relaxed font-light">
+                  {THEMES[previewTheme].purpose}
+                </p>
+              </div>
+
+              {/* Swatches & Live Flight Preview Card */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 shrink-0 w-full lg:w-auto">
+                {/* Palette Swatches */}
+                <div className="p-4 rounded-xl bg-surface-lowest/80 border border-white/10 space-y-2">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-white/50 block">
+                    Telemetry Palette
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {[
+                      { label: 'Primary', color: THEMES[previewTheme].colors.primary },
+                      { label: 'Secondary', color: THEMES[previewTheme].colors.secondary },
+                      { label: 'Accent', color: THEMES[previewTheme].colors.tertiary },
+                      { label: 'Base', color: THEMES[previewTheme].colors.bg }
+                    ].map((swatch, sIdx) => (
+                      <div key={sIdx} className="text-center">
+                        <span 
+                          className="w-8 h-8 rounded-lg block border border-black/40 shadow-sm transition-transform hover:scale-110" 
+                          style={{ backgroundColor: swatch.color }}
+                          title={`${swatch.label}: ${swatch.color}`}
+                        />
+                        <span className="text-[9px] font-mono text-white/40 block mt-1">
+                          {swatch.color}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Simulated Instrument Tile */}
+                <div 
+                  className="p-4 rounded-xl border space-y-2 min-w-[200px]"
+                  style={{ 
+                    backgroundColor: `${THEMES[previewTheme].colors.bg}`,
+                    borderColor: `${THEMES[previewTheme].colors.border}`
+                  }}
+                >
+                  <div className="flex items-center justify-between text-[10px] font-mono">
+                    <span style={{ color: THEMES[previewTheme].colors.primary }}>STATUS: NOMINAL</span>
+                    <span style={{ color: THEMES[previewTheme].colors.secondary }}>94%</span>
+                  </div>
+                  <div className="font-bold text-sm text-white flex items-center gap-2">
+                    <Sparkles size={14} style={{ color: THEMES[previewTheme].colors.primary }} />
+                    <span>Deep Work Orbit</span>
+                  </div>
+                  <div className="w-full h-1.5 rounded-full overflow-hidden bg-white/10">
+                    <div 
+                      className="h-full rounded-full transition-all duration-500" 
+                      style={{ 
+                        width: '78%', 
+                        backgroundColor: THEMES[previewTheme].colors.primary 
+                      }} 
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
 

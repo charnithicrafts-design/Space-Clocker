@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { CURRENT_APP_VERSION } from '../../constants';
-import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor, Copy, History, Rocket, Users, Sparkles } from 'lucide-react';
+import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor, Copy, History, Rocket, Users, Sparkles, Palette } from 'lucide-react';
 import { dbProxy } from '../../db/client';
 import { syncService } from '../../services/SyncService';
 import { SoundManager } from '../../utils/SoundManager';
@@ -13,6 +13,7 @@ import { getOrCreateDeviceId } from '../../utils/DeviceUtils';
 import { useSession } from '../../lib/auth-client';
 import { useNavigate } from 'react-router-dom';
 import { useVocabulary } from '../../utils/vocabulary';
+import { THEMES, setAppTheme, AppTheme } from '../../utils/theme';
 
 const SettingsDashboard = () => {
   const navigate = useNavigate();
@@ -596,6 +597,84 @@ const SettingsDashboard = () => {
                     Clear everyday productivity terms: Goals & Ambitions, Daily Tasks, Habits to Avoid & Cloud Sync.
                   </p>
                 </button>
+              </div>
+            </div>
+
+            {/* Visual Theme & Aesthetic Mode */}
+            <div className="p-5 rounded-2xl bg-surface-high border border-outline-variant space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h4 className="font-bold text-sm text-white flex items-center gap-2">
+                    <Palette size={16} className="text-primary" />
+                    <span>Visual Theme & Aesthetic Mode</span>
+                  </h4>
+                  <p className="text-xs text-on-surface-variant">Switch between Cosmos, Astronaut, and Sunny Iris atmospheres.</p>
+                </div>
+                <span className="type-telemetry-micro font-mono px-2.5 py-0.5 rounded-lg bg-surface-low border border-outline-variant text-on-surface-variant">
+                  Active: {THEMES[localPrefs.theme || 'cosmos']?.name || 'Cosmos (Original)'}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+                {(Object.values(THEMES) as Array<typeof THEMES[keyof typeof THEMES]>).map((item) => {
+                  const isCurrent = (localPrefs.theme || 'cosmos') === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      aria-label={item.name}
+                      aria-pressed={isCurrent}
+                      onClick={() => {
+                        SoundManager.playPop();
+                        const updated = { ...localPrefs, theme: item.id as AppTheme };
+                        setLocalPrefs(updated);
+                        setAppTheme(item.id);
+                      }}
+                      className={`p-4 rounded-xl border text-left transition-all relative flex flex-col justify-between space-y-3 cursor-pointer ${
+                        isCurrent
+                          ? 'bg-surface-low border-primary shadow-[0_0_20px_rgba(0,242,255,0.15)] ring-1 ring-primary'
+                          : 'bg-surface-low/60 border-outline-variant/40 hover:border-outline-variant text-on-surface-variant hover:bg-surface-low'
+                      }`}
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <span 
+                            className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-md border"
+                            style={{ 
+                              color: item.colors.primary, 
+                              borderColor: `${item.colors.primary}40`,
+                              backgroundColor: `${item.colors.primary}15`
+                            }}
+                          >
+                            {item.badge}
+                          </span>
+                          {isCurrent && (
+                            <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: item.colors.primary }} />
+                          )}
+                        </div>
+                        <h5 className="font-display font-bold text-sm text-white">
+                          {item.name}
+                        </h5>
+                        <p className="text-[11px] text-on-surface-variant leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+
+                      {/* Swatches & Purpose Indicator */}
+                      <div className="pt-2 border-t border-outline-variant/30 flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-3.5 h-3.5 rounded-full border border-black/40 shadow-sm" style={{ backgroundColor: item.colors.primary }} title="Primary Color" />
+                          <span className="w-3.5 h-3.5 rounded-full border border-black/40 shadow-sm" style={{ backgroundColor: item.colors.secondary }} title="Secondary Color" />
+                          <span className="w-3.5 h-3.5 rounded-full border border-black/40 shadow-sm" style={{ backgroundColor: item.colors.tertiary }} title="Accent Color" />
+                          <span className="w-3.5 h-3.5 rounded-full border border-black/40 shadow-sm" style={{ backgroundColor: item.colors.bg }} title="Canvas Base" />
+                        </div>
+                        <span className="text-[9px] font-mono text-white/40 uppercase tracking-tight">
+                          {item.id}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 

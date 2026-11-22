@@ -17,11 +17,13 @@ import {
   Info,
   BookOpen,
   Rocket,
-  Users
+  Users,
+  Palette
 } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
 import { useVocabulary } from '../../utils/vocabulary';
+import { useTheme } from '../../utils/theme';
 import CommandHub from './CommandHub';
 
 interface NavLinkProps {
@@ -61,6 +63,7 @@ const Navigation = () => {
   const { pathname } = useLocation();
   const { syncStatus, oracleConfig } = useTrackStore();
   const { t, isPeopleMode, toggleVocabularyMode } = useVocabulary();
+  const { theme, meta: themeMeta, setTheme } = useTheme();
   const [isHubOpen, setIsHubOpen] = useState(false);
 
   const KNOWN_APP_ROUTES = [
@@ -212,6 +215,36 @@ const Navigation = () => {
             }`}>
               {isPeopleMode ? 'People' : 'Original'}
             </span>
+          </button>
+
+          {/* Theme Quick Cycler: Cosmos -> Astronaut -> Sunny Iris */}
+          <button
+            type="button"
+            onClick={() => {
+              SoundManager.playPop();
+              const nextTheme = theme === 'cosmos' ? 'astronaut' : theme === 'astronaut' ? 'sunny-iris' : 'cosmos';
+              setTheme(nextTheme);
+            }}
+            aria-label={`Current Theme: ${themeMeta.name}. Click to cycle theme.`}
+            title={`Active Theme: ${themeMeta.name} — Click to switch`}
+            className="w-full h-10 px-3 rounded-xl bg-surface-low hover:bg-surface-high border border-outline-variant/40 hover:border-outline-variant flex items-center justify-between transition-all group outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <div className="flex items-center gap-2.5">
+              <div 
+                className="w-6 h-6 rounded-md flex items-center justify-center border border-white/10 shrink-0"
+                style={{ backgroundColor: `${themeMeta.colors.primary}20`, color: themeMeta.colors.primary }}
+              >
+                <Palette size={13} />
+              </div>
+              <span className="type-caption text-white font-medium truncate max-w-[110px]">
+                {themeMeta.name.split(' ')[0]}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 shrink-0">
+              <span className="w-2.5 h-2.5 rounded-full border border-black/40" style={{ backgroundColor: themeMeta.colors.primary }} />
+              <span className="w-2.5 h-2.5 rounded-full border border-black/40" style={{ backgroundColor: themeMeta.colors.secondary }} />
+            </div>
           </button>
 
           <NavLink 

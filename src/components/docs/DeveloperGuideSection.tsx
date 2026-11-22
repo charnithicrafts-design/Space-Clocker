@@ -14,7 +14,8 @@ import {
   ArrowLeft,
   Code2,
   Sparkles,
-  Users
+  Users,
+  Palette
 } from 'lucide-react';
 import { SoundManager } from '../../utils/SoundManager';
 
@@ -187,6 +188,25 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
                 Presentation decoupling via <code>useVocabulary()</code>. Dynamically toggles Cosmic & Everyday terms with zero schema changes.
               </p>
             </div>
+          </div>
+
+          {/* Dual-Engine Architecture: Theming + Vocabulary */}
+          <div className="p-5 rounded-2xl bg-surface-high/30 border border-outline-variant/30 space-y-3">
+            <h3 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+              <Palette size={20} className="text-primary" />
+              <span>Three-Theme Engine & CSS Custom Properties</span>
+            </h3>
+            <p className="text-sm">
+              Space-Clocker separates data state, vocabulary, and visual themes into completely orthogonal layers:
+            </p>
+            <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs space-y-2 text-on-surface-variant">
+              <div><span className="text-primary font-bold">1. Cosmos:</span> <code>body[data-theme="cosmos"]</code> — #0B0E14 base, #00F2FF primary cyan, #DAB9FF secondary violet</div>
+              <div><span className="text-secondary font-bold">2. Astronaut:</span> <code>body[data-theme="astronaut"]</code> — #090807 vacuum black, #1D6291 orbital blue, #A0947E thermal gold</div>
+              <div><span className="text-tertiary font-bold">3. Sunny Iris:</span> <code>body[data-theme="sunny-iris"]</code> — #150727 launch poster purple, #DDB763 golden sun, #D6C7F2 pastel lavender</div>
+            </div>
+            <p className="text-xs text-on-surface-variant">
+              Components read standard Tailwind tokens (e.g., <code>bg-surface-high</code>, <code>text-primary</code>) or the <code>useTheme()</code> hook. No component re-rendering cascade is triggered when themes switch—the browser instantly updates the CSS variable cascade at 60fps.
+            </p>
           </div>
         </div>
       )

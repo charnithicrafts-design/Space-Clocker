@@ -13,6 +13,7 @@ import { Award } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { initDb } from './db/init';
 import { purgeDatabase } from './db/client';
+import { getStoredTheme, applyThemeToDocument } from './utils/theme';
 
 // Lazy-loaded screen modules for code-splitting and rapid initial load
 const MomentumEngine = React.lazy(() => import('./components/dashboard/MomentumEngine'));
@@ -50,7 +51,7 @@ const queryClient = new QueryClient({
 
 const AppContent = () => {
   const { pathname } = useLocation();
-  const { initialize, checkSync, performPull, oracleConfig, updateAvailable, profile, showSyncModal, setShowSyncModal, cognitiveState } = useTrackStore();
+  const { initialize, checkSync, performPull, oracleConfig, updateAvailable, profile, showSyncModal, setShowSyncModal, cognitiveState, preferences } = useTrackStore();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [dbStatus, setDbStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [prevLevel, setPrevLevel] = useState<number | null>(null);
@@ -133,7 +134,7 @@ const AppContent = () => {
     }
   }, [profile?.level, prevLevel, dbStatus]);
 
-  // Sync Aura State to CSS Theme
+  // Sync Aura & Theme State to CSS
   useEffect(() => {
     if (cognitiveState?.auraState) {
       document.body.dataset.aura = cognitiveState.auraState;
@@ -141,6 +142,11 @@ const AppContent = () => {
       delete document.body.dataset.aura;
     }
   }, [cognitiveState?.auraState]);
+
+  useEffect(() => {
+    const currentTheme = preferences?.theme || getStoredTheme();
+    applyThemeToDocument(currentTheme);
+  }, [preferences?.theme]);
 
   const handleResolveConflict = async (strategy: 'local' | 'remote') => {
     if (strategy === 'remote') {

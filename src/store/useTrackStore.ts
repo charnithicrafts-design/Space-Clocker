@@ -113,6 +113,7 @@ export interface Preferences {
   uiMode: 'simple' | 'professional' | 'void' | 'nebula' | 'stellar';
   isSimulation?: boolean;
   vocabularyMode?: 'original' | 'people';
+  theme?: 'cosmos' | 'astronaut' | 'sunny-iris';
 }
 
 export interface Transmission {
@@ -270,7 +271,8 @@ export const useTrackStore = create<TrackStore>()(
       confirmDelete: true,
       uiMode: 'simple',
       isSimulation: false,
-      vocabularyMode: 'original'
+      vocabularyMode: 'original',
+      theme: 'cosmos'
     },
     syncStatus: {
       isSyncing: false,
@@ -1060,6 +1062,16 @@ export const useTrackStore = create<TrackStore>()(
     }),
     updatePreferences: (updates) => set((state) => {
       const newPrefs = { ...state.preferences, ...updates };
+      if (updates.theme && typeof document !== 'undefined' && document.body) {
+        document.body.dataset.theme = updates.theme;
+        try {
+          if (typeof localStorage !== 'undefined' && localStorage && typeof localStorage.setItem === 'function') {
+            localStorage.setItem('spaceclocker_theme', updates.theme);
+          }
+        } catch {
+          // ignore localStorage security restrictions
+        }
+      }
       import('../db/client').then(({ getDb }) => {
         const db = getDb();
         db.query(`UPDATE preferences SET confirm_delete = $1, ui_mode = $2, is_simulation = $3 WHERE id = 1`, [newPrefs.confirmDelete, newPrefs.uiMode, !!newPrefs.isSimulation]);

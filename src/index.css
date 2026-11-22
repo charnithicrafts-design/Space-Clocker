@@ -42,12 +42,112 @@
 }
 
 :root {
-  /* Aura State Transitions */
+  /* Aura & Theme State Transitions */
   --transition-aura: background-color 2s ease, color 2s ease, box-shadow 2s ease, border-color 2s ease;
+  --transition-theme: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 body {
-  transition: var(--transition-aura);
+  transition: var(--transition-theme);
+}
+
+/* --- Theme 1: Cosmos (Original Futuristic HUD) --- */
+body[data-theme="cosmos"], body:not([data-theme]) {
+  --color-surface-lowest: #0b0e14;
+  --color-surface-low: #191c22;
+  --color-surface: #1d2026;
+  --color-surface-high: #272a31;
+  --color-surface-highest: #32353c;
+  
+  --color-primary-container: #00f2ff;
+  --color-on-primary-container: #00373a;
+  --color-primary: #e1fdff;
+  --color-on-primary: #00363a;
+  
+  --color-secondary: #dab9ff;
+  --color-on-secondary: #3d235d;
+  
+  --color-tertiary-container: #43f3de;
+  --color-on-tertiary-container: #003833;
+  --color-tertiary-fixed: #4ffbe6;
+  
+  --color-on-surface: #e1e2eb;
+  --color-on-surface-variant: #b9cacb;
+  
+  --color-outline: #899394;
+  --color-outline-variant: #3a494b;
+
+  --color-success: #3ef39b;
+  --color-on-success: #00391d;
+
+  --theme-glow: rgba(0, 242, 255, 0.15);
+  --theme-accent-gradient: linear-gradient(135deg, #00f2ff 0%, #dab9ff 100%);
+}
+
+/* --- Theme 2: Astronaut (Aerospace Engineering) --- */
+body[data-theme="astronaut"] {
+  --color-surface-lowest: #090807; /* Real space vacuum black */
+  --color-surface-low: #14171c; /* Atmospheric charcoal */
+  --color-surface: #1b2027; /* Avionics bay */
+  --color-surface-high: #252c36; /* Flight deck */
+  --color-surface-highest: #313a47;
+  
+  --color-primary-container: #1d6291; /* Earth orbital blue */
+  --color-on-primary-container: #e0ddd8;
+  --color-primary: #e0ddd8; /* Spacesuit ceramic white */
+  --color-on-primary: #090807;
+  
+  --color-secondary: #a0947e; /* Thermal foil gold/taupe */
+  --color-on-secondary: #181510;
+  
+  --color-tertiary-container: #718fa7; /* Sub-orbital steel blue */
+  --color-on-tertiary-container: #0b141c;
+  --color-tertiary-fixed: #88a2bd;
+  
+  --color-on-surface: #e0ddd8; /* High-visibility ceramic */
+  --color-on-surface-variant: #b1bdca; /* Telemetry slate */
+  
+  --color-outline: #8d8573;
+  --color-outline-variant: #424a56;
+
+  --color-success: #4eba86;
+  --color-on-success: #052113;
+
+  --theme-glow: rgba(29, 98, 145, 0.25);
+  --theme-accent-gradient: linear-gradient(135deg, #1d6291 0%, #a0947e 100%);
+}
+
+/* --- Theme 3: Sunny Iris (Botanical Ease of Eye & Launch Poster Heritage) --- */
+body[data-theme="sunny-iris"] {
+  --color-surface-lowest: #150727; /* Deep Charnithi launch poster royal purple */
+  --color-surface-low: #200d3a; /* Midnight velvet purple */
+  --color-surface: #2b134c; /* Iris petal panel */
+  --color-surface-high: #381b62; /* Elevated deck */
+  --color-surface-highest: #49257d;
+  
+  --color-primary-container: #ddb763; /* Sunny Iris golden core */
+  --color-on-primary-container: #261b00;
+  --color-primary: #f6edd9; /* Sunbeam warm white */
+  --color-on-primary: #261b00;
+  
+  --color-secondary: #d6c7f2; /* Soft pastel Iris lavender */
+  --color-on-secondary: #250d44;
+  
+  --color-tertiary-container: #a2b960; /* Fresh sprout stem green */
+  --color-on-tertiary-container: #172403;
+  --color-tertiary-fixed: #b6cd72;
+  
+  --color-on-surface: #f8f5fc; /* Crisp petal white */
+  --color-on-surface-variant: #cfc2e5; /* Lavender mist text */
+  
+  --color-outline: #8b68b8; /* Iris violet outline */
+  --color-outline-variant: #522987; /* Purple hull border */
+
+  --color-success: #a2b960; /* Fresh botanical green */
+  --color-on-success: #172403;
+
+  --theme-glow: rgba(221, 183, 99, 0.2);
+  --theme-accent-gradient: linear-gradient(135deg, #ddb763 0%, #d6c7f2 50%, #a2b960 100%);
 }
 
 /* Aura States */
