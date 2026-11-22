@@ -114,6 +114,7 @@ export interface Preferences {
   isSimulation?: boolean;
   vocabularyMode?: 'original' | 'people';
   theme?: 'cosmos' | 'astronaut' | 'sunny-iris';
+  colorMode?: 'dark' | 'light';
 }
 
 export interface Transmission {
@@ -272,7 +273,8 @@ export const useTrackStore = create<TrackStore>()(
       uiMode: 'simple',
       isSimulation: false,
       vocabularyMode: 'original',
-      theme: 'cosmos'
+      theme: 'cosmos',
+      colorMode: 'dark'
     },
     syncStatus: {
       isSyncing: false,
@@ -1067,6 +1069,16 @@ export const useTrackStore = create<TrackStore>()(
         try {
           if (typeof localStorage !== 'undefined' && localStorage && typeof localStorage.setItem === 'function') {
             localStorage.setItem('spaceclocker_theme', updates.theme);
+          }
+        } catch {
+          // ignore localStorage security restrictions
+        }
+      }
+      if (updates.colorMode && typeof document !== 'undefined' && document.body) {
+        document.body.dataset.colorMode = updates.colorMode;
+        try {
+          if (typeof localStorage !== 'undefined' && localStorage && typeof localStorage.setItem === 'function') {
+            localStorage.setItem('spaceclocker_color_mode', updates.colorMode);
           }
         } catch {
           // ignore localStorage security restrictions

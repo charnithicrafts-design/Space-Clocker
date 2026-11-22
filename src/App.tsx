@@ -13,7 +13,7 @@ import { Award } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { initDb } from './db/init';
 import { purgeDatabase } from './db/client';
-import { getStoredTheme, applyThemeToDocument } from './utils/theme';
+import { getStoredTheme, applyThemeToDocument, getStoredColorMode, applyColorModeToDocument } from './utils/theme';
 
 // Lazy-loaded screen modules for code-splitting and rapid initial load
 const MomentumEngine = React.lazy(() => import('./components/dashboard/MomentumEngine'));
@@ -159,7 +159,9 @@ const AppContent = () => {
   useEffect(() => {
     const currentTheme = preferences?.theme || getStoredTheme();
     applyThemeToDocument(currentTheme);
-  }, [preferences?.theme]);
+    const currentColorMode = preferences?.colorMode || getStoredColorMode();
+    applyColorModeToDocument(currentColorMode);
+  }, [preferences?.theme, preferences?.colorMode]);
 
   const handleResolveConflict = async (strategy: 'local' | 'remote') => {
     if (strategy === 'remote') {

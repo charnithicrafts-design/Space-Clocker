@@ -18,7 +18,9 @@ import {
   BookOpen,
   Rocket,
   Users,
-  Palette
+  Palette,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { useTrackStore } from '../../store/useTrackStore';
 import { SoundManager } from '../../utils/SoundManager';
@@ -63,7 +65,7 @@ const Navigation = () => {
   const { pathname } = useLocation();
   const { syncStatus, oracleConfig } = useTrackStore();
   const { t, isPeopleMode, toggleVocabularyMode } = useVocabulary();
-  const { theme, meta: themeMeta, setTheme } = useTheme();
+  const { theme, meta: themeMeta, setTheme, isLightMode, toggleColorMode } = useTheme();
   const [isHubOpen, setIsHubOpen] = useState(false);
 
   const KNOWN_APP_ROUTES = [
@@ -217,35 +219,55 @@ const Navigation = () => {
             </span>
           </button>
 
-          {/* Theme Quick Cycler: Cosmos -> Astronaut -> Sunny Iris */}
-          <button
-            type="button"
-            onClick={() => {
-              SoundManager.playPop();
-              const nextTheme = theme === 'cosmos' ? 'astronaut' : theme === 'astronaut' ? 'sunny-iris' : 'cosmos';
-              setTheme(nextTheme);
-            }}
-            aria-label={`Current Theme: ${themeMeta.name}. Click to cycle theme.`}
-            title={`Active Theme: ${themeMeta.name} — Click to switch`}
-            className="w-full h-10 px-3 rounded-xl bg-surface-low hover:bg-surface-high border border-outline-variant/40 hover:border-outline-variant flex items-center justify-between transition-all group outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          >
-            <div className="flex items-center gap-2.5">
-              <div 
-                className="w-6 h-6 rounded-md flex items-center justify-center border border-white/10 shrink-0"
-                style={{ backgroundColor: `${themeMeta.colors.primary}20`, color: themeMeta.colors.primary }}
-              >
-                <Palette size={13} />
+          {/* Theme Quick Cycler + Sun/Moon Daylight Sanctuary */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                SoundManager.playPop();
+                const nextTheme = theme === 'cosmos' ? 'astronaut' : theme === 'astronaut' ? 'sunny-iris' : 'cosmos';
+                setTheme(nextTheme);
+              }}
+              aria-label={`Current Theme: ${themeMeta.name}. Click to cycle theme.`}
+              title={`Active Theme: ${themeMeta.name} — Click to switch`}
+              className="flex-1 h-10 px-3 rounded-xl bg-surface-low hover:bg-surface-high border border-outline-variant/40 hover:border-outline-variant flex items-center justify-between transition-all group outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-5 h-5 rounded-md flex items-center justify-center border border-white/10 shrink-0"
+                  style={{ backgroundColor: `${themeMeta.colors.primary}20`, color: themeMeta.colors.primary }}
+                >
+                  <Palette size={12} />
+                </div>
+                <span className="type-caption text-white font-medium truncate max-w-[85px]">
+                  {themeMeta.name.split(' ')[0]}
+                </span>
               </div>
-              <span className="type-caption text-white font-medium truncate max-w-[110px]">
-                {themeMeta.name.split(' ')[0]}
-              </span>
-            </div>
 
-            <div className="flex items-center gap-1.5 shrink-0">
-              <span className="w-2.5 h-2.5 rounded-full border border-black/40" style={{ backgroundColor: themeMeta.colors.primary }} />
-              <span className="w-2.5 h-2.5 rounded-full border border-black/40" style={{ backgroundColor: themeMeta.colors.secondary }} />
-            </div>
-          </button>
+              <div className="flex items-center gap-1 shrink-0">
+                <span className="w-2 h-2 rounded-full border border-black/40" style={{ backgroundColor: themeMeta.colors.primary }} />
+                <span className="w-2 h-2 rounded-full border border-black/40" style={{ backgroundColor: themeMeta.colors.secondary }} />
+              </div>
+            </button>
+
+            {/* Sun / Moon Toggle */}
+            <button
+              type="button"
+              onClick={() => {
+                SoundManager.playPop();
+                toggleColorMode();
+              }}
+              aria-label={isLightMode ? "Switch to Night Mode" : "Switch to Daylight Mode"}
+              title={isLightMode ? "Daylight Sanctuary Active — Click for Night Mode" : "Night Mode Active — Click for Daylight Sanctuary"}
+              className="w-10 h-10 rounded-xl bg-surface-low hover:bg-surface-high border border-outline-variant/40 hover:border-outline-variant flex items-center justify-center transition-all group outline-none focus-visible:ring-2 focus-visible:ring-primary shrink-0"
+            >
+              {isLightMode ? (
+                <Sun size={16} className="text-amber-500 animate-spin-slow" />
+              ) : (
+                <Moon size={16} className="text-secondary group-hover:scale-110 transition-transform" />
+              )}
+            </button>
+          </div>
 
           <NavLink 
             to="/settings" 

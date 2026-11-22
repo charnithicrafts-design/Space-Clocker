@@ -1,5 +1,15 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { THEMES, getStoredTheme, setAppTheme, applyThemeToDocument, AppTheme } from './theme';
+import {
+  THEMES,
+  getStoredTheme,
+  setAppTheme,
+  applyThemeToDocument,
+  getStoredColorMode,
+  applyColorModeToDocument,
+  setColorMode,
+  toggleColorMode,
+  AppTheme
+} from './theme';
 import { useTrackStore } from '../store/useTrackStore';
 
 describe('theme utility', () => {
@@ -21,6 +31,7 @@ describe('theme utility', () => {
     });
 
     document.body.dataset.theme = '';
+    document.body.dataset.colorMode = '';
   });
 
   it('defines all 3 themes with proper colors and metadata', () => {
@@ -68,5 +79,53 @@ describe('theme utility', () => {
     expect(localStorage.getItem('spaceclocker_theme')).toBe('sunny-iris');
     expect(document.body.dataset.theme).toBe('sunny-iris');
     expect(mockUpdatePreferences).toHaveBeenCalledWith({ theme: 'sunny-iris' });
+  });
+
+  it('returns dark as default color mode when nothing is stored', () => {
+    expect(getStoredColorMode()).toBe('dark');
+  });
+
+  it('reads valid stored color mode from localStorage', () => {
+    localStorageMock['spaceclocker_color_mode'] = 'light';
+    expect(getStoredColorMode()).toBe('light');
+
+    localStorageMock['spaceclocker_color_mode'] = 'dark';
+    expect(getStoredColorMode()).toBe('dark');
+  });
+
+  it('applies color mode to document body dataset', () => {
+    applyColorModeToDocument('light');
+    expect(document.body.dataset.colorMode).toBe('light');
+
+    applyColorModeToDocument('dark');
+    expect(document.body.dataset.colorMode).toBe('dark');
+  });
+
+  it('persists color mode via setColorMode and updates store and body', () => {
+    const mockUpdatePreferences = vi.fn();
+    useTrackStore.setState({
+      updatePreferences: mockUpdatePreferences
+    } as any);
+
+    setColorMode('light');
+    expect(localStorage.getItem('spaceclocker_color_mode')).toBe('light');
+    expect(document.body.dataset.colorMode).toBe('light');
+    expect(mockUpdatePreferences).toHaveBeenCalledWith({ colorMode: 'light' });
+  });
+
+  it('toggles color mode between dark and light', () => {
+    const mockUpdatePreferences = vi.fn();
+    useTrackStore.setState({
+      updatePreferences: mockUpdatePreferences
+    } as any);
+
+    expect(getStoredColorMode()).toBe('dark');
+    toggleColorMode();
+    expect(localStorage.getItem('spaceclocker_color_mode')).toBe('light');
+    expect(document.body.dataset.colorMode).toBe('light');
+
+    toggleColorMode();
+    expect(localStorage.getItem('spaceclocker_color_mode')).toBe('dark');
+    expect(document.body.dataset.colorMode).toBe('dark');
   });
 });

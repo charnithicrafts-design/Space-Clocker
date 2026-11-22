@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTrackStore } from '../../store/useTrackStore';
 import { CURRENT_APP_VERSION } from '../../constants';
-import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor, Copy, History, Rocket, Users, Sparkles, Palette } from 'lucide-react';
+import { Save, Download, Upload, User, Cpu, Shield, Trash2, RefreshCcw, Database, Globe, Cloud, Link, AlertCircle, Check, Laptop, Smartphone, Tablet, Monitor, Copy, History, Rocket, Users, Sparkles, Palette, Sun, Moon } from 'lucide-react';
 import { dbProxy } from '../../db/client';
 import { syncService } from '../../services/SyncService';
 import { SoundManager } from '../../utils/SoundManager';
@@ -13,7 +13,7 @@ import { getOrCreateDeviceId } from '../../utils/DeviceUtils';
 import { useSession } from '../../lib/auth-client';
 import { useNavigate } from 'react-router-dom';
 import { useVocabulary } from '../../utils/vocabulary';
-import { THEMES, setAppTheme, AppTheme } from '../../utils/theme';
+import { THEMES, setAppTheme, AppTheme, setColorMode, ColorMode } from '../../utils/theme';
 
 const SettingsDashboard = () => {
   const navigate = useNavigate();
@@ -675,6 +675,74 @@ const SettingsDashboard = () => {
                     </button>
                   );
                 })}
+              </div>
+            </div>
+
+            {/* Daylight Sanctuary & Night Cockpit (Appearance Mode) */}
+            <div className="p-5 rounded-2xl bg-surface-high border border-outline-variant space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h4 className="font-bold text-sm text-white flex items-center gap-2">
+                    <Sun size={16} className="text-amber-400" />
+                    <span>Daylight Sanctuary & Night Appearance</span>
+                  </h4>
+                  <p className="text-xs text-on-surface-variant">Switch between bright daylight study and deep midnight focus.</p>
+                </div>
+                <span className="type-telemetry-micro font-mono px-2.5 py-0.5 rounded-lg bg-surface-low border border-outline-variant text-on-surface-variant">
+                  Active: {localPrefs.colorMode === 'light' ? 'Daylight Sanctuary' : 'Night Cockpit'}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <button
+                  type="button"
+                  aria-label="Night Cockpit Mode"
+                  aria-pressed={localPrefs.colorMode !== 'light'}
+                  onClick={() => {
+                    SoundManager.playPop();
+                    const updated = { ...localPrefs, colorMode: 'dark' as const };
+                    setLocalPrefs(updated);
+                    setColorMode('dark');
+                  }}
+                  className={`p-4 rounded-xl border text-left transition-all relative cursor-pointer ${
+                    localPrefs.colorMode !== 'light'
+                      ? 'bg-surface-low border-primary shadow-[0_0_15px_rgba(0,242,255,0.15)] ring-1 ring-primary'
+                      : 'bg-surface-low/50 border-outline-variant/40 hover:border-outline-variant text-on-surface-variant'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1.5 text-primary font-bold text-xs uppercase tracking-wider font-mono">
+                    <Moon size={14} />
+                    <span>Night Cockpit</span>
+                  </div>
+                  <p className="type-body-sm text-xs leading-relaxed text-on-surface-variant">
+                    Deep void and velvet canvas with glowing rim-lighting for dim rooms, night owls, and high-adrenaline focus.
+                  </p>
+                </button>
+
+                <button
+                  type="button"
+                  aria-label="Daylight Sanctuary Mode"
+                  aria-pressed={localPrefs.colorMode === 'light'}
+                  onClick={() => {
+                    SoundManager.playPop();
+                    const updated = { ...localPrefs, colorMode: 'light' as const };
+                    setLocalPrefs(updated);
+                    setColorMode('light');
+                  }}
+                  className={`p-4 rounded-xl border text-left transition-all relative cursor-pointer ${
+                    localPrefs.colorMode === 'light'
+                      ? 'bg-surface-low border-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.2)] ring-1 ring-amber-400'
+                      : 'bg-surface-low/50 border-outline-variant/40 hover:border-outline-variant text-on-surface-variant'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1.5 text-amber-400 font-bold text-xs uppercase tracking-wider font-mono">
+                    <Sun size={14} />
+                    <span>Daylight Sanctuary</span>
+                  </div>
+                  <p className="type-body-sm text-xs leading-relaxed text-on-surface-variant">
+                    Warm porcelain and sunlit milk canvas for sunlit desks, library mornings, and zero astigmatism eye strain.
+                  </p>
+                </button>
               </div>
             </div>
 

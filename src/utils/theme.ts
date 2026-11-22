@@ -1,6 +1,7 @@
 import { useTrackStore } from '../store/useTrackStore';
 
 export type AppTheme = 'cosmos' | 'astronaut' | 'sunny-iris';
+export type ColorMode = 'dark' | 'light';
 
 export interface ThemeMeta {
   id: AppTheme;
@@ -67,6 +68,49 @@ export const THEMES: Record<AppTheme, ThemeMeta> = {
 };
 
 const THEME_STORAGE_KEY = 'spaceclocker_theme';
+const COLOR_MODE_STORAGE_KEY = 'spaceclocker_color_mode';
+
+export const getStoredColorMode = (): ColorMode => {
+  if (typeof localStorage !== 'undefined' && localStorage && typeof localStorage.getItem === 'function') {
+    try {
+      const stored = localStorage.getItem(COLOR_MODE_STORAGE_KEY);
+      if (stored === 'light' || stored === 'dark') {
+        return stored;
+      }
+    } catch {
+      // Fallback on restricted localStorage
+    }
+  }
+  return 'dark';
+};
+
+export const applyColorModeToDocument = (mode: ColorMode): void => {
+  if (typeof document !== 'undefined' && document.body) {
+    document.body.dataset.colorMode = mode;
+  }
+};
+
+export const setColorMode = (newMode: ColorMode): void => {
+  if (typeof localStorage !== 'undefined' && localStorage && typeof localStorage.setItem === 'function') {
+    try {
+      localStorage.setItem(COLOR_MODE_STORAGE_KEY, newMode);
+    } catch {
+      // Ignore quota/security errors
+    }
+  }
+  applyColorModeToDocument(newMode);
+
+  // Sync with Zustand store
+  const store = useTrackStore.getState();
+  if (store.updatePreferences) {
+    store.updatePreferences({ colorMode: newMode });
+  }
+};
+
+export const toggleColorMode = (): void => {
+  const current = getStoredColorMode();
+  setColorMode(current === 'light' ? 'dark' : 'light');
+};
 
 export const getStoredTheme = (): AppTheme => {
   if (typeof localStorage !== 'undefined' && localStorage && typeof localStorage.getItem === 'function') {
@@ -108,11 +152,16 @@ export const setAppTheme = (newTheme: AppTheme): void => {
 export const useTheme = () => {
   const preferences = useTrackStore((state) => state.preferences);
   const theme: AppTheme = preferences?.theme || 'cosmos';
+  const colorMode: ColorMode = preferences?.colorMode || 'dark';
 
   return {
     theme,
+    colorMode,
+    isLightMode: colorMode === 'light',
     meta: THEMES[theme],
     setTheme: setAppTheme,
+    setColorMode,
+    toggleColorMode,
     allThemes: Object.values(THEMES)
   };
 };

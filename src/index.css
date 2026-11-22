@@ -180,6 +180,140 @@ body[data-theme="sunny-iris"] {
   --theme-accent-gradient: linear-gradient(135deg, #ddb763 0%, #d6c7f2 50%, #a2b960 100%);
 }
 
+/* =========================================================
+   LIGHT MODE: DAYLIGHT SANCTUARY (PORCELAIN & SUNLIGHT)
+   ========================================================= */
+
+/* Default Light Mode & Sunny Iris Daylight Sanctuary */
+body[data-color-mode="light"],
+body[data-color-mode="light"][data-theme="sunny-iris"] {
+  --color-surface-lowest: #faf7f2; /* Warm porcelain canvas */
+  --color-surface-low: #f2ece2; /* Sun-washed ecru */
+  --color-surface: #e9e0d3; /* Soft morning panel */
+  --color-surface-high: #ded3c3; /* Elevated porcelain */
+  --color-surface-highest: #d1c3b0;
+
+  --glass-bg: rgba(255, 255, 255, 0.82); /* Frosted porcelain milk glass */
+  --glass-subtle-bg: rgba(255, 255, 255, 0.7);
+  --glass-elevated-bg: rgba(255, 255, 255, 0.94);
+  --glass-border: rgba(139, 104, 184, 0.22); /* Soft lavender petal rim */
+  --glass-elevated-border: rgba(184, 134, 30, 0.35); /* Warm sunbeam gold rim */
+  --glass-glow: 0 12px 32px -4px rgba(184, 134, 30, 0.12);
+
+  --ambient-orb-1: radial-gradient(circle, rgba(214, 199, 242, 0.45) 0%, transparent 70%); /* Morning Lavender */
+  --ambient-orb-2: radial-gradient(circle, rgba(221, 183, 99, 0.35) 0%, transparent 70%); /* Golden Sunbeam */
+
+  --color-primary-container: #b8861e; /* High-contrast golden sun */
+  --color-on-primary-container: #ffffff;
+  --color-primary: #1c132b; /* Deep royal velvet ink for razor-sharp reading */
+  --color-on-primary: #ffffff;
+
+  --color-secondary: #6b4e99; /* Deep royal lavender */
+  --color-on-secondary: #ffffff;
+
+  --color-tertiary-container: #4f7526; /* Botanical sprout green */
+  --color-on-tertiary-container: #ffffff;
+  --color-tertiary-fixed: #5c8b2c;
+
+  --color-on-surface: #1c132b; /* Deep rich velvet ink */
+  --color-on-surface-variant: #584b66; /* Soft lavender slate */
+
+  --color-outline: #a494b8;
+  --color-outline-variant: #d8cee2;
+
+  --color-success: #357730;
+  --color-on-success: #ffffff;
+
+  --theme-glow: rgba(184, 134, 30, 0.18);
+  --theme-accent-gradient: linear-gradient(135deg, #b8861e 0%, #6b4e99 50%, #4f7526 100%);
+}
+
+/* Astronaut Daylight: Lunar Surface / Cleanroom Ceramic */
+body[data-color-mode="light"][data-theme="astronaut"] {
+  --color-surface-lowest: #f4f6f9; /* Aerospace cleanroom white */
+  --color-surface-low: #e8ecf2;
+  --color-surface: #dce3eb;
+  --color-surface-high: #cfd8e3;
+  --color-surface-highest: #c1ccdb;
+
+  --glass-bg: rgba(255, 255, 255, 0.84);
+  --glass-subtle-bg: rgba(255, 255, 255, 0.72);
+  --glass-elevated-bg: rgba(255, 255, 255, 0.96);
+  --glass-border: rgba(19, 82, 125, 0.22); /* Earth ocean blue rim */
+  --glass-elevated-border: rgba(138, 115, 74, 0.35); /* Thermal gold rim */
+  --glass-glow: 0 12px 32px -4px rgba(19, 82, 125, 0.12);
+
+  --ambient-orb-1: radial-gradient(circle, rgba(29, 98, 145, 0.22) 0%, transparent 70%); /* Earth Blue */
+  --ambient-orb-2: radial-gradient(circle, rgba(160, 148, 126, 0.2) 0%, transparent 70%); /* Thermal Gold */
+
+  --color-primary-container: #13527d; /* Deep orbital ocean blue */
+  --color-on-primary-container: #ffffff;
+  --color-primary: #0e1724; /* Deep naval ink */
+  --color-on-primary: #ffffff;
+
+  --color-secondary: #8a734a; /* Deep thermal gold */
+  --color-on-secondary: #ffffff;
+
+  --color-tertiary-container: #3b6282;
+  --color-on-tertiary-container: #ffffff;
+  --color-tertiary-fixed: #4f7c9e;
+
+  --color-on-surface: #0e1724;
+  --color-on-surface-variant: #475569;
+
+  --color-outline: #94a3b8;
+  --color-outline-variant: #cbd5e1;
+
+  --color-success: #2e7d56;
+  --color-on-success: #ffffff;
+
+  --theme-glow: rgba(19, 82, 125, 0.16);
+  --theme-accent-gradient: linear-gradient(135deg, #13527d 0%, #8a734a 100%);
+}
+
+/* Cosmos Daylight: Stratosphere Solar Ion */
+body[data-color-mode="light"][data-theme="cosmos"] {
+  --color-surface-lowest: #f0f4f8; /* High-altitude stratosphere ice */
+  --color-surface-low: #e1e8f0;
+  --color-surface: #d2dce7;
+  --color-surface-high: #c2cfde;
+  --color-surface-highest: #b2c1d3;
+
+  --glass-bg: rgba(255, 255, 255, 0.84);
+  --glass-subtle-bg: rgba(255, 255, 255, 0.7);
+  --glass-elevated-bg: rgba(255, 255, 255, 0.96);
+  --glass-border: rgba(0, 139, 148, 0.25); /* Cyan ink rim */
+  --glass-elevated-border: rgba(117, 72, 163, 0.35); /* Nebula violet rim */
+  --glass-glow: 0 12px 32px -4px rgba(0, 139, 148, 0.12);
+
+  --ambient-orb-1: radial-gradient(circle, rgba(0, 242, 255, 0.25) 0%, transparent 70%);
+  --ambient-orb-2: radial-gradient(circle, rgba(218, 185, 255, 0.22) 0%, transparent 70%);
+
+  --color-primary-container: #008b94; /* High-contrast teal-cyan */
+  --color-on-primary-container: #ffffff;
+  --color-primary: #091e2c; /* Deep space ink */
+  --color-on-primary: #ffffff;
+
+  --color-secondary: #7548a3; /* Deep nebula violet */
+  --color-on-secondary: #ffffff;
+
+  --color-tertiary-container: #007a82;
+  --color-on-tertiary-container: #ffffff;
+  --color-tertiary-fixed: #009aa4;
+
+  --color-on-surface: #091e2c;
+  --color-on-surface-variant: #4a5568;
+
+  --color-outline: #8c9ba5;
+  --color-outline-variant: #cbd5e1;
+
+  --color-success: #1b8a5a;
+  --color-on-success: #ffffff;
+
+  --theme-glow: rgba(0, 139, 148, 0.16);
+  --theme-accent-gradient: linear-gradient(135deg, #008b94 0%, #7548a3 100%);
+}
+
 /* Aura States */
 body[data-aura="Flow"] {
   --color-primary-container: #43f3de; /* Teal / Flow State */
