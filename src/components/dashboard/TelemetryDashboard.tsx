@@ -20,7 +20,7 @@ export const TelemetryDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-black text-white uppercase tracking-widest">Telemetry Dashboard</h2>
+        <h2 className="text-xl font-black text-on-surface uppercase tracking-widest">Telemetry Dashboard</h2>
         <div className="flex gap-2">
           {[7, 30, 365].map((days) => (
             <button
@@ -56,9 +56,9 @@ export const TelemetryDashboard: React.FC = () => {
                     <stop offset="95%" stopColor="var(--color-secondary)" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" vertical={false} />
-                <XAxis dataKey="date" stroke="rgba(255,255,255,0.3)" fontSize={10} tickFormatter={(str) => str.slice(5)} />
-                <YAxis stroke="rgba(255,255,255,0.3)" fontSize={10} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-outline-variant)" opacity={0.3} vertical={false} />
+                <XAxis dataKey="date" stroke="var(--color-on-surface-variant)" fontSize={10} tickFormatter={(str) => str.slice(5)} />
+                <YAxis stroke="var(--color-on-surface-variant)" fontSize={10} />
                 <RechartsTooltip 
                   contentStyle={{ backgroundColor: 'var(--color-surface-high)', borderColor: 'var(--color-outline-variant)', borderRadius: '12px' }}
                   itemStyle={{ color: 'var(--color-secondary)' }}
@@ -85,9 +85,9 @@ export const TelemetryDashboard: React.FC = () => {
             {voidBreachStats?.hourlyBreaches && voidBreachStats.hourlyBreaches.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={voidBreachStats.hourlyBreaches} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                  <XAxis dataKey="hour" stroke="rgba(255,255,255,0.3)" fontSize={10} tickFormatter={(h) => `${h}:00`} />
-                  <YAxis stroke="rgba(255,255,255,0.3)" fontSize={10} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-outline-variant)" opacity={0.3} vertical={false} />
+                  <XAxis dataKey="hour" stroke="var(--color-on-surface-variant)" fontSize={10} tickFormatter={(h) => `${h}:00`} />
+                  <YAxis stroke="var(--color-on-surface-variant)" fontSize={10} />
                   <RechartsTooltip 
                     contentStyle={{ backgroundColor: 'var(--color-surface-high)', borderColor: 'var(--color-error)', borderRadius: '12px' }}
                     itemStyle={{ color: 'var(--color-error)' }}

@@ -43,7 +43,7 @@ const NavLink: React.FC<NavLinkProps> = ({ to, icon: Icon, label, active, color 
     onClick={() => SoundManager.playPop()}
     aria-current={active ? 'page' : undefined}
     aria-label={`${label} sector`}
-    className={`w-full flex items-center gap-3 h-11 px-3 rounded-xl transition-all relative group focus-visible:ring-2 focus-visible:ring-primary outline-none touch-target-compact ${active ? 'bg-surface-high text-white shadow-lg' : 'text-on-surface-variant hover:text-white hover:bg-surface-low'}`}
+    className={`w-full flex items-center gap-3 h-11 px-3 rounded-xl transition-all relative group focus-visible:ring-2 focus-visible:ring-primary outline-none touch-target-compact ${active ? 'bg-surface-high text-on-surface font-bold shadow-lg border border-primary/20' : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-low'}`}
   >
     {active && (
       <motion.div 
@@ -136,8 +136,8 @@ const Navigation = () => {
           <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg border border-white/20 shrink-0 bg-white" aria-hidden="true">
             <img src="/favicon.svg" alt="Space-Clocker Sanctuary Emblem" className="w-full h-full object-contain" />
           </div>
-          <h1 className="type-title-3 font-display font-black text-white uppercase tracking-tighter leading-none">
-            Space<br/><span className="text-primary">Clocker</span>
+          <h1 className="type-title-3 font-display font-black text-on-surface uppercase tracking-tighter leading-none">
+            Space<br/><span className="text-primary-container">Clocker</span>
           </h1>
         </div>
 

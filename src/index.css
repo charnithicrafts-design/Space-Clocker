@@ -102,15 +102,15 @@ body[data-theme="astronaut"] {
   --color-surface-high: #222933; /* Flight deck */
   --color-surface-highest: #2b3442;
 
-  --glass-bg: rgba(18, 23, 29, 0.74); /* Charcoal carbon fiber glass */
-  --glass-subtle-bg: rgba(14, 18, 23, 0.6);
-  --glass-elevated-bg: rgba(24, 30, 39, 0.85);
-  --glass-border: rgba(29, 98, 145, 0.38); /* Luminous sub-orbital Earth blue border */
-  --glass-elevated-border: rgba(160, 148, 126, 0.45); /* Thermal gold rim on elevation */
-  --glass-glow: 0 16px 40px -4px rgba(29, 98, 145, 0.16);
+  --glass-bg: rgba(14, 20, 28, 0.85); /* Titanium avionics console glass */
+  --glass-subtle-bg: rgba(12, 17, 24, 0.70);
+  --glass-elevated-bg: rgba(22, 30, 42, 0.90);
+  --glass-border: rgba(29, 98, 145, 0.55); /* Luminous sub-orbital Earth blue border */
+  --glass-elevated-border: rgba(160, 148, 126, 0.65); /* Thermal gold rim on elevation */
+  --glass-glow: 0 16px 40px -4px rgba(29, 98, 145, 0.22);
 
-  --ambient-orb-1: radial-gradient(circle, rgba(29, 98, 145, 0.28) 0%, transparent 70%); /* Earth Blue */
-  --ambient-orb-2: radial-gradient(circle, rgba(160, 148, 126, 0.16) 0%, transparent 70%); /* Thermal Gold */
+  --ambient-orb-1: radial-gradient(circle, rgba(29, 98, 145, 0.38) 0%, transparent 70%); /* Sub-orbital Earth Blue */
+  --ambient-orb-2: radial-gradient(circle, rgba(160, 148, 126, 0.24) 0%, transparent 70%); /* Thermal Foil Gold */
 
   --color-primary-container: #1d6291; /* Earth orbital blue */
   --color-on-primary-container: #e0ddd8;
@@ -140,20 +140,20 @@ body[data-theme="astronaut"] {
 /* --- Theme 3: Sunny Iris (Tri-Color Botanical Equilibrium) --- */
 body[data-theme="sunny-iris"] {
   --color-surface-lowest: #140726; /* Deep Charnithi launch poster royal velvet purple */
-  --color-surface-low: #1d0b36; /* Midnight velvet purple */
-  --color-surface: #260f44; /* Iris panel */
-  --color-surface-high: #321556; /* Elevated deck */
-  --color-surface-highest: #411d6e;
+  --color-surface-low: #1e0c38; /* Midnight velvet purple */
+  --color-surface: #29104a; /* Iris panel */
+  --color-surface-high: #381665; /* Elevated deck */
+  --color-surface-highest: #491f75;
 
-  --glass-bg: rgba(38, 15, 68, 0.68); /* Rich velvet iris glass */
-  --glass-subtle-bg: rgba(28, 11, 51, 0.55);
-  --glass-elevated-bg: rgba(48, 20, 84, 0.82);
-  --glass-border: rgba(214, 199, 242, 0.24); /* Soft lavender petal rim */
-  --glass-elevated-border: rgba(221, 183, 99, 0.4); /* Golden sun rim on elevation */
-  --glass-glow: 0 16px 40px -4px rgba(221, 183, 99, 0.14); /* Golden sun ambient glow */
+  --glass-bg: rgba(42, 16, 78, 0.74); /* Rich velvet iris living glass */
+  --glass-subtle-bg: rgba(30, 12, 54, 0.62);
+  --glass-elevated-bg: rgba(54, 22, 98, 0.88);
+  --glass-border: rgba(214, 199, 242, 0.38); /* Soft lavender petal rim */
+  --glass-elevated-border: rgba(221, 183, 99, 0.55); /* Golden sun rim on elevation */
+  --glass-glow: 0 16px 40px -4px rgba(221, 183, 99, 0.18); /* Golden sun ambient glow */
 
-  --ambient-orb-1: radial-gradient(circle, rgba(139, 104, 184, 0.25) 0%, transparent 70%); /* Iris Violet */
-  --ambient-orb-2: radial-gradient(circle, rgba(221, 183, 99, 0.18) 0%, transparent 70%); /* Golden Sun */
+  --ambient-orb-1: radial-gradient(circle, rgba(139, 104, 184, 0.35) 0%, transparent 70%); /* Iris Violet */
+  --ambient-orb-2: radial-gradient(circle, rgba(221, 183, 99, 0.25) 0%, transparent 70%); /* Golden Sun */
 
   --color-primary-container: #ddb763; /* Sunny Iris golden core */
   --color-on-primary-container: #261b00;
@@ -176,7 +176,7 @@ body[data-theme="sunny-iris"] {
   --color-success: #a2b960; /* Fresh botanical sprout green */
   --color-on-success: #172403;
 
-  --theme-glow: rgba(221, 183, 99, 0.2);
+  --theme-glow: rgba(221, 183, 99, 0.22);
   --theme-accent-gradient: linear-gradient(135deg, #ddb763 0%, #d6c7f2 50%, #a2b960 100%);
 }
 
@@ -184,28 +184,28 @@ body[data-theme="sunny-iris"] {
    LIGHT MODE: DAYLIGHT SANCTUARY (PORCELAIN & SUNLIGHT)
    ========================================================= */
 
-/* Default Light Mode & Sunny Iris Daylight Sanctuary */
+/* Default Light Mode & Sunny Iris Daylight Botanical Sanctuary */
 body[data-color-mode="light"],
 body[data-color-mode="light"][data-theme="sunny-iris"] {
-  --color-surface-lowest: #faf7f2; /* Warm porcelain canvas */
-  --color-surface-low: #f2ece2; /* Sun-washed ecru */
-  --color-surface: #e9e0d3; /* Soft morning panel */
-  --color-surface-high: #ded3c3; /* Elevated porcelain */
-  --color-surface-highest: #d1c3b0;
+  --color-surface-lowest: #fbf8f3; /* Sunlit warm petal cream meadow */
+  --color-surface-low: #f3ece2; /* Warm morning ecru */
+  --color-surface: #e8dfd1; /* Soft morning panel */
+  --color-surface-high: #dccfbe; /* Elevated porcelain */
+  --color-surface-highest: #d0c0ad;
 
-  --glass-bg: rgba(255, 255, 255, 0.82); /* Frosted porcelain milk glass */
-  --glass-subtle-bg: rgba(255, 255, 255, 0.7);
-  --glass-elevated-bg: rgba(255, 255, 255, 0.94);
-  --glass-border: rgba(139, 104, 184, 0.22); /* Soft lavender petal rim */
-  --glass-elevated-border: rgba(184, 134, 30, 0.35); /* Warm sunbeam gold rim */
-  --glass-glow: 0 12px 32px -4px rgba(184, 134, 30, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.90); /* Translucent morning-mist porcelain */
+  --glass-subtle-bg: rgba(255, 252, 247, 0.84);
+  --glass-elevated-bg: rgba(255, 255, 255, 0.98);
+  --glass-border: rgba(107, 78, 153, 0.35); /* DISTINCTIVE LAVENDER IRIS PETAL RIM */
+  --glass-elevated-border: rgba(221, 183, 99, 0.50); /* Warm golden sunbeam rim */
+  --glass-glow: 0 14px 36px -4px rgba(221, 183, 99, 0.18);
 
-  --ambient-orb-1: radial-gradient(circle, rgba(214, 199, 242, 0.45) 0%, transparent 70%); /* Morning Lavender */
-  --ambient-orb-2: radial-gradient(circle, rgba(221, 183, 99, 0.35) 0%, transparent 70%); /* Golden Sunbeam */
+  --ambient-orb-1: radial-gradient(circle, rgba(214, 199, 242, 0.55) 0%, transparent 70%); /* Morning Lavender dew */
+  --ambient-orb-2: radial-gradient(circle, rgba(221, 183, 99, 0.40) 0%, transparent 70%); /* Golden Sunbeam */
 
   --color-primary-container: #b8861e; /* High-contrast golden sun */
   --color-on-primary-container: #ffffff;
-  --color-primary: #1c132b; /* Deep royal velvet ink for razor-sharp reading */
+  --color-primary: #1e0a38; /* DEEP ROYAL VELVET PURPLE INK (14:1 contrast ratio) */
   --color-on-primary: #ffffff;
 
   --color-secondary: #6b4e99; /* Deep royal lavender */
@@ -215,11 +215,11 @@ body[data-color-mode="light"][data-theme="sunny-iris"] {
   --color-on-tertiary-container: #ffffff;
   --color-tertiary-fixed: #5c8b2c;
 
-  --color-on-surface: #1c132b; /* Deep rich velvet ink */
-  --color-on-surface-variant: #584b66; /* Soft lavender slate */
+  --color-on-surface: #1e0a38; /* Deep royal velvet purple ink */
+  --color-on-surface-variant: #584475; /* Rich lavender slate */
 
-  --color-outline: #a494b8;
-  --color-outline-variant: #d8cee2;
+  --color-outline: #8b68b8;
+  --color-outline-variant: #d3c4e3;
 
   --color-success: #357730;
   --color-on-success: #ffffff;
@@ -228,27 +228,27 @@ body[data-color-mode="light"][data-theme="sunny-iris"] {
   --theme-accent-gradient: linear-gradient(135deg, #b8861e 0%, #6b4e99 50%, #4f7526 100%);
 }
 
-/* Astronaut Daylight: Lunar Surface / Cleanroom Ceramic */
+/* Astronaut Daylight: Lunar Surface / NASA Spacesuit Ceramic */
 body[data-color-mode="light"][data-theme="astronaut"] {
-  --color-surface-lowest: #f4f6f9; /* Aerospace cleanroom white */
-  --color-surface-low: #e8ecf2;
-  --color-surface: #dce3eb;
-  --color-surface-high: #cfd8e3;
-  --color-surface-highest: #c1ccdb;
+  --color-surface-lowest: #e0ddd8; /* AUTHENTIC SPACESUIT TECHNICAL CERAMIC / TITANIUM */
+  --color-surface-low: #d6d2cc; /* Textured spacesuit nylon shade */
+  --color-surface: #cac5be; /* Flight console base */
+  --color-surface-high: #bdb7af;
+  --color-surface-highest: #ada69d;
 
-  --glass-bg: rgba(255, 255, 255, 0.84);
-  --glass-subtle-bg: rgba(255, 255, 255, 0.72);
-  --glass-elevated-bg: rgba(255, 255, 255, 0.96);
-  --glass-border: rgba(19, 82, 125, 0.22); /* Earth ocean blue rim */
-  --glass-elevated-border: rgba(138, 115, 74, 0.35); /* Thermal gold rim */
-  --glass-glow: 0 12px 32px -4px rgba(19, 82, 125, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.94); /* NASA cleanroom console white */
+  --glass-subtle-bg: rgba(250, 249, 247, 0.88);
+  --glass-elevated-bg: rgba(255, 255, 255, 0.98);
+  --glass-border: rgba(29, 98, 145, 0.45); /* CRISP EARTH ORBITAL BLUE BORDER */
+  --glass-elevated-border: rgba(160, 148, 126, 0.65); /* Thermal gold rim */
+  --glass-glow: 0 14px 36px -4px rgba(29, 98, 145, 0.18);
 
-  --ambient-orb-1: radial-gradient(circle, rgba(29, 98, 145, 0.22) 0%, transparent 70%); /* Earth Blue */
-  --ambient-orb-2: radial-gradient(circle, rgba(160, 148, 126, 0.2) 0%, transparent 70%); /* Thermal Gold */
+  --ambient-orb-1: radial-gradient(circle, rgba(29, 98, 145, 0.26) 0%, transparent 70%); /* Earth Blue */
+  --ambient-orb-2: radial-gradient(circle, rgba(160, 148, 126, 0.22) 0%, transparent 70%); /* Thermal Gold */
 
-  --color-primary-container: #13527d; /* Deep orbital ocean blue */
+  --color-primary-container: #1d6291; /* Deep orbital ocean blue */
   --color-on-primary-container: #ffffff;
-  --color-primary: #0e1724; /* Deep naval ink */
+  --color-primary: #090807; /* True space vacuum black */
   --color-on-primary: #ffffff;
 
   --color-secondary: #8a734a; /* Deep thermal gold */
@@ -258,60 +258,79 @@ body[data-color-mode="light"][data-theme="astronaut"] {
   --color-on-tertiary-container: #ffffff;
   --color-tertiary-fixed: #4f7c9e;
 
-  --color-on-surface: #0e1724;
-  --color-on-surface-variant: #475569;
+  --color-on-surface: #090807; /* Vacuum black ink (16:1 contrast ratio) */
+  --color-on-surface-variant: #2f3e46; /* Deep aerospace charcoal */
 
-  --color-outline: #94a3b8;
-  --color-outline-variant: #cbd5e1;
+  --color-outline: #718fa7;
+  --color-outline-variant: #b5b0a6;
 
   --color-success: #2e7d56;
   --color-on-success: #ffffff;
 
-  --theme-glow: rgba(19, 82, 125, 0.16);
-  --theme-accent-gradient: linear-gradient(135deg, #13527d 0%, #8a734a 100%);
+  --theme-glow: rgba(29, 98, 145, 0.20);
+  --theme-accent-gradient: linear-gradient(135deg, #1d6291 0%, #8a734a 100%);
 }
 
 /* Cosmos Daylight: Stratosphere Solar Ion */
 body[data-color-mode="light"][data-theme="cosmos"] {
-  --color-surface-lowest: #f0f4f8; /* High-altitude stratosphere ice */
-  --color-surface-low: #e1e8f0;
-  --color-surface: #d2dce7;
-  --color-surface-high: #c2cfde;
+  --color-surface-lowest: #e8f0f8; /* High-altitude stratosphere ice */
+  --color-surface-low: #dce6f0;
+  --color-surface: #cfdce8;
+  --color-surface-high: #c1d1e0;
   --color-surface-highest: #b2c1d3;
 
-  --glass-bg: rgba(255, 255, 255, 0.84);
-  --glass-subtle-bg: rgba(255, 255, 255, 0.7);
-  --glass-elevated-bg: rgba(255, 255, 255, 0.96);
-  --glass-border: rgba(0, 139, 148, 0.25); /* Cyan ink rim */
-  --glass-elevated-border: rgba(117, 72, 163, 0.35); /* Nebula violet rim */
-  --glass-glow: 0 12px 32px -4px rgba(0, 139, 148, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.90); /* Luminescent ice glass */
+  --glass-subtle-bg: rgba(240, 248, 255, 0.82);
+  --glass-elevated-bg: rgba(255, 255, 255, 0.98);
+  --glass-border: rgba(0, 180, 216, 0.38); /* Crisp cyber cyan rim */
+  --glass-elevated-border: rgba(0, 180, 216, 0.55);
+  --glass-glow: 0 14px 36px -4px rgba(0, 180, 216, 0.16);
 
-  --ambient-orb-1: radial-gradient(circle, rgba(0, 242, 255, 0.25) 0%, transparent 70%);
-  --ambient-orb-2: radial-gradient(circle, rgba(218, 185, 255, 0.22) 0%, transparent 70%);
+  --ambient-orb-1: radial-gradient(circle, rgba(0, 210, 255, 0.25) 0%, transparent 70%);
+  --ambient-orb-2: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, transparent 70%);
 
   --color-primary-container: #008b94; /* High-contrast teal-cyan */
   --color-on-primary-container: #ffffff;
-  --color-primary: #091e2c; /* Deep space ink */
+  --color-primary: #08111d; /* Jet obsidian ink */
   --color-on-primary: #ffffff;
 
-  --color-secondary: #7548a3; /* Deep nebula violet */
+  --color-secondary: #7e42d6; /* Deep nebula violet */
   --color-on-secondary: #ffffff;
 
-  --color-tertiary-container: #007a82;
+  --color-tertiary-container: #007f87;
   --color-on-tertiary-container: #ffffff;
-  --color-tertiary-fixed: #009aa4;
+  --color-tertiary-fixed: #00a4ae;
 
-  --color-on-surface: #091e2c;
-  --color-on-surface-variant: #4a5568;
+  --color-on-surface: #08111d; /* Jet obsidian ink */
+  --color-on-surface-variant: #3d4f66; /* Stratosphere slate */
 
-  --color-outline: #8c9ba5;
-  --color-outline-variant: #cbd5e1;
+  --color-outline: #6b859e;
+  --color-outline-variant: #b0c4de;
 
-  --color-success: #1b8a5a;
+  --color-success: #1f8a53;
   --color-on-success: #ffffff;
 
-  --theme-glow: rgba(0, 139, 148, 0.16);
-  --theme-accent-gradient: linear-gradient(135deg, #008b94 0%, #7548a3 100%);
+  --theme-glow: rgba(0, 180, 216, 0.20);
+  --theme-accent-gradient: linear-gradient(135deg, #008b94 0%, #7e42d6 100%);
+}
+
+/* Universal Light Mode Typography Inversion for Uninverted Headings & Telemetry */
+body[data-color-mode="light"] :is(
+  h1:not(.keep-white), h2:not(.keep-white), h3:not(.keep-white), h4:not(.keep-white), h5:not(.keep-white), h6:not(.keep-white),
+  .type-display,
+  .type-title-1,
+  .type-title-2,
+  .type-title-3,
+  .type-headline,
+  .type-telemetry-lg,
+  .type-telemetry-base,
+  .type-telemetry-sm
+) {
+  color: var(--color-on-surface);
+}
+
+body[data-color-mode="light"] .text-white:not(.keep-white):not([class*="bg-primary"]):not([class*="bg-secondary"]):not([class*="bg-black"]):not([class*="bg-surface-highest"]) {
+  color: var(--color-on-surface);
 }
 
 /* Aura States */

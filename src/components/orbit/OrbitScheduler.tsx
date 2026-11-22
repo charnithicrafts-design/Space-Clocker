@@ -26,7 +26,7 @@ const SyncGauge = React.memo(({ percentage }: { percentage: number }) => (
       />
     </svg>
     <div className="absolute inset-0 flex flex-col items-center justify-center">
-      <div className="type-telemetry-lg text-white">{Math.round(percentage)}%</div>
+      <div className="type-telemetry-lg text-on-surface">{Math.round(percentage)}%</div>
       <div className="type-overline text-on-surface-variant">Sync</div>
     </div>
     <div className="absolute -top-4 -right-4 bg-primary text-on-primary type-overline px-2 py-0.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
@@ -289,7 +289,7 @@ const OrbitScheduler = () => {
   const globalAnomalies = anomalies.filter(a => a.taskId === 'global');
 
   return (
-    <div className="p-6 lg:pl-80 space-y-8 min-h-screen bg-surface-lowest text-white pb-32">
+    <div className="p-6 lg:pl-80 space-y-8 min-h-screen bg-surface-lowest text-on-surface pb-32">
       <header className="mb-8 relative">
         <div className="flex justify-between items-start">
           <div>
@@ -381,7 +381,7 @@ const OrbitScheduler = () => {
                 </h3>
                 <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
                   <input 
-                    className="w-full md:flex-1 min-w-0 h-10 sm:h-12 bg-surface-high px-4 rounded-xl sm:rounded-2xl border border-outline-variant focus:border-primary focus:outline-none type-body text-white transition-all"
+                    className="w-full md:flex-1 min-w-0 h-10 sm:h-12 bg-surface-high px-4 rounded-xl sm:rounded-2xl border border-outline-variant focus:border-primary focus:outline-none type-body text-on-surface transition-all"
                     placeholder={activeHorizon === 'weekly' ? "Define a weekly resonance milestone..." : "Define the next mission parameter..."}
                     value={newTask}
                     onChange={(e) => setNewTask(e.target.value)}
@@ -393,7 +393,7 @@ const OrbitScheduler = () => {
                         <input 
                           type="time"
                           aria-label="Mission Entry Time"
-                          className="bg-transparent type-telemetry-base text-xs focus:outline-none text-white cursor-pointer"
+                          className="bg-transparent type-telemetry-base text-xs focus:outline-none text-on-surface cursor-pointer"
                           value={newTime}
                           onChange={(e) => setNewTime(e.target.value)}
                         />
@@ -404,7 +404,7 @@ const OrbitScheduler = () => {
                         <input 
                           type="time"
                           aria-label="Mission Descent Time"
-                          className="bg-transparent type-telemetry-base text-xs focus:outline-none text-white cursor-pointer"
+                          className="bg-transparent type-telemetry-base text-xs focus:outline-none text-on-surface cursor-pointer"
                           value={newEndTime}
                           onChange={(e) => setNewEndTime(e.target.value)}
                         />
@@ -414,7 +414,7 @@ const OrbitScheduler = () => {
                         <input 
                           type="datetime-local"
                           aria-label="Mission Deadline"
-                          className="bg-transparent type-telemetry-base text-xs focus:outline-none text-white cursor-pointer w-28 sm:w-32"
+                          className="bg-transparent type-telemetry-base text-xs focus:outline-none text-on-surface cursor-pointer w-28 sm:w-32"
                           value={newDeadline}
                           onChange={(e) => setNewDeadline(e.target.value)}
                         />
@@ -489,7 +489,7 @@ const OrbitScheduler = () => {
                     <Signal size={24} className="animate-pulse" />
                   </div>
                   <div className="space-y-1 text-center md:text-left flex-1">
-                    <h4 className="text-sm font-black text-white uppercase tracking-widest">📡 Mission Telemetry Ready</h4>
+                    <h4 className="text-sm font-black text-on-surface uppercase tracking-widest">📡 Mission Telemetry Ready</h4>
                     <p className="text-xs text-on-surface-variant leading-relaxed">
                       You completed your first daily parameter! See what a 1-click progress transmission looks like for your mentor.
                     </p>
