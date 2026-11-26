@@ -204,7 +204,7 @@ const AppContent = () => {
   if (isDbLoading) {
     return (
       <div style={{ 
-        height: '100vh', 
+        minHeight: '100dvh', 
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
@@ -236,7 +236,7 @@ const AppContent = () => {
   if (dbStatus === 'error') {
     return (
       <div style={{ 
-        height: '100vh', 
+        minHeight: '100dvh', 
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
@@ -384,7 +384,7 @@ const AppContent = () => {
   }
 
   return (
-    <div className={`min-h-screen bg-surface-lowest text-on-surface relative overflow-x-hidden ${updateAvailable && !showOnboarding ? 'pt-10' : ''}`}>
+    <div className={`min-h-dvh bg-surface-lowest text-on-surface relative overflow-x-hidden ${updateAvailable && !showOnboarding ? 'pt-16 sm:pt-12' : ''}`}>
       <AmbientThemeGlow />
       {!showOnboarding && <CriticalUpdateBanner />}
       <Navigation />
@@ -435,51 +435,53 @@ const AppContent = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[300] flex items-center justify-center p-6 bg-surface-lowest/90 backdrop-blur-2xl"
+            className="modal-backdrop z-[300] bg-surface-lowest/90 backdrop-blur-2xl"
           >
-            <motion.div
-              initial={{ scale: 0.9, y: 20, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: -20, opacity: 0 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="w-full max-w-md glass-panel border-2 border-primary p-8 rounded-[2.5rem] text-center space-y-6 relative overflow-hidden"
-            >
-              {/* Decorative radial glows */}
-              <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/20 blur-3xl rounded-full" />
-              <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-secondary/20 blur-3xl rounded-full" />
-              
-              <div className="relative z-10 flex flex-col items-center space-y-6">
-                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary border border-primary/20 shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.3)]">
-                  <Award size={40} className="animate-bounce" />
-                </div>
-
-                <div className="space-y-2">
-                  <h2 className="text-xs font-black uppercase tracking-[0.4em] text-secondary">
-                    Momentum Shift Achieved
-                  </h2>
-                  <h1 className="text-4xl font-display font-black text-white uppercase tracking-tighter">
-                    Rank Ascended!
-                  </h1>
-                  <div className="text-6xl font-black text-primary font-mono tracking-tighter my-4 drop-shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.4)]">
-                    LVL {profile?.level}
+            <div className="modal-center-frame">
+              <motion.div
+                initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                animate={{ scale: 1, y: 0, opacity: 1 }}
+                exit={{ scale: 0.9, y: -20, opacity: 0 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="modal-dialog-scroll max-w-md glass-panel border-2 border-primary p-6 sm:p-8 text-center space-y-6 relative"
+              >
+                {/* Decorative radial glows */}
+                <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/20 blur-3xl rounded-full pointer-events-none" />
+                <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-secondary/20 blur-3xl rounded-full pointer-events-none" />
+                
+                <div className="relative z-10 flex flex-col items-center space-y-6">
+                  <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary border border-primary/20 shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.3)]">
+                    <Award size={40} className="animate-bounce" />
                   </div>
-                  <p className="text-on-surface-variant text-xs leading-relaxed max-w-xs mx-auto">
-                    Your neural trajectory efficiency has unlocked a new rank. The Momentum Engine is now calibrated for high-level operations.
-                  </p>
-                </div>
 
-                <button
-                  onClick={async () => {
-                    const { SoundManager } = await import('./utils/SoundManager');
-                    SoundManager.playPop();
-                    setShowLevelUp(false);
-                  }}
-                  className="w-full py-4 bg-primary text-on-primary rounded-2xl font-black uppercase tracking-widest hover:bg-primary-container transition-colors shadow-lg hover:shadow-primary/20 cursor-pointer border-none outline-none"
-                >
-                  Continue Mission
-                </button>
-              </div>
-            </motion.div>
+                  <div className="space-y-2">
+                    <h2 className="type-overline font-black tracking-[0.4em] text-secondary">
+                      Momentum Shift Achieved
+                    </h2>
+                    <h1 className="type-display font-black text-on-surface uppercase tracking-tighter">
+                      Rank Ascended!
+                    </h1>
+                    <div className="text-6xl font-black text-primary font-mono tracking-tighter my-4 drop-shadow-[0_0_20px_rgba(var(--color-primary-rgb),0.4)]">
+                      LVL {profile?.level}
+                    </div>
+                    <p className="text-on-surface-variant type-body-sm leading-relaxed max-w-xs mx-auto">
+                      Your neural trajectory efficiency has unlocked a new rank. The Momentum Engine is now calibrated for high-level operations.
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={async () => {
+                      const { SoundManager } = await import('./utils/SoundManager');
+                      SoundManager.playPop();
+                      setShowLevelUp(false);
+                    }}
+                    className="w-full min-h-[48px] px-6 py-2 bg-primary text-on-primary rounded-2xl font-black uppercase tracking-widest hover:bg-primary-container transition-colors shadow-lg hover:shadow-primary/20 cursor-pointer border-none outline-none touch-target"
+                  >
+                    Continue Mission
+                  </button>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

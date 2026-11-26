@@ -31,8 +31,8 @@ const HubTile = ({ to, icon: Icon, label, description, color, onClick }: any) =>
       <Icon size={32} className={color} />
     </div>
     <div className="text-left">
-      <h3 className="font-display font-black text-xl text-white uppercase tracking-tight">{label}</h3>
-      <p className="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-1">{description}</p>
+      <h3 className="type-title-3 font-black text-on-surface uppercase tracking-tight">{label}</h3>
+      <p className="type-overline text-on-surface-variant font-bold tracking-widest mt-1">{description}</p>
     </div>
   </Link>
 );
@@ -52,52 +52,51 @@ const CommandHub: React.FC<CommandHubProps> = ({ isOpen, onClose }) => {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-[#050508]/90 backdrop-blur-xl"
-          />
-          
-          <motion.div 
-            initial={{ scale: 0.9, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0, y: 20 }}
-            className="w-full max-w-4xl max-h-[90vh] overflow-y-auto relative z-10 space-y-8 no-scrollbar"
-          >
-            <div className="flex justify-between items-center sticky top-0 bg-transparent pb-4">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
-                  <Zap className="text-primary" size={24} />
+        <div
+          className="modal-backdrop z-[100] bg-surface-lowest/90 backdrop-blur-xl"
+          onClick={onClose}
+        >
+          <div className="modal-center-frame">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-4xl relative z-10 space-y-8 my-auto py-4"
+            >
+              <div className="flex justify-between items-center gap-4 pb-4">
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className="w-12 h-12 shrink-0 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+                    <Zap className="text-primary" size={24} />
+                  </div>
+                  <div className="min-w-0">
+                    <h2 className="type-title-1 font-black text-on-surface uppercase tracking-tight">Mission Control Hub</h2>
+                    <p className="type-overline text-primary font-black tracking-[0.3em]">Sector Synchronization Active</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-2xl font-display font-black text-white uppercase tracking-tight">Mission Control Hub</h2>
-                  <p className="text-[10px] text-primary font-black uppercase tracking-[0.3em]">Sector Synchronization Active</p>
+                <button 
+                  onClick={onClose}
+                  aria-label="Close Mission Control Hub"
+                  className="touch-target shrink-0 w-12 h-12 rounded-full bg-surface-high border border-outline-variant hover:border-error text-on-surface-variant hover:text-error transition-all flex items-center justify-center cursor-pointer"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {sectors.map((sector) => (
+                  <HubTile key={sector.to} {...sector} onClick={onClose} />
+                ))}
+              </div>
+
+              <div className="pt-4 flex justify-center">
+                <div className="glass-panel border border-outline-variant px-6 py-3 rounded-full flex items-center gap-2">
+                  <ShieldCheck size={16} className="text-success shrink-0" />
+                  <span className="type-overline font-black tracking-widest text-on-surface-variant">Neural Connection Secured</span>
                 </div>
               </div>
-              <button 
-                onClick={onClose}
-                className="p-4 rounded-full bg-surface-high border border-outline-variant hover:border-error text-on-surface-variant hover:text-error transition-all"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sectors.map((sector) => (
-                <HubTile key={sector.to} {...sector} onClick={onClose} />
-              ))}
-            </div>
-
-            <div className="pt-8 flex justify-center">
-              <div className="glass-panel border border-outline-variant px-6 py-3 rounded-full flex items-center gap-3">
-                <ShieldCheck size={16} className="text-success" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Neural Connection Secured</span>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       )}
     </AnimatePresence>
