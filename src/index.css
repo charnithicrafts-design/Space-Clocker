@@ -357,6 +357,65 @@ body[data-aura="Clouded"] {
     min-width: 44px;
   }
 
+  /* Viewport-Safe Portrait & Landscape Modal System (8pt aligned) */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    padding: 1rem; /* 16px (2x) mobile gutter */
+  }
+  @media (min-width: 640px) {
+    .modal-backdrop {
+      padding: 1.5rem; /* 24px (3x) tablet+ gutter */
+    }
+  }
+  .modal-center-frame {
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .modal-dialog {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 1.5rem; /* 24px */
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  @media (min-height: 501px) {
+    .modal-dialog {
+      max-height: calc(100dvh - 2rem);
+    }
+  }
+  @media (min-width: 640px) and (min-height: 501px) {
+    .modal-dialog {
+      max-height: calc(100dvh - 3rem);
+    }
+  }
+  .modal-dialog-scroll {
+    width: 100%;
+    border-radius: 1.5rem; /* 24px */
+    margin-top: auto;
+    margin-bottom: auto;
+    overflow-x: hidden;
+  }
+  .modal-body-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  @media (max-height: 500px) {
+    .modal-body-scroll {
+      overflow-y: visible;
+    }
+  }
+
   /* Card Spatial Standards */
   .card-compact {
     padding: 0.75rem; /* 12px (1.5x) */
