@@ -494,156 +494,157 @@ const TransmissionDashboard = () => {
       {/* Generation Modal */}
       <AnimatePresence>
         {isGenerating && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsGenerating(false)}
-              className="absolute inset-0 bg-surface-lowest/80 backdrop-blur-md"
-            />
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="relative w-full max-w-2xl glass-panel p-8 rounded-[2.5rem] border border-outline-variant/30 shadow-2xl"
-            >
-              <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                <Plus className="text-primary" />
-                Initiate New Transmission
-              </h2>
-
-              <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label htmlFor="tx-tier" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Transmission Tier</label>
-                    <select 
-                      id="tx-tier"
-                      value={newTxTier}
-                      onChange={(e) => setNewTxTier(e.target.value as any)}
-                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all"
-                    >
-                      <option value="daily">Daily Mission Log</option>
-                      <option value="weekly">Weekly Orbit Review</option>
-                      <option value="quarterly">Quarterly Sector Update</option>
-                      <option value="yearly">Stellar Annual Report</option>
-                      <option value="milestone">Achievement Packet</option>
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <label htmlFor="tx-target" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Target Career Track</label>
-                    <select 
-                      id="tx-target"
-                      value={newTxTarget || ''}
-                      onChange={(e) => setNewTxTarget(e.target.value || undefined)}
-                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all"
-                    >
-                      <option value="">None (Standard)</option>
-                      <option value="AWS">AWS Specialist</option>
-                      <option value="INDIA_AI">India AI</option>
-                      <option value="GOOGLE">Google AI</option>
-                    </select>
-                  </div>
+          <div
+            className="modal-backdrop z-[100] bg-surface-lowest/85 backdrop-blur-md"
+            onClick={() => setIsGenerating(false)}
+          >
+            <div className="modal-center-frame">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                onClick={(e) => e.stopPropagation()}
+                className="modal-dialog max-w-2xl glass-panel border border-outline-variant/30 shadow-2xl"
+              >
+                <div className="p-4 sm:p-6 border-b border-outline-variant/20 shrink-0">
+                  <h2 className="type-title-2 font-bold flex items-center gap-3 text-on-surface">
+                    <Plus className="text-primary shrink-0" />
+                    Initiate New Transmission
+                  </h2>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label htmlFor="tx-ambition" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Target Trajectory</label>
-                    <select 
-                      id="tx-ambition"
-                      value={newTxTargetAmbitionId || ''}
-                      onChange={(e) => {
-                        setNewTxTargetAmbitionId(e.target.value || undefined);
-                        setNewTxTargetMilestoneId(undefined);
-                      }}
-                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all"
-                    >
-                      <option value="">All Ambitions</option>
-                      {ambitions.map(a => (
-                        <option key={a.id} value={a.id}>{a.title}</option>
-                      ))}
-                    </select>
+                <div className="modal-body-scroll p-4 sm:p-6 space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label htmlFor="tx-tier" className="type-overline font-black tracking-widest text-on-surface-variant">Transmission Tier</label>
+                      <select 
+                        id="tx-tier"
+                        value={newTxTier}
+                        onChange={(e) => setNewTxTier(e.target.value as any)}
+                        className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-4 outline-none focus:border-primary transition-all text-on-surface"
+                      >
+                        <option value="daily">Daily Mission Log</option>
+                        <option value="weekly">Weekly Orbit Review</option>
+                        <option value="quarterly">Quarterly Sector Update</option>
+                        <option value="yearly">Stellar Annual Report</option>
+                        <option value="milestone">Achievement Packet</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="tx-target" className="type-overline font-black tracking-widest text-on-surface-variant">Target Career Track</label>
+                      <select 
+                        id="tx-target"
+                        value={newTxTarget || ''}
+                        onChange={(e) => setNewTxTarget(e.target.value || undefined)}
+                        className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-4 outline-none focus:border-primary transition-all text-on-surface"
+                      >
+                        <option value="">None (Standard)</option>
+                        <option value="AWS">AWS Specialist</option>
+                        <option value="INDIA_AI">India AI</option>
+                        <option value="GOOGLE">Google AI</option>
+                      </select>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <label htmlFor="tx-milestone" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Target Milestone</label>
-                    <select 
-                      id="tx-milestone"
-                      value={newTxTargetMilestoneId || ''}
-                      onChange={(e) => setNewTxTargetMilestoneId(e.target.value || undefined)}
-                      disabled={!newTxTargetAmbitionId}
-                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      <option value="">All Milestones</option>
-                      {newTxTargetAmbitionId && ambitions.find(a => a.id === newTxTargetAmbitionId)?.milestones.map(m => (
-                        <option key={m.id} value={m.id}>{m.title}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label htmlFor="tx-ambition" className="type-overline font-black tracking-widest text-on-surface-variant">Target Trajectory</label>
+                      <select 
+                        id="tx-ambition"
+                        value={newTxTargetAmbitionId || ''}
+                        onChange={(e) => {
+                          setNewTxTargetAmbitionId(e.target.value || undefined);
+                          setNewTxTargetMilestoneId(undefined);
+                        }}
+                        className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-4 outline-none focus:border-primary transition-all text-on-surface"
+                      >
+                        <option value="">All Ambitions</option>
+                        {ambitions.map(a => (
+                          <option key={a.id} value={a.id}>{a.title}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="tx-milestone" className="type-overline font-black tracking-widest text-on-surface-variant">Target Milestone</label>
+                      <select 
+                        id="tx-milestone"
+                        value={newTxTargetMilestoneId || ''}
+                        onChange={(e) => setNewTxTargetMilestoneId(e.target.value || undefined)}
+                        disabled={!newTxTargetAmbitionId}
+                        className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-4 outline-none focus:border-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed text-on-surface"
+                      >
+                        <option value="">All Milestones</option>
+                        {newTxTargetAmbitionId && ambitions.find(a => a.id === newTxTargetAmbitionId)?.milestones.map(m => (
+                          <option key={m.id} value={m.id}>{m.title}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label htmlFor="tx-start" className="type-overline font-black tracking-widest text-on-surface-variant">Mission Start</label>
+                      <input 
+                        id="tx-start"
+                        type="date"
+                        value={newTxStartDate}
+                        onChange={(e) => setNewTxStartDate(e.target.value)}
+                        className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-4 outline-none focus:border-primary transition-all type-body text-on-surface"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="tx-end" className="type-overline font-black tracking-widest text-on-surface-variant">Mission End</label>
+                      <input 
+                        id="tx-end"
+                        type="date"
+                        value={newTxEndDate}
+                        onChange={(e) => setNewTxEndDate(e.target.value)}
+                        className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-4 outline-none focus:border-primary transition-all type-body text-on-surface"
+                      />
+                    </div>
+                  </div>
+
                   <div className="space-y-2">
-                    <label htmlFor="tx-start" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Mission Start</label>
+                    <label htmlFor="tx-title" className="type-overline font-black tracking-widest text-on-surface-variant">Briefing Title</label>
                     <input 
-                      id="tx-start"
-                      type="date"
-                      value={newTxStartDate}
-                      onChange={(e) => setNewTxStartDate(e.target.value)}
-                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all text-sm"
+                      id="tx-title"
+                      type="text"
+                      value={newTxTitle}
+                      onChange={(e) => setNewTxTitle(e.target.value)}
+                      placeholder="e.g., Q1 Trajectory Analysis"
+                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-4 outline-none focus:border-primary transition-all text-on-surface"
                     />
                   </div>
+
                   <div className="space-y-2">
-                    <label htmlFor="tx-end" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Mission End</label>
-                    <input 
-                      id="tx-end"
-                      type="date"
-                      value={newTxEndDate}
-                      onChange={(e) => setNewTxEndDate(e.target.value)}
-                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all text-sm"
+                    <label htmlFor="tx-narrative" className="type-overline font-black tracking-widest text-on-surface-variant">PD&A Narrative</label>
+                    <textarea 
+                      id="tx-narrative"
+                      value={newTxNarrative}
+                      onChange={(e) => setNewTxNarrative(e.target.value)}
+                      placeholder="Reflect on your performance, challenges, and mission realignment..."
+                      rows={4}
+                      className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-4 outline-none focus:border-primary transition-all resize-none text-on-surface"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label htmlFor="tx-title" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">Briefing Title</label>
-                  <input 
-                    id="tx-title"
-                    type="text"
-                    value={newTxTitle}
-                    onChange={(e) => setNewTxTitle(e.target.value)}
-                    placeholder="e.g., Q1 Trajectory Analysis"
-                    className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all"
-                  />
+                <div className="p-4 sm:p-6 border-t border-outline-variant/20 bg-surface-lowest/50 flex flex-col-reverse sm:flex-row justify-end gap-4 shrink-0">
+                  <button 
+                    onClick={() => setIsGenerating(false)}
+                    className="touch-target min-h-[48px] px-6 py-2 rounded-2xl font-bold hover:bg-surface-high transition-all text-on-surface cursor-pointer"
+                  >
+                    Abort
+                  </button>
+                  <button 
+                    onClick={handleGenerate}
+                    className="touch-target min-h-[48px] px-8 py-2 bg-primary text-on-primary rounded-2xl font-bold shadow-lg shadow-primary/20 transition-all active:scale-95 cursor-pointer"
+                  >
+                    Uplink Transmission
+                  </button>
                 </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="tx-narrative" className="text-xs font-black uppercase tracking-widest text-on-surface-variant">PD&A Narrative</label>
-                  <textarea 
-                    id="tx-narrative"
-                    value={newTxNarrative}
-                    onChange={(e) => setNewTxNarrative(e.target.value)}
-                    placeholder="Reflect on your performance, challenges, and mission realignment..."
-                    rows={4}
-                    className="w-full bg-surface-low border border-outline-variant/30 rounded-2xl p-3 outline-none focus:border-primary transition-all resize-none"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-8 flex justify-end gap-4">
-                <button 
-                  onClick={() => setIsGenerating(false)}
-                  className="px-6 py-3 rounded-2xl font-bold hover:bg-surface-high transition-all"
-                >
-                  Abort
-                </button>
-                <button 
-                  onClick={handleGenerate}
-                  className="px-8 py-3 bg-primary text-on-primary rounded-2xl font-bold shadow-lg shadow-primary/20 transition-all active:scale-95"
-                >
-                  Uplink Transmission
-                </button>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         )}
       </AnimatePresence>

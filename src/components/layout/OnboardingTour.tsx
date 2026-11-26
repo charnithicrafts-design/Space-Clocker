@@ -102,8 +102,8 @@ const OnboardingTour = ({ onComplete }: { onComplete: () => void }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[200] bg-surface-lowest/80 backdrop-blur-xl overflow-y-auto">
-      <div className="min-h-full flex items-center justify-center p-4 sm:p-6 py-8 sm:py-12">
+    <div className="modal-backdrop z-[200] bg-surface-lowest/85 backdrop-blur-xl">
+      <div className="modal-center-frame">
         <AnimatePresence mode="wait">
           {currentStep === -1 ? (
             <motion.div 
@@ -111,7 +111,7 @@ const OnboardingTour = ({ onComplete }: { onComplete: () => void }) => {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: -20 }}
-              className="w-full max-w-xl glass-panel border-2 border-primary/30 p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] relative overflow-hidden"
+              className="modal-dialog-scroll max-w-xl glass-panel border-2 border-primary/30 p-6 sm:p-8 relative"
             >
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 blur-3xl rounded-full" />
               
@@ -195,7 +195,7 @@ const OnboardingTour = ({ onComplete }: { onComplete: () => void }) => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: -20 }}
-            className="w-full max-w-lg glass-panel border-2 border-primary/30 p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] relative overflow-hidden"
+            className="modal-dialog-scroll max-w-lg glass-panel border-2 border-primary/30 p-6 sm:p-8 relative"
           >
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 blur-3xl rounded-full" />
             

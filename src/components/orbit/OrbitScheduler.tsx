@@ -291,7 +291,7 @@ const OrbitScheduler = () => {
   return (
     <div className="p-6 lg:pl-80 space-y-8 min-h-screen bg-surface-lowest text-on-surface pb-32">
       <header className="mb-8 relative">
-        <div className="flex justify-between items-start">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
           <div>
             <h2 className="text-secondary type-overline">{isPeopleMode ? 'Daily Tasks' : 'Orbit Protocol'} {isPro ? '(Professional)' : '(Standard)'}</h2>
             <h1 className="type-display text-primary uppercase">{isPeopleMode ? "Today's Tasks" : 'Mission Control'}</h1>
@@ -299,7 +299,7 @@ const OrbitScheduler = () => {
               {isPeopleMode ? 'Organize and complete your tasks for today.' : 'Synchronize your planetary rotation with stellar objectives.'}
             </p>
           </div>
-          <div className="flex flex-col items-end gap-2">
+          <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-2">
             <div className="bg-surface-high border border-outline-variant px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-lg">
               <Zap className="text-primary-container" size={20} />
               <div className="text-right">
@@ -545,26 +545,26 @@ const OrbitScheduler = () => {
                           />
                         </div>
                         
-                        <div className="grid grid-cols-2 gap-3">
-                          <div className="flex flex-col gap-1.5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-2">
                             <label className="type-overline text-on-surface-variant">Entry</label>
                             <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-outline-variant">
                               <Clock size={12} className="text-primary" />
                               <input 
                                 type="time" 
-                                className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none w-full" 
+                                className="bg-transparent text-xs type-telemetry-base text-on-surface focus:outline-none w-full" 
                                 value={editTime} 
                                 onChange={e => setEditTime(e.target.value)} 
                               />
                             </div>
                           </div>
-                          <div className="flex flex-col gap-1.5">
+                          <div className="flex flex-col gap-2">
                             <label className="type-overline text-on-surface-variant">Descent</label>
                             <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-outline-variant">
                               <Timer size={12} className="text-secondary" />
                               <input 
                                 type="time" 
-                                className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none w-full" 
+                                className="bg-transparent text-xs type-telemetry-base text-on-surface focus:outline-none w-full" 
                                 value={editEndTime} 
                                 onChange={e => setEditEndTime(e.target.value)} 
                               />
@@ -572,26 +572,26 @@ const OrbitScheduler = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
-                          <div className="flex flex-col gap-1.5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-2">
                             <label className="type-overline text-on-surface-variant">Mission Date</label>
                             <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-outline-variant">
                               <Calendar size={12} className="text-primary-container" />
                               <input 
                                 type="date" 
-                                className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none w-full uppercase" 
+                                className="bg-transparent text-xs type-telemetry-base text-on-surface focus:outline-none w-full uppercase" 
                                 value={editDate} 
                                 onChange={e => setEditDate(e.target.value)} 
                               />
                             </div>
                           </div>
-                          <div className="flex flex-col gap-1.5">
+                          <div className="flex flex-col gap-2">
                             <label className="type-overline text-error">Deadline Lock</label>
                             <div className="h-10 flex items-center gap-2 bg-surface-low px-3 rounded-xl border border-error/30">
                               <AlertTriangle size={12} className="text-error" />
                               <input 
                                 type="datetime-local" 
-                                className="bg-transparent text-xs type-telemetry-base text-white focus:outline-none w-full" 
+                                className="bg-transparent text-xs type-telemetry-base text-on-surface focus:outline-none w-full" 
                                 value={editDeadline} 
                                 onChange={e => setEditDeadline(e.target.value)} 
                               />
@@ -789,103 +789,108 @@ const OrbitScheduler = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[250] flex items-center justify-center p-6 bg-surface-lowest/90 backdrop-blur-2xl overflow-y-auto"
+            onClick={() => setShowTransmissionPreview(false)}
+            className="modal-backdrop z-[250] bg-surface-lowest/90 backdrop-blur-2xl"
           >
-            <motion.div
-              initial={{ scale: 0.9, y: 20, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: -20, opacity: 0 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="w-full max-w-2xl glass-panel border border-secondary p-8 rounded-[2.5rem] relative overflow-hidden my-8 text-left"
-            >
-              {/* Glowing grids and decorations */}
-              <div className="absolute -top-32 -left-32 w-64 h-64 bg-secondary/10 blur-3xl rounded-full animate-pulse" />
-              <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-primary/10 blur-3xl rounded-full animate-pulse" />
-              
-              <div className="relative z-10 space-y-6">
-                {/* Header */}
-                <div className="flex justify-between items-start border-b border-outline-variant/30 pb-4">
+            <div className="modal-center-frame">
+              <motion.div
+                initial={{ scale: 0.9, y: 20, opacity: 0 }}
+                animate={{ scale: 1, y: 0, opacity: 1 }}
+                exit={{ scale: 0.9, y: -20, opacity: 0 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                onClick={(e) => e.stopPropagation()}
+                className="modal-dialog max-w-2xl glass-panel border border-secondary relative text-left"
+              >
+                {/* Glowing grids and decorations */}
+                <div className="absolute -top-32 -left-32 w-64 h-64 bg-secondary/10 blur-3xl rounded-full animate-pulse pointer-events-none" />
+                <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-primary/10 blur-3xl rounded-full animate-pulse pointer-events-none" />
+                
+                {/* Pinned Header */}
+                <div className="relative z-10 p-4 sm:p-6 flex flex-wrap justify-between items-start gap-4 border-b border-outline-variant/30 shrink-0">
                   <div>
-                    <span className="type-overline px-3.5 py-1 bg-secondary/15 border border-secondary/20 rounded-full text-secondary">
+                    <span className="type-overline px-3 py-1 bg-secondary/15 border border-secondary/20 rounded-full text-secondary inline-block">
                       Transmission Preview (Alpha)
                     </span>
-                    <h2 className="type-title-2 text-white uppercase mt-3">
+                    <h2 className="type-title-2 text-on-surface uppercase mt-2">
                       Telemetry Session Brief
                     </h2>
                   </div>
-                  <div className="text-right type-telemetry-micro text-on-surface-variant space-y-1">
+                  <div className="text-left sm:text-right type-telemetry-micro text-on-surface-variant space-y-1">
                     <div>SECURE LINK STABLE</div>
                     <div className="text-secondary font-bold">TX-2026-DAILY-INIT</div>
                   </div>
                 </div>
 
-                {/* Report Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* PDA Narrative */}
-                  <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-2 col-span-1 md:col-span-2">
-                    <div className="type-overline text-secondary">PDA Narrative Summary</div>
-                    <p className="text-xs text-on-surface leading-relaxed font-mono">
-                      {`"Orbit initialized successfully. Technical workspace synchronized on Chrome desktop. Core trajectories active: ${ambitions.filter(a => a.progress < 100).slice(0, 2).map(a => a.title).join(' & ') || 'General Path'}. Logging daily parameters with ${allTasks.filter(t => t.completed && t.plannedDate === getTodayLocalISO()).length > 0 ? 'optimal' : 'baseline'} resonance efficiency. Standing by for next rotation cycle."`}
+                {/* Scrollable Body */}
+                <div className="modal-body-scroll relative z-10 p-4 sm:p-6 space-y-6">
+                  {/* Report Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* PDA Narrative */}
+                    <div className="bg-surface-low border border-outline-variant/20 p-4 sm:p-6 rounded-2xl space-y-2 col-span-1 md:col-span-2">
+                      <div className="type-overline text-secondary">PDA Narrative Summary</div>
+                      <p className="type-body-sm text-on-surface leading-relaxed font-mono">
+                        {`"Orbit initialized successfully. Technical workspace synchronized on Chrome desktop. Core trajectories active: ${ambitions.filter(a => a.progress < 100).slice(0, 2).map(a => a.title).join(' & ') || 'General Path'}. Logging daily parameters with ${allTasks.filter(t => t.completed && t.plannedDate === getTodayLocalISO()).length > 0 ? 'optimal' : 'baseline'} resonance efficiency. Standing by for next rotation cycle."`}
+                      </p>
+                    </div>
+
+                    {/* Accomplished Parameters */}
+                    <div className="bg-surface-low border border-outline-variant/20 p-4 sm:p-6 rounded-2xl space-y-3">
+                      <div className="type-overline text-primary-container">Accomplished Parameters</div>
+                      <div className="space-y-2">
+                        {(() => {
+                          const completedToday = allTasks.filter(t => t.completed && t.plannedDate === getTodayLocalISO());
+                          if (completedToday.length === 0) {
+                            return <div className="type-body-sm text-on-surface-variant font-mono">No parameters executed today.</div>;
+                          }
+                          return completedToday.map(task => (
+                            <div key={task.id} className="flex items-center gap-2 type-body-sm text-on-surface">
+                              <ShieldCheck size={14} className="text-success shrink-0" />
+                              <span className="truncate">{task.title}</span>
+                              <span className="type-telemetry-micro text-secondary-container bg-secondary-container/10 px-2 py-0.5 rounded ml-auto shrink-0">{(task as any).weightage || 10} XP</span>
+                            </div>
+                          ));
+                        })()}
+                      </div>
+                    </div>
+
+                    {/* Skills Calibration Delta */}
+                    <div className="bg-surface-low border border-outline-variant/20 p-4 sm:p-6 rounded-2xl space-y-3">
+                      <div className="type-overline text-secondary">Skills Calibration Delta</div>
+                      <div className="space-y-2">
+                        {(() => {
+                          if (skills && skills.length > 0) {
+                            return skills.slice(0, 2).map(skill => (
+                              <div key={skill.id} className="flex justify-between items-center type-body-sm">
+                                <span className="text-on-surface font-mono truncate max-w-[150px]">{skill.name}</span>
+                                <span className="text-success font-black font-mono">+{Math.max(1, Math.round(skill.currentProficiency / 10))}%</span>
+                              </div>
+                            ));
+                          }
+                          if (ambitions && ambitions.length > 0) {
+                            return ambitions.slice(0, 2).map(ambition => (
+                              <div key={ambition.id} className="flex justify-between items-center type-body-sm">
+                                <span className="text-on-surface font-mono truncate max-w-[150px]">{ambition.title}</span>
+                                <span className="text-success font-black font-mono">+{Math.max(1, Math.round(ambition.progress / 10))}%</span>
+                              </div>
+                            ));
+                          }
+                          return <div className="type-body-sm text-on-surface-variant font-mono">No calibration data available.</div>;
+                        })()}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Footer notes */}
+                  <div className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center gap-3">
+                    <Info size={16} className="text-primary shrink-0" />
+                    <p className="type-overline text-on-surface-variant normal-case leading-relaxed">
+                      This structured readout is formatted and ready. Sharing this transmission with your mentor ensures continuous feedback and rapid alignment.
                     </p>
                   </div>
-
-                  {/* Accomplished Parameters */}
-                  <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-3">
-                    <div className="type-overline text-primary-container">Accomplished Parameters</div>
-                    <div className="space-y-2">
-                      {(() => {
-                        const completedToday = allTasks.filter(t => t.completed && t.plannedDate === getTodayLocalISO());
-                        if (completedToday.length === 0) {
-                          return <div className="text-xs text-on-surface-variant font-mono">No parameters executed today.</div>;
-                        }
-                        return completedToday.map(task => (
-                          <div key={task.id} className="flex items-center gap-2 text-xs text-white">
-                            <ShieldCheck size={14} className="text-success shrink-0" />
-                            <span className="truncate">{task.title}</span>
-                            <span className="type-telemetry-micro text-secondary-container bg-secondary-container/10 px-1.5 py-0.5 rounded ml-auto">{(task as any).weightage || 10} XP</span>
-                          </div>
-                        ));
-                      })()}
-                    </div>
-                  </div>
-
-                  {/* Skills Calibration Delta */}
-                  <div className="bg-surface-low border border-outline-variant/20 p-5 rounded-2xl space-y-3">
-                    <div className="type-overline text-secondary">Skills Calibration Delta</div>
-                    <div className="space-y-2">
-                      {(() => {
-                        if (skills && skills.length > 0) {
-                          return skills.slice(0, 2).map(skill => (
-                            <div key={skill.id} className="flex justify-between items-center text-xs">
-                              <span className="text-white font-mono truncate max-w-[150px]">{skill.name}</span>
-                              <span className="text-success font-black font-mono">+{Math.max(1, Math.round(skill.currentProficiency / 10))}%</span>
-                            </div>
-                          ));
-                        }
-                        if (ambitions && ambitions.length > 0) {
-                          return ambitions.slice(0, 2).map(ambition => (
-                            <div key={ambition.id} className="flex justify-between items-center text-xs">
-                              <span className="text-white font-mono truncate max-w-[150px]">{ambition.title}</span>
-                              <span className="text-success font-black font-mono">+{Math.max(1, Math.round(ambition.progress / 10))}%</span>
-                            </div>
-                          ));
-                        }
-                        return <div className="text-xs text-on-surface-variant font-mono">No calibration data available.</div>;
-                      })()}
-                    </div>
-                  </div>
                 </div>
 
-                {/* Footer notes */}
-                <div className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center gap-3">
-                  <Info size={16} className="text-primary shrink-0" />
-                  <p className="type-overline text-on-surface-variant normal-case leading-relaxed">
-                    This structured readout is formatted and ready. Sharing this transmission with your mentor ensures continuous feedback and rapid alignment.
-                  </p>
-                </div>
-
-                {/* Actions */}
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                {/* Pinned Actions Footer */}
+                <div className="relative z-10 p-4 sm:p-6 border-t border-outline-variant/20 bg-surface-lowest/50 flex flex-col sm:flex-row gap-3 shrink-0">
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText("https://space-clocker.net/transmission/share/TX-DEMO-PREVIEW");
@@ -910,8 +915,8 @@ const OrbitScheduler = () => {
                     <span>Establish Uplink & Finish</span>
                   </button>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

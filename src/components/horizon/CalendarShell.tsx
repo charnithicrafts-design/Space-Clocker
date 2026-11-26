@@ -223,10 +223,10 @@ const CalendarShell = () => {
                     {format(currentDate, 'MMMM yyyy')}
                   </h3>
                   <div className="flex gap-2">
-                    <button onClick={prevMonth} className="p-2 hover:bg-surface-high rounded-xl transition-colors">
+                    <button onClick={prevMonth} aria-label="Previous month" className="touch-target-compact p-2 hover:bg-surface-high rounded-xl transition-colors flex items-center justify-center cursor-pointer">
                       <ChevronLeft size={20} />
                     </button>
-                    <button onClick={nextMonth} className="p-2 hover:bg-surface-high rounded-xl transition-colors">
+                    <button onClick={nextMonth} aria-label="Next month" className="touch-target-compact p-2 hover:bg-surface-high rounded-xl transition-colors flex items-center justify-center cursor-pointer">
                       <ChevronRight size={20} />
                     </button>
                   </div>
@@ -631,69 +631,71 @@ const CalendarShell = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
+            className="modal-backdrop z-[120] bg-surface-lowest/85 backdrop-blur-sm"
             onClick={() => setSelectedTask(null)}
           >
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-surface-high border border-outline-variant rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-start">
-                <div>
-                  <div className="text-[10px] font-black uppercase tracking-widest text-primary mb-2 flex items-center gap-2">
-                    <Target size={12} /> Mission Brief
-                  </div>
-                  <h3 className="text-xl font-bold text-white leading-tight">{selectedTask.title}</h3>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-4 bg-background/50 p-4 rounded-2xl border border-outline-variant/30">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant">Created On</span>
-                    <span className="text-sm font-bold text-white flex items-center gap-2">
-                      <CalendarIcon size={14} className="text-primary" />
-                      {selectedTask.createdAt ? new Date(selectedTask.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown Origin'}
-                    </span>
+            <div className="modal-center-frame">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                className="modal-dialog-scroll bg-surface-high border border-outline-variant p-6 max-w-md shadow-2xl space-y-6"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="type-overline font-black text-primary mb-2 flex items-center gap-2">
+                      <Target size={12} /> Mission Brief
+                    </div>
+                    <h3 className="type-title-3 font-bold text-on-surface leading-tight">{selectedTask.title}</h3>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 bg-background/50 p-4 rounded-2xl border border-outline-variant/30">
-                  <div className="flex flex-col gap-1 w-full">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant flex items-center gap-2">
-                      Recalibration History
-                      {selectedTask.recalibratedCount ? (
-                        <span className="bg-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded ml-auto text-[8px]">
-                          x{selectedTask.recalibratedCount}
-                        </span>
-                      ) : null}
-                    </span>
-                    <div className="text-xs font-bold text-white mt-2 space-y-2">
-                      {selectedTask.recalibrationDates && selectedTask.recalibrationDates.length > 0 ? (
-                        selectedTask.recalibrationDates.map((date, idx) => (
-                          <div key={idx} className="flex items-center gap-2 text-on-surface-variant bg-surface-high p-2 rounded-xl border border-outline-variant/50">
-                            <Zap size={10} className="text-amber-500" />
-                            {new Date(date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
-                          </div>
-                        ))
-                      ) : (
-                        <span className="text-on-surface-variant italic">No recalibrations recorded.</span>
-                      )}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 bg-background/50 p-4 rounded-2xl border border-outline-variant/30">
+                    <div className="flex flex-col gap-1">
+                      <span className="type-overline font-black text-on-surface-variant">Created On</span>
+                      <span className="type-body font-bold text-on-surface flex items-center gap-2">
+                        <CalendarIcon size={14} className="text-primary shrink-0" />
+                        {selectedTask.createdAt ? new Date(selectedTask.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown Origin'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 bg-background/50 p-4 rounded-2xl border border-outline-variant/30">
+                    <div className="flex flex-col gap-1 w-full">
+                      <span className="type-overline font-black text-on-surface-variant flex items-center gap-2">
+                        Recalibration History
+                        {selectedTask.recalibratedCount ? (
+                          <span className="bg-amber-500/20 text-amber-500 px-2 py-0.5 rounded ml-auto type-telemetry-micro">
+                            x{selectedTask.recalibratedCount}
+                          </span>
+                        ) : null}
+                      </span>
+                      <div className="type-body-sm font-bold text-on-surface mt-2 space-y-2 max-h-40 overflow-y-auto">
+                        {selectedTask.recalibrationDates && selectedTask.recalibrationDates.length > 0 ? (
+                          selectedTask.recalibrationDates.map((date, idx) => (
+                            <div key={idx} className="flex items-center gap-2 text-on-surface-variant bg-surface-high p-2 rounded-xl border border-outline-variant/50">
+                              <Zap size={10} className="text-amber-500 shrink-0" />
+                              {new Date(date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                            </div>
+                          ))
+                        ) : (
+                          <span className="text-on-surface-variant italic">No recalibrations recorded.</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <button 
-                className="w-full p-4 rounded-2xl bg-primary text-on-primary font-black uppercase tracking-widest text-xs hover:bg-primary/90 transition-colors"
-                onClick={() => setSelectedTask(null)}
-              >
-                Acknowledge
-              </button>
-            </motion.div>
+                <button 
+                  className="touch-target min-h-[48px] w-full px-6 py-2 rounded-2xl bg-primary text-on-primary font-black uppercase tracking-widest type-overline hover:bg-primary/90 transition-colors cursor-pointer"
+                  onClick={() => setSelectedTask(null)}
+                >
+                  Acknowledge
+                </button>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

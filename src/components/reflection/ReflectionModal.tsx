@@ -35,25 +35,29 @@ const ReflectionModal: React.FC<ReflectionModalProps> = ({ isOpen, onClose, type
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-surface-lowest/80 backdrop-blur-sm flex items-center justify-center p-6 z-50"
+          onClick={onClose}
+          className="modal-backdrop bg-surface-lowest/80 backdrop-blur-sm z-[120]"
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="glass-panel border border-outline-variant p-6 rounded-2xl w-full max-w-md"
-          >
-            <h2 className="font-display text-xl mb-4 text-primary">{title}</h2>
-            <textarea
-              className="w-full h-32 bg-surface-low border border-outline-variant rounded-xl p-4 text-on-surface mb-4"
-              placeholder={getPlaceholder()}
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
-            <div className="flex gap-3">
-              <button onClick={onClose} className="flex-1 p-3 rounded-lg bg-surface-high">Cancel</button>
-              <button onClick={handleSubmit} className="flex-1 p-3 rounded-lg bg-primary-container text-on-primary font-bold uppercase tracking-widest text-[10px]">Log Entry</button>
-            </div>
-          </motion.div>
+          <div className="modal-center-frame">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              onClick={(e) => e.stopPropagation()}
+              className="modal-dialog-scroll glass-panel border border-outline-variant p-6 max-w-md"
+            >
+              <h2 className="type-title-2 mb-4 text-primary">{title}</h2>
+              <textarea
+                className="w-full h-32 bg-surface-low border border-outline-variant rounded-xl p-4 text-on-surface mb-4 focus:border-primary focus:outline-none"
+                placeholder={getPlaceholder()}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+              />
+              <div className="flex gap-4">
+                <button onClick={onClose} className="flex-1 min-h-[48px] px-4 py-2 rounded-xl bg-surface-high text-on-surface type-overline touch-target cursor-pointer">Cancel</button>
+                <button onClick={handleSubmit} className="flex-1 min-h-[48px] px-4 py-2 rounded-xl bg-primary-container text-on-primary font-bold type-overline touch-target cursor-pointer">Log Entry</button>
+              </div>
+            </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
