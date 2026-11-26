@@ -565,8 +565,8 @@ const NebulaMap = () => {
   };
 
   return (
-    <div className="p-6 lg:pl-80 space-y-8 bg-surface-lowest min-h-screen text-white pb-32">
-      <header className="mb-8 flex justify-between items-end">
+    <div className="p-4 sm:p-6 lg:pl-80 space-y-8 bg-surface-lowest min-h-dvh text-on-surface pb-32 overflow-x-hidden">
+      <header className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
           <h2 className="text-secondary type-overline">{isPeopleMode ? 'Goals & Ambitions' : 'Architect Mode'}</h2>
           <h1 className="type-display text-primary text-glow-primary uppercase">{isPeopleMode ? 'Goals Map' : 'The Nebula Map'}</h1>
@@ -620,7 +620,7 @@ const NebulaMap = () => {
       )}
 
       {/* Bottom Grid for Widgets */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 h-48">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-48">
         <ComputeRelayCard />
         <NextMilestoneCard />
       </section>

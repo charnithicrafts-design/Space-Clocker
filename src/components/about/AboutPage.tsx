@@ -196,11 +196,11 @@ const stats = [
 // ─── Component ──────────────────────────────────────────────────────
 const AboutPage: React.FC = () => {
   return (
-    <div className="relative min-h-screen bg-surface-lowest overflow-hidden">
+    <div className="relative min-h-dvh bg-surface-lowest overflow-x-hidden">
       <Starfield />
 
       {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
+      <section className="relative z-10 flex flex-col items-center justify-center min-h-dvh px-4 sm:px-6 pt-16 pb-20 text-center">
         {/* Radial glow behind logo */}
         <div
           className="absolute w-[600px] h-[600px] rounded-full opacity-20 blur-[120px] pointer-events-none"
@@ -226,7 +226,7 @@ const AboutPage: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.7 }}
-          className="font-display text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none mb-4"
+          className="font-display text-4xl sm:text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none mb-4"
         >
           Space<span className="text-primary">Clocker</span>
         </motion.h1>

@@ -31,7 +31,7 @@ export const DocsHub: React.FC = () => {
   );
 
   return (
-    <div className="p-6 lg:py-10 max-w-7xl mx-auto min-h-screen bg-surface-lowest text-white pb-32">
+    <div className="p-4 sm:p-6 lg:py-10 max-w-7xl mx-auto min-h-dvh bg-surface-lowest text-on-surface pb-32 overflow-x-hidden">
       {/* Top Header & Search Navigation Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-outline-variant/30 pb-6 mb-8">
         <div>

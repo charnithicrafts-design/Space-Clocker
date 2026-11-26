@@ -74,7 +74,7 @@ const RadarChart = ({ skills, showTarget }: { skills: Skill[], showTarget: boole
     }).join(' '), [displaySkills]);
 
   return (
-    <div className="relative flex justify-center items-center w-full px-2 overflow-visible">
+    <div className="relative flex justify-center items-center w-full px-2 overflow-hidden">
       <svg 
         viewBox={`0 0 ${width} ${height}`} 
         className="w-full max-w-[460px] md:max-w-[500px] h-auto overflow-visible drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]"
@@ -236,11 +236,11 @@ const SkillGapCard: React.FC<{ skill: Skill }> = ({ skill }) => {
                   <span className="text-[10px] font-black uppercase tracking-widest text-secondary">{skill.targetProficiency}% Target</span>
                 </div>
               </div>
-              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onClick={() => setIsEditing(true)} className="p-2 hover:bg-surface-high rounded-xl text-on-surface-variant hover:text-primary transition-colors">
+              <div className="flex gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                <button onClick={() => setIsEditing(true)} aria-label="Edit skill" className="touch-target-compact p-2 hover:bg-surface-high rounded-xl text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center cursor-pointer">
                   <Edit3 size={14} />
                 </button>
-                <button onClick={handleDelete} className="p-2 hover:bg-surface-high rounded-xl text-on-surface-variant hover:text-error transition-colors">
+                <button onClick={handleDelete} aria-label="Delete skill" className="touch-target-compact p-2 hover:bg-surface-high rounded-xl text-on-surface-variant hover:text-error transition-colors flex items-center justify-center cursor-pointer">
                   <Trash2 size={14} />
                 </button>
               </div>

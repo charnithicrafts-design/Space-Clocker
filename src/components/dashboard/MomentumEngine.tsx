@@ -57,7 +57,7 @@ const MomentumEngine = () => {
       )}
 
       {/* Header */}
-      <header className="flex justify-between items-center mb-8">
+      <header className="flex flex-wrap justify-between items-center gap-4 mb-8">
         <div>
           <h2 className="text-secondary type-overline">{isPeopleMode ? 'Focus & Growth Level' : 'Space Science Level'}</h2>
           <div className="flex items-center gap-4">
@@ -124,7 +124,7 @@ const MomentumEngine = () => {
       )}
 
       {/* Macro Ambitions */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-wrap justify-between items-center gap-3 mb-4">
         <h2 className="type-title-2 text-on-surface uppercase flex items-center gap-2">
             <Rocket size={20} className="text-secondary" />
             Macro Ambitions (Trajectories)
@@ -248,7 +248,8 @@ const MomentumEngine = () => {
         whileHover={{ scale: 1.1, rotate: 90 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-24 right-8 w-16 h-16 bg-primary-container text-on-primary rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.4)] z-50 border-4 border-surface-lowest"
+        aria-label="Add trajectory"
+        className="fixed bottom-24 right-4 sm:right-8 w-16 h-16 bg-primary-container text-on-primary rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.4)] z-50 border-4 border-surface-lowest cursor-pointer"
       >
         <Plus size={32} />
       </motion.button>

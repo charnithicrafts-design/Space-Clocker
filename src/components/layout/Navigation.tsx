@@ -100,8 +100,8 @@ const Navigation = () => {
       <CommandHub isOpen={isHubOpen} onClose={() => setIsHubOpen(false)} />
 
       {/* Mobile Nav */}
-      <nav className="lg:hidden fixed bottom-6 left-6 right-6 z-50" aria-label="Mobile navigation">
-        <div className="h-16 glass-panel rounded-3xl border border-outline-variant flex justify-around items-center px-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+      <nav className="lg:hidden fixed bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 z-50" aria-label="Mobile navigation">
+        <div className="h-16 glass-panel rounded-3xl border border-outline-variant flex justify-around items-center px-2 sm:px-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
           <Link to="/" aria-label="Momentum sector" className={`touch-target-compact p-2 rounded-2xl ${pathname === '/' ? 'text-primary bg-primary/10' : 'text-on-surface-variant'}`}>
             <LayoutDashboard size={22} aria-hidden="true" />
           </Link>
@@ -131,7 +131,7 @@ const Navigation = () => {
       </nav>
 
       {/* Desktop Nav */}
-      <nav className="hidden lg:flex fixed top-6 left-6 w-72 h-[calc(100vh-48px)] glass-panel rounded-3xl flex-col p-6 gap-8 z-50 overflow-hidden shadow-2xl" aria-label="Desktop navigation">
+      <nav className="hidden lg:flex fixed top-6 left-6 w-72 h-[calc(100dvh-48px)] glass-panel rounded-3xl flex-col p-6 gap-8 z-50 overflow-hidden shadow-2xl" aria-label="Desktop navigation">
         <div className="flex items-center gap-3 px-3">
           <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg border border-white/20 shrink-0 bg-white" aria-hidden="true">
             <img src="/favicon.svg" alt="Space-Clocker Sanctuary Emblem" className="w-full h-full object-contain" />

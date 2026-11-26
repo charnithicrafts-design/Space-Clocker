@@ -25,7 +25,7 @@ const EventHorizon = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050508] p-6 lg:pl-80 flex flex-col items-center justify-center relative overflow-hidden">
+    <div className="min-h-dvh bg-[#050508] p-4 sm:p-6 pt-20 lg:pt-12 pb-32 lg:pb-12 lg:pl-80 flex flex-col items-center justify-center relative overflow-x-hidden">
       {/* Background Glow */}
       <div className="absolute inset-0 bg-radial-at-c from-primary/5 to-transparent pointer-events-none" />
 

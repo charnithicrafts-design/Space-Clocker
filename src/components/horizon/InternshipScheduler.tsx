@@ -33,7 +33,7 @@ const InternshipScheduler = () => {
           <option value="Google">Google</option>
           <option value="Microsoft">Microsoft</option>
         </select>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <input type="date" value={start} onChange={(e) => setStart(e.target.value)} className="bg-surface-high p-3 rounded-xl border border-outline-variant" />
           <input type="date" value={end} onChange={(e) => setEnd(e.target.value)} className="bg-surface-high p-3 rounded-xl border border-outline-variant" />
         </div>

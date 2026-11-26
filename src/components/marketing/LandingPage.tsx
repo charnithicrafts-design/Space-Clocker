@@ -144,7 +144,7 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#06080F] text-white selection:bg-primary/30 selection:text-primary overflow-x-hidden font-sans">
+    <div className="min-h-dvh bg-[#06080F] text-white selection:bg-primary/30 selection:text-primary overflow-x-hidden font-sans">
       <ParticleBackground />
       
       {/* Decorative Orbs */}
@@ -153,16 +153,16 @@ const LandingPage: React.FC = () => {
 
       {/* Navigation */}
       <nav className="fixed top-0 inset-x-0 z-50 border-b border-white/5 bg-[#06080F]/50 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl overflow-hidden shadow-md border border-white/20 shrink-0 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden shadow-md border border-white/20 shrink-0 bg-white">
               <img src="/favicon.svg" alt="Space-Clocker Sanctuary Emblem" className="w-full h-full object-contain" />
             </div>
-            <span className="text-xl font-display font-black tracking-widest uppercase">Space-Clocker</span>
+            <span className="text-base sm:text-xl font-display font-black tracking-wider sm:tracking-widest uppercase truncate">Space-Clocker</span>
           </div>
           <button 
             onClick={launchApp}
-            className="px-6 py-2.5 rounded-full bg-primary/10 border border-primary/30 text-primary font-bold text-xs uppercase tracking-widest hover:bg-primary hover:text-[#06080F] hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] transition-all duration-300"
+            className="px-4 sm:px-6 py-2 min-h-[40px] rounded-full bg-primary/10 border border-primary/30 text-primary font-bold text-xs uppercase tracking-wider sm:tracking-widest hover:bg-primary hover:text-[#06080F] hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] transition-all duration-300 shrink-0 cursor-pointer"
           >
             System Initialization
           </button>
@@ -170,16 +170,16 @@ const LandingPage: React.FC = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-32 px-6 min-h-screen flex items-center z-10">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+      <section className="relative pt-32 sm:pt-40 pb-20 sm:pb-32 px-4 sm:px-6 min-h-dvh flex items-center z-10">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 sm:gap-16 items-center">
           <motion.div 
             style={{ y: y1, opacity }}
-            className="space-y-8"
+            className="space-y-6 sm:space-y-8"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-secondary/30 bg-secondary/10 text-secondary text-xs font-bold uppercase tracking-widest backdrop-blur-md">
-              <Zap size={14} /> Space-Clocker v1.11.3 is Live — Daylight Sanctuary, 3 Visual Modes & Living Glassmorphic Harmony
+              <Zap size={14} className="shrink-0" /> Space-Clocker v1.11.3 is Live — Daylight Sanctuary, 3 Visual Modes & Living Glassmorphic Harmony
             </div>
-            <h1 className="text-6xl lg:text-8xl font-display font-black leading-[1.1] tracking-tighter">
+            <h1 className="text-4xl sm:text-6xl lg:text-8xl font-display font-black leading-[1.1] tracking-tighter">
               Clock In Your <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary drop-shadow-[0_0_30px_rgba(0,242,255,0.3)]">
                 Mental Space.
@@ -323,7 +323,7 @@ const LandingPage: React.FC = () => {
               </div>
 
               {/* Mode Toggle Switch */}
-              <div className="flex items-center p-1.5 rounded-2xl bg-surface-lowest border border-white/10 self-start md:self-auto shrink-0 shadow-inner">
+              <div className="flex flex-wrap items-center gap-1 p-1.5 rounded-2xl bg-surface-lowest border border-white/10 self-start md:self-auto shrink-0 max-w-full shadow-inner">
                 <button
                   onClick={() => {
                     SoundManager.playPop();
@@ -443,7 +443,7 @@ const LandingPage: React.FC = () => {
               </div>
 
               {/* 3-Theme Selector Switch */}
-              <div className="flex items-center p-1.5 rounded-2xl bg-surface-lowest border border-white/10 self-start md:self-auto shrink-0 shadow-inner gap-1">
+              <div className="flex flex-wrap items-center p-1.5 rounded-2xl bg-surface-lowest border border-white/10 self-start md:self-auto shrink-0 max-w-full shadow-inner gap-1">
                 {(['cosmos', 'astronaut', 'sunny-iris'] as AppTheme[]).map((themeKey) => {
                   const tMeta = THEMES[themeKey];
                   const isSelected = previewTheme === themeKey;
@@ -539,7 +539,7 @@ const LandingPage: React.FC = () => {
 
                 {/* Simulated Instrument Tile */}
                 <div 
-                  className="p-4 rounded-xl border space-y-2 min-w-[200px]"
+                  className="p-4 rounded-xl border space-y-2 w-full sm:w-auto sm:min-w-[200px]"
                   style={{ 
                     backgroundColor: `${THEMES[previewTheme].colors.bg}`,
                     borderColor: `${THEMES[previewTheme].colors.border}`

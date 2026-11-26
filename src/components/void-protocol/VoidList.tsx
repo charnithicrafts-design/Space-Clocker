@@ -58,7 +58,7 @@ const VoidList: React.FC = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest px-1">Max Containment</label>
                   <input 

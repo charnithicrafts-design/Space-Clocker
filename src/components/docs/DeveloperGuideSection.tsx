@@ -78,20 +78,20 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
           <div className="space-y-4">
             {/* Step 1 */}
             <div className="p-5 rounded-2xl bg-surface-high/30 border border-outline-variant/30 space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="font-bold text-white text-base flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-full bg-primary text-on-primary text-xs font-black flex items-center justify-center">1</span>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h4 className="font-bold text-on-surface text-base flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-full bg-primary text-on-primary text-xs font-black flex items-center justify-center shrink-0">1</span>
                   <span>Clone the Repository</span>
                 </h4>
                 <button 
                   onClick={() => copyToClipboard('git clone https://github.com/charnithicrafts-design/Space-Clocker.git && cd Space-Clocker', 'clone')}
-                  className="flex items-center gap-1.5 text-xs text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-lg hover:bg-primary/20 transition-all cursor-pointer font-bold"
+                  className="touch-target-compact flex items-center gap-2 type-caption text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-lg hover:bg-primary/20 transition-all cursor-pointer font-bold"
                 >
                   {copiedCode === 'clone' ? <Check size={14} /> : <Copy size={14} />}
                   <span>{copiedCode === 'clone' ? 'Copied!' : 'Copy Command'}</span>
                 </button>
               </div>
-              <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs text-primary">
+              <div className="bg-surface-lowest p-4 rounded-xl border border-outline-variant/30 font-mono text-xs text-primary overflow-x-auto">
                 git clone https://github.com/charnithicrafts-design/Space-Clocker.git<br/>
                 cd Space-Clocker
               </div>
@@ -292,17 +292,17 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
-          className="glass-panel border border-outline-variant/40 p-8 lg:p-12 rounded-[2.5rem] space-y-8 bg-surface-high/20 relative overflow-hidden"
+          className="glass-panel border border-outline-variant/40 p-4 sm:p-8 lg:p-12 rounded-3xl space-y-8 bg-surface-high/20 relative overflow-hidden"
         >
           {/* Header Banner */}
           <div className="space-y-3 border-b border-outline-variant/30 pb-6">
-            <div className="flex items-center gap-3">
-              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-surface-high border border-outline-variant/40 ${currentChapter.color}`}>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className={`type-overline font-black tracking-widest px-3 py-1 rounded-full bg-surface-high border border-outline-variant/40 ${currentChapter.color}`}>
                 {currentChapter.badge}
               </span>
               <span className="text-xs text-on-surface-variant font-mono">Chapter {activeIndex + 1} of {DEV_CHAPTERS.length}</span>
             </div>
-            <h2 className="text-3xl lg:text-4xl font-display font-black text-white uppercase tracking-tight">
+            <h2 className="type-title-1 lg:text-4xl font-display font-black text-on-surface uppercase tracking-tight">
               {currentChapter.title}
             </h2>
             <p className="text-on-surface-variant text-base font-light">
@@ -316,19 +316,19 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
           </div>
 
           {/* Pagination Controls */}
-          <div className="flex items-center justify-between pt-8 border-t border-outline-variant/30">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-8 border-t border-outline-variant/30">
             {activeIndex > 0 ? (
               <button
                 onClick={() => {
                   SoundManager.playPop();
                   onSelectChapter(DEV_CHAPTERS[activeIndex - 1].id);
                 }}
-                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-surface-high text-white text-xs font-bold uppercase tracking-wider hover:bg-surface-high/80 border border-outline-variant/30 transition-all cursor-pointer"
+                className="touch-target flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-5 py-3 rounded-2xl bg-surface-high text-on-surface text-xs font-bold uppercase tracking-wider hover:bg-surface-high/80 border border-outline-variant/30 transition-all cursor-pointer"
               >
-                <ArrowLeft size={16} />
-                <span>{DEV_CHAPTERS[activeIndex - 1].title}</span>
+                <ArrowLeft size={16} className="shrink-0" />
+                <span className="truncate">{DEV_CHAPTERS[activeIndex - 1].title}</span>
               </button>
-            ) : <div />}
+            ) : <div className="hidden sm:block" />}
 
             {activeIndex < DEV_CHAPTERS.length - 1 ? (
               <button
@@ -336,12 +336,12 @@ export const DeveloperGuideSection: React.FC<DevGuideProps> = ({ selectedChapter
                   SoundManager.playPop();
                   onSelectChapter(DEV_CHAPTERS[activeIndex + 1].id);
                 }}
-                className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-secondary text-white text-xs font-black uppercase tracking-widest hover:bg-secondary/80 transition-all cursor-pointer border-none shadow-[0_0_20px_rgba(255,84,77,0.3)]"
+                className="touch-target flex items-center justify-center sm:justify-end gap-2 px-6 py-3 rounded-2xl bg-secondary text-on-secondary text-xs font-black uppercase tracking-widest hover:bg-secondary/80 transition-all cursor-pointer border-none shadow-[0_0_20px_rgba(255,84,77,0.3)]"
               >
-                <span>{DEV_CHAPTERS[activeIndex + 1].title}</span>
-                <ArrowRight size={16} />
+                <span className="truncate">{DEV_CHAPTERS[activeIndex + 1].title}</span>
+                <ArrowRight size={16} className="shrink-0" />
               </button>
-            ) : <div />}
+            ) : <div className="hidden sm:block" />}
           </div>
         </motion.div>
       </AnimatePresence>

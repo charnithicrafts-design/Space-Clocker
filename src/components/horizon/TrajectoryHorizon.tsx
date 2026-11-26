@@ -19,7 +19,7 @@ const TrajectoryHorizon: React.FC = () => {
   // Empathy-driven empty state or loading state
   if (isLoading || !telemetry) {
     return (
-      <div className="min-h-screen bg-[#050508] p-6 lg:pl-80 flex items-center justify-center relative overflow-hidden">
+      <div className="min-h-dvh bg-[#050508] p-4 sm:p-6 pb-32 lg:pb-12 lg:pl-80 flex items-center justify-center relative overflow-x-hidden">
         <div className="absolute inset-0 bg-radial-at-c from-primary/5 to-transparent pointer-events-none" />
         <div className="flex flex-col items-center gap-6">
           <motion.div 
@@ -89,7 +89,7 @@ const TrajectoryHorizon: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050508] p-6 lg:pl-80 relative overflow-hidden">
+    <div className="min-h-dvh bg-[#050508] p-4 sm:p-6 pb-32 lg:pb-12 lg:pl-80 relative overflow-x-hidden">
       <div className="absolute inset-0 bg-radial-at-t from-primary/5 via-transparent to-transparent pointer-events-none" />
       
       <div className="max-w-6xl mx-auto space-y-12 relative z-10">

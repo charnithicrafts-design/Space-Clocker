@@ -389,17 +389,17 @@ export const UserGuideSection: React.FC<UserGuideProps> = ({ selectedChapterId, 
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
-          className="glass-panel border border-outline-variant/40 p-8 lg:p-12 rounded-[2.5rem] space-y-8 bg-surface-high/20 relative overflow-hidden"
+          className="glass-panel border border-outline-variant/40 p-4 sm:p-8 lg:p-12 rounded-3xl space-y-8 bg-surface-high/20 relative overflow-hidden"
         >
           {/* Header Banner */}
           <div className="space-y-3 border-b border-outline-variant/30 pb-6">
-            <div className="flex items-center gap-3">
-              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-surface-high border border-outline-variant/40 ${currentChapter.color}`}>
+            <div className="flex flex-wrap items-center gap-3">
+              <span className={`type-overline font-black tracking-widest px-3 py-1 rounded-full bg-surface-high border border-outline-variant/40 ${currentChapter.color}`}>
                 {currentChapter.badge}
               </span>
               <span className="text-xs text-on-surface-variant font-mono">Chapter {activeIndex + 1} of {USER_CHAPTERS.length}</span>
             </div>
-            <h2 className="text-3xl lg:text-4xl font-display font-black text-white uppercase tracking-tight">
+            <h2 className="type-title-1 lg:text-4xl font-display font-black text-on-surface uppercase tracking-tight">
               {currentChapter.title}
             </h2>
             <p className="text-on-surface-variant text-base font-light">
@@ -413,19 +413,19 @@ export const UserGuideSection: React.FC<UserGuideProps> = ({ selectedChapterId, 
           </div>
 
           {/* Pagination Controls */}
-          <div className="flex items-center justify-between pt-8 border-t border-outline-variant/30">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-8 border-t border-outline-variant/30">
             {activeIndex > 0 ? (
               <button
                 onClick={() => {
                   SoundManager.playPop();
                   onSelectChapter(USER_CHAPTERS[activeIndex - 1].id);
                 }}
-                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-surface-high text-white text-xs font-bold uppercase tracking-wider hover:bg-surface-high/80 border border-outline-variant/30 transition-all cursor-pointer"
+                className="touch-target flex items-center justify-center sm:justify-start gap-2 px-4 sm:px-5 py-3 rounded-2xl bg-surface-high text-on-surface text-xs font-bold uppercase tracking-wider hover:bg-surface-high/80 border border-outline-variant/30 transition-all cursor-pointer"
               >
-                <ArrowLeft size={16} />
-                <span>{USER_CHAPTERS[activeIndex - 1].title}</span>
+                <ArrowLeft size={16} className="shrink-0" />
+                <span className="truncate">{USER_CHAPTERS[activeIndex - 1].title}</span>
               </button>
-            ) : <div />}
+            ) : <div className="hidden sm:block" />}
 
             {activeIndex < USER_CHAPTERS.length - 1 ? (
               <button
@@ -433,12 +433,12 @@ export const UserGuideSection: React.FC<UserGuideProps> = ({ selectedChapterId, 
                   SoundManager.playPop();
                   onSelectChapter(USER_CHAPTERS[activeIndex + 1].id);
                 }}
-                className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary text-on-primary text-xs font-black uppercase tracking-widest hover:bg-primary-container transition-all cursor-pointer border-none shadow-[0_0_20px_rgba(0,242,255,0.3)]"
+                className="touch-target flex items-center justify-center sm:justify-end gap-2 px-6 py-3 rounded-2xl bg-primary text-on-primary text-xs font-black uppercase tracking-widest hover:bg-primary-container transition-all cursor-pointer border-none shadow-[0_0_20px_rgba(0,242,255,0.3)]"
               >
-                <span>{USER_CHAPTERS[activeIndex + 1].title}</span>
-                <ArrowRight size={16} />
+                <span className="truncate">{USER_CHAPTERS[activeIndex + 1].title}</span>
+                <ArrowRight size={16} className="shrink-0" />
               </button>
-            ) : <div />}
+            ) : <div className="hidden sm:block" />}
           </div>
         </motion.div>
       </AnimatePresence>

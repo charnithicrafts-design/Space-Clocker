@@ -125,7 +125,7 @@ const IdentitySelectionMatrix: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface-lowest text-white flex flex-col relative overflow-hidden">
+    <div className="min-h-dvh bg-surface-lowest text-on-surface flex flex-col relative overflow-x-hidden">
       {/* Background Ambience */}
       <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
       <div className="absolute -top-32 -right-32 w-96 h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
@@ -153,7 +153,7 @@ const IdentitySelectionMatrix: React.FC = () => {
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto pb-32">
+      <div className="flex-1 pb-32">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-24 space-y-12">
           
           <header className="max-w-3xl space-y-4">

@@ -71,8 +71,8 @@ const StellarTimeline = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="type-title-2 text-white uppercase flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
+        <h2 className="type-title-2 text-on-surface uppercase flex items-center gap-2">
           <Calendar size={20} className="text-primary-container" />
           Stellar History (Past Missions)
         </h2>
@@ -83,7 +83,7 @@ const StellarTimeline = () => {
             setIsAddModalOpen(true);
             SoundManager.playPop();
           }}
-          className="flex items-center gap-2 h-9 px-4 bg-primary/10 text-primary border border-primary/20 rounded-xl type-overline hover:bg-primary/20 transition-all shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.1)] touch-target-compact"
+          className="flex items-center gap-2 h-10 px-4 bg-primary/10 text-primary border border-primary/20 rounded-xl type-overline hover:bg-primary/20 transition-all shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.1)] touch-target-compact cursor-pointer"
         >
           <Plus size={14} />
           Add Mission Record
@@ -144,7 +144,8 @@ const StellarTimeline = () => {
                 {/* Delete Action */}
                 <button 
                   onClick={() => setDeleteEventId(event.id)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-on-surface-variant/0 group-hover:text-error hover:bg-error/10 rounded-full transition-all duration-300"
+                  aria-label="Delete mission record"
+                  className="touch-target-compact absolute right-3 top-3 sm:top-1/2 sm:-translate-y-1/2 p-2 text-on-surface-variant/60 lg:text-on-surface-variant/0 group-hover:text-error hover:bg-error/10 rounded-full transition-all duration-300 flex items-center justify-center cursor-pointer"
                 >
                   <Trash2 size={16} />
                 </button>

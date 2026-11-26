@@ -9,7 +9,7 @@ export const NotFoundPage: React.FC = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className="min-h-screen bg-surface-lowest text-white flex items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-dvh bg-surface-lowest text-on-surface flex items-center justify-center p-4 sm:p-6 relative overflow-x-hidden">
       {/* Ambient background glows */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
@@ -17,7 +17,7 @@ export const NotFoundPage: React.FC = () => {
       <motion.div 
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="max-w-lg w-full glass-panel border border-outline-variant/40 p-8 lg:p-12 rounded-[2.5rem] text-center space-y-6 relative z-10 shadow-2xl shadow-primary/10"
+        className="max-w-lg w-full glass-panel border border-outline-variant/40 p-6 sm:p-8 lg:p-12 rounded-3xl text-center space-y-6 relative z-10 shadow-2xl shadow-primary/10 my-auto"
       >
         <div className="w-20 h-20 mx-auto rounded-3xl bg-surface-high border border-primary/30 flex items-center justify-center text-primary shadow-[0_0_30px_rgba(var(--color-primary-rgb),0.2)]">
           <Compass size={40} className="animate-spin" style={{ animationDuration: '20s' }} />
