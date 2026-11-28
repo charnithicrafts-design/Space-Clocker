@@ -4,6 +4,7 @@ import * as Comlink from 'comlink';
 import { SCHEMA } from './schema';
 import { MIGRATIONS } from './migrations';
 import { exportToJson, importFromJson } from './sync-engine';
+import { exportYjsUpdate, mergeRemotePayloadAndReconcile } from './yjs-sync';
 
 // Patch recursive mkdir bug in PGlite v0.4.2's OpfsAhpFS VFS
 if (typeof OpfsAhpFS !== 'undefined' && OpfsAhpFS.prototype) {
@@ -962,6 +963,16 @@ export const api = {
     if (initializing) await initializing;
     if (!db) throw new Error('Database not initialized');
     await importFromJson(db, compressedData);
+  },
+  async exportYjsUpdate(deviceId: string): Promise<Uint8Array> {
+    if (initializing) await initializing;
+    if (!db) throw new Error('Database not initialized');
+    return await exportYjsUpdate(db, deviceId);
+  },
+  async mergeRemotePayloadAndReconcile(remoteBytes: Uint8Array, deviceId: string): Promise<Uint8Array> {
+    if (initializing) await initializing;
+    if (!db) throw new Error('Database not initialized');
+    return await mergeRemotePayloadAndReconcile(db, remoteBytes, deviceId);
   }
 };
 

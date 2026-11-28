@@ -152,4 +152,59 @@ describe('SyncService: Stellar Uplink Protocol', () => {
       expect(divergence).toBe('none');
     });
   });
+
+  describe('syncBidirectional (CRDT Pull-Merge-Push)', () => {
+    it('merges remote Yjs payload with local DB before uploading when remote exists', async () => {
+      const mergedBytes = new Uint8Array([9, 8, 7]);
+      (DbClient.dbProxy as any).mergeRemotePayloadAndReconcile = vi.fn().mockResolvedValue(mergedBytes);
+      (DbClient.dbProxy as any).exportYjsUpdate = vi.fn().mockResolvedValue(new Uint8Array([4, 5, 6]));
+
+      const mockBlob = new Blob(['remote-yjs']);
+      mockBlob.arrayBuffer = vi.fn().mockResolvedValue(new Uint8Array([1, 2, 3]).buffer);
+
+      fetchMock
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ found: true, url: 'remote-yjs-url', modifiedAt: '2026-11-28T10:00:00Z' })
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          blob: () => Promise.resolve(mockBlob)
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ url: 'merged-yjs-url' })
+        });
+
+      const res = await syncService.syncBidirectional();
+
+      expect((DbClient.dbProxy as any).mergeRemotePayloadAndReconcile).toHaveBeenCalledWith(
+        expect.any(Uint8Array),
+        expect.any(String)
+      );
+      expect(res.hadRemote).toBe(true);
+      expect(res.fileId).toBe('merged-yjs-url');
+    });
+
+    it('exports local Yjs update directly when no remote backup exists yet', async () => {
+      const localBytes = new Uint8Array([4, 5, 6]);
+      (DbClient.dbProxy as any).exportYjsUpdate = vi.fn().mockResolvedValue(localBytes);
+
+      fetchMock
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ found: false })
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ url: 'first-yjs-url' })
+        });
+
+      const res = await syncService.syncBidirectional();
+
+      expect((DbClient.dbProxy as any).exportYjsUpdate).toHaveBeenCalledWith(expect.any(String));
+      expect(res.hadRemote).toBe(false);
+      expect(res.fileId).toBe('first-yjs-url');
+    });
+  });
 });

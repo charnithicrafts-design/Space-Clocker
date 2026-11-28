@@ -1,4 +1,5 @@
 import { getDb, dbProxy } from '../db/client';
+import { getOrCreateDeviceId } from '../utils/DeviceUtils';
 
 
 export interface SyncProvider {
@@ -102,9 +103,12 @@ export class SyncService {
   }
 
   async pushUpdate() {
-    const uint8Array = await dbProxy.exportToJson();
+    const deviceId = getOrCreateDeviceId();
+    const uint8Array = typeof (dbProxy as any).exportYjsUpdate === 'function'
+      ? await (dbProxy as any).exportYjsUpdate(deviceId)
+      : await dbProxy.exportToJson();
     const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
-    const fileId = await this.provider.uploadFile('space-clocker-sync.json.gz', blob);
+    const fileId = await this.provider.uploadFile('space-clocker-sync.yjs', blob);
     
     const db = getDb();
     await db.query(`
@@ -121,12 +125,61 @@ export class SyncService {
   async pullUpdate(fileId: string) {
     const blob = await this.provider.downloadFile(fileId);
     const arrayBuffer = await blob.arrayBuffer();
-    await dbProxy.importFromJson(new Uint8Array(arrayBuffer));
+    const bytes = new Uint8Array(arrayBuffer);
+    const deviceId = getOrCreateDeviceId();
+
+    if (typeof (dbProxy as any).mergeRemotePayloadAndReconcile === 'function') {
+      await (dbProxy as any).mergeRemotePayloadAndReconcile(bytes, deviceId);
+    } else {
+      await dbProxy.importFromJson(bytes);
+    }
     
     const db = getDb();
     await db.query(`
       UPDATE sync_metadata SET last_synced_at = CURRENT_TIMESTAMP WHERE id = 1
     `);
+  }
+
+  /**
+   * Lossless bidirectional CRDT sync:
+   * 1. Checks remote metadata.
+   * 2. If remote exists, downloads & merges remote Y.Doc state with local PGlite + Y.Doc.
+   * 3. Otherwise exports local state as Y.js update.
+   * 4. Uploads merged state (where /api/sync/upload also runs Y.mergeUpdates for concurrency safety).
+   */
+  async syncBidirectional(): Promise<{ fileId: string; syncedAt: string; hadRemote: boolean }> {
+    const deviceId = getOrCreateDeviceId();
+    const meta = await this.provider.getFileMetadata();
+
+    let payloadToUpload: Uint8Array;
+    let hadRemote = false;
+
+    if (meta && meta.id) {
+      hadRemote = true;
+      const remoteBlob = await this.provider.downloadFile(meta.id);
+      const remoteBytes = new Uint8Array(await remoteBlob.arrayBuffer());
+      payloadToUpload = typeof (dbProxy as any).mergeRemotePayloadAndReconcile === 'function'
+        ? await (dbProxy as any).mergeRemotePayloadAndReconcile(remoteBytes, deviceId)
+        : (await dbProxy.importFromJson(remoteBytes), await dbProxy.exportToJson());
+    } else {
+      payloadToUpload = typeof (dbProxy as any).exportYjsUpdate === 'function'
+        ? await (dbProxy as any).exportYjsUpdate(deviceId)
+        : await dbProxy.exportToJson();
+    }
+
+    const blob = new Blob([payloadToUpload], { type: 'application/octet-stream' });
+    const fileId = await this.provider.uploadFile('space-clocker-sync.yjs', blob);
+
+    const db = getDb();
+    await db.query(`
+      INSERT INTO sync_metadata (id, last_synced_at, remote_file_id)
+      VALUES (1, CURRENT_TIMESTAMP, $1)
+      ON CONFLICT (id) DO UPDATE SET
+        last_synced_at = CURRENT_TIMESTAMP,
+        remote_file_id = $1
+    `, [fileId]);
+
+    return { fileId, syncedAt: new Date().toISOString(), hadRemote };
   }
 
   async checkDivergence() {
