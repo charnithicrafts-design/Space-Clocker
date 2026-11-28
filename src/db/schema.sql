@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS sync_metadata (
   last_synced_at TEXT,
   device_id TEXT,
   remote_file_id TEXT,
+  yjs_state TEXT,
   CONSTRAINT single_sync CHECK (id = 1)
 );
 

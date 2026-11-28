@@ -105,5 +105,14 @@ export const MIGRATIONS: Migration[] = [
         UPDATE tasks SET created_at = planned_date WHERE created_at IS NULL;
       `);
     }
+  },
+  {
+    version: 8,
+    name: 'add_yjs_state_to_sync_metadata',
+    run: async (tx) => {
+      await tx.exec(`
+        ALTER TABLE sync_metadata ADD COLUMN IF NOT EXISTS yjs_state TEXT;
+      `);
+    }
   }
 ];
