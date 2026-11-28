@@ -73,16 +73,17 @@ const SettingsDashboard = () => {
     try {
       setSyncStatus({ isSyncing: true, error: undefined });
       SoundManager.playUplink();
-      
-      const divergence = await syncService.checkDivergence();
-      if (divergence === 'remote_newer') {
-        store.setShowSyncModal(true);
-        setSyncStatus({ isSyncing: false });
-        return;
+
+      if (typeof (syncService as any).syncBidirectional === 'function') {
+        const { syncedAt, hadRemote } = await syncService.syncBidirectional();
+        if (hadRemote) {
+          await initialize();
+        }
+        setSyncStatus({ isSyncing: false, lastSyncedAt: syncedAt });
+      } else {
+        const { syncedAt } = await syncService.pushUpdate();
+        setSyncStatus({ isSyncing: false, lastSyncedAt: syncedAt });
       }
-      
-      const { syncedAt } = await syncService.pushUpdate();
-      setSyncStatus({ isSyncing: false, lastSyncedAt: syncedAt });
       SoundManager.playSyncSuccess();
     } catch (err) {
       console.error('Sync failed:', err);

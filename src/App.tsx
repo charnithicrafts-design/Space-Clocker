@@ -115,10 +115,12 @@ const AppContent = () => {
           setShowOnboarding(true);
         }
 
-        if (oracleConfig.syncEnabled) {
-          const result = await checkSync();
-          if (result === 'remote_newer') {
-            setShowSyncModal(true);
+        if (oracleConfig.syncEnabled && oracleConfig.clientId) {
+          const { syncService } = await import('./services/SyncService');
+          await syncService.authorize(oracleConfig.clientId);
+          const { hadRemote } = await syncService.syncBidirectional();
+          if (hadRemote) {
+            await initialize();
           }
         }
         setDbStatus('ready');

@@ -341,9 +341,10 @@ export const useTrackStore = create<TrackStore>()(
       const config = get().oracleConfig;
       if (config.syncEnabled && config.clientId) {
         const { syncService } = await import('../services/SyncService');
-        syncResult = await syncService.checkDivergence();
-        if (syncResult === 'remote_newer') {
-          set({ showSyncModal: true });
+        const res = await syncService.syncBidirectional();
+        syncResult = res.hadRemote ? 'merged' : 'synced';
+        if (res.hadRemote) {
+          await get().initialize();
         }
       }
 
@@ -375,14 +376,7 @@ export const useTrackStore = create<TrackStore>()(
       // Authorize
       await syncService.authorize(clientId);
       
-      // Try to check if there is an existing database backup in the cloud
-      const meta = await syncService.getFileMetadata();
-      if (meta && meta.id) {
-        // Download and restore
-        await syncService.pullUpdate(meta.id);
-      }
-      
-      // Update config locally
+      // Update config locally first so clientId & syncEnabled are persisted
       const { getDb } = await import('../db/client');
       const db = getDb();
       await db.query(`
@@ -396,10 +390,10 @@ export const useTrackStore = create<TrackStore>()(
       // Register current device
       await get().registerDevice();
       
-      // Push the initial handshake so the cloud array sees this new device
-      await syncService.pushUpdate();
+      // Lossless bidirectional Y.js merge with any existing cloud state + push
+      await syncService.syncBidirectional();
       
-      // Reload
+      // Reload UI state
       await get().initialize();
     },
 
@@ -454,14 +448,17 @@ export const useTrackStore = create<TrackStore>()(
       
       (window as any)._syncDebounceTimeout = setTimeout(async () => {
         try {
-          console.log('[Sync] Triggering background auto-sync...');
+          console.log('[Sync] Triggering lossless Y.js background sync...');
           set({ syncStatus: { isSyncing: true, lastSyncedAt: get().syncStatus.lastSyncedAt, error: undefined } });
           const { syncService } = await import('../services/SyncService');
           
           await get().registerDevice();
-          const { syncedAt } = await syncService.pushUpdate();
+          const { syncedAt, hadRemote } = await syncService.syncBidirectional();
+          if (hadRemote) {
+            await get().initialize();
+          }
           set({ syncStatus: { isSyncing: false, lastSyncedAt: syncedAt } });
-          console.log('[Sync] Background auto-sync complete.');
+          console.log('[Sync] Background CRDT auto-merge complete.');
         } catch (err: any) {
           console.error('[Sync] Background auto-sync failed:', err);
           set({ syncStatus: { isSyncing: false, lastSyncedAt: get().syncStatus.lastSyncedAt, error: 'Background Sync Failed' } });

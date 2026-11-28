@@ -29,6 +29,7 @@ vi.mock('../../constants', () => ({
 vi.mock('../../services/SyncService', () => ({
   syncService: {
     pushUpdate: vi.fn(),
+    syncBidirectional: vi.fn(),
     authorize: vi.fn(),
     checkDivergence: vi.fn().mockResolvedValue('synced')
   }
@@ -134,7 +135,7 @@ describe('SettingsDashboard', () => {
       ...mockInitialState,
       oracleConfig: { ...mockInitialState.oracleConfig, syncEnabled: true }
     });
-    (syncService.pushUpdate as any).mockResolvedValue({ syncedAt: '2024-01-01T12:00:00Z' });
+    (syncService.syncBidirectional as any).mockResolvedValue({ syncedAt: '2024-01-01T12:00:00Z', hadRemote: false });
     renderWithRouter(<SettingsDashboard />);
     const syncButton = screen.getByRole('button', { name: /Sync Now/i });
 
@@ -145,7 +146,7 @@ describe('SettingsDashboard', () => {
 
     // Assert
     expect(mockSetSyncStatus).toHaveBeenCalledWith({ isSyncing: true, error: undefined });
-    expect(syncService.pushUpdate).toHaveBeenCalled();
+    expect(syncService.syncBidirectional).toHaveBeenCalled();
     expect(SoundManager.playUplink).toHaveBeenCalled();
     expect(SoundManager.playSyncSuccess).toHaveBeenCalled();
   });
